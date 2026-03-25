@@ -1,0 +1,634 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
+
+enum CoinDirection {
+  earn
+  deduct
+}
+
+enum TriggerType {
+  auto
+  manual
+}
+
+enum SessionType {
+  lesson
+  exam
+  competition
+  extra
+}
+
+enum RewardType {
+  digital
+  privilege
+  physical
+}
+
+enum PurchaseStatus {
+  pending
+  approved
+  delivered
+  cancelled
+}
+
+enum SourceType {
+  attendance
+  homework
+  competition
+  manual
+  bonus
+  purchase
+}
+
+enum ImportStatus {
+  pending
+  processing
+  done
+  failed
+}
+
+enum Weekday {
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+  sunday
+}
+
+enum SmsRecipientType {
+  student
+  parent
+}
+
+enum SmsStatus {
+  pending
+  sent
+  failed
+}
+
+enum SmsTriggerType {
+  monthly_payment    // Har oyning boshida to'lov eslatmasi
+  absence            // O'quvchi darsga kelmasa
+  schedule_updated   // Yangi dars jadvali
+  custom             // Admin o'zi yozgan xabar
+}
+
+// ─────────────────────────────────────────
+// TENANTS
+// ─────────────────────────────────────────
+
+model Tenant {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(200)
+  slug      String   @unique @db.VarChar(100)
+  plan      String   @default("basic") @db.VarChar(50)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  users              User[]
+  courses            Course[]
+  groups             Group[]
+  coinRules          CoinRule[]
+  rewards            Reward[]
+  sessions           Session[]
+  scheduleTemplates  ScheduleTemplate[]
+  smsTemplates       SmsTemplate[]
+  smsLogs            SmsLog[]
+  rewardCategories   RewardCategory[]
+
+  @@map("tenants")
+}
+
+// ─────────────────────────────────────────
+// ROLES
+// ─────────────────────────────────────────
+
+model Role {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String   @unique @db.VarChar(50)
+  displayName     String   @map("display_name") @db.VarChar(100)
+  level           Int      @default(1) @db.SmallInt
+  canDelete       Boolean  @default(false) @map("can_delete")
+  canManageAdmins Boolean  @default(false) @map("can_manage_admins")
+  isSystem        Boolean  @default(false) @map("is_system")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  users User[]
+
+  @@map("roles")
+}
+
+// ─────────────────────────────────────────
+// USERS
+// ─────────────────────────────────────────
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  phone        String    @unique @db.VarChar(20)
+  passwordHash String    @map("password_hash")
+  fullName     String    @map("full_name") @db.VarChar(150)
+  email        String?   @unique @db.VarChar(150)
+  avatarUrl    String?   @map("avatar_url")
+  parentPhone  String?   @map("parent_phone") @db.VarChar(20) // student uchun, optional
+  isActive     Boolean   @default(true) @map("is_active")
+  archivedAt   DateTime? @map("archived_at") @db.Timestamptz
+  archivedById String?   @map("archived_by") @db.Uuid
+  createdById  String?   @map("created_by") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  refreshTokenHash     String?   @map("refresh_token_hash")
+  passwordResetToken   String?   @map("password_reset_token")
+  passwordResetExpiry  DateTime? @map("password_reset_expiry") @db.Timestamptz
+
+  tenantId String @map("tenant_id") @db.Uuid
+  roleId   String @map("role_id") @db.Uuid
+
+  tenant     Tenant @relation(fields: [tenantId], references: [id])
+  role       Role   @relation(fields: [roleId], references: [id])
+  createdBy  User?  @relation("UserCreatedBy", fields: [createdById], references: [id])
+  createdUsers User[] @relation("UserCreatedBy")
+
+  wallet                    Wallet?
+  taughtGroups              Group[]             @relation("GroupTeacher")
+  createdGroups             Group[]             @relation("GroupCreatedBy")
+  groupMemberships          GroupStudent[]      @relation("StudentMembership")
+  addedGroupStudents        GroupStudent[]      @relation("AddedByUser")
+  ledSessions               Session[]
+  attendanceRecorded        AttendanceRecord[]  @relation("RecordedByUser")
+  attendanceAsStudent       AttendanceRecord[]  @relation("StudentAttendance")
+  coinTransactionsReceived  CoinTransaction[]   @relation("StudentTransactions")
+  coinTransactionsGiven     CoinTransaction[]   @relation("TeacherTransactions")
+  coinRulesCreated          CoinRule[]
+  rewardsCreated            Reward[]
+  purchases                 Purchase[]          @relation("StudentPurchases")
+  purchasesApproved         Purchase[]          @relation("ApprovedByUser")
+  importLogs                ImportLog[]
+  createdCourses            Course[]
+  smsLogsAsStudent          SmsLog[]            @relation("SmsStudent")
+  smsLogsSentBy             SmsLog[]            @relation("SmsSentBy")
+  scheduleTemplatesCreated  ScheduleTemplate[]
+  scheduleExceptionsCreated ScheduleException[]
+  smsTemplatesCreated       SmsTemplate[]
+  rewardCategories          RewardCategory[]
+
+  @@index([tenantId])
+  @@index([phone])
+  @@index([roleId])
+  @@index([isActive])
+  @@map("users")
+}
+
+// ─────────────────────────────────────────
+// WALLETS
+// ─────────────────────────────────────────
+
+model Wallet {
+  id        String   @id @default(uuid()) @db.Uuid
+  balance   Int      @default(0)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  userId String @unique @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  transactions CoinTransaction[]
+
+  @@index([balance(sort: Desc)])
+  @@map("wallets")
+}
+
+// ─────────────────────────────────────────
+// COURSES
+// ─────────────────────────────────────────
+
+model Course {
+  id           String    @id @default(uuid()) @db.Uuid
+  title        String    @db.VarChar(200)
+  description  String?
+  isActive     Boolean   @default(true) @map("is_active")
+  archivedAt   DateTime? @map("archived_at") @db.Timestamptz
+  archivedById String?   @map("archived_by") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  createdBy User   @relation(fields: [createdById], references: [id])
+
+  groups Group[]
+
+  @@index([tenantId])
+  @@index([isActive])
+  @@map("courses")
+}
+
+// ─────────────────────────────────────────
+// GROUPS
+// ─────────────────────────────────────────
+
+model Group {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String    @db.VarChar(150)
+  maxStudents  Int       @default(50) @map("max_students") @db.SmallInt
+  isActive     Boolean   @default(true) @map("is_active")
+  archivedAt   DateTime? @map("archived_at") @db.Timestamptz
+  archivedById String?   @map("archived_by") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  courseId    String @map("course_id") @db.Uuid
+  teacherId   String @map("teacher_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  course    Course @relation(fields: [courseId], references: [id])
+  teacher   User   @relation("GroupTeacher", fields: [teacherId], references: [id])
+  createdBy User   @relation("GroupCreatedBy", fields: [createdById], references: [id])
+
+  students          GroupStudent[]
+  sessions          Session[]
+  coinRules         CoinRule[]
+  transactions      CoinTransaction[]
+  scheduleTemplates ScheduleTemplate[]
+
+  @@index([tenantId])
+  @@index([courseId])
+  @@index([teacherId])
+  @@index([isActive])
+  @@map("groups")
+}
+
+// ─────────────────────────────────────────
+// GROUP_STUDENTS
+// ─────────────────────────────────────────
+
+model GroupStudent {
+  id         String    @id @default(uuid()) @db.Uuid
+  isActive   Boolean   @default(true) @map("is_active")
+  archivedAt DateTime? @map("archived_at") @db.Timestamptz
+  joinedAt   DateTime  @default(now()) @map("joined_at") @db.Timestamptz
+
+  groupId   String  @map("group_id") @db.Uuid
+  studentId String  @map("student_id") @db.Uuid
+  addedById String? @map("added_by") @db.Uuid
+
+  group   Group @relation(fields: [groupId], references: [id])
+  student User  @relation("StudentMembership", fields: [studentId], references: [id])
+  addedBy User? @relation("AddedByUser", fields: [addedById], references: [id])
+
+  @@unique([groupId, studentId])
+  @@index([groupId])
+  @@index([studentId])
+  @@map("group_students")
+}
+
+// ─────────────────────────────────────────
+// SCHEDULE TEMPLATE  (haftalik takrorlanuvchi jadval)
+// ─────────────────────────────────────────
+
+model ScheduleTemplate {
+  id        String   @id @default(uuid()) @db.Uuid
+  weekday   Weekday
+  startTime String   @map("start_time") @db.VarChar(5)  // "14:00"
+  endTime   String   @map("end_time") @db.VarChar(5)    // "16:00"
+  room      String?  @db.VarChar(100)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  groupId     String @map("group_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  group     Group  @relation(fields: [groupId], references: [id])
+  createdBy User   @relation(fields: [createdById], references: [id])
+
+  exceptions ScheduleException[]
+
+  @@index([tenantId])
+  @@index([groupId])
+  @@map("schedule_templates")
+}
+
+// ─────────────────────────────────────────
+// SCHEDULE EXCEPTION  (qo'lda o'zgartirish)
+// Bekor qilish, siljitish, qo'shimcha dars
+// ─────────────────────────────────────────
+
+model ScheduleException {
+  id            String    @id @default(uuid()) @db.Uuid
+  exceptionDate DateTime  @map("exception_date") @db.Date
+  startTime     String?   @map("start_time") @db.VarChar(5)  // null = bekor qilingan
+  endTime       String?   @map("end_time") @db.VarChar(5)
+  room          String?   @db.VarChar(100)
+  isCancelled   Boolean   @default(false) @map("is_cancelled") // true = o'sha kun dars yo'q
+  note          String?   @db.VarChar(300)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  templateId  String  @map("template_id") @db.Uuid
+  createdById String  @map("created_by") @db.Uuid
+
+  template  ScheduleTemplate @relation(fields: [templateId], references: [id])
+  createdBy User             @relation(fields: [createdById], references: [id])
+
+  @@unique([templateId, exceptionDate]) // bir kunda bir template uchun bitta exception
+  @@index([templateId])
+  @@index([exceptionDate])
+  @@map("schedule_exceptions")
+}
+
+// ─────────────────────────────────────────
+// COIN_RULES
+// ─────────────────────────────────────────
+
+model CoinRule {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String        @db.VarChar(200)
+  description String?
+  coinAmount  Int           @map("coin_amount")
+  direction   CoinDirection
+  triggerType TriggerType   @default(manual) @map("trigger_type")
+  isActive    Boolean       @default(true) @map("is_active")
+  archivedAt  DateTime?     @map("archived_at") @db.Timestamptz
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenantId    String  @map("tenant_id") @db.Uuid
+  groupId     String? @map("group_id") @db.Uuid  // null = global
+  createdById String  @map("created_by") @db.Uuid
+
+  tenant    Tenant  @relation(fields: [tenantId], references: [id])
+  group     Group?  @relation(fields: [groupId], references: [id])
+  createdBy User    @relation(fields: [createdById], references: [id])
+
+  transactions CoinTransaction[]
+
+  @@index([tenantId])
+  @@index([groupId])
+  @@index([isActive])
+  @@map("coin_rules")
+}
+
+// ─────────────────────────────────────────
+// SESSIONS
+// ─────────────────────────────────────────
+
+model Session {
+  id          String      @id @default(uuid()) @db.Uuid
+  sessionDate DateTime    @map("session_date") @db.Date
+  startTime   String?     @map("start_time") @db.VarChar(5)  // "14:00"
+  endTime     String?     @map("end_time") @db.VarChar(5)
+  sessionType SessionType @default(lesson) @map("session_type")
+  topic       String?     @db.VarChar(300)
+  isLocked    Boolean     @default(false) @map("is_locked")
+  lockedAt    DateTime?   @map("locked_at") @db.Timestamptz
+  lockedById  String?     @map("locked_by") @db.Uuid
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz
+
+  tenantId  String @map("tenant_id") @db.Uuid
+  groupId   String @map("group_id") @db.Uuid
+  teacherId String @map("teacher_id") @db.Uuid
+
+  tenant  Tenant @relation(fields: [tenantId], references: [id])
+  group   Group  @relation(fields: [groupId], references: [id])
+  teacher User   @relation(fields: [teacherId], references: [id])
+
+  attendanceRecords AttendanceRecord[]
+  transactions      CoinTransaction[]
+
+  @@index([tenantId])
+  @@index([groupId, sessionDate(sort: Desc)])
+  @@index([teacherId])
+  @@map("sessions")
+}
+
+// ─────────────────────────────────────────
+// ATTENDANCE_RECORDS
+// ─────────────────────────────────────────
+
+model AttendanceRecord {
+  id           String   @id @default(uuid()) @db.Uuid
+  isPresent    Boolean  @default(false) @map("is_present")
+  homeworkDone Boolean  @default(false) @map("homework_done")
+  recordedAt   DateTime @default(now()) @map("recorded_at") @db.Timestamptz
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  sessionId    String @map("session_id") @db.Uuid
+  studentId    String @map("student_id") @db.Uuid
+  recordedById String @map("recorded_by") @db.Uuid
+
+  session    Session @relation(fields: [sessionId], references: [id])
+  student    User    @relation("StudentAttendance", fields: [studentId], references: [id])
+  recordedBy User    @relation("RecordedByUser", fields: [recordedById], references: [id])
+
+  @@unique([sessionId, studentId])
+  @@index([sessionId, studentId])
+  @@index([studentId])
+  @@map("attendance_records")
+}
+
+// ─────────────────────────────────────────
+// COIN_TRANSACTIONS
+// ─────────────────────────────────────────
+
+model CoinTransaction {
+  id         String        @id @default(uuid()) @db.Uuid
+  amount     Int
+  direction  CoinDirection
+  sourceType SourceType    @map("source_type")
+  note       String?
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamptz
+
+  walletId  String  @map("wallet_id") @db.Uuid
+  studentId String  @map("student_id") @db.Uuid
+  teacherId String? @map("teacher_id") @db.Uuid
+  ruleId    String? @map("rule_id") @db.Uuid
+  sessionId String? @map("session_id") @db.Uuid
+  groupId   String? @map("group_id") @db.Uuid
+
+  wallet  Wallet    @relation(fields: [walletId], references: [id])
+  student User      @relation("StudentTransactions", fields: [studentId], references: [id])
+  teacher User?     @relation("TeacherTransactions", fields: [teacherId], references: [id])
+  rule    CoinRule? @relation(fields: [ruleId], references: [id])
+  session Session?  @relation(fields: [sessionId], references: [id])
+  group   Group?    @relation(fields: [groupId], references: [id])
+
+  @@index([walletId])
+  @@index([studentId, createdAt(sort: Desc)])
+  @@index([teacherId])
+  @@index([sessionId])
+  @@map("coin_transactions")
+}
+
+// ─────────────────────────────────────────
+// REWARD_CATEGORIES
+// ─────────────────────────────────────────
+
+model RewardCategory {
+  id           String  @id @default(uuid()) @db.Uuid
+  name         String  @db.VarChar(100)
+  isActive     Boolean @default(true) @map("is_active")
+  tenantId     String @map("tenant_id") @db.Uuid
+  createdById  String @map("created_by") @db.Uuid
+
+  tenant     Tenant @relation(fields: [tenantId], references: [id])
+  createdBy  User   @relation(fields: [createdById], references: [id])
+  rewards    Reward[]
+
+  @@unique([tenantId, name])  // bir tenantda bir xil nom bo'lmasin
+  @@index([tenantId])
+  @@map("reward_categories")
+}
+
+// ─────────────────────────────────────────
+// REWARDS
+// ─────────────────────────────────────────
+
+model Reward {
+  id           String     @id @default(uuid()) @db.Uuid
+  title        String     @db.VarChar(200)
+  description  String?
+  coinPrice    Int        @map("coin_price")
+  stock        Int        @default(-1)  // -1 = cheksiz
+  rewardType   RewardType @map("reward_type")
+  imageUrl     String?    @map("image_url")
+  isActive     Boolean    @default(true) @map("is_active")
+  archivedAt   DateTime?  @map("archived_at") @db.Timestamptz
+  archivedById String?    @map("archived_by") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  categoryId  String @map("category_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant         @relation(fields: [tenantId], references: [id])
+  category  RewardCategory @relation(fields: [categoryId], references: [id])
+  createdBy User           @relation(fields: [createdById], references: [id])
+
+  purchases Purchase[]
+
+  @@index([tenantId, isActive])
+  @@map("rewards")
+}
+
+// ─────────────────────────────────────────
+// PURCHASES
+// ─────────────────────────────────────────
+
+model Purchase {
+  id           String         @id @default(uuid()) @db.Uuid
+  coinSpent    Int            @map("coin_spent")
+  status       PurchaseStatus @default(pending)
+  deliveryNote String?        @map("delivery_note")
+  purchasedAt  DateTime       @default(now()) @map("purchased_at") @db.Timestamptz
+  updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  studentId    String  @map("student_id") @db.Uuid
+  rewardId     String  @map("reward_id") @db.Uuid
+  approvedById String? @map("approved_by") @db.Uuid
+
+  student    User    @relation("StudentPurchases", fields: [studentId], references: [id])
+  reward     Reward  @relation(fields: [rewardId], references: [id])
+  approvedBy User?   @relation("ApprovedByUser", fields: [approvedById], references: [id])
+
+  @@index([studentId])
+  @@index([status])
+  @@map("purchases")
+}
+
+// ─────────────────────────────────────────
+// SMS_TEMPLATES  (admin tomonidan boshqariladi)
+// ─────────────────────────────────────────
+
+model SmsTemplate {
+  id          String         @id @default(uuid()) @db.Uuid
+  name        String         @db.VarChar(200)       // "Oylik to'lov eslatmasi"
+  triggerType SmsTriggerType @map("trigger_type")
+  body        String         // "Hurmatli {parent_name}, {student_name} ..."
+  isActive    Boolean        @default(true) @map("is_active")
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  createdBy User   @relation(fields: [createdById], references: [id])
+
+  smsLogs SmsLog[]
+
+  @@index([tenantId])
+  @@map("sms_templates")
+}
+
+// ─────────────────────────────────────────
+// SMS_LOGS  (yuborilgan SMSlar tarixi)
+// ─────────────────────────────────────────
+
+model SmsLog {
+  id            String           @id @default(uuid()) @db.Uuid
+  recipientType SmsRecipientType @map("recipient_type")  // student | parent
+  phone         String           @db.VarChar(20)         // yuborilgan raqam
+  body          String                                    // haqiqiy yuborilgan matn
+  triggerType   SmsTriggerType   @map("trigger_type")
+  status        SmsStatus        @default(pending)
+  eskizMessageId String?         @map("eskiz_message_id") // Eskiz API dan qaytgan ID
+  errorMessage  String?          @map("error_message")
+  sentAt        DateTime?        @map("sent_at") @db.Timestamptz
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz
+
+  tenantId   String  @map("tenant_id") @db.Uuid
+  studentId  String  @map("student_id") @db.Uuid   // qaysi o'quvchi haqida
+  templateId String? @map("template_id") @db.Uuid
+  sentById   String  @map("sent_by") @db.Uuid      // qaysi admin yuborganini
+
+  tenant    Tenant       @relation(fields: [tenantId], references: [id])
+  student   User         @relation("SmsStudent", fields: [studentId], references: [id])
+  template  SmsTemplate? @relation(fields: [templateId], references: [id])
+  sentBy    User         @relation("SmsSentBy", fields: [sentById], references: [id])
+
+  @@index([tenantId])
+  @@index([studentId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("sms_logs")
+}
+
+// ─────────────────────────────────────────
+// IMPORT_LOGS
+// ─────────────────────────────────────────
+
+model ImportLog {
+  id          String       @id @default(uuid()) @db.Uuid
+  entityType  String       @map("entity_type") @db.VarChar(50)
+  fileName    String       @map("file_name") @db.VarChar(300)
+  totalRows   Int          @default(0) @map("total_rows")
+  successRows Int          @default(0) @map("success_rows")
+  failedRows  Int          @default(0) @map("failed_rows")
+  status      ImportStatus @default(pending)
+  errorLog    Json?        @map("error_log")
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  finishedAt  DateTime?    @map("finished_at") @db.Timestamptz
+
+  importedById String @map("imported_by") @db.Uuid
+  importedBy   User   @relation(fields: [importedById], references: [id])
+
+  @@map("import_logs")
+}

@@ -29,10 +29,12 @@ export type CourseMinAggregateOutputType = {
   title: string | null
   description: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   createdById: string | null
 }
@@ -42,10 +44,12 @@ export type CourseMaxAggregateOutputType = {
   title: string | null
   description: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   createdById: string | null
 }
@@ -55,10 +59,12 @@ export type CourseCountAggregateOutputType = {
   title: number
   description: number
   isActive: number
+  isDeleted: number
   archivedAt: number
   archivedById: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   tenantId: number
   createdById: number
   _all: number
@@ -70,10 +76,12 @@ export type CourseMinAggregateInputType = {
   title?: true
   description?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   createdById?: true
 }
@@ -83,10 +91,12 @@ export type CourseMaxAggregateInputType = {
   title?: true
   description?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   createdById?: true
 }
@@ -96,10 +106,12 @@ export type CourseCountAggregateInputType = {
   title?: true
   description?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   createdById?: true
   _all?: true
@@ -182,10 +194,12 @@ export type CourseGroupByOutputType = {
   title: string
   description: string | null
   isActive: boolean
+  isDeleted: boolean
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   tenantId: string
   createdById: string
   _count: CourseCountAggregateOutputType | null
@@ -216,10 +230,12 @@ export type CourseWhereInput = {
   title?: Prisma.StringFilter<"Course"> | string
   description?: Prisma.StringNullableFilter<"Course"> | string | null
   isActive?: Prisma.BoolFilter<"Course"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Course"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Course"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Course"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Course"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Course"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Course"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Course"> | string
   createdById?: Prisma.UuidFilter<"Course"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -232,10 +248,12 @@ export type CourseOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -251,10 +269,12 @@ export type CourseWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Course"> | string
   description?: Prisma.StringNullableFilter<"Course"> | string | null
   isActive?: Prisma.BoolFilter<"Course"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Course"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Course"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Course"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Course"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Course"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Course"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Course"> | string
   createdById?: Prisma.UuidFilter<"Course"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -267,10 +287,12 @@ export type CourseOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   _count?: Prisma.CourseCountOrderByAggregateInput
@@ -286,10 +308,12 @@ export type CourseScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Course"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Course"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Course"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Course"> | boolean
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Course"> | Date | string | null
   archivedById?: Prisma.UuidNullableWithAggregatesFilter<"Course"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Course"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Course"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Course"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"Course"> | string
   createdById?: Prisma.UuidWithAggregatesFilter<"Course"> | string
 }
@@ -299,10 +323,12 @@ export type CourseCreateInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCoursesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCoursesInput
   groups?: Prisma.GroupCreateNestedManyWithoutCourseInput
@@ -313,10 +339,12 @@ export type CourseUncheckedCreateInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutCourseInput
@@ -327,10 +355,12 @@ export type CourseUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCoursesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCoursesNestedInput
   groups?: Prisma.GroupUpdateManyWithoutCourseNestedInput
@@ -341,10 +371,12 @@ export type CourseUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   groups?: Prisma.GroupUncheckedUpdateManyWithoutCourseNestedInput
@@ -355,10 +387,12 @@ export type CourseCreateManyInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
 }
@@ -368,10 +402,12 @@ export type CourseUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CourseUncheckedUpdateManyInput = {
@@ -379,10 +415,12 @@ export type CourseUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -402,10 +440,12 @@ export type CourseCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -415,10 +455,12 @@ export type CourseMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -428,10 +470,12 @@ export type CourseMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -544,10 +588,12 @@ export type CourseCreateWithoutTenantInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCoursesInput
   groups?: Prisma.GroupCreateNestedManyWithoutCourseInput
 }
@@ -557,10 +603,12 @@ export type CourseUncheckedCreateWithoutTenantInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   createdById: string
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutCourseInput
 }
@@ -599,10 +647,12 @@ export type CourseScalarWhereInput = {
   title?: Prisma.StringFilter<"Course"> | string
   description?: Prisma.StringNullableFilter<"Course"> | string | null
   isActive?: Prisma.BoolFilter<"Course"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Course"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Course"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Course"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Course"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Course"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Course"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Course"> | string
   createdById?: Prisma.UuidFilter<"Course"> | string
 }
@@ -612,10 +662,12 @@ export type CourseCreateWithoutCreatedByInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCoursesInput
   groups?: Prisma.GroupCreateNestedManyWithoutCourseInput
 }
@@ -625,10 +677,12 @@ export type CourseUncheckedCreateWithoutCreatedByInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutCourseInput
 }
@@ -664,10 +718,12 @@ export type CourseCreateWithoutGroupsInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCoursesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedCoursesInput
 }
@@ -677,10 +733,12 @@ export type CourseUncheckedCreateWithoutGroupsInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
 }
@@ -706,10 +764,12 @@ export type CourseUpdateWithoutGroupsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCoursesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCoursesNestedInput
 }
@@ -719,10 +779,12 @@ export type CourseUncheckedUpdateWithoutGroupsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -732,10 +794,12 @@ export type CourseCreateManyTenantInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   createdById: string
 }
 
@@ -744,10 +808,12 @@ export type CourseUpdateWithoutTenantInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedCoursesNestedInput
   groups?: Prisma.GroupUpdateManyWithoutCourseNestedInput
 }
@@ -757,10 +823,12 @@ export type CourseUncheckedUpdateWithoutTenantInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   groups?: Prisma.GroupUncheckedUpdateManyWithoutCourseNestedInput
 }
@@ -770,10 +838,12 @@ export type CourseUncheckedUpdateManyWithoutTenantInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -782,10 +852,12 @@ export type CourseCreateManyCreatedByInput = {
   title: string
   description?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
 }
 
@@ -794,10 +866,12 @@ export type CourseUpdateWithoutCreatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCoursesNestedInput
   groups?: Prisma.GroupUpdateManyWithoutCourseNestedInput
 }
@@ -807,10 +881,12 @@ export type CourseUncheckedUpdateWithoutCreatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groups?: Prisma.GroupUncheckedUpdateManyWithoutCourseNestedInput
 }
@@ -820,10 +896,12 @@ export type CourseUncheckedUpdateManyWithoutCreatedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -863,10 +941,12 @@ export type CourseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   title?: boolean
   description?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -880,10 +960,12 @@ export type CourseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   title?: boolean
   description?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -895,10 +977,12 @@ export type CourseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   title?: boolean
   description?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -910,15 +994,17 @@ export type CourseSelectScalar = {
   title?: boolean
   description?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
 }
 
-export type CourseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "isActive" | "archivedAt" | "archivedById" | "createdAt" | "updatedAt" | "tenantId" | "createdById", ExtArgs["result"]["course"]>
+export type CourseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "isActive" | "isDeleted" | "archivedAt" | "archivedById" | "createdAt" | "updatedAt" | "deletedAt" | "tenantId" | "createdById", ExtArgs["result"]["course"]>
 export type CourseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -946,10 +1032,12 @@ export type $CoursePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     title: string
     description: string | null
     isActive: boolean
+    isDeleted: boolean
     archivedAt: Date | null
     archivedById: string | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     tenantId: string
     createdById: string
   }, ExtArgs["result"]["course"]>
@@ -1382,10 +1470,12 @@ export interface CourseFieldRefs {
   readonly title: Prisma.FieldRef<"Course", 'String'>
   readonly description: Prisma.FieldRef<"Course", 'String'>
   readonly isActive: Prisma.FieldRef<"Course", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"Course", 'Boolean'>
   readonly archivedAt: Prisma.FieldRef<"Course", 'DateTime'>
   readonly archivedById: Prisma.FieldRef<"Course", 'String'>
   readonly createdAt: Prisma.FieldRef<"Course", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Course", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Course", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"Course", 'String'>
   readonly createdById: Prisma.FieldRef<"Course", 'String'>
 }

@@ -30,6 +30,7 @@ export type AttendanceRecordMinAggregateOutputType = {
   homeworkDone: boolean | null
   recordedAt: Date | null
   updatedAt: Date | null
+  isDeleted: boolean | null
   sessionId: string | null
   studentId: string | null
   recordedById: string | null
@@ -41,6 +42,7 @@ export type AttendanceRecordMaxAggregateOutputType = {
   homeworkDone: boolean | null
   recordedAt: Date | null
   updatedAt: Date | null
+  isDeleted: boolean | null
   sessionId: string | null
   studentId: string | null
   recordedById: string | null
@@ -52,6 +54,7 @@ export type AttendanceRecordCountAggregateOutputType = {
   homeworkDone: number
   recordedAt: number
   updatedAt: number
+  isDeleted: number
   sessionId: number
   studentId: number
   recordedById: number
@@ -65,6 +68,7 @@ export type AttendanceRecordMinAggregateInputType = {
   homeworkDone?: true
   recordedAt?: true
   updatedAt?: true
+  isDeleted?: true
   sessionId?: true
   studentId?: true
   recordedById?: true
@@ -76,6 +80,7 @@ export type AttendanceRecordMaxAggregateInputType = {
   homeworkDone?: true
   recordedAt?: true
   updatedAt?: true
+  isDeleted?: true
   sessionId?: true
   studentId?: true
   recordedById?: true
@@ -87,6 +92,7 @@ export type AttendanceRecordCountAggregateInputType = {
   homeworkDone?: true
   recordedAt?: true
   updatedAt?: true
+  isDeleted?: true
   sessionId?: true
   studentId?: true
   recordedById?: true
@@ -171,6 +177,7 @@ export type AttendanceRecordGroupByOutputType = {
   homeworkDone: boolean
   recordedAt: Date
   updatedAt: Date
+  isDeleted: boolean
   sessionId: string
   studentId: string
   recordedById: string
@@ -203,6 +210,7 @@ export type AttendanceRecordWhereInput = {
   homeworkDone?: Prisma.BoolFilter<"AttendanceRecord"> | boolean
   recordedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
+  isDeleted?: Prisma.BoolFilter<"AttendanceRecord"> | boolean
   sessionId?: Prisma.UuidFilter<"AttendanceRecord"> | string
   studentId?: Prisma.UuidFilter<"AttendanceRecord"> | string
   recordedById?: Prisma.UuidFilter<"AttendanceRecord"> | string
@@ -217,6 +225,7 @@ export type AttendanceRecordOrderByWithRelationInput = {
   homeworkDone?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
@@ -235,6 +244,7 @@ export type AttendanceRecordWhereUniqueInput = Prisma.AtLeast<{
   homeworkDone?: Prisma.BoolFilter<"AttendanceRecord"> | boolean
   recordedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
+  isDeleted?: Prisma.BoolFilter<"AttendanceRecord"> | boolean
   sessionId?: Prisma.UuidFilter<"AttendanceRecord"> | string
   studentId?: Prisma.UuidFilter<"AttendanceRecord"> | string
   recordedById?: Prisma.UuidFilter<"AttendanceRecord"> | string
@@ -249,6 +259,7 @@ export type AttendanceRecordOrderByWithAggregationInput = {
   homeworkDone?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
@@ -266,6 +277,7 @@ export type AttendanceRecordScalarWhereWithAggregatesInput = {
   homeworkDone?: Prisma.BoolWithAggregatesFilter<"AttendanceRecord"> | boolean
   recordedAt?: Prisma.DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"AttendanceRecord"> | boolean
   sessionId?: Prisma.UuidWithAggregatesFilter<"AttendanceRecord"> | string
   studentId?: Prisma.UuidWithAggregatesFilter<"AttendanceRecord"> | string
   recordedById?: Prisma.UuidWithAggregatesFilter<"AttendanceRecord"> | string
@@ -277,6 +289,7 @@ export type AttendanceRecordCreateInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   session: Prisma.SessionCreateNestedOneWithoutAttendanceRecordsInput
   student: Prisma.UserCreateNestedOneWithoutAttendanceAsStudentInput
   recordedBy: Prisma.UserCreateNestedOneWithoutAttendanceRecordedInput
@@ -288,6 +301,7 @@ export type AttendanceRecordUncheckedCreateInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   sessionId: string
   studentId: string
   recordedById: string
@@ -299,6 +313,7 @@ export type AttendanceRecordUpdateInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   session?: Prisma.SessionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutAttendanceAsStudentNestedInput
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutAttendanceRecordedNestedInput
@@ -310,6 +325,7 @@ export type AttendanceRecordUncheckedUpdateInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -321,6 +337,7 @@ export type AttendanceRecordCreateManyInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   sessionId: string
   studentId: string
   recordedById: string
@@ -332,6 +349,7 @@ export type AttendanceRecordUpdateManyMutationInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type AttendanceRecordUncheckedUpdateManyInput = {
@@ -340,6 +358,7 @@ export type AttendanceRecordUncheckedUpdateManyInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -366,6 +385,7 @@ export type AttendanceRecordCountOrderByAggregateInput = {
   homeworkDone?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
@@ -377,6 +397,7 @@ export type AttendanceRecordMaxOrderByAggregateInput = {
   homeworkDone?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
@@ -388,6 +409,7 @@ export type AttendanceRecordMinOrderByAggregateInput = {
   homeworkDone?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   recordedById?: Prisma.SortOrder
@@ -525,6 +547,7 @@ export type AttendanceRecordCreateWithoutRecordedByInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   session: Prisma.SessionCreateNestedOneWithoutAttendanceRecordsInput
   student: Prisma.UserCreateNestedOneWithoutAttendanceAsStudentInput
 }
@@ -535,6 +558,7 @@ export type AttendanceRecordUncheckedCreateWithoutRecordedByInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   sessionId: string
   studentId: string
 }
@@ -555,6 +579,7 @@ export type AttendanceRecordCreateWithoutStudentInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   session: Prisma.SessionCreateNestedOneWithoutAttendanceRecordsInput
   recordedBy: Prisma.UserCreateNestedOneWithoutAttendanceRecordedInput
 }
@@ -565,6 +590,7 @@ export type AttendanceRecordUncheckedCreateWithoutStudentInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   sessionId: string
   recordedById: string
 }
@@ -604,6 +630,7 @@ export type AttendanceRecordScalarWhereInput = {
   homeworkDone?: Prisma.BoolFilter<"AttendanceRecord"> | boolean
   recordedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceRecord"> | Date | string
+  isDeleted?: Prisma.BoolFilter<"AttendanceRecord"> | boolean
   sessionId?: Prisma.UuidFilter<"AttendanceRecord"> | string
   studentId?: Prisma.UuidFilter<"AttendanceRecord"> | string
   recordedById?: Prisma.UuidFilter<"AttendanceRecord"> | string
@@ -631,6 +658,7 @@ export type AttendanceRecordCreateWithoutSessionInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   student: Prisma.UserCreateNestedOneWithoutAttendanceAsStudentInput
   recordedBy: Prisma.UserCreateNestedOneWithoutAttendanceRecordedInput
 }
@@ -641,6 +669,7 @@ export type AttendanceRecordUncheckedCreateWithoutSessionInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   studentId: string
   recordedById: string
 }
@@ -677,6 +706,7 @@ export type AttendanceRecordCreateManyRecordedByInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   sessionId: string
   studentId: string
 }
@@ -687,6 +717,7 @@ export type AttendanceRecordCreateManyStudentInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   sessionId: string
   recordedById: string
 }
@@ -697,6 +728,7 @@ export type AttendanceRecordUpdateWithoutRecordedByInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   session?: Prisma.SessionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutAttendanceAsStudentNestedInput
 }
@@ -707,6 +739,7 @@ export type AttendanceRecordUncheckedUpdateWithoutRecordedByInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -717,6 +750,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutRecordedByInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -727,6 +761,7 @@ export type AttendanceRecordUpdateWithoutStudentInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   session?: Prisma.SessionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutAttendanceRecordedNestedInput
 }
@@ -737,6 +772,7 @@ export type AttendanceRecordUncheckedUpdateWithoutStudentInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -747,6 +783,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutStudentInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -757,6 +794,7 @@ export type AttendanceRecordCreateManySessionInput = {
   homeworkDone?: boolean
   recordedAt?: Date | string
   updatedAt?: Date | string
+  isDeleted?: boolean
   studentId: string
   recordedById: string
 }
@@ -767,6 +805,7 @@ export type AttendanceRecordUpdateWithoutSessionInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   student?: Prisma.UserUpdateOneRequiredWithoutAttendanceAsStudentNestedInput
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutAttendanceRecordedNestedInput
 }
@@ -777,6 +816,7 @@ export type AttendanceRecordUncheckedUpdateWithoutSessionInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -787,6 +827,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutSessionInput = {
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -799,6 +840,7 @@ export type AttendanceRecordSelect<ExtArgs extends runtime.Types.Extensions.Inte
   homeworkDone?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
+  isDeleted?: boolean
   sessionId?: boolean
   studentId?: boolean
   recordedById?: boolean
@@ -813,6 +855,7 @@ export type AttendanceRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   homeworkDone?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
+  isDeleted?: boolean
   sessionId?: boolean
   studentId?: boolean
   recordedById?: boolean
@@ -827,6 +870,7 @@ export type AttendanceRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   homeworkDone?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
+  isDeleted?: boolean
   sessionId?: boolean
   studentId?: boolean
   recordedById?: boolean
@@ -841,12 +885,13 @@ export type AttendanceRecordSelectScalar = {
   homeworkDone?: boolean
   recordedAt?: boolean
   updatedAt?: boolean
+  isDeleted?: boolean
   sessionId?: boolean
   studentId?: boolean
   recordedById?: boolean
 }
 
-export type AttendanceRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isPresent" | "homeworkDone" | "recordedAt" | "updatedAt" | "sessionId" | "studentId" | "recordedById", ExtArgs["result"]["attendanceRecord"]>
+export type AttendanceRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isPresent" | "homeworkDone" | "recordedAt" | "updatedAt" | "isDeleted" | "sessionId" | "studentId" | "recordedById", ExtArgs["result"]["attendanceRecord"]>
 export type AttendanceRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -876,6 +921,7 @@ export type $AttendanceRecordPayload<ExtArgs extends runtime.Types.Extensions.In
     homeworkDone: boolean
     recordedAt: Date
     updatedAt: Date
+    isDeleted: boolean
     sessionId: string
     studentId: string
     recordedById: string
@@ -1310,6 +1356,7 @@ export interface AttendanceRecordFieldRefs {
   readonly homeworkDone: Prisma.FieldRef<"AttendanceRecord", 'Boolean'>
   readonly recordedAt: Prisma.FieldRef<"AttendanceRecord", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"AttendanceRecord", 'DateTime'>
+  readonly isDeleted: Prisma.FieldRef<"AttendanceRecord", 'Boolean'>
   readonly sessionId: Prisma.FieldRef<"AttendanceRecord", 'String'>
   readonly studentId: Prisma.FieldRef<"AttendanceRecord", 'String'>
   readonly recordedById: Prisma.FieldRef<"AttendanceRecord", 'String'>

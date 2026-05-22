@@ -33,8 +33,10 @@ export type SmsLogMinAggregateOutputType = {
   status: $Enums.SmsStatus | null
   eskizMessageId: string | null
   errorMessage: string | null
+  isDeleted: boolean | null
   sentAt: Date | null
   createdAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   studentId: string | null
   templateId: string | null
@@ -50,8 +52,10 @@ export type SmsLogMaxAggregateOutputType = {
   status: $Enums.SmsStatus | null
   eskizMessageId: string | null
   errorMessage: string | null
+  isDeleted: boolean | null
   sentAt: Date | null
   createdAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   studentId: string | null
   templateId: string | null
@@ -67,8 +71,10 @@ export type SmsLogCountAggregateOutputType = {
   status: number
   eskizMessageId: number
   errorMessage: number
+  isDeleted: number
   sentAt: number
   createdAt: number
+  deletedAt: number
   tenantId: number
   studentId: number
   templateId: number
@@ -86,8 +92,10 @@ export type SmsLogMinAggregateInputType = {
   status?: true
   eskizMessageId?: true
   errorMessage?: true
+  isDeleted?: true
   sentAt?: true
   createdAt?: true
+  deletedAt?: true
   tenantId?: true
   studentId?: true
   templateId?: true
@@ -103,8 +111,10 @@ export type SmsLogMaxAggregateInputType = {
   status?: true
   eskizMessageId?: true
   errorMessage?: true
+  isDeleted?: true
   sentAt?: true
   createdAt?: true
+  deletedAt?: true
   tenantId?: true
   studentId?: true
   templateId?: true
@@ -120,8 +130,10 @@ export type SmsLogCountAggregateInputType = {
   status?: true
   eskizMessageId?: true
   errorMessage?: true
+  isDeleted?: true
   sentAt?: true
   createdAt?: true
+  deletedAt?: true
   tenantId?: true
   studentId?: true
   templateId?: true
@@ -210,8 +222,10 @@ export type SmsLogGroupByOutputType = {
   status: $Enums.SmsStatus
   eskizMessageId: string | null
   errorMessage: string | null
+  isDeleted: boolean
   sentAt: Date | null
   createdAt: Date
+  deletedAt: Date | null
   tenantId: string
   studentId: string
   templateId: string | null
@@ -248,8 +262,10 @@ export type SmsLogWhereInput = {
   status?: Prisma.EnumSmsStatusFilter<"SmsLog"> | $Enums.SmsStatus
   eskizMessageId?: Prisma.StringNullableFilter<"SmsLog"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"SmsLog"> | string | null
+  isDeleted?: Prisma.BoolFilter<"SmsLog"> | boolean
   sentAt?: Prisma.DateTimeNullableFilter<"SmsLog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SmsLog"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"SmsLog"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"SmsLog"> | string
   studentId?: Prisma.UuidFilter<"SmsLog"> | string
   templateId?: Prisma.UuidNullableFilter<"SmsLog"> | string | null
@@ -269,8 +285,10 @@ export type SmsLogOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   eskizMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   templateId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -293,8 +311,10 @@ export type SmsLogWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumSmsStatusFilter<"SmsLog"> | $Enums.SmsStatus
   eskizMessageId?: Prisma.StringNullableFilter<"SmsLog"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"SmsLog"> | string | null
+  isDeleted?: Prisma.BoolFilter<"SmsLog"> | boolean
   sentAt?: Prisma.DateTimeNullableFilter<"SmsLog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SmsLog"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"SmsLog"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"SmsLog"> | string
   studentId?: Prisma.UuidFilter<"SmsLog"> | string
   templateId?: Prisma.UuidNullableFilter<"SmsLog"> | string | null
@@ -314,8 +334,10 @@ export type SmsLogOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   eskizMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   templateId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,8 +359,10 @@ export type SmsLogScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumSmsStatusWithAggregatesFilter<"SmsLog"> | $Enums.SmsStatus
   eskizMessageId?: Prisma.StringNullableWithAggregatesFilter<"SmsLog"> | string | null
   errorMessage?: Prisma.StringNullableWithAggregatesFilter<"SmsLog"> | string | null
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"SmsLog"> | boolean
   sentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SmsLog"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SmsLog"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SmsLog"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"SmsLog"> | string
   studentId?: Prisma.UuidWithAggregatesFilter<"SmsLog"> | string
   templateId?: Prisma.UuidNullableWithAggregatesFilter<"SmsLog"> | string | null
@@ -354,8 +378,10 @@ export type SmsLogCreateInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSmsLogsInput
   student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput
   template?: Prisma.SmsTemplateCreateNestedOneWithoutSmsLogsInput
@@ -371,8 +397,10 @@ export type SmsLogUncheckedCreateInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   studentId: string
   templateId?: string | null
@@ -388,8 +416,10 @@ export type SmsLogUpdateInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsLogsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput
   template?: Prisma.SmsTemplateUpdateOneWithoutSmsLogsNestedInput
@@ -405,8 +435,10 @@ export type SmsLogUncheckedUpdateInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -422,8 +454,10 @@ export type SmsLogCreateManyInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   studentId: string
   templateId?: string | null
@@ -439,8 +473,10 @@ export type SmsLogUpdateManyMutationInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SmsLogUncheckedUpdateManyInput = {
@@ -452,8 +488,10 @@ export type SmsLogUncheckedUpdateManyInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -479,8 +517,10 @@ export type SmsLogCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   eskizMessageId?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
@@ -496,8 +536,10 @@ export type SmsLogMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   eskizMessageId?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
@@ -513,8 +555,10 @@ export type SmsLogMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   eskizMessageId?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
@@ -706,8 +750,10 @@ export type SmsLogCreateWithoutTenantInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput
   template?: Prisma.SmsTemplateCreateNestedOneWithoutSmsLogsInput
   sentBy: Prisma.UserCreateNestedOneWithoutSmsLogsSentByInput
@@ -722,8 +768,10 @@ export type SmsLogUncheckedCreateWithoutTenantInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   templateId?: string | null
   sentById: string
@@ -767,8 +815,10 @@ export type SmsLogScalarWhereInput = {
   status?: Prisma.EnumSmsStatusFilter<"SmsLog"> | $Enums.SmsStatus
   eskizMessageId?: Prisma.StringNullableFilter<"SmsLog"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"SmsLog"> | string | null
+  isDeleted?: Prisma.BoolFilter<"SmsLog"> | boolean
   sentAt?: Prisma.DateTimeNullableFilter<"SmsLog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"SmsLog"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"SmsLog"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"SmsLog"> | string
   studentId?: Prisma.UuidFilter<"SmsLog"> | string
   templateId?: Prisma.UuidNullableFilter<"SmsLog"> | string | null
@@ -784,8 +834,10 @@ export type SmsLogCreateWithoutStudentInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSmsLogsInput
   template?: Prisma.SmsTemplateCreateNestedOneWithoutSmsLogsInput
   sentBy: Prisma.UserCreateNestedOneWithoutSmsLogsSentByInput
@@ -800,8 +852,10 @@ export type SmsLogUncheckedCreateWithoutStudentInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   templateId?: string | null
   sentById: string
@@ -826,8 +880,10 @@ export type SmsLogCreateWithoutSentByInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSmsLogsInput
   student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput
   template?: Prisma.SmsTemplateCreateNestedOneWithoutSmsLogsInput
@@ -842,8 +898,10 @@ export type SmsLogUncheckedCreateWithoutSentByInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   studentId: string
   templateId?: string | null
@@ -900,8 +958,10 @@ export type SmsLogCreateWithoutTemplateInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSmsLogsInput
   student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput
   sentBy: Prisma.UserCreateNestedOneWithoutSmsLogsSentByInput
@@ -916,8 +976,10 @@ export type SmsLogUncheckedCreateWithoutTemplateInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   studentId: string
   sentById: string
@@ -958,8 +1020,10 @@ export type SmsLogCreateManyTenantInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   templateId?: string | null
   sentById: string
@@ -974,8 +1038,10 @@ export type SmsLogUpdateWithoutTenantInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput
   template?: Prisma.SmsTemplateUpdateOneWithoutSmsLogsNestedInput
   sentBy?: Prisma.UserUpdateOneRequiredWithoutSmsLogsSentByNestedInput
@@ -990,8 +1056,10 @@ export type SmsLogUncheckedUpdateWithoutTenantInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1006,8 +1074,10 @@ export type SmsLogUncheckedUpdateManyWithoutTenantInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1022,8 +1092,10 @@ export type SmsLogCreateManyStudentInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   templateId?: string | null
   sentById: string
@@ -1038,8 +1110,10 @@ export type SmsLogCreateManySentByInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   studentId: string
   templateId?: string | null
@@ -1054,8 +1128,10 @@ export type SmsLogUpdateWithoutStudentInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsLogsNestedInput
   template?: Prisma.SmsTemplateUpdateOneWithoutSmsLogsNestedInput
   sentBy?: Prisma.UserUpdateOneRequiredWithoutSmsLogsSentByNestedInput
@@ -1070,8 +1146,10 @@ export type SmsLogUncheckedUpdateWithoutStudentInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1086,8 +1164,10 @@ export type SmsLogUncheckedUpdateManyWithoutStudentInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sentById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1102,8 +1182,10 @@ export type SmsLogUpdateWithoutSentByInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsLogsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput
   template?: Prisma.SmsTemplateUpdateOneWithoutSmsLogsNestedInput
@@ -1118,8 +1200,10 @@ export type SmsLogUncheckedUpdateWithoutSentByInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1134,8 +1218,10 @@ export type SmsLogUncheckedUpdateManyWithoutSentByInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1150,8 +1236,10 @@ export type SmsLogCreateManyTemplateInput = {
   status?: $Enums.SmsStatus
   eskizMessageId?: string | null
   errorMessage?: string | null
+  isDeleted?: boolean
   sentAt?: Date | string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   studentId: string
   sentById: string
@@ -1166,8 +1254,10 @@ export type SmsLogUpdateWithoutTemplateInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsLogsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput
   sentBy?: Prisma.UserUpdateOneRequiredWithoutSmsLogsSentByNestedInput
@@ -1182,8 +1272,10 @@ export type SmsLogUncheckedUpdateWithoutTemplateInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   sentById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1198,8 +1290,10 @@ export type SmsLogUncheckedUpdateManyWithoutTemplateInput = {
   status?: Prisma.EnumSmsStatusFieldUpdateOperationsInput | $Enums.SmsStatus
   eskizMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   sentById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1216,8 +1310,10 @@ export type SmsLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   status?: boolean
   eskizMessageId?: boolean
   errorMessage?: boolean
+  isDeleted?: boolean
   sentAt?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   studentId?: boolean
   templateId?: boolean
@@ -1237,8 +1333,10 @@ export type SmsLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   status?: boolean
   eskizMessageId?: boolean
   errorMessage?: boolean
+  isDeleted?: boolean
   sentAt?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   studentId?: boolean
   templateId?: boolean
@@ -1258,8 +1356,10 @@ export type SmsLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   status?: boolean
   eskizMessageId?: boolean
   errorMessage?: boolean
+  isDeleted?: boolean
   sentAt?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   studentId?: boolean
   templateId?: boolean
@@ -1279,15 +1379,17 @@ export type SmsLogSelectScalar = {
   status?: boolean
   eskizMessageId?: boolean
   errorMessage?: boolean
+  isDeleted?: boolean
   sentAt?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   studentId?: boolean
   templateId?: boolean
   sentById?: boolean
 }
 
-export type SmsLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "recipientType" | "phone" | "body" | "triggerType" | "status" | "eskizMessageId" | "errorMessage" | "sentAt" | "createdAt" | "tenantId" | "studentId" | "templateId" | "sentById", ExtArgs["result"]["smsLog"]>
+export type SmsLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "recipientType" | "phone" | "body" | "triggerType" | "status" | "eskizMessageId" | "errorMessage" | "isDeleted" | "sentAt" | "createdAt" | "deletedAt" | "tenantId" | "studentId" | "templateId" | "sentById", ExtArgs["result"]["smsLog"]>
 export type SmsLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1324,8 +1426,10 @@ export type $SmsLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     status: $Enums.SmsStatus
     eskizMessageId: string | null
     errorMessage: string | null
+    isDeleted: boolean
     sentAt: Date | null
     createdAt: Date
+    deletedAt: Date | null
     tenantId: string
     studentId: string
     templateId: string | null
@@ -1765,8 +1869,10 @@ export interface SmsLogFieldRefs {
   readonly status: Prisma.FieldRef<"SmsLog", 'SmsStatus'>
   readonly eskizMessageId: Prisma.FieldRef<"SmsLog", 'String'>
   readonly errorMessage: Prisma.FieldRef<"SmsLog", 'String'>
+  readonly isDeleted: Prisma.FieldRef<"SmsLog", 'Boolean'>
   readonly sentAt: Prisma.FieldRef<"SmsLog", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"SmsLog", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"SmsLog", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"SmsLog", 'String'>
   readonly studentId: Prisma.FieldRef<"SmsLog", 'String'>
   readonly templateId: Prisma.FieldRef<"SmsLog", 'String'>

@@ -42,9 +42,11 @@ export type CoinRuleMinAggregateOutputType = {
   direction: $Enums.CoinDirection | null
   triggerType: $Enums.TriggerType | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   groupId: string | null
   createdById: string | null
@@ -58,9 +60,11 @@ export type CoinRuleMaxAggregateOutputType = {
   direction: $Enums.CoinDirection | null
   triggerType: $Enums.TriggerType | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   groupId: string | null
   createdById: string | null
@@ -74,9 +78,11 @@ export type CoinRuleCountAggregateOutputType = {
   direction: number
   triggerType: number
   isActive: number
+  isDeleted: number
   archivedAt: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   tenantId: number
   groupId: number
   createdById: number
@@ -100,9 +106,11 @@ export type CoinRuleMinAggregateInputType = {
   direction?: true
   triggerType?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
   createdById?: true
@@ -116,9 +124,11 @@ export type CoinRuleMaxAggregateInputType = {
   direction?: true
   triggerType?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
   createdById?: true
@@ -132,9 +142,11 @@ export type CoinRuleCountAggregateInputType = {
   direction?: true
   triggerType?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
   createdById?: true
@@ -235,9 +247,11 @@ export type CoinRuleGroupByOutputType = {
   direction: $Enums.CoinDirection
   triggerType: $Enums.TriggerType
   isActive: boolean
+  isDeleted: boolean
   archivedAt: Date | null
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   tenantId: string
   groupId: string | null
   createdById: string
@@ -274,9 +288,11 @@ export type CoinRuleWhereInput = {
   direction?: Prisma.EnumCoinDirectionFilter<"CoinRule"> | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFilter<"CoinRule"> | $Enums.TriggerType
   isActive?: Prisma.BoolFilter<"CoinRule"> | boolean
+  isDeleted?: Prisma.BoolFilter<"CoinRule"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"CoinRule"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CoinRule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoinRule"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CoinRule"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"CoinRule"> | string
   groupId?: Prisma.UuidNullableFilter<"CoinRule"> | string | null
   createdById?: Prisma.UuidFilter<"CoinRule"> | string
@@ -294,9 +310,11 @@ export type CoinRuleOrderByWithRelationInput = {
   direction?: Prisma.SortOrder
   triggerType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -317,9 +335,11 @@ export type CoinRuleWhereUniqueInput = Prisma.AtLeast<{
   direction?: Prisma.EnumCoinDirectionFilter<"CoinRule"> | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFilter<"CoinRule"> | $Enums.TriggerType
   isActive?: Prisma.BoolFilter<"CoinRule"> | boolean
+  isDeleted?: Prisma.BoolFilter<"CoinRule"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"CoinRule"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CoinRule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoinRule"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CoinRule"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"CoinRule"> | string
   groupId?: Prisma.UuidNullableFilter<"CoinRule"> | string | null
   createdById?: Prisma.UuidFilter<"CoinRule"> | string
@@ -337,9 +357,11 @@ export type CoinRuleOrderByWithAggregationInput = {
   direction?: Prisma.SortOrder
   triggerType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -361,9 +383,11 @@ export type CoinRuleScalarWhereWithAggregatesInput = {
   direction?: Prisma.EnumCoinDirectionWithAggregatesFilter<"CoinRule"> | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeWithAggregatesFilter<"CoinRule"> | $Enums.TriggerType
   isActive?: Prisma.BoolWithAggregatesFilter<"CoinRule"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"CoinRule"> | boolean
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CoinRule"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CoinRule"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CoinRule"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CoinRule"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"CoinRule"> | string
   groupId?: Prisma.UuidNullableWithAggregatesFilter<"CoinRule"> | string | null
   createdById?: Prisma.UuidWithAggregatesFilter<"CoinRule"> | string
@@ -377,9 +401,11 @@ export type CoinRuleCreateInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCoinRulesInput
   group?: Prisma.GroupCreateNestedOneWithoutCoinRulesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCoinRulesCreatedInput
@@ -394,9 +420,11 @@ export type CoinRuleUncheckedCreateInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId?: string | null
   createdById: string
@@ -411,9 +439,11 @@ export type CoinRuleUpdateInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinRulesNestedInput
   group?: Prisma.GroupUpdateOneWithoutCoinRulesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCoinRulesCreatedNestedInput
@@ -428,9 +458,11 @@ export type CoinRuleUncheckedUpdateInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -445,9 +477,11 @@ export type CoinRuleCreateManyInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId?: string | null
   createdById: string
@@ -461,9 +495,11 @@ export type CoinRuleUpdateManyMutationInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CoinRuleUncheckedUpdateManyInput = {
@@ -474,9 +510,11 @@ export type CoinRuleUncheckedUpdateManyInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -500,9 +538,11 @@ export type CoinRuleCountOrderByAggregateInput = {
   direction?: Prisma.SortOrder
   triggerType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -520,9 +560,11 @@ export type CoinRuleMaxOrderByAggregateInput = {
   direction?: Prisma.SortOrder
   triggerType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -536,9 +578,11 @@ export type CoinRuleMinOrderByAggregateInput = {
   direction?: Prisma.SortOrder
   triggerType?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -711,9 +755,11 @@ export type CoinRuleCreateWithoutTenantInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   group?: Prisma.GroupCreateNestedOneWithoutCoinRulesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCoinRulesCreatedInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutRuleInput
@@ -727,9 +773,11 @@ export type CoinRuleUncheckedCreateWithoutTenantInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   groupId?: string | null
   createdById: string
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutRuleInput
@@ -772,9 +820,11 @@ export type CoinRuleScalarWhereInput = {
   direction?: Prisma.EnumCoinDirectionFilter<"CoinRule"> | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFilter<"CoinRule"> | $Enums.TriggerType
   isActive?: Prisma.BoolFilter<"CoinRule"> | boolean
+  isDeleted?: Prisma.BoolFilter<"CoinRule"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"CoinRule"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"CoinRule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoinRule"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CoinRule"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"CoinRule"> | string
   groupId?: Prisma.UuidNullableFilter<"CoinRule"> | string | null
   createdById?: Prisma.UuidFilter<"CoinRule"> | string
@@ -788,9 +838,11 @@ export type CoinRuleCreateWithoutCreatedByInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCoinRulesInput
   group?: Prisma.GroupCreateNestedOneWithoutCoinRulesInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutRuleInput
@@ -804,9 +856,11 @@ export type CoinRuleUncheckedCreateWithoutCreatedByInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId?: string | null
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutRuleInput
@@ -846,9 +900,11 @@ export type CoinRuleCreateWithoutGroupInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCoinRulesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCoinRulesCreatedInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutRuleInput
@@ -862,9 +918,11 @@ export type CoinRuleUncheckedCreateWithoutGroupInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutRuleInput
@@ -904,9 +962,11 @@ export type CoinRuleCreateWithoutTransactionsInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCoinRulesInput
   group?: Prisma.GroupCreateNestedOneWithoutCoinRulesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCoinRulesCreatedInput
@@ -920,9 +980,11 @@ export type CoinRuleUncheckedCreateWithoutTransactionsInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId?: string | null
   createdById: string
@@ -952,9 +1014,11 @@ export type CoinRuleUpdateWithoutTransactionsInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinRulesNestedInput
   group?: Prisma.GroupUpdateOneWithoutCoinRulesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCoinRulesCreatedNestedInput
@@ -968,9 +1032,11 @@ export type CoinRuleUncheckedUpdateWithoutTransactionsInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -984,9 +1050,11 @@ export type CoinRuleCreateManyTenantInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   groupId?: string | null
   createdById: string
 }
@@ -999,9 +1067,11 @@ export type CoinRuleUpdateWithoutTenantInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   group?: Prisma.GroupUpdateOneWithoutCoinRulesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCoinRulesCreatedNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutRuleNestedInput
@@ -1015,9 +1085,11 @@ export type CoinRuleUncheckedUpdateWithoutTenantInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutRuleNestedInput
@@ -1031,9 +1103,11 @@ export type CoinRuleUncheckedUpdateManyWithoutTenantInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1046,9 +1120,11 @@ export type CoinRuleCreateManyCreatedByInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId?: string | null
 }
@@ -1061,9 +1137,11 @@ export type CoinRuleUpdateWithoutCreatedByInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinRulesNestedInput
   group?: Prisma.GroupUpdateOneWithoutCoinRulesNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutRuleNestedInput
@@ -1077,9 +1155,11 @@ export type CoinRuleUncheckedUpdateWithoutCreatedByInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutRuleNestedInput
@@ -1093,9 +1173,11 @@ export type CoinRuleUncheckedUpdateManyWithoutCreatedByInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1108,9 +1190,11 @@ export type CoinRuleCreateManyGroupInput = {
   direction: $Enums.CoinDirection
   triggerType?: $Enums.TriggerType
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
 }
@@ -1123,9 +1207,11 @@ export type CoinRuleUpdateWithoutGroupInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinRulesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCoinRulesCreatedNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutRuleNestedInput
@@ -1139,9 +1225,11 @@ export type CoinRuleUncheckedUpdateWithoutGroupInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutRuleNestedInput
@@ -1155,9 +1243,11 @@ export type CoinRuleUncheckedUpdateManyWithoutGroupInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   triggerType?: Prisma.EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1201,9 +1291,11 @@ export type CoinRuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   direction?: boolean
   triggerType?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
   createdById?: boolean
@@ -1222,9 +1314,11 @@ export type CoinRuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   direction?: boolean
   triggerType?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
   createdById?: boolean
@@ -1241,9 +1335,11 @@ export type CoinRuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   direction?: boolean
   triggerType?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
   createdById?: boolean
@@ -1260,15 +1356,17 @@ export type CoinRuleSelectScalar = {
   direction?: boolean
   triggerType?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
   createdById?: boolean
 }
 
-export type CoinRuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "coinAmount" | "direction" | "triggerType" | "isActive" | "archivedAt" | "createdAt" | "updatedAt" | "tenantId" | "groupId" | "createdById", ExtArgs["result"]["coinRule"]>
+export type CoinRuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "coinAmount" | "direction" | "triggerType" | "isActive" | "isDeleted" | "archivedAt" | "createdAt" | "updatedAt" | "deletedAt" | "tenantId" | "groupId" | "createdById", ExtArgs["result"]["coinRule"]>
 export type CoinRuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.CoinRule$groupArgs<ExtArgs>
@@ -1303,9 +1401,11 @@ export type $CoinRulePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     direction: $Enums.CoinDirection
     triggerType: $Enums.TriggerType
     isActive: boolean
+    isDeleted: boolean
     archivedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     tenantId: string
     groupId: string | null
     createdById: string
@@ -1743,9 +1843,11 @@ export interface CoinRuleFieldRefs {
   readonly direction: Prisma.FieldRef<"CoinRule", 'CoinDirection'>
   readonly triggerType: Prisma.FieldRef<"CoinRule", 'TriggerType'>
   readonly isActive: Prisma.FieldRef<"CoinRule", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"CoinRule", 'Boolean'>
   readonly archivedAt: Prisma.FieldRef<"CoinRule", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"CoinRule", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CoinRule", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"CoinRule", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"CoinRule", 'String'>
   readonly groupId: Prisma.FieldRef<"CoinRule", 'String'>
   readonly createdById: Prisma.FieldRef<"CoinRule", 'String'>

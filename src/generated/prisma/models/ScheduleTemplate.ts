@@ -29,12 +29,14 @@ export type ScheduleTemplateMinAggregateOutputType = {
   weekday: $Enums.Weekday | null
   startTime: string | null
   endTime: string | null
-  room: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   groupId: string | null
+  roomId: string | null
   createdById: string | null
 }
 
@@ -43,12 +45,14 @@ export type ScheduleTemplateMaxAggregateOutputType = {
   weekday: $Enums.Weekday | null
   startTime: string | null
   endTime: string | null
-  room: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   groupId: string | null
+  roomId: string | null
   createdById: string | null
 }
 
@@ -57,12 +61,14 @@ export type ScheduleTemplateCountAggregateOutputType = {
   weekday: number
   startTime: number
   endTime: number
-  room: number
   isActive: number
+  isDeleted: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   tenantId: number
   groupId: number
+  roomId: number
   createdById: number
   _all: number
 }
@@ -73,12 +79,14 @@ export type ScheduleTemplateMinAggregateInputType = {
   weekday?: true
   startTime?: true
   endTime?: true
-  room?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
+  roomId?: true
   createdById?: true
 }
 
@@ -87,12 +95,14 @@ export type ScheduleTemplateMaxAggregateInputType = {
   weekday?: true
   startTime?: true
   endTime?: true
-  room?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
+  roomId?: true
   createdById?: true
 }
 
@@ -101,12 +111,14 @@ export type ScheduleTemplateCountAggregateInputType = {
   weekday?: true
   startTime?: true
   endTime?: true
-  room?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
+  roomId?: true
   createdById?: true
   _all?: true
 }
@@ -188,12 +200,14 @@ export type ScheduleTemplateGroupByOutputType = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room: string | null
   isActive: boolean
+  isDeleted: boolean
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   tenantId: string
   groupId: string
+  roomId: string
   createdById: string
   _count: ScheduleTemplateCountAggregateOutputType | null
   _min: ScheduleTemplateMinAggregateOutputType | null
@@ -223,15 +237,18 @@ export type ScheduleTemplateWhereInput = {
   weekday?: Prisma.EnumWeekdayFilter<"ScheduleTemplate"> | $Enums.Weekday
   startTime?: Prisma.StringFilter<"ScheduleTemplate"> | string
   endTime?: Prisma.StringFilter<"ScheduleTemplate"> | string
-  room?: Prisma.StringNullableFilter<"ScheduleTemplate"> | string | null
   isActive?: Prisma.BoolFilter<"ScheduleTemplate"> | boolean
+  isDeleted?: Prisma.BoolFilter<"ScheduleTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ScheduleTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ScheduleTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"ScheduleTemplate"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   groupId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
+  roomId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   createdById?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
+  room?: Prisma.XOR<Prisma.RoomScalarRelationFilter, Prisma.RoomWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   exceptions?: Prisma.ScheduleExceptionListRelationFilter
 }
@@ -241,15 +258,18 @@ export type ScheduleTemplateOrderByWithRelationInput = {
   weekday?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   group?: Prisma.GroupOrderByWithRelationInput
+  room?: Prisma.RoomOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   exceptions?: Prisma.ScheduleExceptionOrderByRelationAggregateInput
 }
@@ -262,15 +282,18 @@ export type ScheduleTemplateWhereUniqueInput = Prisma.AtLeast<{
   weekday?: Prisma.EnumWeekdayFilter<"ScheduleTemplate"> | $Enums.Weekday
   startTime?: Prisma.StringFilter<"ScheduleTemplate"> | string
   endTime?: Prisma.StringFilter<"ScheduleTemplate"> | string
-  room?: Prisma.StringNullableFilter<"ScheduleTemplate"> | string | null
   isActive?: Prisma.BoolFilter<"ScheduleTemplate"> | boolean
+  isDeleted?: Prisma.BoolFilter<"ScheduleTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ScheduleTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ScheduleTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"ScheduleTemplate"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   groupId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
+  roomId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   createdById?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
+  room?: Prisma.XOR<Prisma.RoomScalarRelationFilter, Prisma.RoomWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   exceptions?: Prisma.ScheduleExceptionListRelationFilter
 }, "id">
@@ -280,12 +303,14 @@ export type ScheduleTemplateOrderByWithAggregationInput = {
   weekday?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   _count?: Prisma.ScheduleTemplateCountOrderByAggregateInput
   _max?: Prisma.ScheduleTemplateMaxOrderByAggregateInput
@@ -300,12 +325,14 @@ export type ScheduleTemplateScalarWhereWithAggregatesInput = {
   weekday?: Prisma.EnumWeekdayWithAggregatesFilter<"ScheduleTemplate"> | $Enums.Weekday
   startTime?: Prisma.StringWithAggregatesFilter<"ScheduleTemplate"> | string
   endTime?: Prisma.StringWithAggregatesFilter<"ScheduleTemplate"> | string
-  room?: Prisma.StringNullableWithAggregatesFilter<"ScheduleTemplate"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"ScheduleTemplate"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"ScheduleTemplate"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ScheduleTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ScheduleTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ScheduleTemplate"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"ScheduleTemplate"> | string
   groupId?: Prisma.UuidWithAggregatesFilter<"ScheduleTemplate"> | string
+  roomId?: Prisma.UuidWithAggregatesFilter<"ScheduleTemplate"> | string
   createdById?: Prisma.UuidWithAggregatesFilter<"ScheduleTemplate"> | string
 }
 
@@ -314,12 +341,14 @@ export type ScheduleTemplateCreateInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutScheduleTemplatesInput
   group: Prisma.GroupCreateNestedOneWithoutScheduleTemplatesInput
+  room: Prisma.RoomCreateNestedOneWithoutScheduleTemplatesInput
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleTemplatesCreatedInput
   exceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTemplateInput
 }
@@ -329,12 +358,14 @@ export type ScheduleTemplateUncheckedCreateInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   createdById: string
   exceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTemplateInput
 }
@@ -344,12 +375,14 @@ export type ScheduleTemplateUpdateInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutScheduleTemplatesNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleTemplatesCreatedNestedInput
   exceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTemplateNestedInput
 }
@@ -359,12 +392,14 @@ export type ScheduleTemplateUncheckedUpdateInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   exceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTemplateNestedInput
 }
@@ -374,12 +409,14 @@ export type ScheduleTemplateCreateManyInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   createdById: string
 }
 
@@ -388,10 +425,11 @@ export type ScheduleTemplateUpdateManyMutationInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ScheduleTemplateUncheckedUpdateManyInput = {
@@ -399,12 +437,14 @@ export type ScheduleTemplateUncheckedUpdateManyInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -423,12 +463,14 @@ export type ScheduleTemplateCountOrderByAggregateInput = {
   weekday?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
 
@@ -437,12 +479,14 @@ export type ScheduleTemplateMaxOrderByAggregateInput = {
   weekday?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
 
@@ -451,12 +495,14 @@ export type ScheduleTemplateMinOrderByAggregateInput = {
   weekday?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
 
@@ -549,6 +595,48 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.ScheduleTemplateScalarWhereInput | Prisma.ScheduleTemplateScalarWhereInput[]
 }
 
+export type ScheduleTemplateCreateNestedManyWithoutRoomInput = {
+  create?: Prisma.XOR<Prisma.ScheduleTemplateCreateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput> | Prisma.ScheduleTemplateCreateWithoutRoomInput[] | Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput | Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput[]
+  createMany?: Prisma.ScheduleTemplateCreateManyRoomInputEnvelope
+  connect?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+}
+
+export type ScheduleTemplateUncheckedCreateNestedManyWithoutRoomInput = {
+  create?: Prisma.XOR<Prisma.ScheduleTemplateCreateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput> | Prisma.ScheduleTemplateCreateWithoutRoomInput[] | Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput | Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput[]
+  createMany?: Prisma.ScheduleTemplateCreateManyRoomInputEnvelope
+  connect?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+}
+
+export type ScheduleTemplateUpdateManyWithoutRoomNestedInput = {
+  create?: Prisma.XOR<Prisma.ScheduleTemplateCreateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput> | Prisma.ScheduleTemplateCreateWithoutRoomInput[] | Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput | Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput[]
+  upsert?: Prisma.ScheduleTemplateUpsertWithWhereUniqueWithoutRoomInput | Prisma.ScheduleTemplateUpsertWithWhereUniqueWithoutRoomInput[]
+  createMany?: Prisma.ScheduleTemplateCreateManyRoomInputEnvelope
+  set?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  disconnect?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  delete?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  connect?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  update?: Prisma.ScheduleTemplateUpdateWithWhereUniqueWithoutRoomInput | Prisma.ScheduleTemplateUpdateWithWhereUniqueWithoutRoomInput[]
+  updateMany?: Prisma.ScheduleTemplateUpdateManyWithWhereWithoutRoomInput | Prisma.ScheduleTemplateUpdateManyWithWhereWithoutRoomInput[]
+  deleteMany?: Prisma.ScheduleTemplateScalarWhereInput | Prisma.ScheduleTemplateScalarWhereInput[]
+}
+
+export type ScheduleTemplateUncheckedUpdateManyWithoutRoomNestedInput = {
+  create?: Prisma.XOR<Prisma.ScheduleTemplateCreateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput> | Prisma.ScheduleTemplateCreateWithoutRoomInput[] | Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput | Prisma.ScheduleTemplateCreateOrConnectWithoutRoomInput[]
+  upsert?: Prisma.ScheduleTemplateUpsertWithWhereUniqueWithoutRoomInput | Prisma.ScheduleTemplateUpsertWithWhereUniqueWithoutRoomInput[]
+  createMany?: Prisma.ScheduleTemplateCreateManyRoomInputEnvelope
+  set?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  disconnect?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  delete?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  connect?: Prisma.ScheduleTemplateWhereUniqueInput | Prisma.ScheduleTemplateWhereUniqueInput[]
+  update?: Prisma.ScheduleTemplateUpdateWithWhereUniqueWithoutRoomInput | Prisma.ScheduleTemplateUpdateWithWhereUniqueWithoutRoomInput[]
+  updateMany?: Prisma.ScheduleTemplateUpdateManyWithWhereWithoutRoomInput | Prisma.ScheduleTemplateUpdateManyWithWhereWithoutRoomInput[]
+  deleteMany?: Prisma.ScheduleTemplateScalarWhereInput | Prisma.ScheduleTemplateScalarWhereInput[]
+}
+
 export type ScheduleTemplateCreateNestedManyWithoutGroupInput = {
   create?: Prisma.XOR<Prisma.ScheduleTemplateCreateWithoutGroupInput, Prisma.ScheduleTemplateUncheckedCreateWithoutGroupInput> | Prisma.ScheduleTemplateCreateWithoutGroupInput[] | Prisma.ScheduleTemplateUncheckedCreateWithoutGroupInput[]
   connectOrCreate?: Prisma.ScheduleTemplateCreateOrConnectWithoutGroupInput | Prisma.ScheduleTemplateCreateOrConnectWithoutGroupInput[]
@@ -614,11 +702,13 @@ export type ScheduleTemplateCreateWithoutTenantInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   group: Prisma.GroupCreateNestedOneWithoutScheduleTemplatesInput
+  room: Prisma.RoomCreateNestedOneWithoutScheduleTemplatesInput
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleTemplatesCreatedInput
   exceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTemplateInput
 }
@@ -628,11 +718,13 @@ export type ScheduleTemplateUncheckedCreateWithoutTenantInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   groupId: string
+  roomId: string
   createdById: string
   exceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTemplateInput
 }
@@ -671,12 +763,14 @@ export type ScheduleTemplateScalarWhereInput = {
   weekday?: Prisma.EnumWeekdayFilter<"ScheduleTemplate"> | $Enums.Weekday
   startTime?: Prisma.StringFilter<"ScheduleTemplate"> | string
   endTime?: Prisma.StringFilter<"ScheduleTemplate"> | string
-  room?: Prisma.StringNullableFilter<"ScheduleTemplate"> | string | null
   isActive?: Prisma.BoolFilter<"ScheduleTemplate"> | boolean
+  isDeleted?: Prisma.BoolFilter<"ScheduleTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ScheduleTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ScheduleTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"ScheduleTemplate"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   groupId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
+  roomId?: Prisma.UuidFilter<"ScheduleTemplate"> | string
   createdById?: Prisma.UuidFilter<"ScheduleTemplate"> | string
 }
 
@@ -685,12 +779,14 @@ export type ScheduleTemplateCreateWithoutCreatedByInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutScheduleTemplatesInput
   group: Prisma.GroupCreateNestedOneWithoutScheduleTemplatesInput
+  room: Prisma.RoomCreateNestedOneWithoutScheduleTemplatesInput
   exceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTemplateInput
 }
 
@@ -699,12 +795,14 @@ export type ScheduleTemplateUncheckedCreateWithoutCreatedByInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   exceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTemplateInput
 }
 
@@ -734,16 +832,76 @@ export type ScheduleTemplateUpdateManyWithWhereWithoutCreatedByInput = {
   data: Prisma.XOR<Prisma.ScheduleTemplateUpdateManyMutationInput, Prisma.ScheduleTemplateUncheckedUpdateManyWithoutCreatedByInput>
 }
 
+export type ScheduleTemplateCreateWithoutRoomInput = {
+  id?: string
+  weekday: $Enums.Weekday
+  startTime: string
+  endTime: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  tenant: Prisma.TenantCreateNestedOneWithoutScheduleTemplatesInput
+  group: Prisma.GroupCreateNestedOneWithoutScheduleTemplatesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutScheduleTemplatesCreatedInput
+  exceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTemplateInput
+}
+
+export type ScheduleTemplateUncheckedCreateWithoutRoomInput = {
+  id?: string
+  weekday: $Enums.Weekday
+  startTime: string
+  endTime: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  tenantId: string
+  groupId: string
+  createdById: string
+  exceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTemplateInput
+}
+
+export type ScheduleTemplateCreateOrConnectWithoutRoomInput = {
+  where: Prisma.ScheduleTemplateWhereUniqueInput
+  create: Prisma.XOR<Prisma.ScheduleTemplateCreateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput>
+}
+
+export type ScheduleTemplateCreateManyRoomInputEnvelope = {
+  data: Prisma.ScheduleTemplateCreateManyRoomInput | Prisma.ScheduleTemplateCreateManyRoomInput[]
+  skipDuplicates?: boolean
+}
+
+export type ScheduleTemplateUpsertWithWhereUniqueWithoutRoomInput = {
+  where: Prisma.ScheduleTemplateWhereUniqueInput
+  update: Prisma.XOR<Prisma.ScheduleTemplateUpdateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedUpdateWithoutRoomInput>
+  create: Prisma.XOR<Prisma.ScheduleTemplateCreateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedCreateWithoutRoomInput>
+}
+
+export type ScheduleTemplateUpdateWithWhereUniqueWithoutRoomInput = {
+  where: Prisma.ScheduleTemplateWhereUniqueInput
+  data: Prisma.XOR<Prisma.ScheduleTemplateUpdateWithoutRoomInput, Prisma.ScheduleTemplateUncheckedUpdateWithoutRoomInput>
+}
+
+export type ScheduleTemplateUpdateManyWithWhereWithoutRoomInput = {
+  where: Prisma.ScheduleTemplateScalarWhereInput
+  data: Prisma.XOR<Prisma.ScheduleTemplateUpdateManyMutationInput, Prisma.ScheduleTemplateUncheckedUpdateManyWithoutRoomInput>
+}
+
 export type ScheduleTemplateCreateWithoutGroupInput = {
   id?: string
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutScheduleTemplatesInput
+  room: Prisma.RoomCreateNestedOneWithoutScheduleTemplatesInput
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleTemplatesCreatedInput
   exceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTemplateInput
 }
@@ -753,11 +911,13 @@ export type ScheduleTemplateUncheckedCreateWithoutGroupInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
+  roomId: string
   createdById: string
   exceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTemplateInput
 }
@@ -793,12 +953,14 @@ export type ScheduleTemplateCreateWithoutExceptionsInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutScheduleTemplatesInput
   group: Prisma.GroupCreateNestedOneWithoutScheduleTemplatesInput
+  room: Prisma.RoomCreateNestedOneWithoutScheduleTemplatesInput
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleTemplatesCreatedInput
 }
 
@@ -807,12 +969,14 @@ export type ScheduleTemplateUncheckedCreateWithoutExceptionsInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   createdById: string
 }
 
@@ -837,12 +1001,14 @@ export type ScheduleTemplateUpdateWithoutExceptionsInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutScheduleTemplatesNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleTemplatesCreatedNestedInput
 }
 
@@ -851,12 +1017,14 @@ export type ScheduleTemplateUncheckedUpdateWithoutExceptionsInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -865,11 +1033,13 @@ export type ScheduleTemplateCreateManyTenantInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   groupId: string
+  roomId: string
   createdById: string
 }
 
@@ -878,11 +1048,13 @@ export type ScheduleTemplateUpdateWithoutTenantInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   group?: Prisma.GroupUpdateOneRequiredWithoutScheduleTemplatesNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleTemplatesCreatedNestedInput
   exceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTemplateNestedInput
 }
@@ -892,11 +1064,13 @@ export type ScheduleTemplateUncheckedUpdateWithoutTenantInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   exceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTemplateNestedInput
 }
@@ -906,11 +1080,13 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutTenantInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -919,12 +1095,14 @@ export type ScheduleTemplateCreateManyCreatedByInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
 }
 
 export type ScheduleTemplateUpdateWithoutCreatedByInput = {
@@ -932,12 +1110,14 @@ export type ScheduleTemplateUpdateWithoutCreatedByInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutScheduleTemplatesNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   exceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTemplateNestedInput
 }
 
@@ -946,12 +1126,14 @@ export type ScheduleTemplateUncheckedUpdateWithoutCreatedByInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   exceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTemplateNestedInput
 }
 
@@ -960,12 +1142,76 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutCreatedByInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type ScheduleTemplateCreateManyRoomInput = {
+  id?: string
+  weekday: $Enums.Weekday
+  startTime: string
+  endTime: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  tenantId: string
+  groupId: string
+  createdById: string
+}
+
+export type ScheduleTemplateUpdateWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutScheduleTemplatesNestedInput
+  group?: Prisma.GroupUpdateOneRequiredWithoutScheduleTemplatesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleTemplatesCreatedNestedInput
+  exceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTemplateNestedInput
+}
+
+export type ScheduleTemplateUncheckedUpdateWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  exceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTemplateNestedInput
+}
+
+export type ScheduleTemplateUncheckedUpdateManyWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  startTime?: Prisma.StringFieldUpdateOperationsInput | string
+  endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ScheduleTemplateCreateManyGroupInput = {
@@ -973,11 +1219,13 @@ export type ScheduleTemplateCreateManyGroupInput = {
   weekday: $Enums.Weekday
   startTime: string
   endTime: string
-  room?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
+  roomId: string
   createdById: string
 }
 
@@ -986,11 +1234,13 @@ export type ScheduleTemplateUpdateWithoutGroupInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutScheduleTemplatesNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutScheduleTemplatesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleTemplatesCreatedNestedInput
   exceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTemplateNestedInput
 }
@@ -1000,11 +1250,13 @@ export type ScheduleTemplateUncheckedUpdateWithoutGroupInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   exceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTemplateNestedInput
 }
@@ -1014,11 +1266,13 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutGroupInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1058,15 +1312,18 @@ export type ScheduleTemplateSelect<ExtArgs extends runtime.Types.Extensions.Inte
   weekday?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   exceptions?: boolean | Prisma.ScheduleTemplate$exceptionsArgs<ExtArgs>
   _count?: boolean | Prisma.ScheduleTemplateCountOutputTypeDefaultArgs<ExtArgs>
@@ -1077,15 +1334,18 @@ export type ScheduleTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   weekday?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["scheduleTemplate"]>
 
@@ -1094,15 +1354,18 @@ export type ScheduleTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   weekday?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["scheduleTemplate"]>
 
@@ -1111,19 +1374,22 @@ export type ScheduleTemplateSelectScalar = {
   weekday?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   createdById?: boolean
 }
 
-export type ScheduleTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "weekday" | "startTime" | "endTime" | "room" | "isActive" | "createdAt" | "updatedAt" | "tenantId" | "groupId" | "createdById", ExtArgs["result"]["scheduleTemplate"]>
+export type ScheduleTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "weekday" | "startTime" | "endTime" | "isActive" | "isDeleted" | "createdAt" | "updatedAt" | "deletedAt" | "tenantId" | "groupId" | "roomId" | "createdById", ExtArgs["result"]["scheduleTemplate"]>
 export type ScheduleTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   exceptions?: boolean | Prisma.ScheduleTemplate$exceptionsArgs<ExtArgs>
   _count?: boolean | Prisma.ScheduleTemplateCountOutputTypeDefaultArgs<ExtArgs>
@@ -1131,11 +1397,13 @@ export type ScheduleTemplateInclude<ExtArgs extends runtime.Types.Extensions.Int
 export type ScheduleTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ScheduleTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -1144,6 +1412,7 @@ export type $ScheduleTemplatePayload<ExtArgs extends runtime.Types.Extensions.In
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     group: Prisma.$GroupPayload<ExtArgs>
+    room: Prisma.$RoomPayload<ExtArgs>
     createdBy: Prisma.$UserPayload<ExtArgs>
     exceptions: Prisma.$ScheduleExceptionPayload<ExtArgs>[]
   }
@@ -1152,12 +1421,14 @@ export type $ScheduleTemplatePayload<ExtArgs extends runtime.Types.Extensions.In
     weekday: $Enums.Weekday
     startTime: string
     endTime: string
-    room: string | null
     isActive: boolean
+    isDeleted: boolean
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     tenantId: string
     groupId: string
+    roomId: string
     createdById: string
   }, ExtArgs["result"]["scheduleTemplate"]>
   composites: {}
@@ -1555,6 +1826,7 @@ export interface Prisma__ScheduleTemplateClient<T, Null = never, ExtArgs extends
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   group<T extends Prisma.GroupDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GroupDefaultArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  room<T extends Prisma.RoomDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoomDefaultArgs<ExtArgs>>): Prisma.Prisma__RoomClient<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   exceptions<T extends Prisma.ScheduleTemplate$exceptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ScheduleTemplate$exceptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScheduleExceptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1590,12 +1862,14 @@ export interface ScheduleTemplateFieldRefs {
   readonly weekday: Prisma.FieldRef<"ScheduleTemplate", 'Weekday'>
   readonly startTime: Prisma.FieldRef<"ScheduleTemplate", 'String'>
   readonly endTime: Prisma.FieldRef<"ScheduleTemplate", 'String'>
-  readonly room: Prisma.FieldRef<"ScheduleTemplate", 'String'>
   readonly isActive: Prisma.FieldRef<"ScheduleTemplate", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"ScheduleTemplate", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ScheduleTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ScheduleTemplate", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"ScheduleTemplate", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"ScheduleTemplate", 'String'>
   readonly groupId: Prisma.FieldRef<"ScheduleTemplate", 'String'>
+  readonly roomId: Prisma.FieldRef<"ScheduleTemplate", 'String'>
   readonly createdById: Prisma.FieldRef<"ScheduleTemplate", 'String'>
 }
     

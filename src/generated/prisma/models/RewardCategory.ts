@@ -28,24 +28,33 @@ export type RewardCategoryMinAggregateOutputType = {
   id: string | null
   name: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   tenantId: string | null
   createdById: string | null
+  createdAt: Date | null
+  deletedAt: Date | null
 }
 
 export type RewardCategoryMaxAggregateOutputType = {
   id: string | null
   name: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   tenantId: string | null
   createdById: string | null
+  createdAt: Date | null
+  deletedAt: Date | null
 }
 
 export type RewardCategoryCountAggregateOutputType = {
   id: number
   name: number
   isActive: number
+  isDeleted: number
   tenantId: number
   createdById: number
+  createdAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -54,24 +63,33 @@ export type RewardCategoryMinAggregateInputType = {
   id?: true
   name?: true
   isActive?: true
+  isDeleted?: true
   tenantId?: true
   createdById?: true
+  createdAt?: true
+  deletedAt?: true
 }
 
 export type RewardCategoryMaxAggregateInputType = {
   id?: true
   name?: true
   isActive?: true
+  isDeleted?: true
   tenantId?: true
   createdById?: true
+  createdAt?: true
+  deletedAt?: true
 }
 
 export type RewardCategoryCountAggregateInputType = {
   id?: true
   name?: true
   isActive?: true
+  isDeleted?: true
   tenantId?: true
   createdById?: true
+  createdAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -151,8 +169,11 @@ export type RewardCategoryGroupByOutputType = {
   id: string
   name: string
   isActive: boolean
+  isDeleted: boolean
   tenantId: string
   createdById: string
+  createdAt: Date
+  deletedAt: Date | null
   _count: RewardCategoryCountAggregateOutputType | null
   _min: RewardCategoryMinAggregateOutputType | null
   _max: RewardCategoryMaxAggregateOutputType | null
@@ -180,8 +201,11 @@ export type RewardCategoryWhereInput = {
   id?: Prisma.UuidFilter<"RewardCategory"> | string
   name?: Prisma.StringFilter<"RewardCategory"> | string
   isActive?: Prisma.BoolFilter<"RewardCategory"> | boolean
+  isDeleted?: Prisma.BoolFilter<"RewardCategory"> | boolean
   tenantId?: Prisma.UuidFilter<"RewardCategory"> | string
   createdById?: Prisma.UuidFilter<"RewardCategory"> | string
+  createdAt?: Prisma.DateTimeFilter<"RewardCategory"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"RewardCategory"> | Date | string | null
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   rewards?: Prisma.RewardListRelationFilter
@@ -191,8 +215,11 @@ export type RewardCategoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   rewards?: Prisma.RewardOrderByRelationAggregateInput
@@ -206,8 +233,11 @@ export type RewardCategoryWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RewardCategoryWhereInput | Prisma.RewardCategoryWhereInput[]
   name?: Prisma.StringFilter<"RewardCategory"> | string
   isActive?: Prisma.BoolFilter<"RewardCategory"> | boolean
+  isDeleted?: Prisma.BoolFilter<"RewardCategory"> | boolean
   tenantId?: Prisma.UuidFilter<"RewardCategory"> | string
   createdById?: Prisma.UuidFilter<"RewardCategory"> | string
+  createdAt?: Prisma.DateTimeFilter<"RewardCategory"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"RewardCategory"> | Date | string | null
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   rewards?: Prisma.RewardListRelationFilter
@@ -217,8 +247,11 @@ export type RewardCategoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RewardCategoryCountOrderByAggregateInput
   _max?: Prisma.RewardCategoryMaxOrderByAggregateInput
   _min?: Prisma.RewardCategoryMinOrderByAggregateInput
@@ -231,14 +264,20 @@ export type RewardCategoryScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"RewardCategory"> | string
   name?: Prisma.StringWithAggregatesFilter<"RewardCategory"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"RewardCategory"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"RewardCategory"> | boolean
   tenantId?: Prisma.UuidWithAggregatesFilter<"RewardCategory"> | string
   createdById?: Prisma.UuidWithAggregatesFilter<"RewardCategory"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"RewardCategory"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RewardCategory"> | Date | string | null
 }
 
 export type RewardCategoryCreateInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutRewardCategoriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutRewardCategoriesInput
   rewards?: Prisma.RewardCreateNestedManyWithoutCategoryInput
@@ -248,8 +287,11 @@ export type RewardCategoryUncheckedCreateInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
   tenantId: string
   createdById: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -257,6 +299,9 @@ export type RewardCategoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRewardCategoriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutRewardCategoriesNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutCategoryNestedInput
@@ -266,8 +311,11 @@ export type RewardCategoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -275,22 +323,31 @@ export type RewardCategoryCreateManyInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
   tenantId: string
   createdById: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type RewardCategoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RewardCategoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RewardCategoryListRelationFilter = {
@@ -312,24 +369,33 @@ export type RewardCategoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type RewardCategoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type RewardCategoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type RewardCategoryScalarRelationFilter = {
@@ -439,6 +505,9 @@ export type RewardCategoryCreateWithoutTenantInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
   createdBy: Prisma.UserCreateNestedOneWithoutRewardCategoriesInput
   rewards?: Prisma.RewardCreateNestedManyWithoutCategoryInput
 }
@@ -447,7 +516,10 @@ export type RewardCategoryUncheckedCreateWithoutTenantInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
   createdById: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -484,14 +556,20 @@ export type RewardCategoryScalarWhereInput = {
   id?: Prisma.UuidFilter<"RewardCategory"> | string
   name?: Prisma.StringFilter<"RewardCategory"> | string
   isActive?: Prisma.BoolFilter<"RewardCategory"> | boolean
+  isDeleted?: Prisma.BoolFilter<"RewardCategory"> | boolean
   tenantId?: Prisma.UuidFilter<"RewardCategory"> | string
   createdById?: Prisma.UuidFilter<"RewardCategory"> | string
+  createdAt?: Prisma.DateTimeFilter<"RewardCategory"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"RewardCategory"> | Date | string | null
 }
 
 export type RewardCategoryCreateWithoutCreatedByInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutRewardCategoriesInput
   rewards?: Prisma.RewardCreateNestedManyWithoutCategoryInput
 }
@@ -500,7 +578,10 @@ export type RewardCategoryUncheckedCreateWithoutCreatedByInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
   tenantId: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutCategoryInput
 }
 
@@ -534,6 +615,9 @@ export type RewardCategoryCreateWithoutRewardsInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutRewardCategoriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutRewardCategoriesInput
 }
@@ -542,8 +626,11 @@ export type RewardCategoryUncheckedCreateWithoutRewardsInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
   tenantId: string
   createdById: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type RewardCategoryCreateOrConnectWithoutRewardsInput = {
@@ -566,6 +653,9 @@ export type RewardCategoryUpdateWithoutRewardsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRewardCategoriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutRewardCategoriesNestedInput
 }
@@ -574,21 +664,30 @@ export type RewardCategoryUncheckedUpdateWithoutRewardsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RewardCategoryCreateManyTenantInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
   createdById: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type RewardCategoryUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.UserUpdateOneRequiredWithoutRewardCategoriesNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutCategoryNestedInput
 }
@@ -597,7 +696,10 @@ export type RewardCategoryUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -605,20 +707,29 @@ export type RewardCategoryUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RewardCategoryCreateManyCreatedByInput = {
   id?: string
   name: string
   isActive?: boolean
+  isDeleted?: boolean
   tenantId: string
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type RewardCategoryUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRewardCategoriesNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutCategoryNestedInput
 }
@@ -627,7 +738,10 @@ export type RewardCategoryUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
@@ -635,7 +749,10 @@ export type RewardCategoryUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -673,8 +790,11 @@ export type RewardCategorySelect<ExtArgs extends runtime.Types.Extensions.Intern
   id?: boolean
   name?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   tenantId?: boolean
   createdById?: boolean
+  createdAt?: boolean
+  deletedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   rewards?: boolean | Prisma.RewardCategory$rewardsArgs<ExtArgs>
@@ -685,8 +805,11 @@ export type RewardCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   name?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   tenantId?: boolean
   createdById?: boolean
+  createdAt?: boolean
+  deletedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rewardCategory"]>
@@ -695,8 +818,11 @@ export type RewardCategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   name?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   tenantId?: boolean
   createdById?: boolean
+  createdAt?: boolean
+  deletedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rewardCategory"]>
@@ -705,11 +831,14 @@ export type RewardCategorySelectScalar = {
   id?: boolean
   name?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   tenantId?: boolean
   createdById?: boolean
+  createdAt?: boolean
+  deletedAt?: boolean
 }
 
-export type RewardCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isActive" | "tenantId" | "createdById", ExtArgs["result"]["rewardCategory"]>
+export type RewardCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isActive" | "isDeleted" | "tenantId" | "createdById" | "createdAt" | "deletedAt", ExtArgs["result"]["rewardCategory"]>
 export type RewardCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -736,8 +865,11 @@ export type $RewardCategoryPayload<ExtArgs extends runtime.Types.Extensions.Inte
     id: string
     name: string
     isActive: boolean
+    isDeleted: boolean
     tenantId: string
     createdById: string
+    createdAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["rewardCategory"]>
   composites: {}
 }
@@ -1167,8 +1299,11 @@ export interface RewardCategoryFieldRefs {
   readonly id: Prisma.FieldRef<"RewardCategory", 'String'>
   readonly name: Prisma.FieldRef<"RewardCategory", 'String'>
   readonly isActive: Prisma.FieldRef<"RewardCategory", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"RewardCategory", 'Boolean'>
   readonly tenantId: Prisma.FieldRef<"RewardCategory", 'String'>
   readonly createdById: Prisma.FieldRef<"RewardCategory", 'String'>
+  readonly createdAt: Prisma.FieldRef<"RewardCategory", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"RewardCategory", 'DateTime'>
 }
     
 

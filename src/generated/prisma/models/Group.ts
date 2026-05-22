@@ -39,10 +39,12 @@ export type GroupMinAggregateOutputType = {
   name: string | null
   maxStudents: number | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   courseId: string | null
   teacherId: string | null
@@ -54,10 +56,12 @@ export type GroupMaxAggregateOutputType = {
   name: string | null
   maxStudents: number | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   courseId: string | null
   teacherId: string | null
@@ -69,10 +73,12 @@ export type GroupCountAggregateOutputType = {
   name: number
   maxStudents: number
   isActive: number
+  isDeleted: number
   archivedAt: number
   archivedById: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   tenantId: number
   courseId: number
   teacherId: number
@@ -94,10 +100,12 @@ export type GroupMinAggregateInputType = {
   name?: true
   maxStudents?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   courseId?: true
   teacherId?: true
@@ -109,10 +117,12 @@ export type GroupMaxAggregateInputType = {
   name?: true
   maxStudents?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   courseId?: true
   teacherId?: true
@@ -124,10 +134,12 @@ export type GroupCountAggregateInputType = {
   name?: true
   maxStudents?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   courseId?: true
   teacherId?: true
@@ -226,10 +238,12 @@ export type GroupGroupByOutputType = {
   name: string
   maxStudents: number
   isActive: boolean
+  isDeleted: boolean
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -264,10 +278,12 @@ export type GroupWhereInput = {
   name?: Prisma.StringFilter<"Group"> | string
   maxStudents?: Prisma.IntFilter<"Group"> | number
   isActive?: Prisma.BoolFilter<"Group"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Group"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Group"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Group"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Group"> | string
   courseId?: Prisma.UuidFilter<"Group"> | string
   teacherId?: Prisma.UuidFilter<"Group"> | string
@@ -288,10 +304,12 @@ export type GroupOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   maxStudents?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -315,10 +333,12 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Group"> | string
   maxStudents?: Prisma.IntFilter<"Group"> | number
   isActive?: Prisma.BoolFilter<"Group"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Group"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Group"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Group"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Group"> | string
   courseId?: Prisma.UuidFilter<"Group"> | string
   teacherId?: Prisma.UuidFilter<"Group"> | string
@@ -339,10 +359,12 @@ export type GroupOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   maxStudents?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -362,10 +384,12 @@ export type GroupScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Group"> | string
   maxStudents?: Prisma.IntWithAggregatesFilter<"Group"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"Group"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Group"> | boolean
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Group"> | Date | string | null
   archivedById?: Prisma.UuidNullableWithAggregatesFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Group"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Group"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"Group"> | string
   courseId?: Prisma.UuidWithAggregatesFilter<"Group"> | string
   teacherId?: Prisma.UuidWithAggregatesFilter<"Group"> | string
@@ -377,10 +401,12 @@ export type GroupCreateInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
@@ -397,10 +423,12 @@ export type GroupUncheckedCreateInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -417,10 +445,12 @@ export type GroupUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
@@ -437,10 +467,12 @@ export type GroupUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -457,10 +489,12 @@ export type GroupCreateManyInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -472,10 +506,12 @@ export type GroupUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type GroupUncheckedUpdateManyInput = {
@@ -483,10 +519,12 @@ export type GroupUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -508,10 +546,12 @@ export type GroupCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   maxStudents?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -527,10 +567,12 @@ export type GroupMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   maxStudents?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -542,10 +584,12 @@ export type GroupMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   maxStudents?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   courseId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -813,10 +857,12 @@ export type GroupCreateWithoutTenantInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedGroupsInput
@@ -832,10 +878,12 @@ export type GroupUncheckedCreateWithoutTenantInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   courseId: string
   teacherId: string
   createdById: string
@@ -880,10 +928,12 @@ export type GroupScalarWhereInput = {
   name?: Prisma.StringFilter<"Group"> | string
   maxStudents?: Prisma.IntFilter<"Group"> | number
   isActive?: Prisma.BoolFilter<"Group"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Group"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Group"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Group"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Group"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Group"> | string
   courseId?: Prisma.UuidFilter<"Group"> | string
   teacherId?: Prisma.UuidFilter<"Group"> | string
@@ -895,10 +945,12 @@ export type GroupCreateWithoutTeacherInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedGroupsInput
@@ -914,10 +966,12 @@ export type GroupUncheckedCreateWithoutTeacherInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   createdById: string
@@ -943,10 +997,12 @@ export type GroupCreateWithoutCreatedByInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
@@ -962,10 +1018,12 @@ export type GroupUncheckedCreateWithoutCreatedByInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -1023,10 +1081,12 @@ export type GroupCreateWithoutCourseInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedGroupsInput
@@ -1042,10 +1102,12 @@ export type GroupUncheckedCreateWithoutCourseInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   teacherId: string
   createdById: string
@@ -1087,10 +1149,12 @@ export type GroupCreateWithoutStudentsInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
@@ -1106,10 +1170,12 @@ export type GroupUncheckedCreateWithoutStudentsInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -1141,10 +1207,12 @@ export type GroupUpdateWithoutStudentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
@@ -1160,10 +1228,12 @@ export type GroupUncheckedUpdateWithoutStudentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1179,10 +1249,12 @@ export type GroupCreateWithoutScheduleTemplatesInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
@@ -1198,10 +1270,12 @@ export type GroupUncheckedCreateWithoutScheduleTemplatesInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -1233,10 +1307,12 @@ export type GroupUpdateWithoutScheduleTemplatesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
@@ -1252,10 +1328,12 @@ export type GroupUncheckedUpdateWithoutScheduleTemplatesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1271,10 +1349,12 @@ export type GroupCreateWithoutCoinRulesInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
@@ -1290,10 +1370,12 @@ export type GroupUncheckedCreateWithoutCoinRulesInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -1325,10 +1407,12 @@ export type GroupUpdateWithoutCoinRulesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
@@ -1344,10 +1428,12 @@ export type GroupUncheckedUpdateWithoutCoinRulesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1363,10 +1449,12 @@ export type GroupCreateWithoutSessionsInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
@@ -1382,10 +1470,12 @@ export type GroupUncheckedCreateWithoutSessionsInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -1417,10 +1507,12 @@ export type GroupUpdateWithoutSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
@@ -1436,10 +1528,12 @@ export type GroupUncheckedUpdateWithoutSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1455,10 +1549,12 @@ export type GroupCreateWithoutTransactionsInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutGroupsInput
   course: Prisma.CourseCreateNestedOneWithoutGroupsInput
   teacher: Prisma.UserCreateNestedOneWithoutTaughtGroupsInput
@@ -1474,10 +1570,12 @@ export type GroupUncheckedCreateWithoutTransactionsInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -1509,10 +1607,12 @@ export type GroupUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
@@ -1528,10 +1628,12 @@ export type GroupUncheckedUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1547,10 +1649,12 @@ export type GroupCreateManyTenantInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   courseId: string
   teacherId: string
   createdById: string
@@ -1561,10 +1665,12 @@ export type GroupUpdateWithoutTenantInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedGroupsNestedInput
@@ -1580,10 +1686,12 @@ export type GroupUncheckedUpdateWithoutTenantInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1599,10 +1707,12 @@ export type GroupUncheckedUpdateManyWithoutTenantInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1613,10 +1723,12 @@ export type GroupCreateManyTeacherInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   createdById: string
@@ -1627,10 +1739,12 @@ export type GroupCreateManyCreatedByInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   courseId: string
   teacherId: string
@@ -1641,10 +1755,12 @@ export type GroupUpdateWithoutTeacherInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedGroupsNestedInput
@@ -1660,10 +1776,12 @@ export type GroupUncheckedUpdateWithoutTeacherInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1679,10 +1797,12 @@ export type GroupUncheckedUpdateManyWithoutTeacherInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1693,10 +1813,12 @@ export type GroupUpdateWithoutCreatedByInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   course?: Prisma.CourseUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
@@ -1712,10 +1834,12 @@ export type GroupUncheckedUpdateWithoutCreatedByInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1731,10 +1855,12 @@ export type GroupUncheckedUpdateManyWithoutCreatedByInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   courseId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1745,10 +1871,12 @@ export type GroupCreateManyCourseInput = {
   name: string
   maxStudents?: number
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   teacherId: string
   createdById: string
@@ -1759,10 +1887,12 @@ export type GroupUpdateWithoutCourseInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutGroupsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutTaughtGroupsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedGroupsNestedInput
@@ -1778,10 +1908,12 @@ export type GroupUncheckedUpdateWithoutCourseInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1797,10 +1929,12 @@ export type GroupUncheckedUpdateManyWithoutCourseInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1878,10 +2012,12 @@ export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   name?: boolean
   maxStudents?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   courseId?: boolean
   teacherId?: boolean
@@ -1903,10 +2039,12 @@ export type GroupSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   maxStudents?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   courseId?: boolean
   teacherId?: boolean
@@ -1922,10 +2060,12 @@ export type GroupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   name?: boolean
   maxStudents?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   courseId?: boolean
   teacherId?: boolean
@@ -1941,17 +2081,19 @@ export type GroupSelectScalar = {
   name?: boolean
   maxStudents?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   courseId?: boolean
   teacherId?: boolean
   createdById?: boolean
 }
 
-export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "maxStudents" | "isActive" | "archivedAt" | "archivedById" | "createdAt" | "updatedAt" | "tenantId" | "courseId" | "teacherId" | "createdById", ExtArgs["result"]["group"]>
+export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "maxStudents" | "isActive" | "isDeleted" | "archivedAt" | "archivedById" | "createdAt" | "updatedAt" | "deletedAt" | "tenantId" | "courseId" | "teacherId" | "createdById", ExtArgs["result"]["group"]>
 export type GroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   course?: boolean | Prisma.CourseDefaultArgs<ExtArgs>
@@ -1995,10 +2137,12 @@ export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     name: string
     maxStudents: number
     isActive: boolean
+    isDeleted: boolean
     archivedAt: Date | null
     archivedById: string | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     tenantId: string
     courseId: string
     teacherId: string
@@ -2439,10 +2583,12 @@ export interface GroupFieldRefs {
   readonly name: Prisma.FieldRef<"Group", 'String'>
   readonly maxStudents: Prisma.FieldRef<"Group", 'Int'>
   readonly isActive: Prisma.FieldRef<"Group", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"Group", 'Boolean'>
   readonly archivedAt: Prisma.FieldRef<"Group", 'DateTime'>
   readonly archivedById: Prisma.FieldRef<"Group", 'String'>
   readonly createdAt: Prisma.FieldRef<"Group", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Group", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Group", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"Group", 'String'>
   readonly courseId: Prisma.FieldRef<"Group", 'String'>
   readonly teacherId: Prisma.FieldRef<"Group", 'String'>

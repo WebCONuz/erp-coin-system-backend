@@ -106,11 +106,65 @@ export const SmsStatus = {
 export type SmsStatus = (typeof SmsStatus)[keyof typeof SmsStatus]
 
 
+export const EmailStatus = {
+  pending: 'pending',
+  sent: 'sent',
+  failed: 'failed'
+} as const
+
+export type EmailStatus = (typeof EmailStatus)[keyof typeof EmailStatus]
+
+
+export const NotificationType = {
+  sms: 'sms',
+  email: 'email',
+  push: 'push'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
 export const SmsTriggerType = {
-  monthly_payment: 'monthly_payment',
   absence: 'absence',
   schedule_updated: 'schedule_updated',
-  custom: 'custom'
+  custom: 'custom',
+  performance_alert: 'performance_alert'
 } as const
 
 export type SmsTriggerType = (typeof SmsTriggerType)[keyof typeof SmsTriggerType]
+
+
+export const EmailTriggerType = {
+  absence: 'absence',
+  schedule_updated: 'schedule_updated',
+  custom: 'custom',
+  performance_alert: 'performance_alert',
+  reward_update: 'reward_update'
+} as const
+
+export type EmailTriggerType = (typeof EmailTriggerType)[keyof typeof EmailTriggerType]
+
+
+export const RoleScope = {
+  system: 'system',
+  tenant: 'tenant'
+} as const
+
+export type RoleScope = (typeof RoleScope)[keyof typeof RoleScope]
+
+
+export const AuditActionType = {
+  create: 'create',
+  update: 'update',
+  delete: 'delete',
+  archive: 'archive',
+  restore: 'restore',
+  assign: 'assign',
+  approve: 'approve',
+  reject: 'reject',
+  coin_transaction: 'coin_transaction',
+  sms_sent: 'sms_sent',
+  email_sent: 'email_sent'
+} as const
+
+export type AuditActionType = (typeof AuditActionType)[keyof typeof AuditActionType]

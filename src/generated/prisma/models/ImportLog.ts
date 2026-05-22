@@ -46,8 +46,10 @@ export type ImportLogMinAggregateOutputType = {
   successRows: number | null
   failedRows: number | null
   status: $Enums.ImportStatus | null
+  isDeleted: boolean | null
   createdAt: Date | null
   finishedAt: Date | null
+  deletedAt: Date | null
   importedById: string | null
 }
 
@@ -59,8 +61,10 @@ export type ImportLogMaxAggregateOutputType = {
   successRows: number | null
   failedRows: number | null
   status: $Enums.ImportStatus | null
+  isDeleted: boolean | null
   createdAt: Date | null
   finishedAt: Date | null
+  deletedAt: Date | null
   importedById: string | null
 }
 
@@ -73,8 +77,10 @@ export type ImportLogCountAggregateOutputType = {
   failedRows: number
   status: number
   errorLog: number
+  isDeleted: number
   createdAt: number
   finishedAt: number
+  deletedAt: number
   importedById: number
   _all: number
 }
@@ -100,8 +106,10 @@ export type ImportLogMinAggregateInputType = {
   successRows?: true
   failedRows?: true
   status?: true
+  isDeleted?: true
   createdAt?: true
   finishedAt?: true
+  deletedAt?: true
   importedById?: true
 }
 
@@ -113,8 +121,10 @@ export type ImportLogMaxAggregateInputType = {
   successRows?: true
   failedRows?: true
   status?: true
+  isDeleted?: true
   createdAt?: true
   finishedAt?: true
+  deletedAt?: true
   importedById?: true
 }
 
@@ -127,8 +137,10 @@ export type ImportLogCountAggregateInputType = {
   failedRows?: true
   status?: true
   errorLog?: true
+  isDeleted?: true
   createdAt?: true
   finishedAt?: true
+  deletedAt?: true
   importedById?: true
   _all?: true
 }
@@ -228,8 +240,10 @@ export type ImportLogGroupByOutputType = {
   failedRows: number
   status: $Enums.ImportStatus
   errorLog: runtime.JsonValue | null
+  isDeleted: boolean
   createdAt: Date
   finishedAt: Date | null
+  deletedAt: Date | null
   importedById: string
   _count: ImportLogCountAggregateOutputType | null
   _avg: ImportLogAvgAggregateOutputType | null
@@ -265,8 +279,10 @@ export type ImportLogWhereInput = {
   failedRows?: Prisma.IntFilter<"ImportLog"> | number
   status?: Prisma.EnumImportStatusFilter<"ImportLog"> | $Enums.ImportStatus
   errorLog?: Prisma.JsonNullableFilter<"ImportLog">
+  isDeleted?: Prisma.BoolFilter<"ImportLog"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ImportLog"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"ImportLog"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"ImportLog"> | Date | string | null
   importedById?: Prisma.UuidFilter<"ImportLog"> | string
   importedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -280,8 +296,10 @@ export type ImportLogOrderByWithRelationInput = {
   failedRows?: Prisma.SortOrder
   status?: Prisma.SortOrder
   errorLog?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   importedById?: Prisma.SortOrder
   importedBy?: Prisma.UserOrderByWithRelationInput
 }
@@ -298,8 +316,10 @@ export type ImportLogWhereUniqueInput = Prisma.AtLeast<{
   failedRows?: Prisma.IntFilter<"ImportLog"> | number
   status?: Prisma.EnumImportStatusFilter<"ImportLog"> | $Enums.ImportStatus
   errorLog?: Prisma.JsonNullableFilter<"ImportLog">
+  isDeleted?: Prisma.BoolFilter<"ImportLog"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ImportLog"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"ImportLog"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"ImportLog"> | Date | string | null
   importedById?: Prisma.UuidFilter<"ImportLog"> | string
   importedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -313,8 +333,10 @@ export type ImportLogOrderByWithAggregationInput = {
   failedRows?: Prisma.SortOrder
   status?: Prisma.SortOrder
   errorLog?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   importedById?: Prisma.SortOrder
   _count?: Prisma.ImportLogCountOrderByAggregateInput
   _avg?: Prisma.ImportLogAvgOrderByAggregateInput
@@ -335,8 +357,10 @@ export type ImportLogScalarWhereWithAggregatesInput = {
   failedRows?: Prisma.IntWithAggregatesFilter<"ImportLog"> | number
   status?: Prisma.EnumImportStatusWithAggregatesFilter<"ImportLog"> | $Enums.ImportStatus
   errorLog?: Prisma.JsonNullableWithAggregatesFilter<"ImportLog">
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"ImportLog"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ImportLog"> | Date | string
   finishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ImportLog"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ImportLog"> | Date | string | null
   importedById?: Prisma.UuidWithAggregatesFilter<"ImportLog"> | string
 }
 
@@ -349,8 +373,10 @@ export type ImportLogCreateInput = {
   failedRows?: number
   status?: $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: boolean
   createdAt?: Date | string
   finishedAt?: Date | string | null
+  deletedAt?: Date | string | null
   importedBy: Prisma.UserCreateNestedOneWithoutImportLogsInput
 }
 
@@ -363,8 +389,10 @@ export type ImportLogUncheckedCreateInput = {
   failedRows?: number
   status?: $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: boolean
   createdAt?: Date | string
   finishedAt?: Date | string | null
+  deletedAt?: Date | string | null
   importedById: string
 }
 
@@ -377,8 +405,10 @@ export type ImportLogUpdateInput = {
   failedRows?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumImportStatusFieldUpdateOperationsInput | $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedBy?: Prisma.UserUpdateOneRequiredWithoutImportLogsNestedInput
 }
 
@@ -391,8 +421,10 @@ export type ImportLogUncheckedUpdateInput = {
   failedRows?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumImportStatusFieldUpdateOperationsInput | $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -405,8 +437,10 @@ export type ImportLogCreateManyInput = {
   failedRows?: number
   status?: $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: boolean
   createdAt?: Date | string
   finishedAt?: Date | string | null
+  deletedAt?: Date | string | null
   importedById: string
 }
 
@@ -419,8 +453,10 @@ export type ImportLogUpdateManyMutationInput = {
   failedRows?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumImportStatusFieldUpdateOperationsInput | $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ImportLogUncheckedUpdateManyInput = {
@@ -432,8 +468,10 @@ export type ImportLogUncheckedUpdateManyInput = {
   failedRows?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumImportStatusFieldUpdateOperationsInput | $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -456,8 +494,10 @@ export type ImportLogCountOrderByAggregateInput = {
   failedRows?: Prisma.SortOrder
   status?: Prisma.SortOrder
   errorLog?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   importedById?: Prisma.SortOrder
 }
 
@@ -475,8 +515,10 @@ export type ImportLogMaxOrderByAggregateInput = {
   successRows?: Prisma.SortOrder
   failedRows?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   importedById?: Prisma.SortOrder
 }
 
@@ -488,8 +530,10 @@ export type ImportLogMinOrderByAggregateInput = {
   successRows?: Prisma.SortOrder
   failedRows?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   finishedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   importedById?: Prisma.SortOrder
 }
 
@@ -554,8 +598,10 @@ export type ImportLogCreateWithoutImportedByInput = {
   failedRows?: number
   status?: $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: boolean
   createdAt?: Date | string
   finishedAt?: Date | string | null
+  deletedAt?: Date | string | null
 }
 
 export type ImportLogUncheckedCreateWithoutImportedByInput = {
@@ -567,8 +613,10 @@ export type ImportLogUncheckedCreateWithoutImportedByInput = {
   failedRows?: number
   status?: $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: boolean
   createdAt?: Date | string
   finishedAt?: Date | string | null
+  deletedAt?: Date | string | null
 }
 
 export type ImportLogCreateOrConnectWithoutImportedByInput = {
@@ -609,8 +657,10 @@ export type ImportLogScalarWhereInput = {
   failedRows?: Prisma.IntFilter<"ImportLog"> | number
   status?: Prisma.EnumImportStatusFilter<"ImportLog"> | $Enums.ImportStatus
   errorLog?: Prisma.JsonNullableFilter<"ImportLog">
+  isDeleted?: Prisma.BoolFilter<"ImportLog"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ImportLog"> | Date | string
   finishedAt?: Prisma.DateTimeNullableFilter<"ImportLog"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"ImportLog"> | Date | string | null
   importedById?: Prisma.UuidFilter<"ImportLog"> | string
 }
 
@@ -623,8 +673,10 @@ export type ImportLogCreateManyImportedByInput = {
   failedRows?: number
   status?: $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: boolean
   createdAt?: Date | string
   finishedAt?: Date | string | null
+  deletedAt?: Date | string | null
 }
 
 export type ImportLogUpdateWithoutImportedByInput = {
@@ -636,8 +688,10 @@ export type ImportLogUpdateWithoutImportedByInput = {
   failedRows?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumImportStatusFieldUpdateOperationsInput | $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ImportLogUncheckedUpdateWithoutImportedByInput = {
@@ -649,8 +703,10 @@ export type ImportLogUncheckedUpdateWithoutImportedByInput = {
   failedRows?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumImportStatusFieldUpdateOperationsInput | $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ImportLogUncheckedUpdateManyWithoutImportedByInput = {
@@ -662,8 +718,10 @@ export type ImportLogUncheckedUpdateManyWithoutImportedByInput = {
   failedRows?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumImportStatusFieldUpdateOperationsInput | $Enums.ImportStatus
   errorLog?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   finishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -677,8 +735,10 @@ export type ImportLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   failedRows?: boolean
   status?: boolean
   errorLog?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   finishedAt?: boolean
+  deletedAt?: boolean
   importedById?: boolean
   importedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["importLog"]>
@@ -692,8 +752,10 @@ export type ImportLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   failedRows?: boolean
   status?: boolean
   errorLog?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   finishedAt?: boolean
+  deletedAt?: boolean
   importedById?: boolean
   importedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["importLog"]>
@@ -707,8 +769,10 @@ export type ImportLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   failedRows?: boolean
   status?: boolean
   errorLog?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   finishedAt?: boolean
+  deletedAt?: boolean
   importedById?: boolean
   importedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["importLog"]>
@@ -722,12 +786,14 @@ export type ImportLogSelectScalar = {
   failedRows?: boolean
   status?: boolean
   errorLog?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   finishedAt?: boolean
+  deletedAt?: boolean
   importedById?: boolean
 }
 
-export type ImportLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "entityType" | "fileName" | "totalRows" | "successRows" | "failedRows" | "status" | "errorLog" | "createdAt" | "finishedAt" | "importedById", ExtArgs["result"]["importLog"]>
+export type ImportLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "entityType" | "fileName" | "totalRows" | "successRows" | "failedRows" | "status" | "errorLog" | "isDeleted" | "createdAt" | "finishedAt" | "deletedAt" | "importedById", ExtArgs["result"]["importLog"]>
 export type ImportLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   importedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -752,8 +818,10 @@ export type $ImportLogPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     failedRows: number
     status: $Enums.ImportStatus
     errorLog: runtime.JsonValue | null
+    isDeleted: boolean
     createdAt: Date
     finishedAt: Date | null
+    deletedAt: Date | null
     importedById: string
   }, ExtArgs["result"]["importLog"]>
   composites: {}
@@ -1187,8 +1255,10 @@ export interface ImportLogFieldRefs {
   readonly failedRows: Prisma.FieldRef<"ImportLog", 'Int'>
   readonly status: Prisma.FieldRef<"ImportLog", 'ImportStatus'>
   readonly errorLog: Prisma.FieldRef<"ImportLog", 'Json'>
+  readonly isDeleted: Prisma.FieldRef<"ImportLog", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ImportLog", 'DateTime'>
   readonly finishedAt: Prisma.FieldRef<"ImportLog", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"ImportLog", 'DateTime'>
   readonly importedById: Prisma.FieldRef<"ImportLog", 'String'>
 }
     

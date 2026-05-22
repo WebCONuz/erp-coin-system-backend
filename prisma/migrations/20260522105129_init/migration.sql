@@ -29,7 +29,22 @@ CREATE TYPE "SmsRecipientType" AS ENUM ('student', 'parent');
 CREATE TYPE "SmsStatus" AS ENUM ('pending', 'sent', 'failed');
 
 -- CreateEnum
-CREATE TYPE "SmsTriggerType" AS ENUM ('monthly_payment', 'absence', 'schedule_updated', 'custom');
+CREATE TYPE "EmailStatus" AS ENUM ('pending', 'sent', 'failed');
+
+-- CreateEnum
+CREATE TYPE "NotificationType" AS ENUM ('sms', 'email', 'push');
+
+-- CreateEnum
+CREATE TYPE "SmsTriggerType" AS ENUM ('absence', 'schedule_updated', 'custom', 'performance_alert');
+
+-- CreateEnum
+CREATE TYPE "EmailTriggerType" AS ENUM ('absence', 'schedule_updated', 'custom', 'performance_alert', 'reward_update');
+
+-- CreateEnum
+CREATE TYPE "RoleScope" AS ENUM ('system', 'tenant');
+
+-- CreateEnum
+CREATE TYPE "AuditActionType" AS ENUM ('create', 'update', 'delete', 'archive', 'restore', 'assign', 'approve', 'reject', 'coin_transaction', 'sms_sent', 'email_sent');
 
 -- CreateTable
 CREATE TABLE "tenants" (
@@ -38,7 +53,10 @@ CREATE TABLE "tenants" (
     "slug" VARCHAR(100) NOT NULL,
     "plan" VARCHAR(50) NOT NULL DEFAULT 'basic',
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
 
     CONSTRAINT "tenants_pkey" PRIMARY KEY ("id")
 );
@@ -49,13 +67,30 @@ CREATE TABLE "roles" (
     "name" VARCHAR(50) NOT NULL,
     "display_name" VARCHAR(100) NOT NULL,
     "level" SMALLINT NOT NULL DEFAULT 1,
+    "scope" "RoleScope" NOT NULL DEFAULT 'tenant',
     "can_delete" BOOLEAN NOT NULL DEFAULT false,
     "can_manage_admins" BOOLEAN NOT NULL DEFAULT false,
+    "can_manage_users" BOOLEAN NOT NULL DEFAULT false,
     "is_system" BOOLEAN NOT NULL DEFAULT false,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
+    "tenant_id" UUID,
 
     CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "role_permissions" (
+    "id" UUID NOT NULL,
+    "permission" VARCHAR(100) NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "role_id" UUID NOT NULL,
+    "tenant_id" UUID NOT NULL,
+
+    CONSTRAINT "role_permissions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -68,11 +103,16 @@ CREATE TABLE "users" (
     "avatar_url" TEXT,
     "parent_phone" VARCHAR(20),
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "archived_at" TIMESTAMPTZ,
     "archived_by" UUID,
     "created_by" UUID,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
+    "refresh_token_hash" TEXT,
+    "password_reset_token" TEXT,
+    "password_reset_expiry" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "role_id" UUID NOT NULL,
 
@@ -95,14 +135,32 @@ CREATE TABLE "courses" (
     "title" VARCHAR(200) NOT NULL,
     "description" TEXT,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "archived_at" TIMESTAMPTZ,
     "archived_by" UUID,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "created_by" UUID NOT NULL,
 
     CONSTRAINT "courses_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "rooms" (
+    "id" UUID NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "capacity" SMALLINT NOT NULL DEFAULT 50,
+    "description" TEXT,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
+    "tenant_id" UUID NOT NULL,
+
+    CONSTRAINT "rooms_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -111,10 +169,12 @@ CREATE TABLE "groups" (
     "name" VARCHAR(150) NOT NULL,
     "max_students" SMALLINT NOT NULL DEFAULT 50,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "archived_at" TIMESTAMPTZ,
     "archived_by" UUID,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "course_id" UUID NOT NULL,
     "teacher_id" UUID NOT NULL,
@@ -127,6 +187,7 @@ CREATE TABLE "groups" (
 CREATE TABLE "group_students" (
     "id" UUID NOT NULL,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "archived_at" TIMESTAMPTZ,
     "joined_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "group_id" UUID NOT NULL,
@@ -142,12 +203,14 @@ CREATE TABLE "schedule_templates" (
     "weekday" "Weekday" NOT NULL,
     "start_time" VARCHAR(5) NOT NULL,
     "end_time" VARCHAR(5) NOT NULL,
-    "room" VARCHAR(100),
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "group_id" UUID NOT NULL,
+    "room_id" UUID NOT NULL,
     "created_by" UUID NOT NULL,
 
     CONSTRAINT "schedule_templates_pkey" PRIMARY KEY ("id")
@@ -159,10 +222,11 @@ CREATE TABLE "schedule_exceptions" (
     "exception_date" DATE NOT NULL,
     "start_time" VARCHAR(5),
     "end_time" VARCHAR(5),
-    "room" VARCHAR(100),
     "is_cancelled" BOOLEAN NOT NULL DEFAULT false,
     "note" VARCHAR(300),
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
     "template_id" UUID NOT NULL,
     "created_by" UUID NOT NULL,
 
@@ -178,9 +242,11 @@ CREATE TABLE "coin_rules" (
     "direction" "CoinDirection" NOT NULL,
     "trigger_type" "TriggerType" NOT NULL DEFAULT 'manual',
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "archived_at" TIMESTAMPTZ,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "group_id" UUID,
     "created_by" UUID NOT NULL,
@@ -197,11 +263,14 @@ CREATE TABLE "sessions" (
     "session_type" "SessionType" NOT NULL DEFAULT 'lesson',
     "topic" VARCHAR(300),
     "is_locked" BOOLEAN NOT NULL DEFAULT false,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "locked_at" TIMESTAMPTZ,
     "locked_by" UUID,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "group_id" UUID NOT NULL,
+    "room_id" UUID NOT NULL,
     "teacher_id" UUID NOT NULL,
 
     CONSTRAINT "sessions_pkey" PRIMARY KEY ("id")
@@ -214,6 +283,7 @@ CREATE TABLE "attendance_records" (
     "homework_done" BOOLEAN NOT NULL DEFAULT false,
     "recorded_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "session_id" UUID NOT NULL,
     "student_id" UUID NOT NULL,
     "recorded_by" UUID NOT NULL,
@@ -228,7 +298,9 @@ CREATE TABLE "coin_transactions" (
     "direction" "CoinDirection" NOT NULL,
     "source_type" "SourceType" NOT NULL,
     "note" TEXT,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
     "wallet_id" UUID NOT NULL,
     "student_id" UUID NOT NULL,
     "teacher_id" UUID,
@@ -244,6 +316,11 @@ CREATE TABLE "reward_categories" (
     "id" UUID NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "tenant_id" UUID NOT NULL,
+    "created_by" UUID NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
 
     CONSTRAINT "reward_categories_pkey" PRIMARY KEY ("id")
 );
@@ -258,10 +335,12 @@ CREATE TABLE "rewards" (
     "reward_type" "RewardType" NOT NULL,
     "image_url" TEXT,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "archived_at" TIMESTAMPTZ,
     "archived_by" UUID,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "category_id" UUID NOT NULL,
     "created_by" UUID NOT NULL,
@@ -275,8 +354,10 @@ CREATE TABLE "purchases" (
     "coin_spent" INTEGER NOT NULL,
     "status" "PurchaseStatus" NOT NULL DEFAULT 'pending',
     "delivery_note" TEXT,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "purchased_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
     "student_id" UUID NOT NULL,
     "reward_id" UUID NOT NULL,
     "approved_by" UUID,
@@ -291,8 +372,10 @@ CREATE TABLE "sms_templates" (
     "trigger_type" "SmsTriggerType" NOT NULL,
     "body" TEXT NOT NULL,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "created_by" UUID NOT NULL,
 
@@ -309,14 +392,72 @@ CREATE TABLE "sms_logs" (
     "status" "SmsStatus" NOT NULL DEFAULT 'pending',
     "eskiz_message_id" TEXT,
     "error_message" TEXT,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "sent_at" TIMESTAMPTZ,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
     "tenant_id" UUID NOT NULL,
     "student_id" UUID NOT NULL,
     "template_id" UUID,
     "sent_by" UUID NOT NULL,
 
     CONSTRAINT "sms_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "email_templates" (
+    "id" UUID NOT NULL,
+    "name" VARCHAR(200) NOT NULL,
+    "trigger_type" "EmailTriggerType" NOT NULL,
+    "subject" VARCHAR(300) NOT NULL,
+    "body" TEXT NOT NULL,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL,
+    "deleted_at" TIMESTAMPTZ,
+    "tenant_id" UUID NOT NULL,
+    "created_by" UUID NOT NULL,
+
+    CONSTRAINT "email_templates_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "email_logs" (
+    "id" UUID NOT NULL,
+    "email" VARCHAR(150) NOT NULL,
+    "subject" VARCHAR(300) NOT NULL,
+    "body" TEXT NOT NULL,
+    "trigger_type" "EmailTriggerType" NOT NULL,
+    "status" "EmailStatus" NOT NULL DEFAULT 'pending',
+    "error_message" TEXT,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "sent_at" TIMESTAMPTZ,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMPTZ,
+    "tenant_id" UUID NOT NULL,
+    "student_id" UUID NOT NULL,
+    "template_id" UUID,
+    "sent_by" UUID NOT NULL,
+
+    CONSTRAINT "email_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "audit_logs" (
+    "id" UUID NOT NULL,
+    "action_type" "AuditActionType" NOT NULL,
+    "entityType" VARCHAR(50) NOT NULL,
+    "entityId" UUID NOT NULL,
+    "changes" JSONB,
+    "description" VARCHAR(500),
+    "ip_address" VARCHAR(50),
+    "user_agent" TEXT,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "tenant_id" UUID NOT NULL,
+    "created_by" UUID NOT NULL,
+
+    CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -329,8 +470,10 @@ CREATE TABLE "import_logs" (
     "failed_rows" INTEGER NOT NULL DEFAULT 0,
     "status" "ImportStatus" NOT NULL DEFAULT 'pending',
     "error_log" JSONB,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "finished_at" TIMESTAMPTZ,
+    "deleted_at" TIMESTAMPTZ,
     "imported_by" UUID NOT NULL,
 
     CONSTRAINT "import_logs_pkey" PRIMARY KEY ("id")
@@ -340,7 +483,22 @@ CREATE TABLE "import_logs" (
 CREATE UNIQUE INDEX "tenants_slug_key" ON "tenants"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
+CREATE INDEX "roles_tenant_id_idx" ON "roles"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "roles_is_system_idx" ON "roles"("is_system");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "roles_tenant_id_name_key" ON "roles"("tenant_id", "name");
+
+-- CreateIndex
+CREATE INDEX "role_permissions_role_id_idx" ON "role_permissions"("role_id");
+
+-- CreateIndex
+CREATE INDEX "role_permissions_tenant_id_idx" ON "role_permissions"("tenant_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "role_permissions_role_id_permission_key" ON "role_permissions"("role_id", "permission");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
@@ -361,6 +519,9 @@ CREATE INDEX "users_role_id_idx" ON "users"("role_id");
 CREATE INDEX "users_is_active_idx" ON "users"("is_active");
 
 -- CreateIndex
+CREATE INDEX "users_is_deleted_idx" ON "users"("is_deleted");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "wallets_user_id_key" ON "wallets"("user_id");
 
 -- CreateIndex
@@ -371,6 +532,15 @@ CREATE INDEX "courses_tenant_id_idx" ON "courses"("tenant_id");
 
 -- CreateIndex
 CREATE INDEX "courses_is_active_idx" ON "courses"("is_active");
+
+-- CreateIndex
+CREATE INDEX "courses_is_deleted_idx" ON "courses"("is_deleted");
+
+-- CreateIndex
+CREATE INDEX "rooms_tenant_id_idx" ON "rooms"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "rooms_is_active_idx" ON "rooms"("is_active");
 
 -- CreateIndex
 CREATE INDEX "groups_tenant_id_idx" ON "groups"("tenant_id");
@@ -385,10 +555,16 @@ CREATE INDEX "groups_teacher_id_idx" ON "groups"("teacher_id");
 CREATE INDEX "groups_is_active_idx" ON "groups"("is_active");
 
 -- CreateIndex
+CREATE INDEX "groups_is_deleted_idx" ON "groups"("is_deleted");
+
+-- CreateIndex
 CREATE INDEX "group_students_group_id_idx" ON "group_students"("group_id");
 
 -- CreateIndex
 CREATE INDEX "group_students_student_id_idx" ON "group_students"("student_id");
+
+-- CreateIndex
+CREATE INDEX "group_students_is_deleted_idx" ON "group_students"("is_deleted");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "group_students_group_id_student_id_key" ON "group_students"("group_id", "student_id");
@@ -400,10 +576,19 @@ CREATE INDEX "schedule_templates_tenant_id_idx" ON "schedule_templates"("tenant_
 CREATE INDEX "schedule_templates_group_id_idx" ON "schedule_templates"("group_id");
 
 -- CreateIndex
+CREATE INDEX "schedule_templates_room_id_idx" ON "schedule_templates"("room_id");
+
+-- CreateIndex
+CREATE INDEX "schedule_templates_is_deleted_idx" ON "schedule_templates"("is_deleted");
+
+-- CreateIndex
 CREATE INDEX "schedule_exceptions_template_id_idx" ON "schedule_exceptions"("template_id");
 
 -- CreateIndex
 CREATE INDEX "schedule_exceptions_exception_date_idx" ON "schedule_exceptions"("exception_date");
+
+-- CreateIndex
+CREATE INDEX "schedule_exceptions_is_deleted_idx" ON "schedule_exceptions"("is_deleted");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "schedule_exceptions_template_id_exception_date_key" ON "schedule_exceptions"("template_id", "exception_date");
@@ -418,19 +603,31 @@ CREATE INDEX "coin_rules_group_id_idx" ON "coin_rules"("group_id");
 CREATE INDEX "coin_rules_is_active_idx" ON "coin_rules"("is_active");
 
 -- CreateIndex
+CREATE INDEX "coin_rules_is_deleted_idx" ON "coin_rules"("is_deleted");
+
+-- CreateIndex
 CREATE INDEX "sessions_tenant_id_idx" ON "sessions"("tenant_id");
 
 -- CreateIndex
 CREATE INDEX "sessions_group_id_session_date_idx" ON "sessions"("group_id", "session_date" DESC);
 
 -- CreateIndex
+CREATE INDEX "sessions_room_id_idx" ON "sessions"("room_id");
+
+-- CreateIndex
 CREATE INDEX "sessions_teacher_id_idx" ON "sessions"("teacher_id");
+
+-- CreateIndex
+CREATE INDEX "sessions_is_deleted_idx" ON "sessions"("is_deleted");
 
 -- CreateIndex
 CREATE INDEX "attendance_records_session_id_student_id_idx" ON "attendance_records"("session_id", "student_id");
 
 -- CreateIndex
 CREATE INDEX "attendance_records_student_id_idx" ON "attendance_records"("student_id");
+
+-- CreateIndex
+CREATE INDEX "attendance_records_is_deleted_idx" ON "attendance_records"("is_deleted");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "attendance_records_session_id_student_id_key" ON "attendance_records"("session_id", "student_id");
@@ -448,10 +645,22 @@ CREATE INDEX "coin_transactions_teacher_id_idx" ON "coin_transactions"("teacher_
 CREATE INDEX "coin_transactions_session_id_idx" ON "coin_transactions"("session_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "reward_categories_name_key" ON "reward_categories"("name");
+CREATE INDEX "coin_transactions_is_deleted_idx" ON "coin_transactions"("is_deleted");
+
+-- CreateIndex
+CREATE INDEX "reward_categories_tenant_id_idx" ON "reward_categories"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "reward_categories_is_deleted_idx" ON "reward_categories"("is_deleted");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "reward_categories_tenant_id_name_key" ON "reward_categories"("tenant_id", "name");
 
 -- CreateIndex
 CREATE INDEX "rewards_tenant_id_is_active_idx" ON "rewards"("tenant_id", "is_active");
+
+-- CreateIndex
+CREATE INDEX "rewards_is_deleted_idx" ON "rewards"("is_deleted");
 
 -- CreateIndex
 CREATE INDEX "purchases_student_id_idx" ON "purchases"("student_id");
@@ -460,7 +669,13 @@ CREATE INDEX "purchases_student_id_idx" ON "purchases"("student_id");
 CREATE INDEX "purchases_status_idx" ON "purchases"("status");
 
 -- CreateIndex
+CREATE INDEX "purchases_is_deleted_idx" ON "purchases"("is_deleted");
+
+-- CreateIndex
 CREATE INDEX "sms_templates_tenant_id_idx" ON "sms_templates"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "sms_templates_is_deleted_idx" ON "sms_templates"("is_deleted");
 
 -- CreateIndex
 CREATE INDEX "sms_logs_tenant_id_idx" ON "sms_logs"("tenant_id");
@@ -474,8 +689,59 @@ CREATE INDEX "sms_logs_status_idx" ON "sms_logs"("status");
 -- CreateIndex
 CREATE INDEX "sms_logs_created_at_idx" ON "sms_logs"("created_at" DESC);
 
+-- CreateIndex
+CREATE INDEX "sms_logs_is_deleted_idx" ON "sms_logs"("is_deleted");
+
+-- CreateIndex
+CREATE INDEX "email_templates_tenant_id_idx" ON "email_templates"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "email_templates_is_deleted_idx" ON "email_templates"("is_deleted");
+
+-- CreateIndex
+CREATE INDEX "email_logs_tenant_id_idx" ON "email_logs"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "email_logs_student_id_idx" ON "email_logs"("student_id");
+
+-- CreateIndex
+CREATE INDEX "email_logs_status_idx" ON "email_logs"("status");
+
+-- CreateIndex
+CREATE INDEX "email_logs_created_at_idx" ON "email_logs"("created_at" DESC);
+
+-- CreateIndex
+CREATE INDEX "email_logs_is_deleted_idx" ON "email_logs"("is_deleted");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_tenant_id_idx" ON "audit_logs"("tenant_id");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_created_by_idx" ON "audit_logs"("created_by");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_action_type_idx" ON "audit_logs"("action_type");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_entityType_idx" ON "audit_logs"("entityType");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_created_at_idx" ON "audit_logs"("created_at" DESC);
+
+-- CreateIndex
+CREATE INDEX "import_logs_is_deleted_idx" ON "import_logs"("is_deleted");
+
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "roles" ADD CONSTRAINT "roles_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -484,16 +750,22 @@ ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") 
 ALTER TABLE "users" ADD CONSTRAINT "users_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "wallets" ADD CONSTRAINT "wallets_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_archived_by_fkey" FOREIGN KEY ("archived_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "courses" ADD CONSTRAINT "courses_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "wallets" ADD CONSTRAINT "wallets_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "courses" ADD CONSTRAINT "courses_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "courses" ADD CONSTRAINT "courses_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "groups" ADD CONSTRAINT "groups_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "rooms" ADD CONSTRAINT "rooms_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "groups" ADD CONSTRAINT "groups_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "groups" ADD CONSTRAINT "groups_course_id_fkey" FOREIGN KEY ("course_id") REFERENCES "courses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -505,7 +777,7 @@ ALTER TABLE "groups" ADD CONSTRAINT "groups_teacher_id_fkey" FOREIGN KEY ("teach
 ALTER TABLE "groups" ADD CONSTRAINT "groups_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "group_students" ADD CONSTRAINT "group_students_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "group_students" ADD CONSTRAINT "group_students_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "group_students" ADD CONSTRAINT "group_students_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -514,22 +786,25 @@ ALTER TABLE "group_students" ADD CONSTRAINT "group_students_student_id_fkey" FOR
 ALTER TABLE "group_students" ADD CONSTRAINT "group_students_added_by_fkey" FOREIGN KEY ("added_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "schedule_templates" ADD CONSTRAINT "schedule_templates_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "schedule_templates" ADD CONSTRAINT "schedule_templates_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "schedule_templates" ADD CONSTRAINT "schedule_templates_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "schedule_templates" ADD CONSTRAINT "schedule_templates_room_id_fkey" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "schedule_templates" ADD CONSTRAINT "schedule_templates_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "schedule_exceptions" ADD CONSTRAINT "schedule_exceptions_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "schedule_templates"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "schedule_exceptions" ADD CONSTRAINT "schedule_exceptions_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "schedule_templates"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "schedule_exceptions" ADD CONSTRAINT "schedule_exceptions_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "coin_rules" ADD CONSTRAINT "coin_rules_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "coin_rules" ADD CONSTRAINT "coin_rules_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "coin_rules" ADD CONSTRAINT "coin_rules_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -538,16 +813,19 @@ ALTER TABLE "coin_rules" ADD CONSTRAINT "coin_rules_group_id_fkey" FOREIGN KEY (
 ALTER TABLE "coin_rules" ADD CONSTRAINT "coin_rules_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "sessions" ADD CONSTRAINT "sessions_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_room_id_fkey" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_teacher_id_fkey" FOREIGN KEY ("teacher_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_session_id_fkey" FOREIGN KEY ("session_id") REFERENCES "sessions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_session_id_fkey" FOREIGN KEY ("session_id") REFERENCES "sessions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -556,7 +834,7 @@ ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_student_id_f
 ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_recorded_by_fkey" FOREIGN KEY ("recorded_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "coin_transactions" ADD CONSTRAINT "coin_transactions_wallet_id_fkey" FOREIGN KEY ("wallet_id") REFERENCES "wallets"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "coin_transactions" ADD CONSTRAINT "coin_transactions_wallet_id_fkey" FOREIGN KEY ("wallet_id") REFERENCES "wallets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "coin_transactions" ADD CONSTRAINT "coin_transactions_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -574,7 +852,13 @@ ALTER TABLE "coin_transactions" ADD CONSTRAINT "coin_transactions_session_id_fke
 ALTER TABLE "coin_transactions" ADD CONSTRAINT "coin_transactions_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "rewards" ADD CONSTRAINT "rewards_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reward_categories" ADD CONSTRAINT "reward_categories_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reward_categories" ADD CONSTRAINT "reward_categories_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "rewards" ADD CONSTRAINT "rewards_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "rewards" ADD CONSTRAINT "rewards_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "reward_categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -592,13 +876,13 @@ ALTER TABLE "purchases" ADD CONSTRAINT "purchases_reward_id_fkey" FOREIGN KEY ("
 ALTER TABLE "purchases" ADD CONSTRAINT "purchases_approved_by_fkey" FOREIGN KEY ("approved_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "sms_templates" ADD CONSTRAINT "sms_templates_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "sms_templates" ADD CONSTRAINT "sms_templates_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sms_templates" ADD CONSTRAINT "sms_templates_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "sms_logs" ADD CONSTRAINT "sms_logs_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "sms_logs" ADD CONSTRAINT "sms_logs_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sms_logs" ADD CONSTRAINT "sms_logs_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -608,6 +892,30 @@ ALTER TABLE "sms_logs" ADD CONSTRAINT "sms_logs_template_id_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "sms_logs" ADD CONSTRAINT "sms_logs_sent_by_fkey" FOREIGN KEY ("sent_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "email_templates" ADD CONSTRAINT "email_templates_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "email_templates" ADD CONSTRAINT "email_templates_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "email_logs" ADD CONSTRAINT "email_logs_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "email_logs" ADD CONSTRAINT "email_logs_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "email_logs" ADD CONSTRAINT "email_logs_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "email_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "email_logs" ADD CONSTRAINT "email_logs_sent_by_fkey" FOREIGN KEY ("sent_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "import_logs" ADD CONSTRAINT "import_logs_imported_by_fkey" FOREIGN KEY ("imported_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

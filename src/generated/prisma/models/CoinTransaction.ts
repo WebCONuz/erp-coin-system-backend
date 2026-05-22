@@ -40,7 +40,9 @@ export type CoinTransactionMinAggregateOutputType = {
   direction: $Enums.CoinDirection | null
   sourceType: $Enums.SourceType | null
   note: string | null
+  isDeleted: boolean | null
   createdAt: Date | null
+  deletedAt: Date | null
   walletId: string | null
   studentId: string | null
   teacherId: string | null
@@ -55,7 +57,9 @@ export type CoinTransactionMaxAggregateOutputType = {
   direction: $Enums.CoinDirection | null
   sourceType: $Enums.SourceType | null
   note: string | null
+  isDeleted: boolean | null
   createdAt: Date | null
+  deletedAt: Date | null
   walletId: string | null
   studentId: string | null
   teacherId: string | null
@@ -70,7 +74,9 @@ export type CoinTransactionCountAggregateOutputType = {
   direction: number
   sourceType: number
   note: number
+  isDeleted: number
   createdAt: number
+  deletedAt: number
   walletId: number
   studentId: number
   teacherId: number
@@ -95,7 +101,9 @@ export type CoinTransactionMinAggregateInputType = {
   direction?: true
   sourceType?: true
   note?: true
+  isDeleted?: true
   createdAt?: true
+  deletedAt?: true
   walletId?: true
   studentId?: true
   teacherId?: true
@@ -110,7 +118,9 @@ export type CoinTransactionMaxAggregateInputType = {
   direction?: true
   sourceType?: true
   note?: true
+  isDeleted?: true
   createdAt?: true
+  deletedAt?: true
   walletId?: true
   studentId?: true
   teacherId?: true
@@ -125,7 +135,9 @@ export type CoinTransactionCountAggregateInputType = {
   direction?: true
   sourceType?: true
   note?: true
+  isDeleted?: true
   createdAt?: true
+  deletedAt?: true
   walletId?: true
   studentId?: true
   teacherId?: true
@@ -227,7 +239,9 @@ export type CoinTransactionGroupByOutputType = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note: string | null
+  isDeleted: boolean
   createdAt: Date
+  deletedAt: Date | null
   walletId: string
   studentId: string
   teacherId: string | null
@@ -265,7 +279,9 @@ export type CoinTransactionWhereInput = {
   direction?: Prisma.EnumCoinDirectionFilter<"CoinTransaction"> | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFilter<"CoinTransaction"> | $Enums.SourceType
   note?: Prisma.StringNullableFilter<"CoinTransaction"> | string | null
+  isDeleted?: Prisma.BoolFilter<"CoinTransaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CoinTransaction"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CoinTransaction"> | Date | string | null
   walletId?: Prisma.UuidFilter<"CoinTransaction"> | string
   studentId?: Prisma.UuidFilter<"CoinTransaction"> | string
   teacherId?: Prisma.UuidNullableFilter<"CoinTransaction"> | string | null
@@ -286,7 +302,9 @@ export type CoinTransactionOrderByWithRelationInput = {
   direction?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   walletId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -310,7 +328,9 @@ export type CoinTransactionWhereUniqueInput = Prisma.AtLeast<{
   direction?: Prisma.EnumCoinDirectionFilter<"CoinTransaction"> | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFilter<"CoinTransaction"> | $Enums.SourceType
   note?: Prisma.StringNullableFilter<"CoinTransaction"> | string | null
+  isDeleted?: Prisma.BoolFilter<"CoinTransaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CoinTransaction"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CoinTransaction"> | Date | string | null
   walletId?: Prisma.UuidFilter<"CoinTransaction"> | string
   studentId?: Prisma.UuidFilter<"CoinTransaction"> | string
   teacherId?: Prisma.UuidNullableFilter<"CoinTransaction"> | string | null
@@ -331,7 +351,9 @@ export type CoinTransactionOrderByWithAggregationInput = {
   direction?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   walletId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -354,7 +376,9 @@ export type CoinTransactionScalarWhereWithAggregatesInput = {
   direction?: Prisma.EnumCoinDirectionWithAggregatesFilter<"CoinTransaction"> | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeWithAggregatesFilter<"CoinTransaction"> | $Enums.SourceType
   note?: Prisma.StringNullableWithAggregatesFilter<"CoinTransaction"> | string | null
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"CoinTransaction"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CoinTransaction"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CoinTransaction"> | Date | string | null
   walletId?: Prisma.UuidWithAggregatesFilter<"CoinTransaction"> | string
   studentId?: Prisma.UuidWithAggregatesFilter<"CoinTransaction"> | string
   teacherId?: Prisma.UuidNullableWithAggregatesFilter<"CoinTransaction"> | string | null
@@ -369,7 +393,9 @@ export type CoinTransactionCreateInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput
@@ -384,7 +410,9 @@ export type CoinTransactionUncheckedCreateInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -399,7 +427,9 @@ export type CoinTransactionUpdateInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput
@@ -414,7 +444,9 @@ export type CoinTransactionUncheckedUpdateInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -429,7 +461,9 @@ export type CoinTransactionCreateManyInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -444,7 +478,9 @@ export type CoinTransactionUpdateManyMutationInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CoinTransactionUncheckedUpdateManyInput = {
@@ -453,7 +489,9 @@ export type CoinTransactionUncheckedUpdateManyInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -478,7 +516,9 @@ export type CoinTransactionCountOrderByAggregateInput = {
   direction?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   walletId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -497,7 +537,9 @@ export type CoinTransactionMaxOrderByAggregateInput = {
   direction?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   walletId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -512,7 +554,9 @@ export type CoinTransactionMinOrderByAggregateInput = {
   direction?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   walletId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
@@ -787,7 +831,9 @@ export type CoinTransactionCreateWithoutStudentInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput
   rule?: Prisma.CoinRuleCreateNestedOneWithoutTransactionsInput
@@ -801,7 +847,9 @@ export type CoinTransactionUncheckedCreateWithoutStudentInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   teacherId?: string | null
   ruleId?: string | null
@@ -825,7 +873,9 @@ export type CoinTransactionCreateWithoutTeacherInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput
   rule?: Prisma.CoinRuleCreateNestedOneWithoutTransactionsInput
@@ -839,7 +889,9 @@ export type CoinTransactionUncheckedCreateWithoutTeacherInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   ruleId?: string | null
@@ -882,7 +934,9 @@ export type CoinTransactionScalarWhereInput = {
   direction?: Prisma.EnumCoinDirectionFilter<"CoinTransaction"> | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFilter<"CoinTransaction"> | $Enums.SourceType
   note?: Prisma.StringNullableFilter<"CoinTransaction"> | string | null
+  isDeleted?: Prisma.BoolFilter<"CoinTransaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"CoinTransaction"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"CoinTransaction"> | Date | string | null
   walletId?: Prisma.UuidFilter<"CoinTransaction"> | string
   studentId?: Prisma.UuidFilter<"CoinTransaction"> | string
   teacherId?: Prisma.UuidNullableFilter<"CoinTransaction"> | string | null
@@ -913,7 +967,9 @@ export type CoinTransactionCreateWithoutWalletInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput
   rule?: Prisma.CoinRuleCreateNestedOneWithoutTransactionsInput
@@ -927,7 +983,9 @@ export type CoinTransactionUncheckedCreateWithoutWalletInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   teacherId?: string | null
   ruleId?: string | null
@@ -967,7 +1025,9 @@ export type CoinTransactionCreateWithoutGroupInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput
@@ -981,7 +1041,9 @@ export type CoinTransactionUncheckedCreateWithoutGroupInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -1021,7 +1083,9 @@ export type CoinTransactionCreateWithoutRuleInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput
@@ -1035,7 +1099,9 @@ export type CoinTransactionUncheckedCreateWithoutRuleInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -1075,7 +1141,9 @@ export type CoinTransactionCreateWithoutSessionInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput
@@ -1089,7 +1157,9 @@ export type CoinTransactionUncheckedCreateWithoutSessionInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -1129,7 +1199,9 @@ export type CoinTransactionCreateManyStudentInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   teacherId?: string | null
   ruleId?: string | null
@@ -1143,7 +1215,9 @@ export type CoinTransactionCreateManyTeacherInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   ruleId?: string | null
@@ -1157,7 +1231,9 @@ export type CoinTransactionUpdateWithoutStudentInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput
   rule?: Prisma.CoinRuleUpdateOneWithoutTransactionsNestedInput
@@ -1171,7 +1247,9 @@ export type CoinTransactionUncheckedUpdateWithoutStudentInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1185,7 +1263,9 @@ export type CoinTransactionUncheckedUpdateManyWithoutStudentInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1199,7 +1279,9 @@ export type CoinTransactionUpdateWithoutTeacherInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput
   rule?: Prisma.CoinRuleUpdateOneWithoutTransactionsNestedInput
@@ -1213,7 +1295,9 @@ export type CoinTransactionUncheckedUpdateWithoutTeacherInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1227,7 +1311,9 @@ export type CoinTransactionUncheckedUpdateManyWithoutTeacherInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1241,7 +1327,9 @@ export type CoinTransactionCreateManyWalletInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   teacherId?: string | null
   ruleId?: string | null
@@ -1255,7 +1343,9 @@ export type CoinTransactionUpdateWithoutWalletInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput
   rule?: Prisma.CoinRuleUpdateOneWithoutTransactionsNestedInput
@@ -1269,7 +1359,9 @@ export type CoinTransactionUncheckedUpdateWithoutWalletInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1283,7 +1375,9 @@ export type CoinTransactionUncheckedUpdateManyWithoutWalletInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1297,7 +1391,9 @@ export type CoinTransactionCreateManyGroupInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -1311,7 +1407,9 @@ export type CoinTransactionUpdateWithoutGroupInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput
@@ -1325,7 +1423,9 @@ export type CoinTransactionUncheckedUpdateWithoutGroupInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1339,7 +1439,9 @@ export type CoinTransactionUncheckedUpdateManyWithoutGroupInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1353,7 +1455,9 @@ export type CoinTransactionCreateManyRuleInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -1367,7 +1471,9 @@ export type CoinTransactionUpdateWithoutRuleInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput
@@ -1381,7 +1487,9 @@ export type CoinTransactionUncheckedUpdateWithoutRuleInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1395,7 +1503,9 @@ export type CoinTransactionUncheckedUpdateManyWithoutRuleInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1409,7 +1519,9 @@ export type CoinTransactionCreateManySessionInput = {
   direction: $Enums.CoinDirection
   sourceType: $Enums.SourceType
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   walletId: string
   studentId: string
   teacherId?: string | null
@@ -1423,7 +1535,9 @@ export type CoinTransactionUpdateWithoutSessionInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput
@@ -1437,7 +1551,9 @@ export type CoinTransactionUncheckedUpdateWithoutSessionInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1451,7 +1567,9 @@ export type CoinTransactionUncheckedUpdateManyWithoutSessionInput = {
   direction?: Prisma.EnumCoinDirectionFieldUpdateOperationsInput | $Enums.CoinDirection
   sourceType?: Prisma.EnumSourceTypeFieldUpdateOperationsInput | $Enums.SourceType
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1467,7 +1585,9 @@ export type CoinTransactionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   direction?: boolean
   sourceType?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   walletId?: boolean
   studentId?: boolean
   teacherId?: boolean
@@ -1488,7 +1608,9 @@ export type CoinTransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   direction?: boolean
   sourceType?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   walletId?: boolean
   studentId?: boolean
   teacherId?: boolean
@@ -1509,7 +1631,9 @@ export type CoinTransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   direction?: boolean
   sourceType?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   walletId?: boolean
   studentId?: boolean
   teacherId?: boolean
@@ -1530,7 +1654,9 @@ export type CoinTransactionSelectScalar = {
   direction?: boolean
   sourceType?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   walletId?: boolean
   studentId?: boolean
   teacherId?: boolean
@@ -1539,7 +1665,7 @@ export type CoinTransactionSelectScalar = {
   groupId?: boolean
 }
 
-export type CoinTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "direction" | "sourceType" | "note" | "createdAt" | "walletId" | "studentId" | "teacherId" | "ruleId" | "sessionId" | "groupId", ExtArgs["result"]["coinTransaction"]>
+export type CoinTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "direction" | "sourceType" | "note" | "isDeleted" | "createdAt" | "deletedAt" | "walletId" | "studentId" | "teacherId" | "ruleId" | "sessionId" | "groupId", ExtArgs["result"]["coinTransaction"]>
 export type CoinTransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1581,7 +1707,9 @@ export type $CoinTransactionPayload<ExtArgs extends runtime.Types.Extensions.Int
     direction: $Enums.CoinDirection
     sourceType: $Enums.SourceType
     note: string | null
+    isDeleted: boolean
     createdAt: Date
+    deletedAt: Date | null
     walletId: string
     studentId: string
     teacherId: string | null
@@ -2022,7 +2150,9 @@ export interface CoinTransactionFieldRefs {
   readonly direction: Prisma.FieldRef<"CoinTransaction", 'CoinDirection'>
   readonly sourceType: Prisma.FieldRef<"CoinTransaction", 'SourceType'>
   readonly note: Prisma.FieldRef<"CoinTransaction", 'String'>
+  readonly isDeleted: Prisma.FieldRef<"CoinTransaction", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"CoinTransaction", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"CoinTransaction", 'DateTime'>
   readonly walletId: Prisma.FieldRef<"CoinTransaction", 'String'>
   readonly studentId: Prisma.FieldRef<"CoinTransaction", 'String'>
   readonly teacherId: Prisma.FieldRef<"CoinTransaction", 'String'>

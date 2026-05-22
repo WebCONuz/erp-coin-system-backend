@@ -53,9 +53,11 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Tenant: 'Tenant',
   Role: 'Role',
+  RolePermission: 'RolePermission',
   User: 'User',
   Wallet: 'Wallet',
   Course: 'Course',
+  Room: 'Room',
   Group: 'Group',
   GroupStudent: 'GroupStudent',
   ScheduleTemplate: 'ScheduleTemplate',
@@ -69,6 +71,9 @@ export const ModelName = {
   Purchase: 'Purchase',
   SmsTemplate: 'SmsTemplate',
   SmsLog: 'SmsLog',
+  EmailTemplate: 'EmailTemplate',
+  EmailLog: 'EmailLog',
+  AuditLog: 'AuditLog',
   ImportLog: 'ImportLog'
 } as const
 
@@ -94,7 +99,10 @@ export const TenantScalarFieldEnum = {
   slug: 'slug',
   plan: 'plan',
   isActive: 'isActive',
-  createdAt: 'createdAt'
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type TenantScalarFieldEnum = (typeof TenantScalarFieldEnum)[keyof typeof TenantScalarFieldEnum]
@@ -105,14 +113,31 @@ export const RoleScalarFieldEnum = {
   name: 'name',
   displayName: 'displayName',
   level: 'level',
+  scope: 'scope',
   canDelete: 'canDelete',
   canManageAdmins: 'canManageAdmins',
+  canManageUsers: 'canManageUsers',
   isSystem: 'isSystem',
   isActive: 'isActive',
-  createdAt: 'createdAt'
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  tenantId: 'tenantId'
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+
+
+export const RolePermissionScalarFieldEnum = {
+  id: 'id',
+  permission: 'permission',
+  createdAt: 'createdAt',
+  roleId: 'roleId',
+  tenantId: 'tenantId'
+} as const
+
+export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -124,11 +149,13 @@ export const UserScalarFieldEnum = {
   avatarUrl: 'avatarUrl',
   parentPhone: 'parentPhone',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   archivedById: 'archivedById',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   refreshTokenHash: 'refreshTokenHash',
   passwordResetToken: 'passwordResetToken',
   passwordResetExpiry: 'passwordResetExpiry',
@@ -154,10 +181,12 @@ export const CourseScalarFieldEnum = {
   title: 'title',
   description: 'description',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   archivedById: 'archivedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   createdById: 'createdById'
 } as const
@@ -165,15 +194,33 @@ export const CourseScalarFieldEnum = {
 export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
 
 
+export const RoomScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  capacity: 'capacity',
+  description: 'description',
+  isActive: 'isActive',
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  tenantId: 'tenantId'
+} as const
+
+export type RoomScalarFieldEnum = (typeof RoomScalarFieldEnum)[keyof typeof RoomScalarFieldEnum]
+
+
 export const GroupScalarFieldEnum = {
   id: 'id',
   name: 'name',
   maxStudents: 'maxStudents',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   archivedById: 'archivedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   courseId: 'courseId',
   teacherId: 'teacherId',
@@ -186,6 +233,7 @@ export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof Gr
 export const GroupStudentScalarFieldEnum = {
   id: 'id',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   joinedAt: 'joinedAt',
   groupId: 'groupId',
@@ -201,12 +249,14 @@ export const ScheduleTemplateScalarFieldEnum = {
   weekday: 'weekday',
   startTime: 'startTime',
   endTime: 'endTime',
-  room: 'room',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   groupId: 'groupId',
+  roomId: 'roomId',
   createdById: 'createdById'
 } as const
 
@@ -218,10 +268,11 @@ export const ScheduleExceptionScalarFieldEnum = {
   exceptionDate: 'exceptionDate',
   startTime: 'startTime',
   endTime: 'endTime',
-  room: 'room',
   isCancelled: 'isCancelled',
   note: 'note',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
   templateId: 'templateId',
   createdById: 'createdById'
 } as const
@@ -237,9 +288,11 @@ export const CoinRuleScalarFieldEnum = {
   direction: 'direction',
   triggerType: 'triggerType',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   groupId: 'groupId',
   createdById: 'createdById'
@@ -256,11 +309,14 @@ export const SessionScalarFieldEnum = {
   sessionType: 'sessionType',
   topic: 'topic',
   isLocked: 'isLocked',
+  isDeleted: 'isDeleted',
   lockedAt: 'lockedAt',
   lockedById: 'lockedById',
   createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   groupId: 'groupId',
+  roomId: 'roomId',
   teacherId: 'teacherId'
 } as const
 
@@ -273,6 +329,7 @@ export const AttendanceRecordScalarFieldEnum = {
   homeworkDone: 'homeworkDone',
   recordedAt: 'recordedAt',
   updatedAt: 'updatedAt',
+  isDeleted: 'isDeleted',
   sessionId: 'sessionId',
   studentId: 'studentId',
   recordedById: 'recordedById'
@@ -287,7 +344,9 @@ export const CoinTransactionScalarFieldEnum = {
   direction: 'direction',
   sourceType: 'sourceType',
   note: 'note',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
   walletId: 'walletId',
   studentId: 'studentId',
   teacherId: 'teacherId',
@@ -303,8 +362,11 @@ export const RewardCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   tenantId: 'tenantId',
-  createdById: 'createdById'
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type RewardCategoryScalarFieldEnum = (typeof RewardCategoryScalarFieldEnum)[keyof typeof RewardCategoryScalarFieldEnum]
@@ -319,10 +381,12 @@ export const RewardScalarFieldEnum = {
   rewardType: 'rewardType',
   imageUrl: 'imageUrl',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   archivedById: 'archivedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   categoryId: 'categoryId',
   createdById: 'createdById'
@@ -336,8 +400,10 @@ export const PurchaseScalarFieldEnum = {
   coinSpent: 'coinSpent',
   status: 'status',
   deliveryNote: 'deliveryNote',
+  isDeleted: 'isDeleted',
   purchasedAt: 'purchasedAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   studentId: 'studentId',
   rewardId: 'rewardId',
   approvedById: 'approvedById'
@@ -352,8 +418,10 @@ export const SmsTemplateScalarFieldEnum = {
   triggerType: 'triggerType',
   body: 'body',
   isActive: 'isActive',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   createdById: 'createdById'
 } as const
@@ -370,8 +438,10 @@ export const SmsLogScalarFieldEnum = {
   status: 'status',
   eskizMessageId: 'eskizMessageId',
   errorMessage: 'errorMessage',
+  isDeleted: 'isDeleted',
   sentAt: 'sentAt',
   createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
   tenantId: 'tenantId',
   studentId: 'studentId',
   templateId: 'templateId',
@@ -379,6 +449,62 @@ export const SmsLogScalarFieldEnum = {
 } as const
 
 export type SmsLogScalarFieldEnum = (typeof SmsLogScalarFieldEnum)[keyof typeof SmsLogScalarFieldEnum]
+
+
+export const EmailTemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  triggerType: 'triggerType',
+  subject: 'subject',
+  body: 'body',
+  isActive: 'isActive',
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  tenantId: 'tenantId',
+  createdById: 'createdById'
+} as const
+
+export type EmailTemplateScalarFieldEnum = (typeof EmailTemplateScalarFieldEnum)[keyof typeof EmailTemplateScalarFieldEnum]
+
+
+export const EmailLogScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  subject: 'subject',
+  body: 'body',
+  triggerType: 'triggerType',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  isDeleted: 'isDeleted',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  tenantId: 'tenantId',
+  studentId: 'studentId',
+  templateId: 'templateId',
+  sentById: 'sentById'
+} as const
+
+export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  actionType: 'actionType',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  changes: 'changes',
+  description: 'description',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  tenantId: 'tenantId',
+  createdBy: 'createdBy'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const ImportLogScalarFieldEnum = {
@@ -390,8 +516,10 @@ export const ImportLogScalarFieldEnum = {
   failedRows: 'failedRows',
   status: 'status',
   errorLog: 'errorLog',
+  isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   finishedAt: 'finishedAt',
+  deletedAt: 'deletedAt',
   importedById: 'importedById'
 } as const
 

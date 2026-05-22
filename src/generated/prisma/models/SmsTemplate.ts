@@ -30,8 +30,10 @@ export type SmsTemplateMinAggregateOutputType = {
   triggerType: $Enums.SmsTriggerType | null
   body: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   createdById: string | null
 }
@@ -42,8 +44,10 @@ export type SmsTemplateMaxAggregateOutputType = {
   triggerType: $Enums.SmsTriggerType | null
   body: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   createdById: string | null
 }
@@ -54,8 +58,10 @@ export type SmsTemplateCountAggregateOutputType = {
   triggerType: number
   body: number
   isActive: number
+  isDeleted: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   tenantId: number
   createdById: number
   _all: number
@@ -68,8 +74,10 @@ export type SmsTemplateMinAggregateInputType = {
   triggerType?: true
   body?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   createdById?: true
 }
@@ -80,8 +88,10 @@ export type SmsTemplateMaxAggregateInputType = {
   triggerType?: true
   body?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   createdById?: true
 }
@@ -92,8 +102,10 @@ export type SmsTemplateCountAggregateInputType = {
   triggerType?: true
   body?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   createdById?: true
   _all?: true
@@ -177,8 +189,10 @@ export type SmsTemplateGroupByOutputType = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive: boolean
+  isDeleted: boolean
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   tenantId: string
   createdById: string
   _count: SmsTemplateCountAggregateOutputType | null
@@ -210,8 +224,10 @@ export type SmsTemplateWhereInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFilter<"SmsTemplate"> | $Enums.SmsTriggerType
   body?: Prisma.StringFilter<"SmsTemplate"> | string
   isActive?: Prisma.BoolFilter<"SmsTemplate"> | boolean
+  isDeleted?: Prisma.BoolFilter<"SmsTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SmsTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SmsTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"SmsTemplate"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"SmsTemplate"> | string
   createdById?: Prisma.UuidFilter<"SmsTemplate"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -225,8 +241,10 @@ export type SmsTemplateOrderByWithRelationInput = {
   triggerType?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
@@ -243,8 +261,10 @@ export type SmsTemplateWhereUniqueInput = Prisma.AtLeast<{
   triggerType?: Prisma.EnumSmsTriggerTypeFilter<"SmsTemplate"> | $Enums.SmsTriggerType
   body?: Prisma.StringFilter<"SmsTemplate"> | string
   isActive?: Prisma.BoolFilter<"SmsTemplate"> | boolean
+  isDeleted?: Prisma.BoolFilter<"SmsTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SmsTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SmsTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"SmsTemplate"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"SmsTemplate"> | string
   createdById?: Prisma.UuidFilter<"SmsTemplate"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
@@ -258,8 +278,10 @@ export type SmsTemplateOrderByWithAggregationInput = {
   triggerType?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   _count?: Prisma.SmsTemplateCountOrderByAggregateInput
@@ -276,8 +298,10 @@ export type SmsTemplateScalarWhereWithAggregatesInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeWithAggregatesFilter<"SmsTemplate"> | $Enums.SmsTriggerType
   body?: Prisma.StringWithAggregatesFilter<"SmsTemplate"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"SmsTemplate"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"SmsTemplate"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SmsTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SmsTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SmsTemplate"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"SmsTemplate"> | string
   createdById?: Prisma.UuidWithAggregatesFilter<"SmsTemplate"> | string
 }
@@ -288,8 +312,10 @@ export type SmsTemplateCreateInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSmsTemplatesInput
   createdBy: Prisma.UserCreateNestedOneWithoutSmsTemplatesCreatedInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTemplateInput
@@ -301,8 +327,10 @@ export type SmsTemplateUncheckedCreateInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTemplateInput
@@ -314,8 +342,10 @@ export type SmsTemplateUpdateInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsTemplatesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutSmsTemplatesCreatedNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTemplateNestedInput
@@ -327,8 +357,10 @@ export type SmsTemplateUncheckedUpdateInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTemplateNestedInput
@@ -340,8 +372,10 @@ export type SmsTemplateCreateManyInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
 }
@@ -352,8 +386,10 @@ export type SmsTemplateUpdateManyMutationInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SmsTemplateUncheckedUpdateManyInput = {
@@ -362,8 +398,10 @@ export type SmsTemplateUncheckedUpdateManyInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -384,8 +422,10 @@ export type SmsTemplateCountOrderByAggregateInput = {
   triggerType?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -396,8 +436,10 @@ export type SmsTemplateMaxOrderByAggregateInput = {
   triggerType?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -408,8 +450,10 @@ export type SmsTemplateMinOrderByAggregateInput = {
   triggerType?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -529,8 +573,10 @@ export type SmsTemplateCreateWithoutTenantInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   createdBy: Prisma.UserCreateNestedOneWithoutSmsTemplatesCreatedInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTemplateInput
 }
@@ -541,8 +587,10 @@ export type SmsTemplateUncheckedCreateWithoutTenantInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   createdById: string
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTemplateInput
 }
@@ -582,8 +630,10 @@ export type SmsTemplateScalarWhereInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFilter<"SmsTemplate"> | $Enums.SmsTriggerType
   body?: Prisma.StringFilter<"SmsTemplate"> | string
   isActive?: Prisma.BoolFilter<"SmsTemplate"> | boolean
+  isDeleted?: Prisma.BoolFilter<"SmsTemplate"> | boolean
   createdAt?: Prisma.DateTimeFilter<"SmsTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SmsTemplate"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"SmsTemplate"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"SmsTemplate"> | string
   createdById?: Prisma.UuidFilter<"SmsTemplate"> | string
 }
@@ -594,8 +644,10 @@ export type SmsTemplateCreateWithoutCreatedByInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSmsTemplatesInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTemplateInput
 }
@@ -606,8 +658,10 @@ export type SmsTemplateUncheckedCreateWithoutCreatedByInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTemplateInput
 }
@@ -644,8 +698,10 @@ export type SmsTemplateCreateWithoutSmsLogsInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSmsTemplatesInput
   createdBy: Prisma.UserCreateNestedOneWithoutSmsTemplatesCreatedInput
 }
@@ -656,8 +712,10 @@ export type SmsTemplateUncheckedCreateWithoutSmsLogsInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
 }
@@ -684,8 +742,10 @@ export type SmsTemplateUpdateWithoutSmsLogsInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsTemplatesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutSmsTemplatesCreatedNestedInput
 }
@@ -696,8 +756,10 @@ export type SmsTemplateUncheckedUpdateWithoutSmsLogsInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -708,8 +770,10 @@ export type SmsTemplateCreateManyTenantInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   createdById: string
 }
 
@@ -719,8 +783,10 @@ export type SmsTemplateUpdateWithoutTenantInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.UserUpdateOneRequiredWithoutSmsTemplatesCreatedNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTemplateNestedInput
 }
@@ -731,8 +797,10 @@ export type SmsTemplateUncheckedUpdateWithoutTenantInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTemplateNestedInput
 }
@@ -743,8 +811,10 @@ export type SmsTemplateUncheckedUpdateManyWithoutTenantInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -754,8 +824,10 @@ export type SmsTemplateCreateManyCreatedByInput = {
   triggerType: $Enums.SmsTriggerType
   body: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
 }
 
@@ -765,8 +837,10 @@ export type SmsTemplateUpdateWithoutCreatedByInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsTemplatesNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTemplateNestedInput
 }
@@ -777,8 +851,10 @@ export type SmsTemplateUncheckedUpdateWithoutCreatedByInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTemplateNestedInput
 }
@@ -789,8 +865,10 @@ export type SmsTemplateUncheckedUpdateManyWithoutCreatedByInput = {
   triggerType?: Prisma.EnumSmsTriggerTypeFieldUpdateOperationsInput | $Enums.SmsTriggerType
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -831,8 +909,10 @@ export type SmsTemplateSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   triggerType?: boolean
   body?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -847,8 +927,10 @@ export type SmsTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   triggerType?: boolean
   body?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -861,8 +943,10 @@ export type SmsTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   triggerType?: boolean
   body?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -875,13 +959,15 @@ export type SmsTemplateSelectScalar = {
   triggerType?: boolean
   body?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   createdById?: boolean
 }
 
-export type SmsTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "triggerType" | "body" | "isActive" | "createdAt" | "updatedAt" | "tenantId" | "createdById", ExtArgs["result"]["smsTemplate"]>
+export type SmsTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "triggerType" | "body" | "isActive" | "isDeleted" | "createdAt" | "updatedAt" | "deletedAt" | "tenantId" | "createdById", ExtArgs["result"]["smsTemplate"]>
 export type SmsTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -910,8 +996,10 @@ export type $SmsTemplatePayload<ExtArgs extends runtime.Types.Extensions.Interna
     triggerType: $Enums.SmsTriggerType
     body: string
     isActive: boolean
+    isDeleted: boolean
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     tenantId: string
     createdById: string
   }, ExtArgs["result"]["smsTemplate"]>
@@ -1345,8 +1433,10 @@ export interface SmsTemplateFieldRefs {
   readonly triggerType: Prisma.FieldRef<"SmsTemplate", 'SmsTriggerType'>
   readonly body: Prisma.FieldRef<"SmsTemplate", 'String'>
   readonly isActive: Prisma.FieldRef<"SmsTemplate", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"SmsTemplate", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"SmsTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SmsTemplate", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"SmsTemplate", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"SmsTemplate", 'String'>
   readonly createdById: Prisma.FieldRef<"SmsTemplate", 'String'>
 }

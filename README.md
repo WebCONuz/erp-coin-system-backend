@@ -1,98 +1,421 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🎓 ERP COIN SYSTEM
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+O'quv markazlari va maktablar uchun **incentive management tizimi**. O'quvchilarni darsga qiziqtirib, bonus va jarima tangalari (coins) orqali mukofotlash va punishment qilish.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📌 LOYIHA MAZMUNÍ
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 🎯 Asosiy G'oya
 
-## Project setup
+- **O'quvchilarni qiziqtirish**: Darsga vaqtida qatnashgan, uyga vazifasini bajargan, faol o'quvchilar bonus tangalari (coins) oladi
+- **Jarima tizimi**: Darsga kelmagan, hulqi salbiy bo'lgan o'quvchilar jarima ballari (coins olib ketiladi)
+- **Online Store**: O'quvchilar olgan tangalari bilan loyiha ichidagi virtual do'konda kerakli narsalarni sotib olishlari mumkin
+- **Multi-tenant**: Bir platformada bir nechta o'quv markazi va maktablar ishlashi mumkin
+- **Role-based Access**: Har bir foydalanuvchi o'z roli bo'yicha turli imkoniyatlarga ega
+
+### 👥 Foydalanuvchi Turlari
+
+1. **Creator** - Loyihaning dastahli (super-super admin, hech kim bilmaydi)
+2. **Super Admin** - Loyihani boshlovchi (barcha filiallarni nazorat qiladi)
+3. **Tenant Admin** - O'quv markazi boshlig'i (o'z filialini to'liq nazorat qiladi)
+4. **Teacher** - O'qituvchi (darsga qatnashish va uyga vazifa bajarishni qayd qiladi)
+5. **Student** - O'quvchi (o'z kabinetida stats va coins ko'radi)
+6. **Parent** - Ota-ona (o'quvchi haqida ma'lumot oladi)
+
+### 🏢 Asosiy Funktsiyalar
+
+- ✅ Dars jadvali boshqarish (xonalar bilan conflict oldini olish)
+- ✅ Davomat va uyga vazifa tracking
+- ✅ Coins avtomatik hisoblash (attendance + homework + faollik)
+- ✅ Reward store (digital, imtiyoz, fizik sovg'alar)
+- ✅ SMS/Email bildirishnomalar
+- ✅ Audit logging (barcha harakatlar qayd)
+- ✅ Role-based permissions (guard-style)
+- ✅ Student/Parent cabinet
+
+---
+
+## 🗄️ DATABASE SXEMA
+
+### **TENANCY & ROLES**
+
+Tenant
+├── id (UUID)
+├── name, slug, plan
+├── isActive, isDeleted
+└── timestamps
+Role
+├── id (UUID)
+├── name, displayName, level
+├── scope (system | tenant)
+├── isSystem, canDelete, canManageAdmins, canManageUsers
+├── tenantId (NULL = system role)
+└── timestamps
+RolePermission
+├── id (UUID)
+├── permission (string: "create_course", "edit_student", etc.)
+├── roleId, tenantId
+└── unique: [roleId, permission]
+User
+├── id (UUID)
+├── phone (unique), email (unique)
+├── fullName, passwordHash, avatarUrl
+├── parentPhone (student uchun)
+├── tenantId, roleId
+├── isActive, isDeleted
+└── timestamps + auth fields
+
+### **COURSES & GROUPS**
+
+Course
+├── id (UUID)
+├── title, description
+├── tenantId, createdById
+├── isActive, isDeleted
+└── timestamps
+Room
+├── id (UUID)
+├── name, capacity
+├── tenantId
+├── isActive, isDeleted
+└── timestamps
+Group
+├── id (UUID)
+├── name, maxStudents
+├── tenantId, courseId, teacherId
+├── isActive, isDeleted
+└── timestamps
+GroupStudent
+├── id (UUID)
+├── groupId, studentId
+├── isActive, joinedAt
+└── unique: [groupId, studentId]
+
+### **SCHEDULE & SESSIONS**
+
+ScheduleTemplate
+├── id (UUID)
+├── weekday, startTime, endTime
+├── tenantId, groupId, roomId
+├── isActive, isDeleted
+└── timestamps
+ScheduleException
+├── id (UUID)
+├── exceptionDate, startTime, endTime
+├── isCancelled, note
+├── templateId
+└── unique: [templateId, exceptionDate]
+Session
+├── id (UUID)
+├── sessionDate, startTime, endTime
+├── sessionType (lesson | exam | competition | extra)
+├── topic, isLocked
+├── tenantId, groupId, roomId, teacherId
+├── isDeleted
+└── timestamps
+
+### **ATTENDANCE & COINS**
+
+AttendanceRecord
+├── id (UUID)
+├── isPresent, homeworkDone
+├── sessionId, studentId, recordedById
+├── isDeleted
+└── timestamps
+CoinRule
+├── id (UUID)
+├── name, description
+├── coinAmount, direction (earn | deduct)
+├── triggerType (auto | manual)
+├── tenantId, groupId (NULL = global)
+├── isActive, isDeleted
+└── timestamps
+CoinTransaction
+├── id (UUID)
+├── amount, direction
+├── sourceType (attendance | homework | competition | manual | bonus | purchase)
+├── walletId, studentId, teacherId
+├── ruleId, sessionId, groupId
+├── isDeleted
+└── timestamps
+Wallet
+├── id (UUID)
+├── balance (INT)
+├── userId (unique)
+└── updatedAt
+
+### **REWARDS & PURCHASES**
+
+RewardCategory
+├── id (UUID)
+├── name (unique per tenant)
+├── tenantId, createdById
+└── isDeleted
+Reward
+├── id (UUID)
+├── title, description
+├── coinPrice, stock (-1 = cheksiz)
+├── rewardType (digital | privilege | physical)
+├── imageUrl
+├── tenantId, categoryId
+├── isActive, isDeleted
+└── timestamps
+Purchase
+├── id (UUID)
+├── coinSpent, status (pending | approved | delivered | cancelled)
+├── deliveryNote
+├── studentId, rewardId, approvedById
+├── isDeleted
+└── timestamps
+
+### **NOTIFICATIONS**
+
+SmsTemplate
+├── id (UUID)
+├── name, triggerType
+├── body (template with {placeholders})
+├── tenantId, createdById
+└── isDeleted
+SmsLog
+├── id (UUID)
+├── recipientType (student | parent), phone, body
+├── status (pending | sent | failed)
+├── eskizMessageId, errorMessage
+├── tenantId, studentId, templateId, sentById
+└── timestamps
+EmailTemplate
+├── id (UUID)
+├── name, triggerType, subject, body
+├── tenantId, createdById
+└── isDeleted
+EmailLog
+├── id (UUID)
+├── email, subject, body
+├── status (pending | sent | failed)
+├── tenantId, studentId, templateId, sentById
+└── timestamps
+
+### **AUDIT & IMPORTS**
+
+AuditLog
+├── id (UUID)
+├── actionType (create | update | delete | archive | coin_transaction | sms_sent | email_sent)
+├── entityType, entityId
+├── changes (JSON: old_value, new_value)
+├── description, ipAddress, userAgent
+├── tenantId, createdById
+└── createdAt
+ImportLog
+├── id (UUID)
+├── entityType, fileName
+├── totalRows, successRows, failedRows
+├── status (pending | processing | done | failed)
+├── errorLog (JSON)
+├── importedById
+└── timestamps
+
+---
+
+## 🛠️ QULLANILADIGAN TEXNOLOGIYALAR
+
+| Texnologiya         | Maqsadi                               |
+| ------------------- | ------------------------------------- |
+| **Node.js**         | Runtime environment                   |
+| **TypeScript**      | Type-safe JavaScript                  |
+| **NestJS**          | Backend framework (modular, scalable) |
+| **Prisma**          | ORM (type-safe database)              |
+| **PostgreSQL**      | Relational database                   |
+| **JWT**             | Authentication                        |
+| **Bcrypt**          | Password hashing                      |
+| **Swagger/OpenAPI** | API documentation                     |
+| **Jest**            | Unit testing                          |
+| **Docker**          | Containerization                      |
+
+---
+
+## 📦 ISHGA TUSHIRISH
+
+### **1️⃣ Loyihani Clone qilish**
 
 ```bash
-$ npm install
+git clone <repository-url>
+cd erp-coin-system-backend
 ```
 
-## Compile and run the project
+### **2️⃣ Dependencies'ni o'rnatish**
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+### **3️⃣ Environment o'zgaruvchilari**
+
+`.env` faylini yarating:
+
+```env
+# Port
+PORT=3000
+
+# Database URL for Prizma
+DATABASE_URL="postgresql://postgres:your_pass@localhost:your_port/your_db?schema=public"
+
+# Token secrets
+JWT_ACCESS_SECRET = your_access_token_key
+JWT_REFRESH_SECRET = your_refresh_token_key
+
+# Gmail Providers
+SMTP_PASSWORD=your_smtp_password
+SMTP_USER=your_smtp_email
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+
+# SMS service
+ESKIZ_EMAIL=your_eskis_email
+ESKIZ_PASSWORD=eskiz_parol
+ESKIZ_SENDER=your_eskiz_sender
+
+# Creator datas
+CREATOR_PHONE=creator_phone
+CREATOR_PASSWORD=creator_password
+CREATOR_NAME=creator_full_name
+CREATOR_EMAIL=creator_email
+
+
+# Super admin datas
+SUPER_ADMIN_PHONE=super_admin_phone
+SUPER_ADMIN_PASSWORD=super_admin_password
+SUPER_ADMIN_NAME=super_admin_fullname
+
+# Frontend domen
+FRONTEND_DOMEN=your_fronend_domen
+
+# Working environment
+NODE_ENV='development' | 'production'
+```
+
+### **4️⃣ Database Migration'larni ishlatib ko'rish**
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npx prisma migrate dev --name init
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### **5️⃣ Prisma Client'ni generate qilish**
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma generate
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### **6️⃣ Database'ni seed data bilan to'ldirish**
 
-## Resources
+```bash
+npx prisma db seed
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Bu komanda:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- ✅ System tenant yaratadi
+- ✅ Creator, Super Admin, Base roller'ni yaratadi
+- ✅ Creator va Super Admin user'larini yaratadi
+- ✅ Default reward kategoriyalarini yaratadi
+- ✅ Wallet'larni yaratadi
 
-## Support
+### **7️⃣ Loyihani ishga tushirish**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# Development rejimida
+npm run start:dev
 
-## Stay in touch
+# Production rejimida
+npm run build
+npm run start:prod
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### **8️⃣ Prisma Studio (Database GUI)**
 
-## License
+```bash
+npx prisma studio
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Bu buyruq `http://localhost:5555`'da database'ni visual ko'rish imkoniyatini beradi.
+
+---
+
+## 📁 LOYIHA STRUKTURA
+
+erp-coin-system-backend/
+├── src/
+│ ├── modules/
+│ │ ├── auth/ # Authentication & JWT
+│ │ ├── users/ # User management
+│ │ ├── roles/ # Role & Permission
+│ │ ├── tenants/ # Tenant management
+│ │ ├── courses/ # Courses & Groups
+│ │ ├── sessions/ # Sessions & Attendance
+│ │ ├── coins/ # Coin transactions
+│ │ ├── rewards/ # Rewards & Purchases
+│ │ ├── notifications/ # SMS & Email
+│ │ ├── audit/ # Audit logging
+│ │ └── imports/ # Data import
+│ ├── common/
+│ │ ├── guards/ # TenantGuard, AuthGuard, PermissionGuard
+│ │ ├── interceptors/ # Logging, Error handling
+│ │ ├── pipes/ # Validation
+│ │ └── decorators/ # @CurrentTenant, @RequirePermission
+│ ├── prisma/
+│ │ ├── prisma.service.ts
+│ │ └── seed.ts
+│ ├── config/ # Configuration files
+│ └── app.module.ts
+├── prisma/
+│ ├── schema.prisma # Database schema
+│ └── migrations/ # Migration files
+├── test/ # Jest tests
+├── .env # Environment variables
+├── package.json
+├── tsconfig.json
+└── README.md
+
+---
+
+## 🚀 KEYINGI BOSQICHLAR
+
+- [ ] NestJS modules'ni yaratish
+- [ ] Authentication va JWT guard'larini yozish
+- [ ] TenantGuard va PermissionGuard'larini yozish
+- [ ] API endpoints'larini yozish
+- [ ] Unit tests'ni yozish
+- [ ] Integration tests'ni yozish
+- [ ] Docker setup'ni yaratish
+- [ ] CI/CD pipeline'ni sozlash
+- [ ] Frontend integration
+
+---
+
+## 📚 QIMOSIY FAYLLAR
+
+- **Schema**: `prisma/schema.prisma`
+- **Seed data**: `src/prisma/seed.ts`
+- **Environment**: `.env`
+
+---
+
+## 🔐 SECURITY NOTES
+
+- ✅ Creator - hech kimga ma'lum emas (maxfiy)
+- ✅ Super Admin - loyiha buyurtmachisi
+- ✅ Tenant Admin - har filialning o'z admini
+- ✅ Barcha harakatlar AuditLog'da qayd qilinadi
+- ✅ Tenant isolation - faqat o'z filialini ko'radi
+- ✅ Role-based permissions - faqat roli bo'yicha imkoniyatlar
+
+---
+
+## 📞 KONTAKT
+
+**Yaratuvchi**: Muxammadi  
+**Email**: muxammadi0799@gmail.com
+
+---
+
+**⭐ Loyiha ready for development!**

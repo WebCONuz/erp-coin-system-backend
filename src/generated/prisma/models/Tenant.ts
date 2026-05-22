@@ -30,7 +30,10 @@ export type TenantMinAggregateOutputType = {
   slug: string | null
   plan: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TenantMaxAggregateOutputType = {
@@ -39,7 +42,10 @@ export type TenantMaxAggregateOutputType = {
   slug: string | null
   plan: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TenantCountAggregateOutputType = {
@@ -48,7 +54,10 @@ export type TenantCountAggregateOutputType = {
   slug: number
   plan: number
   isActive: number
+  isDeleted: number
   createdAt: number
+  updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -59,7 +68,10 @@ export type TenantMinAggregateInputType = {
   slug?: true
   plan?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type TenantMaxAggregateInputType = {
@@ -68,7 +80,10 @@ export type TenantMaxAggregateInputType = {
   slug?: true
   plan?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type TenantCountAggregateInputType = {
@@ -77,7 +92,10 @@ export type TenantCountAggregateInputType = {
   slug?: true
   plan?: true
   isActive?: true
+  isDeleted?: true
   createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -159,7 +177,10 @@ export type TenantGroupByOutputType = {
   slug: string
   plan: string
   isActive: boolean
+  isDeleted: boolean
   createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
   _count: TenantCountAggregateOutputType | null
   _min: TenantMinAggregateOutputType | null
   _max: TenantMaxAggregateOutputType | null
@@ -189,17 +210,26 @@ export type TenantWhereInput = {
   slug?: Prisma.StringFilter<"Tenant"> | string
   plan?: Prisma.StringFilter<"Tenant"> | string
   isActive?: Prisma.BoolFilter<"Tenant"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Tenant"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
   users?: Prisma.UserListRelationFilter
   courses?: Prisma.CourseListRelationFilter
   groups?: Prisma.GroupListRelationFilter
+  rooms?: Prisma.RoomListRelationFilter
   coinRules?: Prisma.CoinRuleListRelationFilter
   rewards?: Prisma.RewardListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   scheduleTemplates?: Prisma.ScheduleTemplateListRelationFilter
   smsTemplates?: Prisma.SmsTemplateListRelationFilter
+  emailTemplates?: Prisma.EmailTemplateListRelationFilter
   smsLogs?: Prisma.SmsLogListRelationFilter
+  emailLogs?: Prisma.EmailLogListRelationFilter
   rewardCategories?: Prisma.RewardCategoryListRelationFilter
+  roles?: Prisma.RoleListRelationFilter
+  rolePermissions?: Prisma.RolePermissionListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type TenantOrderByWithRelationInput = {
@@ -208,17 +238,26 @@ export type TenantOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
   courses?: Prisma.CourseOrderByRelationAggregateInput
   groups?: Prisma.GroupOrderByRelationAggregateInput
+  rooms?: Prisma.RoomOrderByRelationAggregateInput
   coinRules?: Prisma.CoinRuleOrderByRelationAggregateInput
   rewards?: Prisma.RewardOrderByRelationAggregateInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   scheduleTemplates?: Prisma.ScheduleTemplateOrderByRelationAggregateInput
   smsTemplates?: Prisma.SmsTemplateOrderByRelationAggregateInput
+  emailTemplates?: Prisma.EmailTemplateOrderByRelationAggregateInput
   smsLogs?: Prisma.SmsLogOrderByRelationAggregateInput
+  emailLogs?: Prisma.EmailLogOrderByRelationAggregateInput
   rewardCategories?: Prisma.RewardCategoryOrderByRelationAggregateInput
+  roles?: Prisma.RoleOrderByRelationAggregateInput
+  rolePermissions?: Prisma.RolePermissionOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -230,17 +269,26 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Tenant"> | string
   plan?: Prisma.StringFilter<"Tenant"> | string
   isActive?: Prisma.BoolFilter<"Tenant"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Tenant"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
   users?: Prisma.UserListRelationFilter
   courses?: Prisma.CourseListRelationFilter
   groups?: Prisma.GroupListRelationFilter
+  rooms?: Prisma.RoomListRelationFilter
   coinRules?: Prisma.CoinRuleListRelationFilter
   rewards?: Prisma.RewardListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   scheduleTemplates?: Prisma.ScheduleTemplateListRelationFilter
   smsTemplates?: Prisma.SmsTemplateListRelationFilter
+  emailTemplates?: Prisma.EmailTemplateListRelationFilter
   smsLogs?: Prisma.SmsLogListRelationFilter
+  emailLogs?: Prisma.EmailLogListRelationFilter
   rewardCategories?: Prisma.RewardCategoryListRelationFilter
+  roles?: Prisma.RoleListRelationFilter
+  rolePermissions?: Prisma.RolePermissionListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id" | "slug">
 
 export type TenantOrderByWithAggregationInput = {
@@ -249,7 +297,10 @@ export type TenantOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TenantCountOrderByAggregateInput
   _max?: Prisma.TenantMaxOrderByAggregateInput
   _min?: Prisma.TenantMinOrderByAggregateInput
@@ -264,7 +315,10 @@ export type TenantScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
   plan?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"Tenant"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Tenant"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Tenant"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Tenant"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tenant"> | Date | string | null
 }
 
 export type TenantCreateInput = {
@@ -273,17 +327,26 @@ export type TenantCreateInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateInput = {
@@ -292,17 +355,26 @@ export type TenantUncheckedCreateInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUpdateInput = {
@@ -311,17 +383,26 @@ export type TenantUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateInput = {
@@ -330,17 +411,26 @@ export type TenantUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateManyInput = {
@@ -349,7 +439,10 @@ export type TenantCreateManyInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TenantUpdateManyMutationInput = {
@@ -358,7 +451,10 @@ export type TenantUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TenantUncheckedUpdateManyInput = {
@@ -367,7 +463,10 @@ export type TenantUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TenantCountOrderByAggregateInput = {
@@ -376,7 +475,10 @@ export type TenantCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TenantMaxOrderByAggregateInput = {
@@ -385,7 +487,10 @@ export type TenantMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TenantMinOrderByAggregateInput = {
@@ -394,7 +499,15 @@ export type TenantMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   plan?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+}
+
+export type TenantNullableScalarRelationFilter = {
+  is?: Prisma.TenantWhereInput | null
+  isNot?: Prisma.TenantWhereInput | null
 }
 
 export type TenantScalarRelationFilter = {
@@ -412,6 +525,40 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type TenantCreateNestedOneWithoutRolesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutRolesInput, Prisma.TenantUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutRolesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneWithoutRolesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutRolesInput, Prisma.TenantUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutRolesInput
+  upsert?: Prisma.TenantUpsertWithoutRolesInput
+  disconnect?: Prisma.TenantWhereInput | boolean
+  delete?: Prisma.TenantWhereInput | boolean
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutRolesInput, Prisma.TenantUpdateWithoutRolesInput>, Prisma.TenantUncheckedUpdateWithoutRolesInput>
+}
+
+export type TenantCreateNestedOneWithoutRolePermissionsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutRolePermissionsInput, Prisma.TenantUncheckedCreateWithoutRolePermissionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutRolePermissionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutRolePermissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutRolePermissionsInput, Prisma.TenantUncheckedCreateWithoutRolePermissionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutRolePermissionsInput
+  upsert?: Prisma.TenantUpsertWithoutRolePermissionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutRolePermissionsInput, Prisma.TenantUpdateWithoutRolePermissionsInput>, Prisma.TenantUncheckedUpdateWithoutRolePermissionsInput>
 }
 
 export type TenantCreateNestedOneWithoutUsersInput = {
@@ -440,6 +587,20 @@ export type TenantUpdateOneRequiredWithoutCoursesNestedInput = {
   upsert?: Prisma.TenantUpsertWithoutCoursesInput
   connect?: Prisma.TenantWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutCoursesInput, Prisma.TenantUpdateWithoutCoursesInput>, Prisma.TenantUncheckedUpdateWithoutCoursesInput>
+}
+
+export type TenantCreateNestedOneWithoutRoomsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutRoomsInput, Prisma.TenantUncheckedCreateWithoutRoomsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutRoomsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutRoomsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutRoomsInput, Prisma.TenantUncheckedCreateWithoutRoomsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutRoomsInput
+  upsert?: Prisma.TenantUpsertWithoutRoomsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutRoomsInput, Prisma.TenantUpdateWithoutRoomsInput>, Prisma.TenantUncheckedUpdateWithoutRoomsInput>
 }
 
 export type TenantCreateNestedOneWithoutGroupsInput = {
@@ -554,22 +715,321 @@ export type TenantUpdateOneRequiredWithoutSmsLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutSmsLogsInput, Prisma.TenantUpdateWithoutSmsLogsInput>, Prisma.TenantUncheckedUpdateWithoutSmsLogsInput>
 }
 
+export type TenantCreateNestedOneWithoutEmailTemplatesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutEmailTemplatesInput, Prisma.TenantUncheckedCreateWithoutEmailTemplatesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutEmailTemplatesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutEmailTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutEmailTemplatesInput, Prisma.TenantUncheckedCreateWithoutEmailTemplatesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutEmailTemplatesInput
+  upsert?: Prisma.TenantUpsertWithoutEmailTemplatesInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutEmailTemplatesInput, Prisma.TenantUpdateWithoutEmailTemplatesInput>, Prisma.TenantUncheckedUpdateWithoutEmailTemplatesInput>
+}
+
+export type TenantCreateNestedOneWithoutEmailLogsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutEmailLogsInput, Prisma.TenantUncheckedCreateWithoutEmailLogsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutEmailLogsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutEmailLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutEmailLogsInput, Prisma.TenantUncheckedCreateWithoutEmailLogsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutEmailLogsInput
+  upsert?: Prisma.TenantUpsertWithoutEmailLogsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutEmailLogsInput, Prisma.TenantUpdateWithoutEmailLogsInput>, Prisma.TenantUncheckedUpdateWithoutEmailLogsInput>
+}
+
+export type TenantCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutAuditLogsInput, Prisma.TenantUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutAuditLogsInput, Prisma.TenantUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.TenantUpsertWithoutAuditLogsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.TenantUpdateWithoutAuditLogsInput>, Prisma.TenantUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type TenantCreateWithoutRolesInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutRolesInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutRolesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutRolesInput, Prisma.TenantUncheckedCreateWithoutRolesInput>
+}
+
+export type TenantUpsertWithoutRolesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutRolesInput, Prisma.TenantUncheckedUpdateWithoutRolesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutRolesInput, Prisma.TenantUncheckedCreateWithoutRolesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutRolesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutRolesInput, Prisma.TenantUncheckedUpdateWithoutRolesInput>
+}
+
+export type TenantUpdateWithoutRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutRolePermissionsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutRolePermissionsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutRolePermissionsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutRolePermissionsInput, Prisma.TenantUncheckedCreateWithoutRolePermissionsInput>
+}
+
+export type TenantUpsertWithoutRolePermissionsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutRolePermissionsInput, Prisma.TenantUncheckedUpdateWithoutRolePermissionsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutRolePermissionsInput, Prisma.TenantUncheckedCreateWithoutRolePermissionsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutRolePermissionsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutRolePermissionsInput, Prisma.TenantUncheckedUpdateWithoutRolePermissionsInput>
+}
+
+export type TenantUpdateWithoutRolePermissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutRolePermissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
 export type TenantCreateWithoutUsersInput = {
   id?: string
   name: string
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutUsersInput = {
@@ -578,16 +1038,25 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutUsersInput = {
@@ -612,16 +1081,25 @@ export type TenantUpdateWithoutUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutUsersInput = {
@@ -630,16 +1108,25 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCoursesInput = {
@@ -648,16 +1135,25 @@ export type TenantCreateWithoutCoursesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCoursesInput = {
@@ -666,16 +1162,25 @@ export type TenantUncheckedCreateWithoutCoursesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCoursesInput = {
@@ -700,16 +1205,25 @@ export type TenantUpdateWithoutCoursesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCoursesInput = {
@@ -718,16 +1232,149 @@ export type TenantUncheckedUpdateWithoutCoursesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutRoomsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutRoomsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutRoomsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutRoomsInput, Prisma.TenantUncheckedCreateWithoutRoomsInput>
+}
+
+export type TenantUpsertWithoutRoomsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutRoomsInput, Prisma.TenantUncheckedUpdateWithoutRoomsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutRoomsInput, Prisma.TenantUncheckedCreateWithoutRoomsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutRoomsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutRoomsInput, Prisma.TenantUncheckedUpdateWithoutRoomsInput>
+}
+
+export type TenantUpdateWithoutRoomsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutRoomsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutGroupsInput = {
@@ -736,16 +1383,25 @@ export type TenantCreateWithoutGroupsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutGroupsInput = {
@@ -754,16 +1410,25 @@ export type TenantUncheckedCreateWithoutGroupsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutGroupsInput = {
@@ -788,16 +1453,25 @@ export type TenantUpdateWithoutGroupsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutGroupsInput = {
@@ -806,16 +1480,25 @@ export type TenantUncheckedUpdateWithoutGroupsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutScheduleTemplatesInput = {
@@ -824,16 +1507,25 @@ export type TenantCreateWithoutScheduleTemplatesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutScheduleTemplatesInput = {
@@ -842,16 +1534,25 @@ export type TenantUncheckedCreateWithoutScheduleTemplatesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutScheduleTemplatesInput = {
@@ -876,16 +1577,25 @@ export type TenantUpdateWithoutScheduleTemplatesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutScheduleTemplatesInput = {
@@ -894,16 +1604,25 @@ export type TenantUncheckedUpdateWithoutScheduleTemplatesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCoinRulesInput = {
@@ -912,16 +1631,25 @@ export type TenantCreateWithoutCoinRulesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCoinRulesInput = {
@@ -930,16 +1658,25 @@ export type TenantUncheckedCreateWithoutCoinRulesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCoinRulesInput = {
@@ -964,16 +1701,25 @@ export type TenantUpdateWithoutCoinRulesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCoinRulesInput = {
@@ -982,16 +1728,25 @@ export type TenantUncheckedUpdateWithoutCoinRulesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSessionsInput = {
@@ -1000,16 +1755,25 @@ export type TenantCreateWithoutSessionsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSessionsInput = {
@@ -1018,16 +1782,25 @@ export type TenantUncheckedCreateWithoutSessionsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSessionsInput = {
@@ -1052,16 +1825,25 @@ export type TenantUpdateWithoutSessionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSessionsInput = {
@@ -1070,16 +1852,25 @@ export type TenantUncheckedUpdateWithoutSessionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutRewardCategoriesInput = {
@@ -1088,16 +1879,25 @@ export type TenantCreateWithoutRewardCategoriesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutRewardCategoriesInput = {
@@ -1106,16 +1906,25 @@ export type TenantUncheckedCreateWithoutRewardCategoriesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutRewardCategoriesInput = {
@@ -1140,16 +1949,25 @@ export type TenantUpdateWithoutRewardCategoriesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutRewardCategoriesInput = {
@@ -1158,16 +1976,25 @@ export type TenantUncheckedUpdateWithoutRewardCategoriesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutRewardsInput = {
@@ -1176,16 +2003,25 @@ export type TenantCreateWithoutRewardsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutRewardsInput = {
@@ -1194,16 +2030,25 @@ export type TenantUncheckedCreateWithoutRewardsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutRewardsInput = {
@@ -1228,16 +2073,25 @@ export type TenantUpdateWithoutRewardsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutRewardsInput = {
@@ -1246,16 +2100,25 @@ export type TenantUncheckedUpdateWithoutRewardsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSmsTemplatesInput = {
@@ -1264,16 +2127,25 @@ export type TenantCreateWithoutSmsTemplatesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSmsTemplatesInput = {
@@ -1282,16 +2154,25 @@ export type TenantUncheckedCreateWithoutSmsTemplatesInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSmsTemplatesInput = {
@@ -1316,16 +2197,25 @@ export type TenantUpdateWithoutSmsTemplatesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSmsTemplatesInput = {
@@ -1334,16 +2224,25 @@ export type TenantUncheckedUpdateWithoutSmsTemplatesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSmsLogsInput = {
@@ -1352,16 +2251,25 @@ export type TenantCreateWithoutSmsLogsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSmsLogsInput = {
@@ -1370,16 +2278,25 @@ export type TenantUncheckedCreateWithoutSmsLogsInput = {
   slug: string
   plan?: string
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
   groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
   coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
   rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
   smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSmsLogsInput = {
@@ -1404,16 +2321,25 @@ export type TenantUpdateWithoutSmsLogsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSmsLogsInput = {
@@ -1422,16 +2348,397 @@ export type TenantUncheckedUpdateWithoutSmsLogsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
   courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
   groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
   coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
   rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
   smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutEmailTemplatesInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutEmailTemplatesInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutEmailTemplatesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutEmailTemplatesInput, Prisma.TenantUncheckedCreateWithoutEmailTemplatesInput>
+}
+
+export type TenantUpsertWithoutEmailTemplatesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutEmailTemplatesInput, Prisma.TenantUncheckedUpdateWithoutEmailTemplatesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutEmailTemplatesInput, Prisma.TenantUncheckedCreateWithoutEmailTemplatesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutEmailTemplatesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutEmailTemplatesInput, Prisma.TenantUncheckedUpdateWithoutEmailTemplatesInput>
+}
+
+export type TenantUpdateWithoutEmailTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutEmailTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutEmailLogsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutEmailLogsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutEmailLogsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutEmailLogsInput, Prisma.TenantUncheckedCreateWithoutEmailLogsInput>
+}
+
+export type TenantUpsertWithoutEmailLogsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutEmailLogsInput, Prisma.TenantUncheckedUpdateWithoutEmailLogsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutEmailLogsInput, Prisma.TenantUncheckedCreateWithoutEmailLogsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutEmailLogsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutEmailLogsInput, Prisma.TenantUncheckedUpdateWithoutEmailLogsInput>
+}
+
+export type TenantUpdateWithoutEmailLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutEmailLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutAuditLogsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutAuditLogsInput = {
+  id?: string
+  name: string
+  slug: string
+  plan?: string
+  isActive?: boolean
+  isDeleted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutAuditLogsInput, Prisma.TenantUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type TenantUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutAuditLogsInput, Prisma.TenantUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutAuditLogsInput, Prisma.TenantUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutAuditLogsInput, Prisma.TenantUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type TenantUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 
@@ -1443,26 +2750,38 @@ export type TenantCountOutputType = {
   users: number
   courses: number
   groups: number
+  rooms: number
   coinRules: number
   rewards: number
   sessions: number
   scheduleTemplates: number
   smsTemplates: number
+  emailTemplates: number
   smsLogs: number
+  emailLogs: number
   rewardCategories: number
+  roles: number
+  rolePermissions: number
+  auditLogs: number
 }
 
 export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | TenantCountOutputTypeCountUsersArgs
   courses?: boolean | TenantCountOutputTypeCountCoursesArgs
   groups?: boolean | TenantCountOutputTypeCountGroupsArgs
+  rooms?: boolean | TenantCountOutputTypeCountRoomsArgs
   coinRules?: boolean | TenantCountOutputTypeCountCoinRulesArgs
   rewards?: boolean | TenantCountOutputTypeCountRewardsArgs
   sessions?: boolean | TenantCountOutputTypeCountSessionsArgs
   scheduleTemplates?: boolean | TenantCountOutputTypeCountScheduleTemplatesArgs
   smsTemplates?: boolean | TenantCountOutputTypeCountSmsTemplatesArgs
+  emailTemplates?: boolean | TenantCountOutputTypeCountEmailTemplatesArgs
   smsLogs?: boolean | TenantCountOutputTypeCountSmsLogsArgs
+  emailLogs?: boolean | TenantCountOutputTypeCountEmailLogsArgs
   rewardCategories?: boolean | TenantCountOutputTypeCountRewardCategoriesArgs
+  roles?: boolean | TenantCountOutputTypeCountRolesArgs
+  rolePermissions?: boolean | TenantCountOutputTypeCountRolePermissionsArgs
+  auditLogs?: boolean | TenantCountOutputTypeCountAuditLogsArgs
 }
 
 /**
@@ -1494,6 +2813,13 @@ export type TenantCountOutputTypeCountCoursesArgs<ExtArgs extends runtime.Types.
  */
 export type TenantCountOutputTypeCountGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GroupWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountRoomsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoomWhereInput
 }
 
 /**
@@ -1534,8 +2860,22 @@ export type TenantCountOutputTypeCountSmsTemplatesArgs<ExtArgs extends runtime.T
 /**
  * TenantCountOutputType without action
  */
+export type TenantCountOutputTypeCountEmailTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailTemplateWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
 export type TenantCountOutputTypeCountSmsLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SmsLogWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountEmailLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailLogWhereInput
 }
 
 /**
@@ -1545,6 +2885,27 @@ export type TenantCountOutputTypeCountRewardCategoriesArgs<ExtArgs extends runti
   where?: Prisma.RewardCategoryWhereInput
 }
 
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoleWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountRolePermissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RolePermissionWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
 
 export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1552,17 +2913,26 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   slug?: boolean
   plan?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   users?: boolean | Prisma.Tenant$usersArgs<ExtArgs>
   courses?: boolean | Prisma.Tenant$coursesArgs<ExtArgs>
   groups?: boolean | Prisma.Tenant$groupsArgs<ExtArgs>
+  rooms?: boolean | Prisma.Tenant$roomsArgs<ExtArgs>
   coinRules?: boolean | Prisma.Tenant$coinRulesArgs<ExtArgs>
   rewards?: boolean | Prisma.Tenant$rewardsArgs<ExtArgs>
   sessions?: boolean | Prisma.Tenant$sessionsArgs<ExtArgs>
   scheduleTemplates?: boolean | Prisma.Tenant$scheduleTemplatesArgs<ExtArgs>
   smsTemplates?: boolean | Prisma.Tenant$smsTemplatesArgs<ExtArgs>
+  emailTemplates?: boolean | Prisma.Tenant$emailTemplatesArgs<ExtArgs>
   smsLogs?: boolean | Prisma.Tenant$smsLogsArgs<ExtArgs>
+  emailLogs?: boolean | Prisma.Tenant$emailLogsArgs<ExtArgs>
   rewardCategories?: boolean | Prisma.Tenant$rewardCategoriesArgs<ExtArgs>
+  roles?: boolean | Prisma.Tenant$rolesArgs<ExtArgs>
+  rolePermissions?: boolean | Prisma.Tenant$rolePermissionsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Tenant$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenant"]>
 
@@ -1572,7 +2942,10 @@ export type TenantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   slug?: boolean
   plan?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["tenant"]>
 
 export type TenantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1581,7 +2954,10 @@ export type TenantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   slug?: boolean
   plan?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["tenant"]>
 
 export type TenantSelectScalar = {
@@ -1590,21 +2966,30 @@ export type TenantSelectScalar = {
   slug?: boolean
   plan?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "plan" | "isActive" | "createdAt", ExtArgs["result"]["tenant"]>
+export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "plan" | "isActive" | "isDeleted" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["tenant"]>
 export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Tenant$usersArgs<ExtArgs>
   courses?: boolean | Prisma.Tenant$coursesArgs<ExtArgs>
   groups?: boolean | Prisma.Tenant$groupsArgs<ExtArgs>
+  rooms?: boolean | Prisma.Tenant$roomsArgs<ExtArgs>
   coinRules?: boolean | Prisma.Tenant$coinRulesArgs<ExtArgs>
   rewards?: boolean | Prisma.Tenant$rewardsArgs<ExtArgs>
   sessions?: boolean | Prisma.Tenant$sessionsArgs<ExtArgs>
   scheduleTemplates?: boolean | Prisma.Tenant$scheduleTemplatesArgs<ExtArgs>
   smsTemplates?: boolean | Prisma.Tenant$smsTemplatesArgs<ExtArgs>
+  emailTemplates?: boolean | Prisma.Tenant$emailTemplatesArgs<ExtArgs>
   smsLogs?: boolean | Prisma.Tenant$smsLogsArgs<ExtArgs>
+  emailLogs?: boolean | Prisma.Tenant$emailLogsArgs<ExtArgs>
   rewardCategories?: boolean | Prisma.Tenant$rewardCategoriesArgs<ExtArgs>
+  roles?: boolean | Prisma.Tenant$rolesArgs<ExtArgs>
+  rolePermissions?: boolean | Prisma.Tenant$rolePermissionsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Tenant$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TenantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1616,13 +3001,19 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     users: Prisma.$UserPayload<ExtArgs>[]
     courses: Prisma.$CoursePayload<ExtArgs>[]
     groups: Prisma.$GroupPayload<ExtArgs>[]
+    rooms: Prisma.$RoomPayload<ExtArgs>[]
     coinRules: Prisma.$CoinRulePayload<ExtArgs>[]
     rewards: Prisma.$RewardPayload<ExtArgs>[]
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     scheduleTemplates: Prisma.$ScheduleTemplatePayload<ExtArgs>[]
     smsTemplates: Prisma.$SmsTemplatePayload<ExtArgs>[]
+    emailTemplates: Prisma.$EmailTemplatePayload<ExtArgs>[]
     smsLogs: Prisma.$SmsLogPayload<ExtArgs>[]
+    emailLogs: Prisma.$EmailLogPayload<ExtArgs>[]
     rewardCategories: Prisma.$RewardCategoryPayload<ExtArgs>[]
+    roles: Prisma.$RolePayload<ExtArgs>[]
+    rolePermissions: Prisma.$RolePermissionPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1630,7 +3021,10 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     slug: string
     plan: string
     isActive: boolean
+    isDeleted: boolean
     createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["tenant"]>
   composites: {}
 }
@@ -2028,13 +3422,19 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   users<T extends Prisma.Tenant$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   courses<T extends Prisma.Tenant$coursesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   groups<T extends Prisma.Tenant$groupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$groupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rooms<T extends Prisma.Tenant$roomsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$roomsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   coinRules<T extends Prisma.Tenant$coinRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$coinRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoinRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rewards<T extends Prisma.Tenant$rewardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$rewardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.Tenant$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   scheduleTemplates<T extends Prisma.Tenant$scheduleTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$scheduleTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScheduleTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   smsTemplates<T extends Prisma.Tenant$smsTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$smsTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SmsTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  emailTemplates<T extends Prisma.Tenant$emailTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$emailTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   smsLogs<T extends Prisma.Tenant$smsLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$smsLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SmsLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  emailLogs<T extends Prisma.Tenant$emailLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$emailLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rewardCategories<T extends Prisma.Tenant$rewardCategoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$rewardCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RewardCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roles<T extends Prisma.Tenant$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rolePermissions<T extends Prisma.Tenant$rolePermissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$rolePermissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.Tenant$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2069,7 +3469,10 @@ export interface TenantFieldRefs {
   readonly slug: Prisma.FieldRef<"Tenant", 'String'>
   readonly plan: Prisma.FieldRef<"Tenant", 'String'>
   readonly isActive: Prisma.FieldRef<"Tenant", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"Tenant", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Tenant", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Tenant", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Tenant", 'DateTime'>
 }
     
 
@@ -2535,6 +3938,30 @@ export type Tenant$groupsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * Tenant.rooms
+ */
+export type Tenant$roomsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Room
+   */
+  select?: Prisma.RoomSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Room
+   */
+  omit?: Prisma.RoomOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  where?: Prisma.RoomWhereInput
+  orderBy?: Prisma.RoomOrderByWithRelationInput | Prisma.RoomOrderByWithRelationInput[]
+  cursor?: Prisma.RoomWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoomScalarFieldEnum | Prisma.RoomScalarFieldEnum[]
+}
+
+/**
  * Tenant.coinRules
  */
 export type Tenant$coinRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2655,6 +4082,30 @@ export type Tenant$smsTemplatesArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * Tenant.emailTemplates
+ */
+export type Tenant$emailTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailTemplate
+   */
+  select?: Prisma.EmailTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailTemplate
+   */
+  omit?: Prisma.EmailTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailTemplateInclude<ExtArgs> | null
+  where?: Prisma.EmailTemplateWhereInput
+  orderBy?: Prisma.EmailTemplateOrderByWithRelationInput | Prisma.EmailTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.EmailTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailTemplateScalarFieldEnum | Prisma.EmailTemplateScalarFieldEnum[]
+}
+
+/**
  * Tenant.smsLogs
  */
 export type Tenant$smsLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2679,6 +4130,30 @@ export type Tenant$smsLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Tenant.emailLogs
+ */
+export type Tenant$emailLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailLog
+   */
+  select?: Prisma.EmailLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailLog
+   */
+  omit?: Prisma.EmailLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailLogInclude<ExtArgs> | null
+  where?: Prisma.EmailLogWhereInput
+  orderBy?: Prisma.EmailLogOrderByWithRelationInput | Prisma.EmailLogOrderByWithRelationInput[]
+  cursor?: Prisma.EmailLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailLogScalarFieldEnum | Prisma.EmailLogScalarFieldEnum[]
+}
+
+/**
  * Tenant.rewardCategories
  */
 export type Tenant$rewardCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2700,6 +4175,78 @@ export type Tenant$rewardCategoriesArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.RewardCategoryScalarFieldEnum | Prisma.RewardCategoryScalarFieldEnum[]
+}
+
+/**
+ * Tenant.roles
+ */
+export type Tenant$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Role
+   */
+  select?: Prisma.RoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Role
+   */
+  omit?: Prisma.RoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoleInclude<ExtArgs> | null
+  where?: Prisma.RoleWhereInput
+  orderBy?: Prisma.RoleOrderByWithRelationInput | Prisma.RoleOrderByWithRelationInput[]
+  cursor?: Prisma.RoleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoleScalarFieldEnum | Prisma.RoleScalarFieldEnum[]
+}
+
+/**
+ * Tenant.rolePermissions
+ */
+export type Tenant$rolePermissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RolePermission
+   */
+  select?: Prisma.RolePermissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RolePermission
+   */
+  omit?: Prisma.RolePermissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RolePermissionInclude<ExtArgs> | null
+  where?: Prisma.RolePermissionWhereInput
+  orderBy?: Prisma.RolePermissionOrderByWithRelationInput | Prisma.RolePermissionOrderByWithRelationInput[]
+  cursor?: Prisma.RolePermissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RolePermissionScalarFieldEnum | Prisma.RolePermissionScalarFieldEnum[]
+}
+
+/**
+ * Tenant.auditLogs
+ */
+export type Tenant$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

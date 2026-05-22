@@ -39,8 +39,10 @@ export type PurchaseMinAggregateOutputType = {
   coinSpent: number | null
   status: $Enums.PurchaseStatus | null
   deliveryNote: string | null
+  isDeleted: boolean | null
   purchasedAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   studentId: string | null
   rewardId: string | null
   approvedById: string | null
@@ -51,8 +53,10 @@ export type PurchaseMaxAggregateOutputType = {
   coinSpent: number | null
   status: $Enums.PurchaseStatus | null
   deliveryNote: string | null
+  isDeleted: boolean | null
   purchasedAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   studentId: string | null
   rewardId: string | null
   approvedById: string | null
@@ -63,8 +67,10 @@ export type PurchaseCountAggregateOutputType = {
   coinSpent: number
   status: number
   deliveryNote: number
+  isDeleted: number
   purchasedAt: number
   updatedAt: number
+  deletedAt: number
   studentId: number
   rewardId: number
   approvedById: number
@@ -85,8 +91,10 @@ export type PurchaseMinAggregateInputType = {
   coinSpent?: true
   status?: true
   deliveryNote?: true
+  isDeleted?: true
   purchasedAt?: true
   updatedAt?: true
+  deletedAt?: true
   studentId?: true
   rewardId?: true
   approvedById?: true
@@ -97,8 +105,10 @@ export type PurchaseMaxAggregateInputType = {
   coinSpent?: true
   status?: true
   deliveryNote?: true
+  isDeleted?: true
   purchasedAt?: true
   updatedAt?: true
+  deletedAt?: true
   studentId?: true
   rewardId?: true
   approvedById?: true
@@ -109,8 +119,10 @@ export type PurchaseCountAggregateInputType = {
   coinSpent?: true
   status?: true
   deliveryNote?: true
+  isDeleted?: true
   purchasedAt?: true
   updatedAt?: true
+  deletedAt?: true
   studentId?: true
   rewardId?: true
   approvedById?: true
@@ -208,8 +220,10 @@ export type PurchaseGroupByOutputType = {
   coinSpent: number
   status: $Enums.PurchaseStatus
   deliveryNote: string | null
+  isDeleted: boolean
   purchasedAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   studentId: string
   rewardId: string
   approvedById: string | null
@@ -243,8 +257,10 @@ export type PurchaseWhereInput = {
   coinSpent?: Prisma.IntFilter<"Purchase"> | number
   status?: Prisma.EnumPurchaseStatusFilter<"Purchase"> | $Enums.PurchaseStatus
   deliveryNote?: Prisma.StringNullableFilter<"Purchase"> | string | null
+  isDeleted?: Prisma.BoolFilter<"Purchase"> | boolean
   purchasedAt?: Prisma.DateTimeFilter<"Purchase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Purchase"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Purchase"> | Date | string | null
   studentId?: Prisma.UuidFilter<"Purchase"> | string
   rewardId?: Prisma.UuidFilter<"Purchase"> | string
   approvedById?: Prisma.UuidNullableFilter<"Purchase"> | string | null
@@ -258,8 +274,10 @@ export type PurchaseOrderByWithRelationInput = {
   coinSpent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   purchasedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   studentId?: Prisma.SortOrder
   rewardId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -276,8 +294,10 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<{
   coinSpent?: Prisma.IntFilter<"Purchase"> | number
   status?: Prisma.EnumPurchaseStatusFilter<"Purchase"> | $Enums.PurchaseStatus
   deliveryNote?: Prisma.StringNullableFilter<"Purchase"> | string | null
+  isDeleted?: Prisma.BoolFilter<"Purchase"> | boolean
   purchasedAt?: Prisma.DateTimeFilter<"Purchase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Purchase"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Purchase"> | Date | string | null
   studentId?: Prisma.UuidFilter<"Purchase"> | string
   rewardId?: Prisma.UuidFilter<"Purchase"> | string
   approvedById?: Prisma.UuidNullableFilter<"Purchase"> | string | null
@@ -291,8 +311,10 @@ export type PurchaseOrderByWithAggregationInput = {
   coinSpent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   purchasedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   studentId?: Prisma.SortOrder
   rewardId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -311,8 +333,10 @@ export type PurchaseScalarWhereWithAggregatesInput = {
   coinSpent?: Prisma.IntWithAggregatesFilter<"Purchase"> | number
   status?: Prisma.EnumPurchaseStatusWithAggregatesFilter<"Purchase"> | $Enums.PurchaseStatus
   deliveryNote?: Prisma.StringNullableWithAggregatesFilter<"Purchase"> | string | null
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Purchase"> | boolean
   purchasedAt?: Prisma.DateTimeWithAggregatesFilter<"Purchase"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Purchase"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Purchase"> | Date | string | null
   studentId?: Prisma.UuidWithAggregatesFilter<"Purchase"> | string
   rewardId?: Prisma.UuidWithAggregatesFilter<"Purchase"> | string
   approvedById?: Prisma.UuidNullableWithAggregatesFilter<"Purchase"> | string | null
@@ -323,8 +347,10 @@ export type PurchaseCreateInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput
@@ -335,8 +361,10 @@ export type PurchaseUncheckedCreateInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   rewardId: string
   approvedById?: string | null
@@ -347,8 +375,10 @@ export type PurchaseUpdateInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput
@@ -359,8 +389,10 @@ export type PurchaseUncheckedUpdateInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -371,8 +403,10 @@ export type PurchaseCreateManyInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   rewardId: string
   approvedById?: string | null
@@ -383,8 +417,10 @@ export type PurchaseUpdateManyMutationInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PurchaseUncheckedUpdateManyInput = {
@@ -392,8 +428,10 @@ export type PurchaseUncheckedUpdateManyInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -414,8 +452,10 @@ export type PurchaseCountOrderByAggregateInput = {
   coinSpent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deliveryNote?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   purchasedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   rewardId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
@@ -430,8 +470,10 @@ export type PurchaseMaxOrderByAggregateInput = {
   coinSpent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deliveryNote?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   purchasedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   rewardId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
@@ -442,8 +484,10 @@ export type PurchaseMinOrderByAggregateInput = {
   coinSpent?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deliveryNote?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   purchasedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   rewardId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
@@ -588,8 +632,10 @@ export type PurchaseCreateWithoutStudentInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput
 }
@@ -599,8 +645,10 @@ export type PurchaseUncheckedCreateWithoutStudentInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   rewardId: string
   approvedById?: string | null
 }
@@ -620,8 +668,10 @@ export type PurchaseCreateWithoutApprovedByInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput
 }
@@ -631,8 +681,10 @@ export type PurchaseUncheckedCreateWithoutApprovedByInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   rewardId: string
 }
@@ -671,8 +723,10 @@ export type PurchaseScalarWhereInput = {
   coinSpent?: Prisma.IntFilter<"Purchase"> | number
   status?: Prisma.EnumPurchaseStatusFilter<"Purchase"> | $Enums.PurchaseStatus
   deliveryNote?: Prisma.StringNullableFilter<"Purchase"> | string | null
+  isDeleted?: Prisma.BoolFilter<"Purchase"> | boolean
   purchasedAt?: Prisma.DateTimeFilter<"Purchase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Purchase"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Purchase"> | Date | string | null
   studentId?: Prisma.UuidFilter<"Purchase"> | string
   rewardId?: Prisma.UuidFilter<"Purchase"> | string
   approvedById?: Prisma.UuidNullableFilter<"Purchase"> | string | null
@@ -699,8 +753,10 @@ export type PurchaseCreateWithoutRewardInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput
 }
@@ -710,8 +766,10 @@ export type PurchaseUncheckedCreateWithoutRewardInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   approvedById?: string | null
 }
@@ -747,8 +805,10 @@ export type PurchaseCreateManyStudentInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   rewardId: string
   approvedById?: string | null
 }
@@ -758,8 +818,10 @@ export type PurchaseCreateManyApprovedByInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   rewardId: string
 }
@@ -769,8 +831,10 @@ export type PurchaseUpdateWithoutStudentInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput
 }
@@ -780,8 +844,10 @@ export type PurchaseUncheckedUpdateWithoutStudentInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -791,8 +857,10 @@ export type PurchaseUncheckedUpdateManyWithoutStudentInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -802,8 +870,10 @@ export type PurchaseUpdateWithoutApprovedByInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput
 }
@@ -813,8 +883,10 @@ export type PurchaseUncheckedUpdateWithoutApprovedByInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -824,8 +896,10 @@ export type PurchaseUncheckedUpdateManyWithoutApprovedByInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -835,8 +909,10 @@ export type PurchaseCreateManyRewardInput = {
   coinSpent: number
   status?: $Enums.PurchaseStatus
   deliveryNote?: string | null
+  isDeleted?: boolean
   purchasedAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   studentId: string
   approvedById?: string | null
 }
@@ -846,8 +922,10 @@ export type PurchaseUpdateWithoutRewardInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput
 }
@@ -857,8 +935,10 @@ export type PurchaseUncheckedUpdateWithoutRewardInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -868,8 +948,10 @@ export type PurchaseUncheckedUpdateManyWithoutRewardInput = {
   coinSpent?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPurchaseStatusFieldUpdateOperationsInput | $Enums.PurchaseStatus
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -881,8 +963,10 @@ export type PurchaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   coinSpent?: boolean
   status?: boolean
   deliveryNote?: boolean
+  isDeleted?: boolean
   purchasedAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   studentId?: boolean
   rewardId?: boolean
   approvedById?: boolean
@@ -896,8 +980,10 @@ export type PurchaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   coinSpent?: boolean
   status?: boolean
   deliveryNote?: boolean
+  isDeleted?: boolean
   purchasedAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   studentId?: boolean
   rewardId?: boolean
   approvedById?: boolean
@@ -911,8 +997,10 @@ export type PurchaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   coinSpent?: boolean
   status?: boolean
   deliveryNote?: boolean
+  isDeleted?: boolean
   purchasedAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   studentId?: boolean
   rewardId?: boolean
   approvedById?: boolean
@@ -926,14 +1014,16 @@ export type PurchaseSelectScalar = {
   coinSpent?: boolean
   status?: boolean
   deliveryNote?: boolean
+  isDeleted?: boolean
   purchasedAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   studentId?: boolean
   rewardId?: boolean
   approvedById?: boolean
 }
 
-export type PurchaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "coinSpent" | "status" | "deliveryNote" | "purchasedAt" | "updatedAt" | "studentId" | "rewardId" | "approvedById", ExtArgs["result"]["purchase"]>
+export type PurchaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "coinSpent" | "status" | "deliveryNote" | "isDeleted" | "purchasedAt" | "updatedAt" | "deletedAt" | "studentId" | "rewardId" | "approvedById", ExtArgs["result"]["purchase"]>
 export type PurchaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>
@@ -962,8 +1052,10 @@ export type $PurchasePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     coinSpent: number
     status: $Enums.PurchaseStatus
     deliveryNote: string | null
+    isDeleted: boolean
     purchasedAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     studentId: string
     rewardId: string
     approvedById: string | null
@@ -1397,8 +1489,10 @@ export interface PurchaseFieldRefs {
   readonly coinSpent: Prisma.FieldRef<"Purchase", 'Int'>
   readonly status: Prisma.FieldRef<"Purchase", 'PurchaseStatus'>
   readonly deliveryNote: Prisma.FieldRef<"Purchase", 'String'>
+  readonly isDeleted: Prisma.FieldRef<"Purchase", 'Boolean'>
   readonly purchasedAt: Prisma.FieldRef<"Purchase", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Purchase", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Purchase", 'DateTime'>
   readonly studentId: Prisma.FieldRef<"Purchase", 'String'>
   readonly rewardId: Prisma.FieldRef<"Purchase", 'String'>
   readonly approvedById: Prisma.FieldRef<"Purchase", 'String'>

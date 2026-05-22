@@ -78,11 +78,50 @@ enum SmsStatus {
   failed
 }
 
+enum EmailStatus {
+  pending
+  sent
+  failed
+}
+
+enum NotificationType {
+  sms
+  email
+  push
+}
+
 enum SmsTriggerType {
-  monthly_payment    // Har oyning boshida to'lov eslatmasi
-  absence            // O'quvchi darsga kelmasa
-  schedule_updated   // Yangi dars jadvali
-  custom             // Admin o'zi yozgan xabar
+  absence
+  schedule_updated
+  custom
+  performance_alert
+}
+
+enum EmailTriggerType {
+  absence
+  schedule_updated
+  custom
+  performance_alert
+  reward_update
+}
+
+enum RoleScope {
+  system
+  tenant
+}
+
+enum AuditActionType {
+  create
+  update
+  delete
+  archive
+  restore
+  assign
+  approve
+  reject
+  coin_transaction
+  sms_sent
+  email_sent
 }
 
 // ─────────────────────────────────────────
@@ -95,40 +134,78 @@ model Tenant {
   slug      String   @unique @db.VarChar(100)
   plan      String   @default("basic") @db.VarChar(50)
   isActive  Boolean  @default(true) @map("is_active")
+  isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
 
   users              User[]
   courses            Course[]
   groups             Group[]
+  rooms              Room[]
   coinRules          CoinRule[]
   rewards            Reward[]
   sessions           Session[]
   scheduleTemplates  ScheduleTemplate[]
   smsTemplates       SmsTemplate[]
+  emailTemplates     EmailTemplate[]
   smsLogs            SmsLog[]
+  emailLogs          EmailLog[]
   rewardCategories   RewardCategory[]
+  roles              Role[]
+  rolePermissions    RolePermission[]
+  auditLogs          AuditLog[]
 
   @@map("tenants")
 }
 
 // ─────────────────────────────────────────
-// ROLES
+// ROLES & PERMISSIONS
 // ─────────────────────────────────────────
 
 model Role {
   id              String   @id @default(uuid()) @db.Uuid
-  name            String   @unique @db.VarChar(50)
+  name            String   @db.VarChar(50)
   displayName     String   @map("display_name") @db.VarChar(100)
   level           Int      @default(1) @db.SmallInt
+  scope           RoleScope @default(tenant)
   canDelete       Boolean  @default(false) @map("can_delete")
   canManageAdmins Boolean  @default(false) @map("can_manage_admins")
+  canManageUsers  Boolean  @default(false) @map("can_manage_users")
   isSystem        Boolean  @default(false) @map("is_system")
   isActive        Boolean  @default(true) @map("is_active")
+  isDeleted       Boolean  @default(false) @map("is_deleted")
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz
 
-  users User[]
+  tenantId String? @map("tenant_id") @db.Uuid
+  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
+  users       User[]
+  permissions RolePermission[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([isSystem])
   @@map("roles")
+}
+
+model RolePermission {
+  id         String   @id @default(uuid()) @db.Uuid
+  permission String   @db.VarChar(100)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  roleId   String @map("role_id") @db.Uuid
+  tenantId String @map("tenant_id") @db.Uuid
+
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permission])
+  @@index([roleId])
+  @@index([tenantId])
+  @@map("role_permissions")
 }
 
 // ─────────────────────────────────────────
@@ -142,13 +219,15 @@ model User {
   fullName     String    @map("full_name") @db.VarChar(150)
   email        String?   @unique @db.VarChar(150)
   avatarUrl    String?   @map("avatar_url")
-  parentPhone  String?   @map("parent_phone") @db.VarChar(20) // student uchun, optional
+  parentPhone  String?   @map("parent_phone") @db.VarChar(20)
   isActive     Boolean   @default(true) @map("is_active")
+  isDeleted    Boolean   @default(false) @map("is_deleted")
   archivedAt   DateTime? @map("archived_at") @db.Timestamptz
   archivedById String?   @map("archived_by") @db.Uuid
   createdById  String?   @map("created_by") @db.Uuid
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
   refreshTokenHash     String?   @map("refresh_token_hash")
   passwordResetToken   String?   @map("password_reset_token")
   passwordResetExpiry  DateTime? @map("password_reset_expiry") @db.Timestamptz
@@ -156,10 +235,12 @@ model User {
   tenantId String @map("tenant_id") @db.Uuid
   roleId   String @map("role_id") @db.Uuid
 
-  tenant     Tenant @relation(fields: [tenantId], references: [id])
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   role       Role   @relation(fields: [roleId], references: [id])
   createdBy  User?  @relation("UserCreatedBy", fields: [createdById], references: [id])
   createdUsers User[] @relation("UserCreatedBy")
+  archivedBy User?  @relation("UserArchivedBy", fields: [archivedById], references: [id])
+  archivedUsers User[] @relation("UserArchivedBy")
 
   wallet                    Wallet?
   taughtGroups              Group[]             @relation("GroupTeacher")
@@ -179,15 +260,20 @@ model User {
   createdCourses            Course[]
   smsLogsAsStudent          SmsLog[]            @relation("SmsStudent")
   smsLogsSentBy             SmsLog[]            @relation("SmsSentBy")
+  emailLogsAsStudent        EmailLog[]          @relation("EmailStudent")
+  emailLogsSentBy           EmailLog[]          @relation("EmailSentBy")
   scheduleTemplatesCreated  ScheduleTemplate[]
   scheduleExceptionsCreated ScheduleException[]
   smsTemplatesCreated       SmsTemplate[]
+  emailTemplatesCreated     EmailTemplate[]
   rewardCategories          RewardCategory[]
+  auditLogsCreatedBy        AuditLog[]          @relation("AuditCreatedBy")
 
   @@index([tenantId])
   @@index([phone])
   @@index([roleId])
   @@index([isActive])
+  @@index([isDeleted])
   @@map("users")
 }
 
@@ -201,7 +287,7 @@ model Wallet {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   userId String @unique @map("user_id") @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   transactions CoinTransaction[]
 
@@ -218,22 +304,51 @@ model Course {
   title        String    @db.VarChar(200)
   description  String?
   isActive     Boolean   @default(true) @map("is_active")
+  isDeleted    Boolean   @default(false) @map("is_deleted")
   archivedAt   DateTime? @map("archived_at") @db.Timestamptz
   archivedById String?   @map("archived_by") @db.Uuid
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
 
   tenantId    String @map("tenant_id") @db.Uuid
   createdById String @map("created_by") @db.Uuid
 
-  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   createdBy User   @relation(fields: [createdById], references: [id])
 
   groups Group[]
 
   @@index([tenantId])
   @@index([isActive])
+  @@index([isDeleted])
   @@map("courses")
+}
+
+// ─────────────────────────────────────────
+// ROOMS
+// ─────────────────────────────────────────
+
+model Room {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @db.VarChar(100)
+  capacity    Int      @default(50) @db.SmallInt
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  sessions        Session[]
+  scheduleTemplates ScheduleTemplate[]
+
+  @@index([tenantId])
+  @@index([isActive])
+  @@map("rooms")
 }
 
 // ─────────────────────────────────────────
@@ -245,17 +360,19 @@ model Group {
   name         String    @db.VarChar(150)
   maxStudents  Int       @default(50) @map("max_students") @db.SmallInt
   isActive     Boolean   @default(true) @map("is_active")
+  isDeleted    Boolean   @default(false) @map("is_deleted")
   archivedAt   DateTime? @map("archived_at") @db.Timestamptz
   archivedById String?   @map("archived_by") @db.Uuid
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
 
   tenantId    String @map("tenant_id") @db.Uuid
   courseId    String @map("course_id") @db.Uuid
   teacherId   String @map("teacher_id") @db.Uuid
   createdById String @map("created_by") @db.Uuid
 
-  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   course    Course @relation(fields: [courseId], references: [id])
   teacher   User   @relation("GroupTeacher", fields: [teacherId], references: [id])
   createdBy User   @relation("GroupCreatedBy", fields: [createdById], references: [id])
@@ -270,6 +387,7 @@ model Group {
   @@index([courseId])
   @@index([teacherId])
   @@index([isActive])
+  @@index([isDeleted])
   @@map("groups")
 }
 
@@ -280,6 +398,7 @@ model Group {
 model GroupStudent {
   id         String    @id @default(uuid()) @db.Uuid
   isActive   Boolean   @default(true) @map("is_active")
+  isDeleted  Boolean   @default(false) @map("is_deleted")
   archivedAt DateTime? @map("archived_at") @db.Timestamptz
   joinedAt   DateTime  @default(now()) @map("joined_at") @db.Timestamptz
 
@@ -287,69 +406,76 @@ model GroupStudent {
   studentId String  @map("student_id") @db.Uuid
   addedById String? @map("added_by") @db.Uuid
 
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
   student User  @relation("StudentMembership", fields: [studentId], references: [id])
   addedBy User? @relation("AddedByUser", fields: [addedById], references: [id])
 
   @@unique([groupId, studentId])
   @@index([groupId])
   @@index([studentId])
+  @@index([isDeleted])
   @@map("group_students")
 }
 
 // ─────────────────────────────────────────
-// SCHEDULE TEMPLATE  (haftalik takrorlanuvchi jadval)
+// SCHEDULE_TEMPLATE
 // ─────────────────────────────────────────
 
 model ScheduleTemplate {
   id        String   @id @default(uuid()) @db.Uuid
   weekday   Weekday
-  startTime String   @map("start_time") @db.VarChar(5)  // "14:00"
-  endTime   String   @map("end_time") @db.VarChar(5)    // "16:00"
-  room      String?  @db.VarChar(100)
+  startTime String   @map("start_time") @db.VarChar(5)
+  endTime   String   @map("end_time") @db.VarChar(5)
   isActive  Boolean  @default(true) @map("is_active")
+  isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
 
   tenantId    String @map("tenant_id") @db.Uuid
   groupId     String @map("group_id") @db.Uuid
+  roomId      String @map("room_id") @db.Uuid
   createdById String @map("created_by") @db.Uuid
 
-  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   group     Group  @relation(fields: [groupId], references: [id])
+  room      Room   @relation(fields: [roomId], references: [id])
   createdBy User   @relation(fields: [createdById], references: [id])
 
   exceptions ScheduleException[]
 
   @@index([tenantId])
   @@index([groupId])
+  @@index([roomId])
+  @@index([isDeleted])
   @@map("schedule_templates")
 }
 
 // ─────────────────────────────────────────
-// SCHEDULE EXCEPTION  (qo'lda o'zgartirish)
-// Bekor qilish, siljitish, qo'shimcha dars
+// SCHEDULE_EXCEPTION
 // ─────────────────────────────────────────
 
 model ScheduleException {
   id            String    @id @default(uuid()) @db.Uuid
   exceptionDate DateTime  @map("exception_date") @db.Date
-  startTime     String?   @map("start_time") @db.VarChar(5)  // null = bekor qilingan
+  startTime     String?   @map("start_time") @db.VarChar(5)
   endTime       String?   @map("end_time") @db.VarChar(5)
-  room          String?   @db.VarChar(100)
-  isCancelled   Boolean   @default(false) @map("is_cancelled") // true = o'sha kun dars yo'q
+  isCancelled   Boolean   @default(false) @map("is_cancelled")
   note          String?   @db.VarChar(300)
+  isDeleted     Boolean   @default(false) @map("is_deleted")
   createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt     DateTime? @map("deleted_at") @db.Timestamptz
 
   templateId  String  @map("template_id") @db.Uuid
   createdById String  @map("created_by") @db.Uuid
 
-  template  ScheduleTemplate @relation(fields: [templateId], references: [id])
+  template  ScheduleTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
   createdBy User             @relation(fields: [createdById], references: [id])
 
-  @@unique([templateId, exceptionDate]) // bir kunda bir template uchun bitta exception
+  @@unique([templateId, exceptionDate])
   @@index([templateId])
   @@index([exceptionDate])
+  @@index([isDeleted])
   @@map("schedule_exceptions")
 }
 
@@ -365,15 +491,17 @@ model CoinRule {
   direction   CoinDirection
   triggerType TriggerType   @default(manual) @map("trigger_type")
   isActive    Boolean       @default(true) @map("is_active")
+  isDeleted   Boolean       @default(false) @map("is_deleted")
   archivedAt  DateTime?     @map("archived_at") @db.Timestamptz
   createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime?     @map("deleted_at") @db.Timestamptz
 
   tenantId    String  @map("tenant_id") @db.Uuid
-  groupId     String? @map("group_id") @db.Uuid  // null = global
+  groupId     String? @map("group_id") @db.Uuid
   createdById String  @map("created_by") @db.Uuid
 
-  tenant    Tenant  @relation(fields: [tenantId], references: [id])
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   group     Group?  @relation(fields: [groupId], references: [id])
   createdBy User    @relation(fields: [createdById], references: [id])
 
@@ -382,6 +510,7 @@ model CoinRule {
   @@index([tenantId])
   @@index([groupId])
   @@index([isActive])
+  @@index([isDeleted])
   @@map("coin_rules")
 }
 
@@ -392,21 +521,25 @@ model CoinRule {
 model Session {
   id          String      @id @default(uuid()) @db.Uuid
   sessionDate DateTime    @map("session_date") @db.Date
-  startTime   String?     @map("start_time") @db.VarChar(5)  // "14:00"
+  startTime   String?     @map("start_time") @db.VarChar(5)
   endTime     String?     @map("end_time") @db.VarChar(5)
   sessionType SessionType @default(lesson) @map("session_type")
   topic       String?     @db.VarChar(300)
   isLocked    Boolean     @default(false) @map("is_locked")
+  isDeleted   Boolean     @default(false) @map("is_deleted")
   lockedAt    DateTime?   @map("locked_at") @db.Timestamptz
   lockedById  String?     @map("locked_by") @db.Uuid
   createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt   DateTime?   @map("deleted_at") @db.Timestamptz
 
   tenantId  String @map("tenant_id") @db.Uuid
   groupId   String @map("group_id") @db.Uuid
+  roomId    String @map("room_id") @db.Uuid
   teacherId String @map("teacher_id") @db.Uuid
 
-  tenant  Tenant @relation(fields: [tenantId], references: [id])
+  tenant  Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   group   Group  @relation(fields: [groupId], references: [id])
+  room    Room   @relation(fields: [roomId], references: [id])
   teacher User   @relation(fields: [teacherId], references: [id])
 
   attendanceRecords AttendanceRecord[]
@@ -414,7 +547,9 @@ model Session {
 
   @@index([tenantId])
   @@index([groupId, sessionDate(sort: Desc)])
+  @@index([roomId])
   @@index([teacherId])
+  @@index([isDeleted])
   @@map("sessions")
 }
 
@@ -428,18 +563,20 @@ model AttendanceRecord {
   homeworkDone Boolean  @default(false) @map("homework_done")
   recordedAt   DateTime @default(now()) @map("recorded_at") @db.Timestamptz
   updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  isDeleted    Boolean  @default(false) @map("is_deleted")
 
   sessionId    String @map("session_id") @db.Uuid
   studentId    String @map("student_id") @db.Uuid
   recordedById String @map("recorded_by") @db.Uuid
 
-  session    Session @relation(fields: [sessionId], references: [id])
+  session    Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   student    User    @relation("StudentAttendance", fields: [studentId], references: [id])
   recordedBy User    @relation("RecordedByUser", fields: [recordedById], references: [id])
 
   @@unique([sessionId, studentId])
   @@index([sessionId, studentId])
   @@index([studentId])
+  @@index([isDeleted])
   @@map("attendance_records")
 }
 
@@ -453,7 +590,9 @@ model CoinTransaction {
   direction  CoinDirection
   sourceType SourceType    @map("source_type")
   note       String?
+  isDeleted  Boolean       @default(false) @map("is_deleted")
   createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt  DateTime?     @map("deleted_at") @db.Timestamptz
 
   walletId  String  @map("wallet_id") @db.Uuid
   studentId String  @map("student_id") @db.Uuid
@@ -462,7 +601,7 @@ model CoinTransaction {
   sessionId String? @map("session_id") @db.Uuid
   groupId   String? @map("group_id") @db.Uuid
 
-  wallet  Wallet    @relation(fields: [walletId], references: [id])
+  wallet  Wallet    @relation(fields: [walletId], references: [id], onDelete: Cascade)
   student User      @relation("StudentTransactions", fields: [studentId], references: [id])
   teacher User?     @relation("TeacherTransactions", fields: [teacherId], references: [id])
   rule    CoinRule? @relation(fields: [ruleId], references: [id])
@@ -473,6 +612,7 @@ model CoinTransaction {
   @@index([studentId, createdAt(sort: Desc)])
   @@index([teacherId])
   @@index([sessionId])
+  @@index([isDeleted])
   @@map("coin_transactions")
 }
 
@@ -484,15 +624,19 @@ model RewardCategory {
   id           String  @id @default(uuid()) @db.Uuid
   name         String  @db.VarChar(100)
   isActive     Boolean @default(true) @map("is_active")
-  tenantId     String @map("tenant_id") @db.Uuid
-  createdById  String @map("created_by") @db.Uuid
+  isDeleted    Boolean @default(false) @map("is_deleted")
+  tenantId     String  @map("tenant_id") @db.Uuid
+  createdById  String  @map("created_by") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
 
-  tenant     Tenant @relation(fields: [tenantId], references: [id])
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   createdBy  User   @relation(fields: [createdById], references: [id])
   rewards    Reward[]
 
-  @@unique([tenantId, name])  // bir tenantda bir xil nom bo'lmasin
+  @@unique([tenantId, name])
   @@index([tenantId])
+  @@index([isDeleted])
   @@map("reward_categories")
 }
 
@@ -505,26 +649,29 @@ model Reward {
   title        String     @db.VarChar(200)
   description  String?
   coinPrice    Int        @map("coin_price")
-  stock        Int        @default(-1)  // -1 = cheksiz
+  stock        Int        @default(-1)
   rewardType   RewardType @map("reward_type")
   imageUrl     String?    @map("image_url")
   isActive     Boolean    @default(true) @map("is_active")
+  isDeleted    Boolean    @default(false) @map("is_deleted")
   archivedAt   DateTime?  @map("archived_at") @db.Timestamptz
   archivedById String?    @map("archived_by") @db.Uuid
   createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz
   updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime?  @map("deleted_at") @db.Timestamptz
 
   tenantId    String @map("tenant_id") @db.Uuid
   categoryId  String @map("category_id") @db.Uuid
   createdById String @map("created_by") @db.Uuid
 
-  tenant    Tenant         @relation(fields: [tenantId], references: [id])
+  tenant    Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   category  RewardCategory @relation(fields: [categoryId], references: [id])
   createdBy User           @relation(fields: [createdById], references: [id])
 
   purchases Purchase[]
 
   @@index([tenantId, isActive])
+  @@index([isDeleted])
   @@map("rewards")
 }
 
@@ -537,8 +684,10 @@ model Purchase {
   coinSpent    Int            @map("coin_spent")
   status       PurchaseStatus @default(pending)
   deliveryNote String?        @map("delivery_note")
+  isDeleted    Boolean        @default(false) @map("is_deleted")
   purchasedAt  DateTime       @default(now()) @map("purchased_at") @db.Timestamptz
   updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime?      @map("deleted_at") @db.Timestamptz
 
   studentId    String  @map("student_id") @db.Uuid
   rewardId     String  @map("reward_id") @db.Uuid
@@ -550,56 +699,62 @@ model Purchase {
 
   @@index([studentId])
   @@index([status])
+  @@index([isDeleted])
   @@map("purchases")
 }
 
 // ─────────────────────────────────────────
-// SMS_TEMPLATES  (admin tomonidan boshqariladi)
+// SMS_TEMPLATES
 // ─────────────────────────────────────────
 
 model SmsTemplate {
   id          String         @id @default(uuid()) @db.Uuid
-  name        String         @db.VarChar(200)       // "Oylik to'lov eslatmasi"
+  name        String         @db.VarChar(200)
   triggerType SmsTriggerType @map("trigger_type")
-  body        String         // "Hurmatli {parent_name}, {student_name} ..."
+  body        String
   isActive    Boolean        @default(true) @map("is_active")
+  isDeleted   Boolean        @default(false) @map("is_deleted")
   createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime?      @map("deleted_at") @db.Timestamptz
 
   tenantId    String @map("tenant_id") @db.Uuid
   createdById String @map("created_by") @db.Uuid
 
-  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   createdBy User   @relation(fields: [createdById], references: [id])
 
   smsLogs SmsLog[]
 
   @@index([tenantId])
+  @@index([isDeleted])
   @@map("sms_templates")
 }
 
 // ─────────────────────────────────────────
-// SMS_LOGS  (yuborilgan SMSlar tarixi)
+// SMS_LOGS
 // ─────────────────────────────────────────
 
 model SmsLog {
   id            String           @id @default(uuid()) @db.Uuid
-  recipientType SmsRecipientType @map("recipient_type")  // student | parent
-  phone         String           @db.VarChar(20)         // yuborilgan raqam
-  body          String                                    // haqiqiy yuborilgan matn
+  recipientType SmsRecipientType @map("recipient_type")
+  phone         String           @db.VarChar(20)
+  body          String
   triggerType   SmsTriggerType   @map("trigger_type")
   status        SmsStatus        @default(pending)
-  eskizMessageId String?         @map("eskiz_message_id") // Eskiz API dan qaytgan ID
+  eskizMessageId String?         @map("eskiz_message_id")
   errorMessage  String?          @map("error_message")
+  isDeleted     Boolean          @default(false) @map("is_deleted")
   sentAt        DateTime?        @map("sent_at") @db.Timestamptz
   createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt     DateTime?        @map("deleted_at") @db.Timestamptz
 
   tenantId   String  @map("tenant_id") @db.Uuid
-  studentId  String  @map("student_id") @db.Uuid   // qaysi o'quvchi haqida
+  studentId  String  @map("student_id") @db.Uuid
   templateId String? @map("template_id") @db.Uuid
-  sentById   String  @map("sent_by") @db.Uuid      // qaysi admin yuborganini
+  sentById   String  @map("sent_by") @db.Uuid
 
-  tenant    Tenant       @relation(fields: [tenantId], references: [id])
+  tenant    Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   student   User         @relation("SmsStudent", fields: [studentId], references: [id])
   template  SmsTemplate? @relation(fields: [templateId], references: [id])
   sentBy    User         @relation("SmsSentBy", fields: [sentById], references: [id])
@@ -608,7 +763,101 @@ model SmsLog {
   @@index([studentId])
   @@index([status])
   @@index([createdAt(sort: Desc)])
+  @@index([isDeleted])
   @@map("sms_logs")
+}
+
+// ─────────────────────────────────────────
+// EMAIL_TEMPLATES
+// ─────────────────────────────────────────
+
+model EmailTemplate {
+  id          String          @id @default(uuid()) @db.Uuid
+  name        String          @db.VarChar(200)
+  triggerType EmailTriggerType @map("trigger_type")
+  subject     String          @db.VarChar(300)
+  body        String
+  isActive    Boolean         @default(true) @map("is_active")
+  isDeleted   Boolean         @default(false) @map("is_deleted")
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime?       @map("deleted_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdBy User   @relation(fields: [createdById], references: [id])
+
+  emailLogs EmailLog[]
+
+  @@index([tenantId])
+  @@index([isDeleted])
+  @@map("email_templates")
+}
+
+// ─────────────────────────────────────────
+// EMAIL_LOGS
+// ─────────────────────────────────────────
+
+model EmailLog {
+  id             String          @id @default(uuid()) @db.Uuid
+  email          String          @db.VarChar(150)
+  subject        String          @db.VarChar(300)
+  body           String
+  triggerType    EmailTriggerType @map("trigger_type")
+  status         EmailStatus     @default(pending)
+  errorMessage   String?         @map("error_message")
+  isDeleted      Boolean         @default(false) @map("is_deleted")
+  sentAt         DateTime?       @map("sent_at") @db.Timestamptz
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt      DateTime?       @map("deleted_at") @db.Timestamptz
+
+  tenantId   String  @map("tenant_id") @db.Uuid
+  studentId  String  @map("student_id") @db.Uuid
+  templateId String? @map("template_id") @db.Uuid
+  sentById   String  @map("sent_by") @db.Uuid
+
+  tenant    Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  student   User           @relation("EmailStudent", fields: [studentId], references: [id])
+  template  EmailTemplate? @relation(fields: [templateId], references: [id])
+  sentBy    User           @relation("EmailSentBy", fields: [sentById], references: [id])
+
+  @@index([tenantId])
+  @@index([studentId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@index([isDeleted])
+  @@map("email_logs")
+}
+
+// ─────────────────────────────────────────
+// AUDIT_LOGS
+// ─────────────────────────────────────────
+
+model AuditLog {
+  id          String            @id @default(uuid()) @db.Uuid
+  actionType  AuditActionType   @map("action_type")
+  entityType  String            @db.VarChar(50)
+  entityId    String            @db.Uuid
+  changes     Json?
+  description String?           @db.VarChar(500)
+  ipAddress   String?           @map("ip_address") @db.VarChar(50)
+  userAgent   String?           @map("user_agent")
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz
+
+  tenantId  String @map("tenant_id") @db.Uuid
+  createdBy String @map("created_by") @db.Uuid
+
+  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdByUser User   @relation("AuditCreatedBy", fields: [createdBy], references: [id])
+
+  @@index([tenantId])
+  @@index([createdBy])
+  @@index([actionType])
+  @@index([entityType])
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
 }
 
 // ─────────────────────────────────────────
@@ -624,11 +873,14 @@ model ImportLog {
   failedRows  Int          @default(0) @map("failed_rows")
   status      ImportStatus @default(pending)
   errorLog    Json?        @map("error_log")
+  isDeleted   Boolean      @default(false) @map("is_deleted")
   createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz
   finishedAt  DateTime?    @map("finished_at") @db.Timestamptz
+  deletedAt   DateTime?    @map("deleted_at") @db.Timestamptz
 
   importedById String @map("imported_by") @db.Uuid
   importedBy   User   @relation(fields: [importedById], references: [id])
 
+  @@index([isDeleted])
   @@map("import_logs")
 }

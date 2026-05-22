@@ -29,10 +29,11 @@ export type ScheduleExceptionMinAggregateOutputType = {
   exceptionDate: Date | null
   startTime: string | null
   endTime: string | null
-  room: string | null
   isCancelled: boolean | null
   note: string | null
+  isDeleted: boolean | null
   createdAt: Date | null
+  deletedAt: Date | null
   templateId: string | null
   createdById: string | null
 }
@@ -42,10 +43,11 @@ export type ScheduleExceptionMaxAggregateOutputType = {
   exceptionDate: Date | null
   startTime: string | null
   endTime: string | null
-  room: string | null
   isCancelled: boolean | null
   note: string | null
+  isDeleted: boolean | null
   createdAt: Date | null
+  deletedAt: Date | null
   templateId: string | null
   createdById: string | null
 }
@@ -55,10 +57,11 @@ export type ScheduleExceptionCountAggregateOutputType = {
   exceptionDate: number
   startTime: number
   endTime: number
-  room: number
   isCancelled: number
   note: number
+  isDeleted: number
   createdAt: number
+  deletedAt: number
   templateId: number
   createdById: number
   _all: number
@@ -70,10 +73,11 @@ export type ScheduleExceptionMinAggregateInputType = {
   exceptionDate?: true
   startTime?: true
   endTime?: true
-  room?: true
   isCancelled?: true
   note?: true
+  isDeleted?: true
   createdAt?: true
+  deletedAt?: true
   templateId?: true
   createdById?: true
 }
@@ -83,10 +87,11 @@ export type ScheduleExceptionMaxAggregateInputType = {
   exceptionDate?: true
   startTime?: true
   endTime?: true
-  room?: true
   isCancelled?: true
   note?: true
+  isDeleted?: true
   createdAt?: true
+  deletedAt?: true
   templateId?: true
   createdById?: true
 }
@@ -96,10 +101,11 @@ export type ScheduleExceptionCountAggregateInputType = {
   exceptionDate?: true
   startTime?: true
   endTime?: true
-  room?: true
   isCancelled?: true
   note?: true
+  isDeleted?: true
   createdAt?: true
+  deletedAt?: true
   templateId?: true
   createdById?: true
   _all?: true
@@ -182,10 +188,11 @@ export type ScheduleExceptionGroupByOutputType = {
   exceptionDate: Date
   startTime: string | null
   endTime: string | null
-  room: string | null
   isCancelled: boolean
   note: string | null
+  isDeleted: boolean
   createdAt: Date
+  deletedAt: Date | null
   templateId: string
   createdById: string
   _count: ScheduleExceptionCountAggregateOutputType | null
@@ -216,10 +223,11 @@ export type ScheduleExceptionWhereInput = {
   exceptionDate?: Prisma.DateTimeFilter<"ScheduleException"> | Date | string
   startTime?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
   endTime?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
-  room?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
   isCancelled?: Prisma.BoolFilter<"ScheduleException"> | boolean
   note?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
+  isDeleted?: Prisma.BoolFilter<"ScheduleException"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ScheduleException"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"ScheduleException"> | Date | string | null
   templateId?: Prisma.UuidFilter<"ScheduleException"> | string
   createdById?: Prisma.UuidFilter<"ScheduleException"> | string
   template?: Prisma.XOR<Prisma.ScheduleTemplateScalarRelationFilter, Prisma.ScheduleTemplateWhereInput>
@@ -231,10 +239,11 @@ export type ScheduleExceptionOrderByWithRelationInput = {
   exceptionDate?: Prisma.SortOrder
   startTime?: Prisma.SortOrderInput | Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  room?: Prisma.SortOrderInput | Prisma.SortOrder
   isCancelled?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   templateId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   template?: Prisma.ScheduleTemplateOrderByWithRelationInput
@@ -250,10 +259,11 @@ export type ScheduleExceptionWhereUniqueInput = Prisma.AtLeast<{
   exceptionDate?: Prisma.DateTimeFilter<"ScheduleException"> | Date | string
   startTime?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
   endTime?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
-  room?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
   isCancelled?: Prisma.BoolFilter<"ScheduleException"> | boolean
   note?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
+  isDeleted?: Prisma.BoolFilter<"ScheduleException"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ScheduleException"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"ScheduleException"> | Date | string | null
   templateId?: Prisma.UuidFilter<"ScheduleException"> | string
   createdById?: Prisma.UuidFilter<"ScheduleException"> | string
   template?: Prisma.XOR<Prisma.ScheduleTemplateScalarRelationFilter, Prisma.ScheduleTemplateWhereInput>
@@ -265,10 +275,11 @@ export type ScheduleExceptionOrderByWithAggregationInput = {
   exceptionDate?: Prisma.SortOrder
   startTime?: Prisma.SortOrderInput | Prisma.SortOrder
   endTime?: Prisma.SortOrderInput | Prisma.SortOrder
-  room?: Prisma.SortOrderInput | Prisma.SortOrder
   isCancelled?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   templateId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   _count?: Prisma.ScheduleExceptionCountOrderByAggregateInput
@@ -284,10 +295,11 @@ export type ScheduleExceptionScalarWhereWithAggregatesInput = {
   exceptionDate?: Prisma.DateTimeWithAggregatesFilter<"ScheduleException"> | Date | string
   startTime?: Prisma.StringNullableWithAggregatesFilter<"ScheduleException"> | string | null
   endTime?: Prisma.StringNullableWithAggregatesFilter<"ScheduleException"> | string | null
-  room?: Prisma.StringNullableWithAggregatesFilter<"ScheduleException"> | string | null
   isCancelled?: Prisma.BoolWithAggregatesFilter<"ScheduleException"> | boolean
   note?: Prisma.StringNullableWithAggregatesFilter<"ScheduleException"> | string | null
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"ScheduleException"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ScheduleException"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ScheduleException"> | Date | string | null
   templateId?: Prisma.UuidWithAggregatesFilter<"ScheduleException"> | string
   createdById?: Prisma.UuidWithAggregatesFilter<"ScheduleException"> | string
 }
@@ -297,10 +309,11 @@ export type ScheduleExceptionCreateInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   template: Prisma.ScheduleTemplateCreateNestedOneWithoutExceptionsInput
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleExceptionsCreatedInput
 }
@@ -310,10 +323,11 @@ export type ScheduleExceptionUncheckedCreateInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   templateId: string
   createdById: string
 }
@@ -323,10 +337,11 @@ export type ScheduleExceptionUpdateInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   template?: Prisma.ScheduleTemplateUpdateOneRequiredWithoutExceptionsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput
 }
@@ -336,10 +351,11 @@ export type ScheduleExceptionUncheckedUpdateInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -349,10 +365,11 @@ export type ScheduleExceptionCreateManyInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   templateId: string
   createdById: string
 }
@@ -362,10 +379,11 @@ export type ScheduleExceptionUpdateManyMutationInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ScheduleExceptionUncheckedUpdateManyInput = {
@@ -373,10 +391,11 @@ export type ScheduleExceptionUncheckedUpdateManyInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -401,10 +420,11 @@ export type ScheduleExceptionCountOrderByAggregateInput = {
   exceptionDate?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrder
   isCancelled?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -414,10 +434,11 @@ export type ScheduleExceptionMaxOrderByAggregateInput = {
   exceptionDate?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrder
   isCancelled?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -427,10 +448,11 @@ export type ScheduleExceptionMinOrderByAggregateInput = {
   exceptionDate?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
-  room?: Prisma.SortOrder
   isCancelled?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
 }
@@ -524,10 +546,11 @@ export type ScheduleExceptionCreateWithoutCreatedByInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   template: Prisma.ScheduleTemplateCreateNestedOneWithoutExceptionsInput
 }
 
@@ -536,10 +559,11 @@ export type ScheduleExceptionUncheckedCreateWithoutCreatedByInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   templateId: string
 }
 
@@ -577,10 +601,11 @@ export type ScheduleExceptionScalarWhereInput = {
   exceptionDate?: Prisma.DateTimeFilter<"ScheduleException"> | Date | string
   startTime?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
   endTime?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
-  room?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
   isCancelled?: Prisma.BoolFilter<"ScheduleException"> | boolean
   note?: Prisma.StringNullableFilter<"ScheduleException"> | string | null
+  isDeleted?: Prisma.BoolFilter<"ScheduleException"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ScheduleException"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"ScheduleException"> | Date | string | null
   templateId?: Prisma.UuidFilter<"ScheduleException"> | string
   createdById?: Prisma.UuidFilter<"ScheduleException"> | string
 }
@@ -590,10 +615,11 @@ export type ScheduleExceptionCreateWithoutTemplateInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleExceptionsCreatedInput
 }
 
@@ -602,10 +628,11 @@ export type ScheduleExceptionUncheckedCreateWithoutTemplateInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   createdById: string
 }
 
@@ -640,10 +667,11 @@ export type ScheduleExceptionCreateManyCreatedByInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   templateId: string
 }
 
@@ -652,10 +680,11 @@ export type ScheduleExceptionUpdateWithoutCreatedByInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   template?: Prisma.ScheduleTemplateUpdateOneRequiredWithoutExceptionsNestedInput
 }
 
@@ -664,10 +693,11 @@ export type ScheduleExceptionUncheckedUpdateWithoutCreatedByInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -676,10 +706,11 @@ export type ScheduleExceptionUncheckedUpdateManyWithoutCreatedByInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -688,10 +719,11 @@ export type ScheduleExceptionCreateManyTemplateInput = {
   exceptionDate: Date | string
   startTime?: string | null
   endTime?: string | null
-  room?: string | null
   isCancelled?: boolean
   note?: string | null
+  isDeleted?: boolean
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   createdById: string
 }
 
@@ -700,10 +732,11 @@ export type ScheduleExceptionUpdateWithoutTemplateInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput
 }
 
@@ -712,10 +745,11 @@ export type ScheduleExceptionUncheckedUpdateWithoutTemplateInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -724,10 +758,11 @@ export type ScheduleExceptionUncheckedUpdateManyWithoutTemplateInput = {
   exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  room?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -738,10 +773,11 @@ export type ScheduleExceptionSelect<ExtArgs extends runtime.Types.Extensions.Int
   exceptionDate?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isCancelled?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   templateId?: boolean
   createdById?: boolean
   template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>
@@ -753,10 +789,11 @@ export type ScheduleExceptionSelectCreateManyAndReturn<ExtArgs extends runtime.T
   exceptionDate?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isCancelled?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   templateId?: boolean
   createdById?: boolean
   template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>
@@ -768,10 +805,11 @@ export type ScheduleExceptionSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   exceptionDate?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isCancelled?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   templateId?: boolean
   createdById?: boolean
   template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>
@@ -783,15 +821,16 @@ export type ScheduleExceptionSelectScalar = {
   exceptionDate?: boolean
   startTime?: boolean
   endTime?: boolean
-  room?: boolean
   isCancelled?: boolean
   note?: boolean
+  isDeleted?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   templateId?: boolean
   createdById?: boolean
 }
 
-export type ScheduleExceptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "exceptionDate" | "startTime" | "endTime" | "room" | "isCancelled" | "note" | "createdAt" | "templateId" | "createdById", ExtArgs["result"]["scheduleException"]>
+export type ScheduleExceptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "exceptionDate" | "startTime" | "endTime" | "isCancelled" | "note" | "isDeleted" | "createdAt" | "deletedAt" | "templateId" | "createdById", ExtArgs["result"]["scheduleException"]>
 export type ScheduleExceptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -816,10 +855,11 @@ export type $ScheduleExceptionPayload<ExtArgs extends runtime.Types.Extensions.I
     exceptionDate: Date
     startTime: string | null
     endTime: string | null
-    room: string | null
     isCancelled: boolean
     note: string | null
+    isDeleted: boolean
     createdAt: Date
+    deletedAt: Date | null
     templateId: string
     createdById: string
   }, ExtArgs["result"]["scheduleException"]>
@@ -1251,10 +1291,11 @@ export interface ScheduleExceptionFieldRefs {
   readonly exceptionDate: Prisma.FieldRef<"ScheduleException", 'DateTime'>
   readonly startTime: Prisma.FieldRef<"ScheduleException", 'String'>
   readonly endTime: Prisma.FieldRef<"ScheduleException", 'String'>
-  readonly room: Prisma.FieldRef<"ScheduleException", 'String'>
   readonly isCancelled: Prisma.FieldRef<"ScheduleException", 'Boolean'>
   readonly note: Prisma.FieldRef<"ScheduleException", 'String'>
+  readonly isDeleted: Prisma.FieldRef<"ScheduleException", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"ScheduleException", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"ScheduleException", 'DateTime'>
   readonly templateId: Prisma.FieldRef<"ScheduleException", 'String'>
   readonly createdById: Prisma.FieldRef<"ScheduleException", 'String'>
 }

@@ -45,10 +45,12 @@ export type RewardMinAggregateOutputType = {
   rewardType: $Enums.RewardType | null
   imageUrl: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   categoryId: string | null
   createdById: string | null
@@ -63,10 +65,12 @@ export type RewardMaxAggregateOutputType = {
   rewardType: $Enums.RewardType | null
   imageUrl: string | null
   isActive: boolean | null
+  isDeleted: boolean | null
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   categoryId: string | null
   createdById: string | null
@@ -81,10 +85,12 @@ export type RewardCountAggregateOutputType = {
   rewardType: number
   imageUrl: number
   isActive: number
+  isDeleted: number
   archivedAt: number
   archivedById: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   tenantId: number
   categoryId: number
   createdById: number
@@ -111,10 +117,12 @@ export type RewardMinAggregateInputType = {
   rewardType?: true
   imageUrl?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   categoryId?: true
   createdById?: true
@@ -129,10 +137,12 @@ export type RewardMaxAggregateInputType = {
   rewardType?: true
   imageUrl?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   categoryId?: true
   createdById?: true
@@ -147,10 +157,12 @@ export type RewardCountAggregateInputType = {
   rewardType?: true
   imageUrl?: true
   isActive?: true
+  isDeleted?: true
   archivedAt?: true
   archivedById?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   tenantId?: true
   categoryId?: true
   createdById?: true
@@ -252,10 +264,12 @@ export type RewardGroupByOutputType = {
   rewardType: $Enums.RewardType
   imageUrl: string | null
   isActive: boolean
+  isDeleted: boolean
   archivedAt: Date | null
   archivedById: string | null
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   tenantId: string
   categoryId: string
   createdById: string
@@ -293,10 +307,12 @@ export type RewardWhereInput = {
   rewardType?: Prisma.EnumRewardTypeFilter<"Reward"> | $Enums.RewardType
   imageUrl?: Prisma.StringNullableFilter<"Reward"> | string | null
   isActive?: Prisma.BoolFilter<"Reward"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Reward"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Reward"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Reward"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Reward"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Reward"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Reward"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Reward"> | string
   categoryId?: Prisma.UuidFilter<"Reward"> | string
   createdById?: Prisma.UuidFilter<"Reward"> | string
@@ -315,10 +331,12 @@ export type RewardOrderByWithRelationInput = {
   rewardType?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -340,10 +358,12 @@ export type RewardWhereUniqueInput = Prisma.AtLeast<{
   rewardType?: Prisma.EnumRewardTypeFilter<"Reward"> | $Enums.RewardType
   imageUrl?: Prisma.StringNullableFilter<"Reward"> | string | null
   isActive?: Prisma.BoolFilter<"Reward"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Reward"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Reward"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Reward"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Reward"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Reward"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Reward"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Reward"> | string
   categoryId?: Prisma.UuidFilter<"Reward"> | string
   createdById?: Prisma.UuidFilter<"Reward"> | string
@@ -362,10 +382,12 @@ export type RewardOrderByWithAggregationInput = {
   rewardType?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   archivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -388,10 +410,12 @@ export type RewardScalarWhereWithAggregatesInput = {
   rewardType?: Prisma.EnumRewardTypeWithAggregatesFilter<"Reward"> | $Enums.RewardType
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Reward"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Reward"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Reward"> | boolean
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Reward"> | Date | string | null
   archivedById?: Prisma.UuidNullableWithAggregatesFilter<"Reward"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Reward"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Reward"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Reward"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"Reward"> | string
   categoryId?: Prisma.UuidWithAggregatesFilter<"Reward"> | string
   createdById?: Prisma.UuidWithAggregatesFilter<"Reward"> | string
@@ -406,10 +430,12 @@ export type RewardCreateInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutRewardsInput
   category: Prisma.RewardCategoryCreateNestedOneWithoutRewardsInput
   createdBy: Prisma.UserCreateNestedOneWithoutRewardsCreatedInput
@@ -425,10 +451,12 @@ export type RewardUncheckedCreateInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   categoryId: string
   createdById: string
@@ -444,10 +472,12 @@ export type RewardUpdateInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRewardsNestedInput
   category?: Prisma.RewardCategoryUpdateOneRequiredWithoutRewardsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutRewardsCreatedNestedInput
@@ -463,10 +493,12 @@ export type RewardUncheckedUpdateInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -482,10 +514,12 @@ export type RewardCreateManyInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   categoryId: string
   createdById: string
@@ -500,10 +534,12 @@ export type RewardUpdateManyMutationInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RewardUncheckedUpdateManyInput = {
@@ -515,10 +551,12 @@ export type RewardUncheckedUpdateManyInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -543,10 +581,12 @@ export type RewardCountOrderByAggregateInput = {
   rewardType?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -566,10 +606,12 @@ export type RewardMaxOrderByAggregateInput = {
   rewardType?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -584,10 +626,12 @@ export type RewardMinOrderByAggregateInput = {
   rewardType?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   archivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -756,10 +800,12 @@ export type RewardCreateWithoutTenantInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   category: Prisma.RewardCategoryCreateNestedOneWithoutRewardsInput
   createdBy: Prisma.UserCreateNestedOneWithoutRewardsCreatedInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutRewardInput
@@ -774,10 +820,12 @@ export type RewardUncheckedCreateWithoutTenantInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   categoryId: string
   createdById: string
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutRewardInput
@@ -821,10 +869,12 @@ export type RewardScalarWhereInput = {
   rewardType?: Prisma.EnumRewardTypeFilter<"Reward"> | $Enums.RewardType
   imageUrl?: Prisma.StringNullableFilter<"Reward"> | string | null
   isActive?: Prisma.BoolFilter<"Reward"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Reward"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Reward"> | Date | string | null
   archivedById?: Prisma.UuidNullableFilter<"Reward"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Reward"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Reward"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Reward"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Reward"> | string
   categoryId?: Prisma.UuidFilter<"Reward"> | string
   createdById?: Prisma.UuidFilter<"Reward"> | string
@@ -839,10 +889,12 @@ export type RewardCreateWithoutCreatedByInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutRewardsInput
   category: Prisma.RewardCategoryCreateNestedOneWithoutRewardsInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutRewardInput
@@ -857,10 +909,12 @@ export type RewardUncheckedCreateWithoutCreatedByInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   categoryId: string
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutRewardInput
@@ -901,10 +955,12 @@ export type RewardCreateWithoutCategoryInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutRewardsInput
   createdBy: Prisma.UserCreateNestedOneWithoutRewardsCreatedInput
   purchases?: Prisma.PurchaseCreateNestedManyWithoutRewardInput
@@ -919,10 +975,12 @@ export type RewardUncheckedCreateWithoutCategoryInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutRewardInput
@@ -963,10 +1021,12 @@ export type RewardCreateWithoutPurchasesInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutRewardsInput
   category: Prisma.RewardCategoryCreateNestedOneWithoutRewardsInput
   createdBy: Prisma.UserCreateNestedOneWithoutRewardsCreatedInput
@@ -981,10 +1041,12 @@ export type RewardUncheckedCreateWithoutPurchasesInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   categoryId: string
   createdById: string
@@ -1015,10 +1077,12 @@ export type RewardUpdateWithoutPurchasesInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRewardsNestedInput
   category?: Prisma.RewardCategoryUpdateOneRequiredWithoutRewardsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutRewardsCreatedNestedInput
@@ -1033,10 +1097,12 @@ export type RewardUncheckedUpdateWithoutPurchasesInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1051,10 +1117,12 @@ export type RewardCreateManyTenantInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   categoryId: string
   createdById: string
 }
@@ -1068,10 +1136,12 @@ export type RewardUpdateWithoutTenantInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   category?: Prisma.RewardCategoryUpdateOneRequiredWithoutRewardsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutRewardsCreatedNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutRewardNestedInput
@@ -1086,10 +1156,12 @@ export type RewardUncheckedUpdateWithoutTenantInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutRewardNestedInput
@@ -1104,10 +1176,12 @@ export type RewardUncheckedUpdateManyWithoutTenantInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1121,10 +1195,12 @@ export type RewardCreateManyCreatedByInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   categoryId: string
 }
@@ -1138,10 +1214,12 @@ export type RewardUpdateWithoutCreatedByInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRewardsNestedInput
   category?: Prisma.RewardCategoryUpdateOneRequiredWithoutRewardsNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutRewardNestedInput
@@ -1156,10 +1234,12 @@ export type RewardUncheckedUpdateWithoutCreatedByInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutRewardNestedInput
@@ -1174,10 +1254,12 @@ export type RewardUncheckedUpdateManyWithoutCreatedByInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1191,10 +1273,12 @@ export type RewardCreateManyCategoryInput = {
   rewardType: $Enums.RewardType
   imageUrl?: string | null
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: Date | string | null
   archivedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   createdById: string
 }
@@ -1208,10 +1292,12 @@ export type RewardUpdateWithoutCategoryInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRewardsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutRewardsCreatedNestedInput
   purchases?: Prisma.PurchaseUpdateManyWithoutRewardNestedInput
@@ -1226,10 +1312,12 @@ export type RewardUncheckedUpdateWithoutCategoryInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutRewardNestedInput
@@ -1244,10 +1332,12 @@ export type RewardUncheckedUpdateManyWithoutCategoryInput = {
   rewardType?: Prisma.EnumRewardTypeFieldUpdateOperationsInput | $Enums.RewardType
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   archivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1292,10 +1382,12 @@ export type RewardSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   rewardType?: boolean
   imageUrl?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -1315,10 +1407,12 @@ export type RewardSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   rewardType?: boolean
   imageUrl?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -1336,10 +1430,12 @@ export type RewardSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   rewardType?: boolean
   imageUrl?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   categoryId?: boolean
   createdById?: boolean
@@ -1357,16 +1453,18 @@ export type RewardSelectScalar = {
   rewardType?: boolean
   imageUrl?: boolean
   isActive?: boolean
+  isDeleted?: boolean
   archivedAt?: boolean
   archivedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   categoryId?: boolean
   createdById?: boolean
 }
 
-export type RewardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "coinPrice" | "stock" | "rewardType" | "imageUrl" | "isActive" | "archivedAt" | "archivedById" | "createdAt" | "updatedAt" | "tenantId" | "categoryId" | "createdById", ExtArgs["result"]["reward"]>
+export type RewardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "coinPrice" | "stock" | "rewardType" | "imageUrl" | "isActive" | "isDeleted" | "archivedAt" | "archivedById" | "createdAt" | "updatedAt" | "deletedAt" | "tenantId" | "categoryId" | "createdById", ExtArgs["result"]["reward"]>
 export type RewardInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   category?: boolean | Prisma.RewardCategoryDefaultArgs<ExtArgs>
@@ -1402,10 +1500,12 @@ export type $RewardPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     rewardType: $Enums.RewardType
     imageUrl: string | null
     isActive: boolean
+    isDeleted: boolean
     archivedAt: Date | null
     archivedById: string | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     tenantId: string
     categoryId: string
     createdById: string
@@ -1844,10 +1944,12 @@ export interface RewardFieldRefs {
   readonly rewardType: Prisma.FieldRef<"Reward", 'RewardType'>
   readonly imageUrl: Prisma.FieldRef<"Reward", 'String'>
   readonly isActive: Prisma.FieldRef<"Reward", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"Reward", 'Boolean'>
   readonly archivedAt: Prisma.FieldRef<"Reward", 'DateTime'>
   readonly archivedById: Prisma.FieldRef<"Reward", 'String'>
   readonly createdAt: Prisma.FieldRef<"Reward", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Reward", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Reward", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"Reward", 'String'>
   readonly categoryId: Prisma.FieldRef<"Reward", 'String'>
   readonly createdById: Prisma.FieldRef<"Reward", 'String'>

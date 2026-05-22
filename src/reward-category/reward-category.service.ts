@@ -16,8 +16,6 @@ export class RewardCategoryService {
     createdById: string,
     dto: CreateRewardCategoryDto,
   ) {
-    console.log(tenantId, createdById, dto);
-
     const existing = await this.prisma.rewardCategory.findUnique({
       where: { tenantId_name: { tenantId, name: dto.name } },
     });
@@ -30,6 +28,8 @@ export class RewardCategoryService {
   }
 
   async findAll(tenantId: string) {
+    console.log('++++');
+
     return this.prisma.rewardCategory.findMany({
       where: { tenantId },
       orderBy: { name: 'asc' },

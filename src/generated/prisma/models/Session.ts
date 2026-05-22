@@ -32,11 +32,14 @@ export type SessionMinAggregateOutputType = {
   sessionType: $Enums.SessionType | null
   topic: string | null
   isLocked: boolean | null
+  isDeleted: boolean | null
   lockedAt: Date | null
   lockedById: string | null
   createdAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   groupId: string | null
+  roomId: string | null
   teacherId: string | null
 }
 
@@ -48,11 +51,14 @@ export type SessionMaxAggregateOutputType = {
   sessionType: $Enums.SessionType | null
   topic: string | null
   isLocked: boolean | null
+  isDeleted: boolean | null
   lockedAt: Date | null
   lockedById: string | null
   createdAt: Date | null
+  deletedAt: Date | null
   tenantId: string | null
   groupId: string | null
+  roomId: string | null
   teacherId: string | null
 }
 
@@ -64,11 +70,14 @@ export type SessionCountAggregateOutputType = {
   sessionType: number
   topic: number
   isLocked: number
+  isDeleted: number
   lockedAt: number
   lockedById: number
   createdAt: number
+  deletedAt: number
   tenantId: number
   groupId: number
+  roomId: number
   teacherId: number
   _all: number
 }
@@ -82,11 +91,14 @@ export type SessionMinAggregateInputType = {
   sessionType?: true
   topic?: true
   isLocked?: true
+  isDeleted?: true
   lockedAt?: true
   lockedById?: true
   createdAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
+  roomId?: true
   teacherId?: true
 }
 
@@ -98,11 +110,14 @@ export type SessionMaxAggregateInputType = {
   sessionType?: true
   topic?: true
   isLocked?: true
+  isDeleted?: true
   lockedAt?: true
   lockedById?: true
   createdAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
+  roomId?: true
   teacherId?: true
 }
 
@@ -114,11 +129,14 @@ export type SessionCountAggregateInputType = {
   sessionType?: true
   topic?: true
   isLocked?: true
+  isDeleted?: true
   lockedAt?: true
   lockedById?: true
   createdAt?: true
+  deletedAt?: true
   tenantId?: true
   groupId?: true
+  roomId?: true
   teacherId?: true
   _all?: true
 }
@@ -203,11 +221,14 @@ export type SessionGroupByOutputType = {
   sessionType: $Enums.SessionType
   topic: string | null
   isLocked: boolean
+  isDeleted: boolean
   lockedAt: Date | null
   lockedById: string | null
   createdAt: Date
+  deletedAt: Date | null
   tenantId: string
   groupId: string
+  roomId: string
   teacherId: string
   _count: SessionCountAggregateOutputType | null
   _min: SessionMinAggregateOutputType | null
@@ -240,14 +261,18 @@ export type SessionWhereInput = {
   sessionType?: Prisma.EnumSessionTypeFilter<"Session"> | $Enums.SessionType
   topic?: Prisma.StringNullableFilter<"Session"> | string | null
   isLocked?: Prisma.BoolFilter<"Session"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Session"> | boolean
   lockedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   lockedById?: Prisma.UuidNullableFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Session"> | string
   groupId?: Prisma.UuidFilter<"Session"> | string
+  roomId?: Prisma.UuidFilter<"Session"> | string
   teacherId?: Prisma.UuidFilter<"Session"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
+  room?: Prisma.XOR<Prisma.RoomScalarRelationFilter, Prisma.RoomWhereInput>
   teacher?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   attendanceRecords?: Prisma.AttendanceRecordListRelationFilter
   transactions?: Prisma.CoinTransactionListRelationFilter
@@ -261,14 +286,18 @@ export type SessionOrderByWithRelationInput = {
   sessionType?: Prisma.SortOrder
   topic?: Prisma.SortOrderInput | Prisma.SortOrder
   isLocked?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lockedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   group?: Prisma.GroupOrderByWithRelationInput
+  room?: Prisma.RoomOrderByWithRelationInput
   teacher?: Prisma.UserOrderByWithRelationInput
   attendanceRecords?: Prisma.AttendanceRecordOrderByRelationAggregateInput
   transactions?: Prisma.CoinTransactionOrderByRelationAggregateInput
@@ -285,14 +314,18 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
   sessionType?: Prisma.EnumSessionTypeFilter<"Session"> | $Enums.SessionType
   topic?: Prisma.StringNullableFilter<"Session"> | string | null
   isLocked?: Prisma.BoolFilter<"Session"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Session"> | boolean
   lockedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   lockedById?: Prisma.UuidNullableFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Session"> | string
   groupId?: Prisma.UuidFilter<"Session"> | string
+  roomId?: Prisma.UuidFilter<"Session"> | string
   teacherId?: Prisma.UuidFilter<"Session"> | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
+  room?: Prisma.XOR<Prisma.RoomScalarRelationFilter, Prisma.RoomWhereInput>
   teacher?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   attendanceRecords?: Prisma.AttendanceRecordListRelationFilter
   transactions?: Prisma.CoinTransactionListRelationFilter
@@ -306,11 +339,14 @@ export type SessionOrderByWithAggregationInput = {
   sessionType?: Prisma.SortOrder
   topic?: Prisma.SortOrderInput | Prisma.SortOrder
   isLocked?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lockedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   _count?: Prisma.SessionCountOrderByAggregateInput
   _max?: Prisma.SessionMaxOrderByAggregateInput
@@ -328,11 +364,14 @@ export type SessionScalarWhereWithAggregatesInput = {
   sessionType?: Prisma.EnumSessionTypeWithAggregatesFilter<"Session"> | $Enums.SessionType
   topic?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
   isLocked?: Prisma.BoolWithAggregatesFilter<"Session"> | boolean
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Session"> | boolean
   lockedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
   lockedById?: Prisma.UuidNullableWithAggregatesFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
   tenantId?: Prisma.UuidWithAggregatesFilter<"Session"> | string
   groupId?: Prisma.UuidWithAggregatesFilter<"Session"> | string
+  roomId?: Prisma.UuidWithAggregatesFilter<"Session"> | string
   teacherId?: Prisma.UuidWithAggregatesFilter<"Session"> | string
 }
 
@@ -344,11 +383,14 @@ export type SessionCreateInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSessionsInput
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput
+  room: Prisma.RoomCreateNestedOneWithoutSessionsInput
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput
@@ -362,11 +404,14 @@ export type SessionUncheckedCreateInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   teacherId: string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput
@@ -380,11 +425,14 @@ export type SessionUpdateInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSessionsNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput
@@ -398,11 +446,14 @@ export type SessionUncheckedUpdateInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput
@@ -416,11 +467,14 @@ export type SessionCreateManyInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   teacherId: string
 }
 
@@ -432,9 +486,11 @@ export type SessionUpdateManyMutationInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SessionUncheckedUpdateManyInput = {
@@ -445,11 +501,14 @@ export type SessionUncheckedUpdateManyInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -471,11 +530,14 @@ export type SessionCountOrderByAggregateInput = {
   sessionType?: Prisma.SortOrder
   topic?: Prisma.SortOrder
   isLocked?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
   lockedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
 }
 
@@ -487,11 +549,14 @@ export type SessionMaxOrderByAggregateInput = {
   sessionType?: Prisma.SortOrder
   topic?: Prisma.SortOrder
   isLocked?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
   lockedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
 }
 
@@ -503,11 +568,14 @@ export type SessionMinOrderByAggregateInput = {
   sessionType?: Prisma.SortOrder
   topic?: Prisma.SortOrder
   isLocked?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
   lockedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
+  roomId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
 }
 
@@ -605,6 +673,48 @@ export type SessionUncheckedUpdateManyWithoutTeacherNestedInput = {
   deleteMany?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
 }
 
+export type SessionCreateNestedManyWithoutRoomInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutRoomInput, Prisma.SessionUncheckedCreateWithoutRoomInput> | Prisma.SessionCreateWithoutRoomInput[] | Prisma.SessionUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutRoomInput | Prisma.SessionCreateOrConnectWithoutRoomInput[]
+  createMany?: Prisma.SessionCreateManyRoomInputEnvelope
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+}
+
+export type SessionUncheckedCreateNestedManyWithoutRoomInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutRoomInput, Prisma.SessionUncheckedCreateWithoutRoomInput> | Prisma.SessionCreateWithoutRoomInput[] | Prisma.SessionUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutRoomInput | Prisma.SessionCreateOrConnectWithoutRoomInput[]
+  createMany?: Prisma.SessionCreateManyRoomInputEnvelope
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+}
+
+export type SessionUpdateManyWithoutRoomNestedInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutRoomInput, Prisma.SessionUncheckedCreateWithoutRoomInput> | Prisma.SessionCreateWithoutRoomInput[] | Prisma.SessionUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutRoomInput | Prisma.SessionCreateOrConnectWithoutRoomInput[]
+  upsert?: Prisma.SessionUpsertWithWhereUniqueWithoutRoomInput | Prisma.SessionUpsertWithWhereUniqueWithoutRoomInput[]
+  createMany?: Prisma.SessionCreateManyRoomInputEnvelope
+  set?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  disconnect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  delete?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  update?: Prisma.SessionUpdateWithWhereUniqueWithoutRoomInput | Prisma.SessionUpdateWithWhereUniqueWithoutRoomInput[]
+  updateMany?: Prisma.SessionUpdateManyWithWhereWithoutRoomInput | Prisma.SessionUpdateManyWithWhereWithoutRoomInput[]
+  deleteMany?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
+}
+
+export type SessionUncheckedUpdateManyWithoutRoomNestedInput = {
+  create?: Prisma.XOR<Prisma.SessionCreateWithoutRoomInput, Prisma.SessionUncheckedCreateWithoutRoomInput> | Prisma.SessionCreateWithoutRoomInput[] | Prisma.SessionUncheckedCreateWithoutRoomInput[]
+  connectOrCreate?: Prisma.SessionCreateOrConnectWithoutRoomInput | Prisma.SessionCreateOrConnectWithoutRoomInput[]
+  upsert?: Prisma.SessionUpsertWithWhereUniqueWithoutRoomInput | Prisma.SessionUpsertWithWhereUniqueWithoutRoomInput[]
+  createMany?: Prisma.SessionCreateManyRoomInputEnvelope
+  set?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  disconnect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  delete?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[]
+  update?: Prisma.SessionUpdateWithWhereUniqueWithoutRoomInput | Prisma.SessionUpdateWithWhereUniqueWithoutRoomInput[]
+  updateMany?: Prisma.SessionUpdateManyWithWhereWithoutRoomInput | Prisma.SessionUpdateManyWithWhereWithoutRoomInput[]
+  deleteMany?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
+}
+
 export type SessionCreateNestedManyWithoutGroupInput = {
   create?: Prisma.XOR<Prisma.SessionCreateWithoutGroupInput, Prisma.SessionUncheckedCreateWithoutGroupInput> | Prisma.SessionCreateWithoutGroupInput[] | Prisma.SessionUncheckedCreateWithoutGroupInput[]
   connectOrCreate?: Prisma.SessionCreateOrConnectWithoutGroupInput | Prisma.SessionCreateOrConnectWithoutGroupInput[]
@@ -689,10 +799,13 @@ export type SessionCreateWithoutTenantInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput
+  room: Prisma.RoomCreateNestedOneWithoutSessionsInput
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput
@@ -706,10 +819,13 @@ export type SessionUncheckedCreateWithoutTenantInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   groupId: string
+  roomId: string
   teacherId: string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput
@@ -752,11 +868,14 @@ export type SessionScalarWhereInput = {
   sessionType?: Prisma.EnumSessionTypeFilter<"Session"> | $Enums.SessionType
   topic?: Prisma.StringNullableFilter<"Session"> | string | null
   isLocked?: Prisma.BoolFilter<"Session"> | boolean
+  isDeleted?: Prisma.BoolFilter<"Session"> | boolean
   lockedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   lockedById?: Prisma.UuidNullableFilter<"Session"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   tenantId?: Prisma.UuidFilter<"Session"> | string
   groupId?: Prisma.UuidFilter<"Session"> | string
+  roomId?: Prisma.UuidFilter<"Session"> | string
   teacherId?: Prisma.UuidFilter<"Session"> | string
 }
 
@@ -768,11 +887,14 @@ export type SessionCreateWithoutTeacherInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSessionsInput
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput
+  room: Prisma.RoomCreateNestedOneWithoutSessionsInput
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput
 }
@@ -785,11 +907,14 @@ export type SessionUncheckedCreateWithoutTeacherInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput
 }
@@ -820,6 +945,72 @@ export type SessionUpdateManyWithWhereWithoutTeacherInput = {
   data: Prisma.XOR<Prisma.SessionUpdateManyMutationInput, Prisma.SessionUncheckedUpdateManyWithoutTeacherInput>
 }
 
+export type SessionCreateWithoutRoomInput = {
+  id?: string
+  sessionDate: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  sessionType?: $Enums.SessionType
+  topic?: string | null
+  isLocked?: boolean
+  isDeleted?: boolean
+  lockedAt?: Date | string | null
+  lockedById?: string | null
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  tenant: Prisma.TenantCreateNestedOneWithoutSessionsInput
+  group: Prisma.GroupCreateNestedOneWithoutSessionsInput
+  teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput
+  transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput
+}
+
+export type SessionUncheckedCreateWithoutRoomInput = {
+  id?: string
+  sessionDate: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  sessionType?: $Enums.SessionType
+  topic?: string | null
+  isLocked?: boolean
+  isDeleted?: boolean
+  lockedAt?: Date | string | null
+  lockedById?: string | null
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  tenantId: string
+  groupId: string
+  teacherId: string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput
+  transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput
+}
+
+export type SessionCreateOrConnectWithoutRoomInput = {
+  where: Prisma.SessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.SessionCreateWithoutRoomInput, Prisma.SessionUncheckedCreateWithoutRoomInput>
+}
+
+export type SessionCreateManyRoomInputEnvelope = {
+  data: Prisma.SessionCreateManyRoomInput | Prisma.SessionCreateManyRoomInput[]
+  skipDuplicates?: boolean
+}
+
+export type SessionUpsertWithWhereUniqueWithoutRoomInput = {
+  where: Prisma.SessionWhereUniqueInput
+  update: Prisma.XOR<Prisma.SessionUpdateWithoutRoomInput, Prisma.SessionUncheckedUpdateWithoutRoomInput>
+  create: Prisma.XOR<Prisma.SessionCreateWithoutRoomInput, Prisma.SessionUncheckedCreateWithoutRoomInput>
+}
+
+export type SessionUpdateWithWhereUniqueWithoutRoomInput = {
+  where: Prisma.SessionWhereUniqueInput
+  data: Prisma.XOR<Prisma.SessionUpdateWithoutRoomInput, Prisma.SessionUncheckedUpdateWithoutRoomInput>
+}
+
+export type SessionUpdateManyWithWhereWithoutRoomInput = {
+  where: Prisma.SessionScalarWhereInput
+  data: Prisma.XOR<Prisma.SessionUpdateManyMutationInput, Prisma.SessionUncheckedUpdateManyWithoutRoomInput>
+}
+
 export type SessionCreateWithoutGroupInput = {
   id?: string
   sessionDate: Date | string
@@ -828,10 +1019,13 @@ export type SessionCreateWithoutGroupInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSessionsInput
+  room: Prisma.RoomCreateNestedOneWithoutSessionsInput
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput
@@ -845,10 +1039,13 @@ export type SessionUncheckedCreateWithoutGroupInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
+  roomId: string
   teacherId: string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput
@@ -888,11 +1085,14 @@ export type SessionCreateWithoutAttendanceRecordsInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSessionsInput
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput
+  room: Prisma.RoomCreateNestedOneWithoutSessionsInput
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput
 }
@@ -905,11 +1105,14 @@ export type SessionUncheckedCreateWithoutAttendanceRecordsInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   teacherId: string
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput
 }
@@ -938,11 +1141,14 @@ export type SessionUpdateWithoutAttendanceRecordsInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSessionsNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput
 }
@@ -955,11 +1161,14 @@ export type SessionUncheckedUpdateWithoutAttendanceRecordsInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput
 }
@@ -972,11 +1181,14 @@ export type SessionCreateWithoutTransactionsInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSessionsInput
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput
+  room: Prisma.RoomCreateNestedOneWithoutSessionsInput
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput
 }
@@ -989,11 +1201,14 @@ export type SessionUncheckedCreateWithoutTransactionsInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
   teacherId: string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput
 }
@@ -1022,11 +1237,14 @@ export type SessionUpdateWithoutTransactionsInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSessionsNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput
 }
@@ -1039,11 +1257,14 @@ export type SessionUncheckedUpdateWithoutTransactionsInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput
 }
@@ -1056,10 +1277,13 @@ export type SessionCreateManyTenantInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   groupId: string
+  roomId: string
   teacherId: string
 }
 
@@ -1071,10 +1295,13 @@ export type SessionUpdateWithoutTenantInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput
@@ -1088,10 +1315,13 @@ export type SessionUncheckedUpdateWithoutTenantInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput
@@ -1105,10 +1335,13 @@ export type SessionUncheckedUpdateManyWithoutTenantInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1120,11 +1353,14 @@ export type SessionCreateManyTeacherInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
   groupId: string
+  roomId: string
 }
 
 export type SessionUpdateWithoutTeacherInput = {
@@ -1135,11 +1371,14 @@ export type SessionUpdateWithoutTeacherInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSessionsNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput
 }
@@ -1152,11 +1391,14 @@ export type SessionUncheckedUpdateWithoutTeacherInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput
 }
@@ -1169,11 +1411,90 @@ export type SessionUncheckedUpdateManyWithoutTeacherInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type SessionCreateManyRoomInput = {
+  id?: string
+  sessionDate: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  sessionType?: $Enums.SessionType
+  topic?: string | null
+  isLocked?: boolean
+  isDeleted?: boolean
+  lockedAt?: Date | string | null
+  lockedById?: string | null
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  tenantId: string
+  groupId: string
+  teacherId: string
+}
+
+export type SessionUpdateWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutSessionsNestedInput
+  group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput
+  teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput
+  transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput
+}
+
+export type SessionUncheckedUpdateWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  teacherId?: Prisma.StringFieldUpdateOperationsInput | string
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput
+  transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput
+}
+
+export type SessionUncheckedUpdateManyWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  teacherId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SessionCreateManyGroupInput = {
@@ -1184,10 +1505,13 @@ export type SessionCreateManyGroupInput = {
   sessionType?: $Enums.SessionType
   topic?: string | null
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: Date | string | null
   lockedById?: string | null
   createdAt?: Date | string
+  deletedAt?: Date | string | null
   tenantId: string
+  roomId: string
   teacherId: string
 }
 
@@ -1199,10 +1523,13 @@ export type SessionUpdateWithoutGroupInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSessionsNestedInput
+  room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput
@@ -1216,10 +1543,13 @@ export type SessionUncheckedUpdateWithoutGroupInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput
@@ -1233,10 +1563,13 @@ export type SessionUncheckedUpdateManyWithoutGroupInput = {
   sessionType?: Prisma.EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1288,14 +1621,18 @@ export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   sessionType?: boolean
   topic?: boolean
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: boolean
   lockedById?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   teacherId?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   attendanceRecords?: boolean | Prisma.Session$attendanceRecordsArgs<ExtArgs>
   transactions?: boolean | Prisma.Session$transactionsArgs<ExtArgs>
@@ -1310,14 +1647,18 @@ export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   sessionType?: boolean
   topic?: boolean
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: boolean
   lockedById?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   teacherId?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
@@ -1329,14 +1670,18 @@ export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   sessionType?: boolean
   topic?: boolean
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: boolean
   lockedById?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   teacherId?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
@@ -1348,18 +1693,22 @@ export type SessionSelectScalar = {
   sessionType?: boolean
   topic?: boolean
   isLocked?: boolean
+  isDeleted?: boolean
   lockedAt?: boolean
   lockedById?: boolean
   createdAt?: boolean
+  deletedAt?: boolean
   tenantId?: boolean
   groupId?: boolean
+  roomId?: boolean
   teacherId?: boolean
 }
 
-export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionDate" | "startTime" | "endTime" | "sessionType" | "topic" | "isLocked" | "lockedAt" | "lockedById" | "createdAt" | "tenantId" | "groupId" | "teacherId", ExtArgs["result"]["session"]>
+export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionDate" | "startTime" | "endTime" | "sessionType" | "topic" | "isLocked" | "isDeleted" | "lockedAt" | "lockedById" | "createdAt" | "deletedAt" | "tenantId" | "groupId" | "roomId" | "teacherId", ExtArgs["result"]["session"]>
 export type SessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   attendanceRecords?: boolean | Prisma.Session$attendanceRecordsArgs<ExtArgs>
   transactions?: boolean | Prisma.Session$transactionsArgs<ExtArgs>
@@ -1368,11 +1717,13 @@ export type SessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type SessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type SessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -1381,6 +1732,7 @@ export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     group: Prisma.$GroupPayload<ExtArgs>
+    room: Prisma.$RoomPayload<ExtArgs>
     teacher: Prisma.$UserPayload<ExtArgs>
     attendanceRecords: Prisma.$AttendanceRecordPayload<ExtArgs>[]
     transactions: Prisma.$CoinTransactionPayload<ExtArgs>[]
@@ -1393,11 +1745,14 @@ export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     sessionType: $Enums.SessionType
     topic: string | null
     isLocked: boolean
+    isDeleted: boolean
     lockedAt: Date | null
     lockedById: string | null
     createdAt: Date
+    deletedAt: Date | null
     tenantId: string
     groupId: string
+    roomId: string
     teacherId: string
   }, ExtArgs["result"]["session"]>
   composites: {}
@@ -1795,6 +2150,7 @@ export interface Prisma__SessionClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   group<T extends Prisma.GroupDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GroupDefaultArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  room<T extends Prisma.RoomDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoomDefaultArgs<ExtArgs>>): Prisma.Prisma__RoomClient<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   teacher<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   attendanceRecords<T extends Prisma.Session$attendanceRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$attendanceRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transactions<T extends Prisma.Session$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoinTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1834,11 +2190,14 @@ export interface SessionFieldRefs {
   readonly sessionType: Prisma.FieldRef<"Session", 'SessionType'>
   readonly topic: Prisma.FieldRef<"Session", 'String'>
   readonly isLocked: Prisma.FieldRef<"Session", 'Boolean'>
+  readonly isDeleted: Prisma.FieldRef<"Session", 'Boolean'>
   readonly lockedAt: Prisma.FieldRef<"Session", 'DateTime'>
   readonly lockedById: Prisma.FieldRef<"Session", 'String'>
   readonly createdAt: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Session", 'DateTime'>
   readonly tenantId: Prisma.FieldRef<"Session", 'String'>
   readonly groupId: Prisma.FieldRef<"Session", 'String'>
+  readonly roomId: Prisma.FieldRef<"Session", 'String'>
   readonly teacherId: Prisma.FieldRef<"Session", 'String'>
 }
     

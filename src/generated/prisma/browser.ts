@@ -28,6 +28,11 @@ export type Tenant = Prisma.TenantModel
  */
 export type Role = Prisma.RoleModel
 /**
+ * Model RolePermission
+ * 
+ */
+export type RolePermission = Prisma.RolePermissionModel
+/**
  * Model User
  * 
  */
@@ -42,6 +47,11 @@ export type Wallet = Prisma.WalletModel
  * 
  */
 export type Course = Prisma.CourseModel
+/**
+ * Model Room
+ * 
+ */
+export type Room = Prisma.RoomModel
 /**
  * Model Group
  * 
@@ -107,6 +117,21 @@ export type SmsTemplate = Prisma.SmsTemplateModel
  * 
  */
 export type SmsLog = Prisma.SmsLogModel
+/**
+ * Model EmailTemplate
+ * 
+ */
+export type EmailTemplate = Prisma.EmailTemplateModel
+/**
+ * Model EmailLog
+ * 
+ */
+export type EmailLog = Prisma.EmailLogModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel
 /**
  * Model ImportLog
  * 

@@ -13,13 +13,13 @@ import { MailService } from '../mail/mail.service';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { Response } from 'express';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private jwt: JwtService,
-    private config: ConfigService,
+    private tokenService: TokenService,
     private mail: MailService,
   ) {}
 
@@ -46,8 +46,8 @@ export class AuthService {
       tenantId: user.tenantId,
     };
 
-    const accessToken = this.generateAccessToken(payload);
-    const refreshToken = this.generateRefreshToken(payload);
+    const accessToken = this.tokenService.generateAccessToken(payload);
+    const refreshToken = this.tokenService.generateRefreshToken(payload);
 
     // Refresh tokenni hash qilib DB ga saqlash
     const refreshHash = await bcrypt.hash(refreshToken, 10);
@@ -57,7 +57,7 @@ export class AuthService {
     });
 
     // Cookie ga yozish
-    this.setTokenCookies(res, accessToken, refreshToken);
+    this.tokenService.setTokenCookies(res, accessToken, refreshToken);
 
     return {
       status: 'success',
@@ -80,9 +80,7 @@ export class AuthService {
 
     let payload: any;
     try {
-      payload = this.jwt.verify(refreshToken, {
-        secret: this.config.get('JWT_REFRESH_SECRET'),
-      });
+      payload = this.tokenService.verifyRefreshToken(refreshToken);
     } catch {
       throw new UnauthorizedException(
         "Refresh token yaroqsiz yoki muddati o'tgan",
@@ -113,8 +111,8 @@ export class AuthService {
       tenantId: user.tenantId,
     };
 
-    const newAccessToken = this.generateAccessToken(newPayload);
-    const newRefreshToken = this.generateRefreshToken(newPayload);
+    const newAccessToken = this.tokenService.generateAccessToken(newPayload);
+    const newRefreshToken = this.tokenService.generateRefreshToken(newPayload);
 
     // Yangi refresh tokenni saqlash
     const refreshHash = await bcrypt.hash(newRefreshToken, 10);
@@ -123,7 +121,7 @@ export class AuthService {
       data: { refreshTokenHash: refreshHash },
     });
 
-    this.setTokenCookies(res, newAccessToken, newRefreshToken);
+    this.tokenService.setTokenCookies(res, newAccessToken, newRefreshToken);
 
     return { message: 'Token yangilandi' };
   }
@@ -185,6 +183,7 @@ export class AuthService {
       },
     });
 
+    // Emailga xabar yuborish
     await this.mail.sendPasswordReset({
       to: user.email!,
       fullName: user.fullName,
@@ -221,42 +220,5 @@ export class AuthService {
     });
 
     return { message: "Parol muvaffaqiyatli o'zgartirildi. Qayta kiring." };
-  }
-
-  // ─── Helpers ──────────────────────────────────────────────────
-  private generateAccessToken(payload: object) {
-    return this.jwt.sign(payload, {
-      secret: this.config.get('JWT_ACCESS_SECRET'),
-      expiresIn: '15m',
-    });
-  }
-
-  private generateRefreshToken(payload: object) {
-    return this.jwt.sign(payload, {
-      secret: this.config.get('JWT_REFRESH_SECRET'),
-      expiresIn: '1d',
-    });
-  }
-
-  private setTokenCookies(
-    res: Response,
-    accessToken: string,
-    refreshToken: string,
-  ) {
-    const isProd = this.config.get('NODE_ENV') === 'production';
-
-    res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
-      maxAge: 1000 * 60 * 15, // 15 daqiqa
-    });
-
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
-      maxAge: 1000 * 60 * 60 * 24, // 1 kun
-    });
   }
 }

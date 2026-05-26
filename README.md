@@ -16,16 +16,14 @@ O'quv markazlari va maktablar uchun **incentive management tizimi**. O'quvchilar
 
 ### 👥 Foydalanuvchi Turlari
 
-1. **Creator** - Loyihaning dastahli (super-super admin, hech kim bilmaydi)
-2. **Super Admin** - Loyihani boshlovchi (barcha filiallarni nazorat qiladi)
+1. **Creator** - Loyihaning yaratuvchisi (super-super admin, hech kim bilmaydi)
+2. **Super Admin** - Loyihani bosh boqaruvchisi (barcha filiallarni nazorat qiladi)
 3. **Tenant Admin** - O'quv markazi boshlig'i (o'z filialini to'liq nazorat qiladi)
 4. **Teacher** - O'qituvchi (darsga qatnashish va uyga vazifa bajarishni qayd qiladi)
-5. **Student** - O'quvchi (o'z kabinetida stats va coins ko'radi)
-6. **Parent** - Ota-ona (o'quvchi haqida ma'lumot oladi)
+5. **Student | Parent** - O'quvchi | ota-ona (o'z kabinetida stats va coins ko'radi)
 
 ### 🏢 Asosiy Funktsiyalar
 
-- ✅ Dars jadvali boshqarish (xonalar bilan conflict oldini olish)
 - ✅ Davomat va uyga vazifa tracking
 - ✅ Coins avtomatik hisoblash (attendance + homework + faollik)
 - ✅ Reward store (digital, imtiyoz, fizik sovg'alar)
@@ -33,6 +31,7 @@ O'quv markazlari va maktablar uchun **incentive management tizimi**. O'quvchilar
 - ✅ Audit logging (barcha harakatlar qayd)
 - ✅ Role-based permissions (guard-style)
 - ✅ Student/Parent cabinet
+- ⚠️ Dars jadvali boshqarish (xonalar bilan conflict oldini olish)
 
 ---
 
@@ -69,151 +68,40 @@ User
 ### **COURSES & GROUPS**
 
 Course
-├── id (UUID)
-├── title, description
-├── tenantId, createdById
-├── isActive, isDeleted
-└── timestamps
 Room
-├── id (UUID)
-├── name, capacity
-├── tenantId
-├── isActive, isDeleted
-└── timestamps
 Group
-├── id (UUID)
-├── name, maxStudents
-├── tenantId, courseId, teacherId
-├── isActive, isDeleted
-└── timestamps
 GroupStudent
-├── id (UUID)
-├── groupId, studentId
-├── isActive, joinedAt
-└── unique: [groupId, studentId]
 
 ### **SCHEDULE & SESSIONS**
 
 ScheduleTemplate
-├── id (UUID)
-├── weekday, startTime, endTime
-├── tenantId, groupId, roomId
-├── isActive, isDeleted
-└── timestamps
 ScheduleException
-├── id (UUID)
-├── exceptionDate, startTime, endTime
-├── isCancelled, note
-├── templateId
-└── unique: [templateId, exceptionDate]
 Session
-├── id (UUID)
-├── sessionDate, startTime, endTime
-├── sessionType (lesson | exam | competition | extra)
-├── topic, isLocked
-├── tenantId, groupId, roomId, teacherId
-├── isDeleted
-└── timestamps
 
 ### **ATTENDANCE & COINS**
 
 AttendanceRecord
-├── id (UUID)
-├── isPresent, homeworkDone
-├── sessionId, studentId, recordedById
-├── isDeleted
-└── timestamps
 CoinRule
-├── id (UUID)
-├── name, description
-├── coinAmount, direction (earn | deduct)
-├── triggerType (auto | manual)
-├── tenantId, groupId (NULL = global)
-├── isActive, isDeleted
-└── timestamps
 CoinTransaction
-├── id (UUID)
-├── amount, direction
-├── sourceType (attendance | homework | competition | manual | bonus | purchase)
-├── walletId, studentId, teacherId
-├── ruleId, sessionId, groupId
-├── isDeleted
-└── timestamps
 Wallet
-├── id (UUID)
-├── balance (INT)
-├── userId (unique)
-└── updatedAt
 
 ### **REWARDS & PURCHASES**
 
 RewardCategory
-├── id (UUID)
-├── name (unique per tenant)
-├── tenantId, createdById
-└── isDeleted
 Reward
-├── id (UUID)
-├── title, description
-├── coinPrice, stock (-1 = cheksiz)
-├── rewardType (digital | privilege | physical)
-├── imageUrl
-├── tenantId, categoryId
-├── isActive, isDeleted
-└── timestamps
 Purchase
-├── id (UUID)
-├── coinSpent, status (pending | approved | delivered | cancelled)
-├── deliveryNote
-├── studentId, rewardId, approvedById
-├── isDeleted
-└── timestamps
 
 ### **NOTIFICATIONS**
 
 SmsTemplate
-├── id (UUID)
-├── name, triggerType
-├── body (template with {placeholders})
-├── tenantId, createdById
-└── isDeleted
 SmsLog
-├── id (UUID)
-├── recipientType (student | parent), phone, body
-├── status (pending | sent | failed)
-├── eskizMessageId, errorMessage
-├── tenantId, studentId, templateId, sentById
-└── timestamps
 EmailTemplate
-├── id (UUID)
-├── name, triggerType, subject, body
-├── tenantId, createdById
-└── isDeleted
 EmailLog
-├── id (UUID)
-├── email, subject, body
-├── status (pending | sent | failed)
-├── tenantId, studentId, templateId, sentById
-└── timestamps
 
 ### **AUDIT & IMPORTS**
 
 AuditLog
-├── id (UUID)
-├── actionType (create | update | delete | archive | coin_transaction | sms_sent | email_sent)
-├── entityType, entityId
-├── changes (JSON: old_value, new_value)
-├── description, ipAddress, userAgent
-├── tenantId, createdById
-└── createdAt
 ImportLog
-├── id (UUID)
-├── entityType, fileName
-├── totalRows, successRows, failedRows
-├── status (pending | processing | done | failed)
-├── errorLog (JSON)
-├── importedById
-└── timestamps
 
 ---
 
@@ -229,8 +117,6 @@ ImportLog
 | **JWT**             | Authentication                        |
 | **Bcrypt**          | Password hashing                      |
 | **Swagger/OpenAPI** | API documentation                     |
-| **Jest**            | Unit testing                          |
-| **Docker**          | Containerization                      |
 
 ---
 
@@ -413,7 +299,8 @@ erp-coin-system-backend/
 
 ## 📞 KONTAKT
 
-**Yaratuvchi**: Muxammadi  
+**Yaratuvchi**: Muxammadi Toshtemirov
+**Telefon**: +998(94) 542-63-07
 **Email**: muxammadi0799@gmail.com
 
 ---

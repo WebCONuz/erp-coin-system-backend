@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { TenantModule } from './tenant/tenant.module';
 import { RewardCategoryModule } from './reward-category/reward-category.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { RewardCategoryModule } from './reward-category/reward-category.module';
     MailModule,
     TenantModule,
     RewardCategoryModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [

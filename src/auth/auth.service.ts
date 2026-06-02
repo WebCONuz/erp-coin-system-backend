@@ -44,6 +44,7 @@ export class AuthService {
       phone: user.phone,
       role: user.role.name,
       tenantId: user.tenantId,
+      roleId: user.roleId,
     };
 
     const accessToken = this.tokenService.generateAccessToken(payload);

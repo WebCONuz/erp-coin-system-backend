@@ -22,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     phone: string;
     role: string;
     tenantId: string;
+    roleId: string;
   }) {
     const user = await this.prisma.user.findFirst({
       where: { id: payload.sub, isActive: true },
@@ -38,6 +39,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       tenantId: user.tenantId,
       role: user.role.name,
       roleLevel: user.role.level,
+      roleId: user.roleId,
     };
   }
 }

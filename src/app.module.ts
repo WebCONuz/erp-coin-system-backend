@@ -9,6 +9,7 @@ import { MailModule } from './mail/mail.module';
 import { TenantModule } from './tenant/tenant.module';
 import { RewardCategoryModule } from './reward-category/reward-category.module';
 import { RolesModule } from './roles/roles.module';
+import { CoursesModule } from './courses/courses.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RolesModule } from './roles/roles.module';
     TenantModule,
     RewardCategoryModule,
     RolesModule,
+    CoursesModule,
   ],
   controllers: [],
   providers: [

@@ -9,6 +9,7 @@ import {
   Query,
   ParseUUIDPipe,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,9 +24,13 @@ import { UpdateUserDto, ChangePasswordDto } from './dto/update-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 
 @ApiTags('Users')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -38,7 +43,7 @@ export class UsersController {
   @ApiResponse({ status: 409, description: 'Telefon yoki email band' })
   create(
     @Body() dto: CreateUserDto,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @CurrentUser('id') createdById: string,
   ) {
     return this.usersService.create(dto, tenantId, createdById);
@@ -50,7 +55,7 @@ export class UsersController {
   @ApiOperation({ summary: "Foydalanuvchilar ro'yxati (filter + pagination)" })
   findAll(
     @Query() query: QueryUserDto,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @CurrentUser('id') requesterId: string,
     @CurrentUser('role') role: string,
   ) {
@@ -74,7 +79,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: "Ruxsat yo'q" })
   findOne(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @CurrentUser('id') requesterId: string,
     @CurrentUser('role') role: string,
   ) {
@@ -88,7 +93,7 @@ export class UsersController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateUserDto,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @CurrentUser('id') requesterId: string,
     @CurrentUser('role') role: string,
   ) {
@@ -119,7 +124,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: "Super adminni arxivlab bo'lmaydi" })
   remove(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @CurrentUser('id') archiverId: string,
     @CurrentUser('role') role: string,
   ) {
@@ -134,7 +139,7 @@ export class UsersController {
   @ApiParam({ name: 'id', description: 'User UUID' })
   restore(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @CurrentUser('role') role: string,
   ) {
     return this.usersService.restore(id, tenantId, role);

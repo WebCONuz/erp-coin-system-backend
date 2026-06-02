@@ -16,6 +16,11 @@ export enum UserSortBy {
 }
 
 export class QueryUserDto {
+  @ApiPropertyOptional({ description: 'Faqat super_admin uchun' })
+  @IsOptional()
+  @IsUUID()
+  tenantId?: string; // faqat super_admin uchun
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()

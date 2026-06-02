@@ -35,76 +35,6 @@ O'quv markazlari va maktablar uchun **incentive management tizimi**. O'quvchilar
 
 ---
 
-## 🗄️ DATABASE SXEMA
-
-### **TENANCY & ROLES**
-
-Tenant
-├── id (UUID)
-├── name, slug, plan
-├── isActive, isDeleted
-└── timestamps
-Role
-├── id (UUID)
-├── name, displayName, level
-├── scope (system | tenant)
-├── isSystem, canDelete, canManageAdmins, canManageUsers
-├── tenantId (NULL = system role)
-└── timestamps
-RolePermission
-├── id (UUID)
-├── permission (string: "create_course", "edit_student", etc.)
-├── roleId, tenantId
-└── unique: [roleId, permission]
-User
-├── id (UUID)
-├── phone (unique), email (unique)
-├── fullName, passwordHash, avatarUrl
-├── parentPhone (student uchun)
-├── tenantId, roleId
-├── isActive, isDeleted
-└── timestamps + auth fields
-
-### **COURSES & GROUPS**
-
-Course
-Room
-Group
-GroupStudent
-
-### **SCHEDULE & SESSIONS**
-
-ScheduleTemplate
-ScheduleException
-Session
-
-### **ATTENDANCE & COINS**
-
-AttendanceRecord
-CoinRule
-CoinTransaction
-Wallet
-
-### **REWARDS & PURCHASES**
-
-RewardCategory
-Reward
-Purchase
-
-### **NOTIFICATIONS**
-
-SmsTemplate
-SmsLog
-EmailTemplate
-EmailLog
-
-### **AUDIT & IMPORTS**
-
-AuditLog
-ImportLog
-
----
-
 ## 🛠️ QULLANILADIGAN TEXNOLOGIYALAR
 
 | Texnologiya         | Maqsadi                               |
@@ -172,6 +102,7 @@ CREATOR_EMAIL=creator_email
 SUPER_ADMIN_PHONE=super_admin_phone
 SUPER_ADMIN_PASSWORD=super_admin_password
 SUPER_ADMIN_NAME=super_admin_fullname
+SUPER_ADMIN_EMAIL=super_admin_email
 
 # Frontend domen
 FRONTEND_DOMEN=your_fronend_domen
@@ -299,10 +230,11 @@ erp-coin-system-backend/
 
 ## 📞 KONTAKT
 
-**Yaratuvchi**: Muxammadi Toshtemirov
-**Telefon**: +998(94) 542-63-07
-**Email**: muxammadi0799@gmail.com
+- [ ] **Yaratuvchi**: Muxammadi Toshtemirov
+- [ ] **Telefon**: +998(94) 542-63-07
+- [ ] **Email**: muxammadi0799@gmail.com
 
 ---
 
-**⭐ Loyiha ready for development!**
+**⭐ Loyiha development uchun tayyor!**
+**⭐ Ishlab chiqaruvchi: Muxammadi Toshtemirov**

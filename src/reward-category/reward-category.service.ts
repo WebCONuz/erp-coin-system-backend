@@ -28,8 +28,6 @@ export class RewardCategoryService {
   }
 
   async findAll(tenantId: string) {
-    console.log('++++');
-
     return this.prisma.rewardCategory.findMany({
       where: { tenantId },
       orderBy: { name: 'asc' },

@@ -41,8 +41,6 @@ export class RewardCategoryController {
   @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Barcha kategoriyalar' })
   findAll(@CurrentUser('tenantId') tenantId: string) {
-    console.log(tenantId);
-
     return this.service.findAll(tenantId);
   }
 

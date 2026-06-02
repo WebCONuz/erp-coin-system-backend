@@ -10,6 +10,9 @@ import { TenantModule } from './tenant/tenant.module';
 import { RewardCategoryModule } from './reward-category/reward-category.module';
 import { RolesModule } from './roles/roles.module';
 import { CoursesModule } from './courses/courses.module';
+import { RoomsModule } from './rooms/rooms.module';
+import { GroupsModule } from './groups/groups.module';
+import { RewardsModule } from './rewards/rewards.module';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import { CoursesModule } from './courses/courses.module';
     RewardCategoryModule,
     RolesModule,
     CoursesModule,
+    RoomsModule,
+    GroupsModule,
+    RewardsModule,
   ],
   controllers: [],
   providers: [

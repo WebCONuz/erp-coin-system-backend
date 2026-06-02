@@ -17,11 +17,10 @@ import {
   ApiParam,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-
+import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { QueryCourseDto } from './dto/query-course.dto';
-import { CoursesService } from './courses.service';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -56,8 +55,8 @@ export class CoursesController {
   @ApiOperation({ summary: 'ID bo‘yicha kursni olish' })
   @ApiParam({
     name: 'id',
-    example: 1,
-    description: 'Kurs IDsi',
+    format: 'uuid',
+    example: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
   })
   @ApiResponse({ status: 200, description: 'Kurs topildi' })
   @ApiResponse({ status: 404, description: 'Kurs topilmadi' })
@@ -72,7 +71,8 @@ export class CoursesController {
   @ApiOperation({ summary: 'Kursni yangilash' })
   @ApiParam({
     name: 'id',
-    example: 1,
+    format: 'uuid',
+    example: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
   })
   @ApiResponse({ status: 200, description: 'Kurs yangilandi' })
   update(
@@ -84,10 +84,11 @@ export class CoursesController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Kursni o‘chirish' })
+  @ApiOperation({ summary: 'Kursni soft-delete qilish' })
   @ApiParam({
     name: 'id',
-    example: 1,
+    format: 'uuid',
+    example: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
   })
   @ApiResponse({ status: 200, description: 'Kurs o‘chirildi' })
   remove(

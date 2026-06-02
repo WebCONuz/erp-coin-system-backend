@@ -9,10 +9,8 @@ import {
 import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class QueryCourseDto {
-  @ApiPropertyOptional({
-    description: 'Faqat super_admin va creator uchun tenant_id',
-  })
+export class QueryRoomDto {
+  @ApiPropertyOptional({ description: 'Faqat super_admin va creator uchun' })
   @IsOptional()
   @IsUUID()
   tenantId?: string;
@@ -32,15 +30,15 @@ export class QueryCourseDto {
   limit?: number = 10;
 
   @ApiPropertyOptional({
-    example: 'Node.js',
-    description: 'Kurs nomi bo‘yicha qidiruv',
+    example: 'Coding',
+    description: 'Xona nomi bo‘yicha qidiruv',
   })
   @IsOptional()
   @IsString()
   search?: string;
 
   @ApiPropertyOptional({
-    description: 'Nofaol kurslarni ham ko‘rish uchun',
+    description: 'Nofaol xonalarni ham ko‘rish uchun',
     example: true,
   })
   @IsOptional()

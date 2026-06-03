@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { QueryCourseDto } from './dto/query-course.dto';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class CoursesService {
@@ -28,7 +29,7 @@ export class CoursesService {
     const skip = (page - 1) * limit;
 
     // Toza Where Builder shakllantiramiz
-    const where: any = {
+    const where: Prisma.CourseWhereInput = {
       tenantId,
       isDeleted: false, // O'chirilganlarni mutloq ko'rsatmaymiz
     };

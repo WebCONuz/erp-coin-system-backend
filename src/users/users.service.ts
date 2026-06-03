@@ -9,6 +9,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto, ChangePasswordDto } from './dto/update-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import * as bcrypt from 'bcrypt';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -83,7 +84,7 @@ export class UsersService {
       return this.findStudentsByTeacher(requesterId, query);
     }
 
-    const where: any = { tenantId, isActive: true };
+    const where: Prisma.UserWhereInput = { tenantId, isActive: true };
 
     if (search) {
       where.OR = [
@@ -124,7 +125,7 @@ export class UsersService {
     const { search, page = 1, limit = 20 } = query;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Prisma.UserWhereInput = {
       groupMemberships: {
         some: {
           group: { teacherId },
@@ -168,7 +169,7 @@ export class UsersService {
     requesterRole: string,
     requesterId: string,
   ) {
-    const where: any = { id, isActive: true };
+    const where: Prisma.UserWhereInput = { id, isActive: true };
 
     // super_admin istalgan tenantni ko'ra oladi
     if (requesterRole !== 'super_admin') {
@@ -210,6 +211,8 @@ export class UsersService {
     requesterRole: string,
     requesterId: string,
   ) {
+    console.log(requesterId);
+
     await this.findOneOrFail(id, tenantId, requesterRole);
 
     if (dto.phone) {
@@ -315,7 +318,7 @@ export class UsersService {
 
   // Arxivdan qaytarish
   async restore(id: string, tenantId: string, requesterRole: string) {
-    const where: any = { id };
+    const where: Prisma.UserWhereInput = { id };
     if (requesterRole !== 'super_admin') where.tenantId = tenantId;
 
     const user = await this.prisma.user.findFirst({ where });
@@ -339,7 +342,7 @@ export class UsersService {
     tenantId: string,
     requesterRole: string,
   ) {
-    const where: any = { id, isActive: true };
+    const where: Prisma.UserWhereInput = { id, isActive: true };
     if (requesterRole !== 'super_admin') where.tenantId = tenantId;
 
     const user = await this.prisma.user.findFirst({
@@ -351,12 +354,13 @@ export class UsersService {
   }
 
   // passwordHash ni response dan olib tashlash
-  private exclude<T extends Record<string, any>>(
+  private exclude<T extends Record<string, unknown>, K extends keyof T>(
     user: T,
-    keys: string[],
-  ): Omit<T, (typeof keys)[number]> {
-    return Object.fromEntries(
-      Object.entries(user).filter(([k]) => !keys.includes(k)),
-    ) as Omit<T, (typeof keys)[number]>;
+    keys: K[],
+  ): Omit<T, K> {
+    const entries = Object.entries(user).filter(
+      ([key]) => !keys.includes(key as K),
+    );
+    return Object.fromEntries(entries) as Omit<T, K>;
   }
 }

@@ -2,13 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-
-export interface TokenPayload {
-  sub: string;
-  phone: string;
-  role: string;
-  tenantId: string;
-}
+import { AuthPayloadType } from 'src/common/types';
 
 @Injectable()
 export class TokenService {
@@ -20,7 +14,7 @@ export class TokenService {
   /**
    * Access token yaratadi (15 daqiqa)
    */
-  generateAccessToken(payload: TokenPayload): string {
+  generateAccessToken(payload: AuthPayloadType): string {
     return this.jwt.sign(payload, {
       secret: this.config.get('JWT_ACCESS_SECRET'),
       expiresIn: '15m',
@@ -30,7 +24,7 @@ export class TokenService {
   /**
    * Refresh token yaratadi (1 kun)
    */
-  generateRefreshToken(payload: TokenPayload): string {
+  generateRefreshToken(payload: AuthPayloadType): string {
     return this.jwt.sign(payload, {
       secret: this.config.get('JWT_REFRESH_SECRET'),
       expiresIn: '1d',
@@ -73,7 +67,9 @@ export class TokenService {
   /**
    * Refresh tokenni verify qiladi
    */
-  verifyRefreshToken(refreshToken: string) {
+  verifyRefreshToken(
+    refreshToken: string,
+  ): AuthPayloadType & { iat: number; exp: number } {
     return this.jwt.verify(refreshToken, {
       secret: this.config.get('JWT_REFRESH_SECRET'),
     });

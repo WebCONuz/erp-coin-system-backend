@@ -1,56 +1,54 @@
 # 🎓 ERP COIN SYSTEM
 
-O'quv markazlari va maktablar uchun **incentive management tizimi**. O'quvchilarni darsga qiziqtirib, bonus va jarima tangalari (coins) orqali mukofotlash va punishment qilish.
+O'quv markazlari va maktablar uchun mo'ljallangan, zamonaviy va kengaytirshga qulay **Incentive Management (Geymifikatsiya va Rag'batlantirish) Tizimi**. Ushbu platforma o'quvchilarni darsga qiziqtirish, davomat samaradorligini oshirish va ichki virtual iqtisodiyot (tanga va sovg'alar do'koni) orqali o'quv jarayonini interaktiv qilish uchun ishlab chiqilgan.
 
 ---
 
-## 📌 LOYIHA MAZMUNÍ
+## 📌 LOYIHA MAZMUNI
 
 ### 🎯 Asosiy G'oya
 
-- **O'quvchilarni qiziqtirish**: Darsga vaqtida qatnashgan, uyga vazifasini bajargan, faol o'quvchilar bonus tangalari (coins) oladi
-- **Jarima tizimi**: Darsga kelmagan, hulqi salbiy bo'lgan o'quvchilar jarima ballari (coins olib ketiladi)
-- **Online Store**: O'quvchilar olgan tangalari bilan loyiha ichidagi virtual do'konda kerakli narsalarni sotib olishlari mumkin
-- **Multi-tenant**: Bir platformada bir nechta o'quv markazi va maktablar ishlashi mumkin
-- **Role-based Access**: Har bir foydalanuvchi o'z roli bo'yicha turli imkoniyatlarga ega
+- **O'quvchilarni qiziqtirish (Gamification)**: Darsga o'z vaqtida qatnashgan, uyga vazifasini mukammal bajargan va faol o'quvchilar avtomatik ravishda bonus tangalari (coins) bilan taqdirlanadi.
+- **Jarima tizimi (Penalty Logic)**: Darsga sababsiz kelmagan yoki ichki tartib-qoidalarni buzgan o'quvchilarning hamyonidan tangalar tizim tomonidan chegirib tashlanadi.
+- **Virtual Do'kon (Rewards Store)**: O'quvchilar yig'gan tangalari evaziga tizim ichidagi do'kondan jismoniy (futbolka, ruchka), raqamli (kurslar, kuponlar) yoki imtiyozli (guruhni o'zgartirish, imtihonni qayta topshirish) sovg'alarni sotib olishlari mumkin.
+- **Xavfsiz Multi-tenant Arxitektura**: Bir vaqtning o'zida yuzlab o'quv markazlari va maktablar (Tenant) tizimdan mutloq xavfsiz va bir-biridan ajratilgan (Isolated) holda foydalana oladi.
+- **Granulyar Role-based Access (RBAC)**: Foydalanuvchilar o'z rollari va ruxsatnomalari (Permissions) doirasidagina tizim qismlariga kirish huquqiga ega.
 
-### 👥 Foydalanuvchi Turlari
+### 👥 Foydalanuvchi Turlari va Rollari
 
-1. **Creator** - Loyihaning yaratuvchisi (super-super admin, hech kim bilmaydi)
-2. **Super Admin** - Loyihani bosh boqaruvchisi (barcha filiallarni nazorat qiladi)
-3. **Tenant Admin** - O'quv markazi boshlig'i (o'z filialini to'liq nazorat qiladi)
-4. **Teacher** - O'qituvchi (darsga qatnashish va uyga vazifa bajarishni qayd qiladi)
-5. **Student | Parent** - O'quvchi | ota-ona (o'z kabinetida stats va coins ko'radi)
+1. **Creator** - Platformaning global yaratuvchisi (Super-super admin). Hech bir tenantga tegishli bo'lmagan holda, tizimning barcha qismlarini va global parametrlarni nazorat qiladi.
+2. **Super Admin** - Loyihaning asosiy egalari va boshqaruvchilari. Yangi o'quv markazlarini (Tenant) ro'yxatdan o'tkazadi va global moliya/auditingni kuzatadi.
+3. **Tenant Admin** - Muayyan o'quv markazi yoki maktab rahbari. O'z filialining o'qituvchilari, o'quvchilari, guruhlari, kurslari va tangalar qoidalarini to'liq boshqaradi.
+4. **Teacher** - O'qituvchi. Dars jurnali orqali guruhlarni bittada (Bulk) yo'qlama qiladi va o'quvchilarga qo'lda (Manual) yoki dars asosida (Auto) tangalar yozadi.
+5. **Student | Parent** - O'quvchi va ota-ona kabineti. Joriy tangalar balansini, batafsil tranzaksiyalar tarixini, reytinglar jadvalini (Leaderboard) ko'radi hamda do'kondan xaridlarni amalga oshiradi.
 
-### 🏢 Asosiy Funktsiyalar
+### 🏢 MVP Bosqichidagi Asosiy Funktsiyalar
 
-- ✅ Davomat va uyga vazifa tracking
-- ✅ Coins avtomatik hisoblash (attendance + homework + faollik)
-- ✅ Reward store (digital, imtiyoz, fizik sovg'alar)
-- ✅ SMS/Email bildirishnomalar
-- ✅ Audit logging (barcha harakatlar qayd)
-- ✅ Role-based permissions (guard-style)
-- ✅ Student/Parent cabinet
-- ⚠️ Dars jadvali boshqarish (xonalar bilan conflict oldini olish)
+- [x] **Multi-Tenant Isolation**: Maxsus `@TenantContext()` dekoratori orqali ma'lumotlar xavfsizligi va tenantlararo aloqa cheklanishi ta'minlangan.
+- [x] **Bulk Attendance & Auto-Coin System**: Guruhni bittada davomat qilish orqali butun guruhga avtomatik ravishda `CoinRule` asosida tanga berish yoki ayirish logikasi.
+- [x] **Transactional Wallet Integrity**: Barcha moliya operatsiyalari Prisma `$transaction` (Atomik amallar) orqali yoziladi. Balans hech qachon to'g'ridan-to'g'ri o'zgarmaydi, faqat `CoinTransaction` orqali inkrement/dekrement qilinadi.
+- [x] **Store & Refund Logic**: Talaba sovg'a sotib olganda ombor zaxirasi (`stock`) avtomatik kamayadi. Admin xaridni rad etsa (`rejected`), tangalar talaba hamyoniga qaytariladi va zaxira tiklanadi.
+- [x] **Leaderboard (Reyting Tizimi)**: Database darajasida indekslangan va optimallashtirilgan eng ko'p tangaga ega talabalar TOP ro'yxati.
+- [x] **Audit Logging & Security**: Tizimdagi har bir xavfli operatsiya va xarid tarixi qat'iy nazorat ostida log qilinadi.
 
 ---
 
-## 🛠️ QULLANILADIGAN TEXNOLOGIYALAR
+## 🛠️ QO'LLANILADIGAN TEXNOLOGIYALAR
 
-| Texnologiya         | Maqsadi                               |
-| ------------------- | ------------------------------------- |
-| **Node.js**         | Runtime environment                   |
-| **TypeScript**      | Type-safe JavaScript                  |
-| **NestJS**          | Backend framework (modular, scalable) |
-| **Prisma**          | ORM (type-safe database)              |
-| **PostgreSQL**      | Relational database                   |
-| **JWT**             | Authentication                        |
-| **Bcrypt**          | Password hashing                      |
-| **Swagger/OpenAPI** | API documentation                     |
+| Texnologiya                       | Maqsadi                                                                |
+| :-------------------------------- | :--------------------------------------------------------------------- |
+| **Node.js (v18+)**                | Backend runtime muhiti                                                 |
+| **TypeScript**                    | Strict type-safe dasturlash tili                                       |
+| **NestJS**                        | Enterprise darajadagi, modulli backend framework                       |
+| **Prisma ORM**                    | Tizimli va type-safe ma'lumotlar bazasi munosabatlari                  |
+| **PostgreSQL**                    | Relational ma'lumotlar bazasi (Tranzaksiyalar uchun qulay)             |
+| **Class-Validator & Transformer** | DTO darajasida requestlarni qat'iy va xavfsiz validatsiya qilish       |
+| **JWT (Access & Refresh)**        | Ikki bosqichli xavfsiz autentifikatsiya tizimi                         |
+| **Swagger / OpenAPI**             | Interaktiv va avtomatik generatsiya bo'luvchi API hujjatlar jamlanmasi |
 
 ---
 
-## 📦 ISHGA TUSHIRISH
+## 📦 ISHGA TUSHIRISH VA SOZLANGANLIK
 
 ### **1️⃣ Loyihani Clone qilish**
 
@@ -73,42 +71,41 @@ npm install
 # Port
 PORT=3000
 
-# Database URL for Prizma
-DATABASE_URL="postgresql://postgres:your_pass@localhost:your_port/your_db?schema=public"
+# Database URL for Prisma (PostgreSQL)
+DATABASE_URL="postgresql://postgres:your_pass@localhost:5432/erp_coin_db?schema=public"
 
-# Token secrets
-JWT_ACCESS_SECRET = your_access_token_key
-JWT_REFRESH_SECRET = your_refresh_token_key
+# Token secrets (Kamida 32 belgidan iborat murakkab kalit yozing)
+JWT_ACCESS_SECRET="your_extremely_strong_access_token_key_2026"
+JWT_REFRESH_SECRET="your_extremely_strong_refresh_token_key_2026"
 
-# Gmail Providers
-SMTP_PASSWORD=your_smtp_password
-SMTP_USER=your_smtp_email
-SMTP_HOST=smtp.gmail.com
+# Gmail SMTP Providers
+SMTP_PASSWORD="your_smtp_app_password"
+SMTP_USER="info@yourdomain.com"
+SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
 
-# SMS service
-ESKIZ_EMAIL=your_eskis_email
-ESKIZ_PASSWORD=eskiz_parol
-ESKIZ_SENDER=your_eskiz_sender
+# SMS API Service (Eskiz.uz integratsiyasi)
+ESKIZ_EMAIL="your_eskiz_email@gmail.com"
+ESKIZ_PASSWORD="your_eskiz_password"
+ESKIZ_SENDER="4545"
 
-# Creator datas
-CREATOR_PHONE=creator_phone
-CREATOR_PASSWORD=creator_password
-CREATOR_NAME=creator_full_name
-CREATOR_EMAIL=creator_email
+# Global Creator (Secret Master Account)
+CREATOR_PHONE="+998945426307"
+CREATOR_PASSWORD="secure_creator_password_123"
+CREATOR_NAME="Muxammadi Toshtemirov"
+CREATOR_EMAIL="muxammadi0799@gmail.com"
 
+# System Super Admin Datas
+SUPER_ADMIN_PHONE="+998901234567"
+SUPER_ADMIN_PASSWORD="super_admin_secure_pass"
+SUPER_ADMIN_NAME="Super Admin Chief"
+SUPER_ADMIN_EMAIL="admin@erpcoin.uz"
 
-# Super admin datas
-SUPER_ADMIN_PHONE=super_admin_phone
-SUPER_ADMIN_PASSWORD=super_admin_password
-SUPER_ADMIN_NAME=super_admin_fullname
-SUPER_ADMIN_EMAIL=super_admin_email
-
-# Frontend domen
-FRONTEND_DOMEN=your_fronend_domen
+# Frontend Web Domain URL
+FRONTEND_DOMEN="http://localhost:3000"
 
 # Working environment
-NODE_ENV='development' | 'production'
+NODE_ENV="development"
 ```
 
 ### **4️⃣ Database Migration'larni ishlatib ko'rish**
@@ -162,45 +159,33 @@ Bu buyruq `http://localhost:5555`'da database'ni visual ko'rish imkoniyatini ber
 
 erp-coin-system-backend/
 ├── src/
-│ ├── modules/
-│ │ ├── auth/ # Authentication & JWT
-│ │ ├── users/ # User management
-│ │ ├── roles/ # Role & Permission
-│ │ ├── tenants/ # Tenant management
-│ │ ├── courses/ # Courses & Groups
-│ │ ├── sessions/ # Sessions & Attendance
-│ │ ├── coins/ # Coin transactions
-│ │ ├── rewards/ # Rewards & Purchases
-│ │ ├── notifications/ # SMS & Email
-│ │ ├── audit/ # Audit logging
-│ │ └── imports/ # Data import
-│ ├── common/
-│ │ ├── guards/ # TenantGuard, AuthGuard, PermissionGuard
-│ │ ├── interceptors/ # Logging, Error handling
-│ │ ├── pipes/ # Validation
-│ │ └── decorators/ # @CurrentTenant, @RequirePermission
-│ ├── prisma/
-│ │ ├── prisma.service.ts
-│ │ └── seed.ts
-│ ├── config/ # Configuration files
-│ └── app.module.ts
+│ ├── auth/ # Autentifikatsiya, JWT, Login/Logout va Guardlar
+│ │ ├── decorators/ # @CurrentUser, @TenantContext maxsus dekoratorlari
+│ │ └── guards/ # JwtAuthGuard, RolesGuard
+│ ├── coin-rules/ # Tanga berish/ayirish mezonlari (CRUD)
+│ ├── coin-transactions/ # Kirim-chiqim tranzaksiyalari & Wallet (Atomik Servis)
+│ ├── rewards/ # Do'kon sovg'alari boshqaruvi (CRUD)
+│ ├── purchases/ # Xaridlar tarixi & Admin Tasdiqlash/Qaytarish logikasi
+│ ├── sessions/ # Darslar jadvali & Bulk Attendance (Yo'qlama jurnali)
+│ ├── users/ # Foydalanuvchilar va profil boshqaruvi
+│ ├── tenants/ # O'quv markazlari (Tenant) boshqaruvi
+│ ├── prisma/ # Prisma Service ulanishi va seed mantiqlari
+│ ├── common/ # Global Interceptorlar, Exception Filterlar va Pipelar
+│ └── app.module.ts # Markaziy ildiz moduli
 ├── prisma/
-│ ├── schema.prisma # Database schema
-│ └── migrations/ # Migration files
-├── test/ # Jest tests
-├── .env # Environment variables
-├── package.json
-├── tsconfig.json
-└── README.md
+│ ├── schema.prisma # Markaziy Database relyatsion sxemasi
+│ └── migrations/ # SQL migratsiya fayllari tarixi
+├── .husky/ # Git pre-commit pre-push hooklar (Linting & Case-sensitivity protection)
+├── .env # Atrof-muhit o'zgaruvchilari fayli
+├── package.json # Loyiha skriptlari va kutubxonalari ro'yxati
+└── README.md # Loyiha qo'llanmasi
 
 ---
 
 ## 🚀 KEYINGI BOSQICHLAR
 
-- [ ] NestJS modules'ni yaratish
-- [ ] Authentication va JWT guard'larini yozish
-- [ ] TenantGuard va PermissionGuard'larini yozish
-- [ ] API endpoints'larini yozish
+- [ ] Tashqi file-uploading ulash
+- [ ] Dars jadval tizimini ishlab chiqish
 - [ ] Unit tests'ni yozish
 - [ ] Integration tests'ni yozish
 - [ ] Docker setup'ni yaratish
@@ -230,11 +215,11 @@ erp-coin-system-backend/
 
 ## 📞 KONTAKT
 
-- [ ] **Yaratuvchi**: Muxammadi Toshtemirov
-- [ ] **Telefon**: +998(94) 542-63-07
-- [ ] **Email**: muxammadi0799@gmail.com
+- [ ] **Yaratuvchi (Lead Engineer)**: Muxammadi Toshtemirov
+- [ ] **Telefon raqam**: +998(94) 542-63-07
+- [ ] **Elektron pochta**: muxammadi0799@gmail.com
+- [ ] **Telegram**: @Muxammadi_Dev
 
 ---
 
-**⭐ Loyiha development uchun tayyor!**
-**⭐ Ishlab chiqaruvchi: Muxammadi Toshtemirov**
+**⭐ Tizim MVP talablari bo'yicha ishlab chiqarish (Production) va sinov rejimlariga to'liq tayyor!**

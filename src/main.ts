@@ -4,15 +4,19 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import * as basicAuth from 'express-basic-auth';
+import { Handler } from 'express';
 import helmet from 'helmet';
 
 async function start() {
   // port
   const PORT = process.env.PORT || 3001;
+
   // app
   const app = await NestFactory.create(AppModule);
+
   // cookie-parser
   app.use(cookieParser());
+
   // global validation
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,18 +25,26 @@ async function start() {
       transform: true,
     }),
   );
+
   // global prefix
   app.setGlobalPrefix('/api');
+
   // helmet
   app.use(helmet());
-  // cors
+
+  // CORS
+  const allowedOrigins: string[] = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+  ];
+  if (process.env.FRONTEND_DOMEN) {
+    allowedOrigins.push(process.env.FRONTEND_DOMEN);
+  }
   app.enableCors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        'http://localhost:5173',
-        'http://localhost:3000',
-        process.env.FRONTEND_DOMEN,
-      ];
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -42,14 +54,17 @@ async function start() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
-  // add auth to read swagger docs
+
+  // swagger auth
+  const authMiddleware = basicAuth as unknown as (options: unknown) => Handler;
   app.use(
     ['/api/docs'],
-    basicAuth({
+    authMiddleware({
       users: { kottaAdmin: '12345' },
       challenge: true,
     }),
   );
+
   // swagger
   const config = new DocumentBuilder()
     .addBearerAuth(
@@ -68,10 +83,17 @@ async function start() {
     .setVersion('1.0.0')
     .addTag('Nestjs, Prisma, Validation')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
+
   // listen app
-  await app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
+  await app.listen(PORT, () =>
+    console.log(`🚀 Server running at port ${PORT}`),
+  );
 }
 
-start();
+start().catch((err) => {
+  console.error('❌ Server startup error:', err);
+  process.exit(1);
+});

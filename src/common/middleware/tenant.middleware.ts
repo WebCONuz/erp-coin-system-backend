@@ -1,13 +1,14 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { PrismaService } from '../../prisma/prisma.service';
+import { RequestWithUser } from '../types';
 
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {
   constructor(private prisma: PrismaService) {}
 
-  async use(req: Request, res: Response, next: NextFunction) {
-    const user = (req as any).user;
+  async use(req: RequestWithUser, res: Response, next: NextFunction) {
+    const user = req.user;
 
     if (user?.tenantId) {
       await this.prisma.$executeRawUnsafe(

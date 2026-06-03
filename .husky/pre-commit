@@ -1,0 +1,7 @@
+# 1. Git keys-sensitivlikni tekshirish (papkalar to'g'ri push bo'lishi uchun)
+echo "🔍 Git konfiguratsiyasi tekshirilmoqda..."
+git config core.ignorecase false
+
+# 2. Linting va TypeScript xatoliklarini tekshirish
+echo "🚀 Pre-commit linter ishga tushdi..."
+npm run lint && npm run format

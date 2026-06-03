@@ -9,6 +9,7 @@ import { UpdateGroupDto } from './dto/update-group.dto';
 import { QueryGroupDto } from './dto/query-group.dto';
 import { AddStudentDto } from './dto/add-student.dto';
 import { AddStudentsBulkDto } from './dto/add-students-bulk.dto';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class GroupsService {
@@ -54,7 +55,7 @@ export class GroupsService {
     } = query;
     const skip = (page - 1) * limit;
 
-    const where: any = { tenantId, isDeleted: false };
+    const where: Prisma.GroupWhereInput = { tenantId, isDeleted: false };
 
     if (isActive !== undefined) where.isActive = isActive;
     else where.isActive = true;

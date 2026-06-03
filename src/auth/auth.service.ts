@@ -3,8 +3,6 @@ import {
   UnauthorizedException,
   BadRequestException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -14,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { Response } from 'express';
 import { TokenService } from './token.service';
+import { AuthPayloadType } from 'src/common/types';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +38,7 @@ export class AuthService {
       throw new UnauthorizedException("Telefon raqam yoki parol noto'g'ri");
     }
 
-    const payload = {
+    const payload: AuthPayloadType = {
       sub: user.id,
       phone: user.phone,
       role: user.role.name,
@@ -79,7 +78,7 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token topilmadi');
     }
 
-    let payload: any;
+    let payload: AuthPayloadType;
     try {
       payload = this.tokenService.verifyRefreshToken(refreshToken);
     } catch {
@@ -105,11 +104,12 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token mos kelmadi');
     }
 
-    const newPayload = {
+    const newPayload: AuthPayloadType = {
       sub: user.id,
       phone: user.phone,
       role: user.role.name,
       tenantId: user.tenantId,
+      roleId: user.roleId,
     };
 
     const newAccessToken = this.tokenService.generateAccessToken(newPayload);
@@ -154,6 +154,8 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Foydalanuvchi topilmadi');
 
     const { passwordHash, refreshTokenHash, ...safeUser } = user;
+    console.log(passwordHash, refreshTokenHash);
+
     return {
       status: 'success',
       message: 'Your full datas',

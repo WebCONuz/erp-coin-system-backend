@@ -12,6 +12,7 @@ import {
   PurchaseStatus,
   SourceType,
 } from 'src/generated/prisma/enums';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class RewardsService {
@@ -37,7 +38,11 @@ export class RewardsService {
     const { page = 1, limit = 10, search, onlyInStock } = query;
     const skip = (page - 1) * limit;
 
-    const where: any = { tenantId, isDeleted: false, isActive: true };
+    const where: Prisma.RewardWhereInput = {
+      tenantId,
+      isDeleted: false,
+      isActive: true,
+    };
 
     if (search) {
       where.title = { contains: search, mode: 'insensitive' };

@@ -13,6 +13,10 @@ import { CoursesModule } from './courses/courses.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { GroupsModule } from './groups/groups.module';
 import { RewardsModule } from './rewards/rewards.module';
+import { CoinRulesModule } from './coin-rules/coin-rules.module';
+import { CoinTransactionsModule } from './coin-transaction/coin-transaction.module';
+import { SessionsModule } from './sessions/sessions.module';
+import { PurchasesModule } from './purchases/purchases.module';
 
 @Module({
   imports: [
@@ -40,6 +44,10 @@ import { RewardsModule } from './rewards/rewards.module';
     RoomsModule,
     GroupsModule,
     RewardsModule,
+    CoinRulesModule,
+    CoinTransactionsModule,
+    SessionsModule,
+    PurchasesModule,
   ],
   controllers: [],
   providers: [

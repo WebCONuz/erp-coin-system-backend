@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { QueryRoomDto } from './dto/query-room.dto';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class RoomsService {
@@ -27,7 +28,7 @@ export class RoomsService {
     const { page = 1, limit = 10, search, isActive } = query;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Prisma.RoomWhereInput = {
       tenantId,
       isDeleted: false, // O'chirilgan xonalarni mutloq ko'rsatmaymiz
     };

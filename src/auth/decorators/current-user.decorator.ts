@@ -1,10 +1,14 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { RequestWithUser } from 'src/common/types';
 
-// Ishlatish: @CurrentUser() user: RequestUser
 export const CurrentUser = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
+    const request = ctx.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
-    return data ? user?.[data] : user;
+
+    if (data && user) {
+      return user[data] as unknown;
+    }
+    return user;
   },
 );

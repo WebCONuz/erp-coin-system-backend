@@ -7,6 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthPayloadType } from 'src/common/types';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -23,9 +24,13 @@ export class RolesGuard implements CanActivate {
 
     if (!requiredRoles || requiredRoles.length === 0) return true;
 
-    const { user } = context.switchToHttp().getRequest();
+    const request = context
+      .switchToHttp()
+      .getRequest<{ user?: AuthPayloadType }>();
+    const user = request.user;
     if (!user) return false;
 
+    // Foydalanuvchining rolini bazadan tekshiramiz
     const userRole = await this.prisma.role.findUnique({
       where: { id: user.roleId },
       select: { level: true, name: true },
@@ -33,10 +38,13 @@ export class RolesGuard implements CanActivate {
 
     if (!userRole) return false;
 
+    // Talab qilingan rollarni darajasini (level) olamiz
     const requiredLevels = await this.prisma.role.findMany({
       where: { name: { in: requiredRoles } },
       select: { level: true },
     });
+
+    if (requiredLevels.length === 0) return false;
 
     const minRequired = Math.min(...requiredLevels.map((r) => r.level));
 

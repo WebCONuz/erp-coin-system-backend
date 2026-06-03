@@ -36,7 +36,7 @@ export class AuthController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Access tokenni yangilash' })
   refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authService.refresh(req.cookies?.refresh_token, res);
+    return this.authService.refresh(req.cookies?.refresh_token as string, res);
   }
 
   @UseGuards(JwtAuthGuard)

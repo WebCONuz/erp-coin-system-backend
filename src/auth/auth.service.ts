@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
@@ -30,12 +31,12 @@ export class AuthService {
     });
 
     if (!user || !user.isActive) {
-      throw new UnauthorizedException("Telefon raqam yoki parol noto'g'ri");
+      throw new BadRequestException("Telefon raqam yoki parol noto'g'ri");
     }
 
     const passwordMatch = await bcrypt.compare(dto.password, user.passwordHash);
     if (!passwordMatch) {
-      throw new UnauthorizedException("Telefon raqam yoki parol noto'g'ri");
+      throw new BadRequestException("Telefon raqam yoki parol noto'g'ri");
     }
 
     const payload: AuthPayloadType = {
@@ -75,7 +76,7 @@ export class AuthService {
   // ─── Token yangilash ──────────────────────────────────────────
   async refresh(refreshToken: string, res: Response) {
     if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token topilmadi');
+      throw new BadRequestException('Refresh token topilmadi');
     }
 
     let payload: AuthPayloadType;
@@ -93,7 +94,7 @@ export class AuthService {
     });
 
     if (!user || !user.refreshTokenHash) {
-      throw new UnauthorizedException('Foydalanuvchi topilmadi');
+      throw new NotFoundException('Foydalanuvchi topilmadi');
     }
 
     const tokenMatch = await bcrypt.compare(
@@ -151,7 +152,7 @@ export class AuthService {
         wallet: { select: { balance: true } },
       },
     });
-    if (!user) throw new UnauthorizedException('Foydalanuvchi topilmadi');
+    if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
 
     const { passwordHash, refreshTokenHash, ...safeUser } = user;
     console.log(passwordHash, refreshTokenHash);

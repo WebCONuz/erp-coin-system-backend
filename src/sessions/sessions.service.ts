@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSessionDto } from './dto/create-session.dto';
@@ -24,6 +25,25 @@ export class SessionsService {
 
   // 1. DARS YARATISH
   async create(tenantId: string, dto: CreateSessionDto) {
+    // session oldin yatilmaganini tekshirish
+    const existingSession = await this.prisma.session.findFirst({
+      where: {
+        sessionDate: dto.sessionDate,
+        startTime: dto.startTime,
+        endTime: dto.endTime,
+        sessionType: dto.sessionType,
+        groupId: dto.groupId,
+        teacherId: dto.teacherId,
+        tenantId,
+      },
+    });
+
+    if (existingSession) {
+      throw new ConflictException(
+        "Bu guruh uchun ko'rsatilgan sanada dars sessiyasi allaqachon yaratilgan!",
+      );
+    }
+
     return this.prisma.session.create({
       data: {
         sessionDate: new Date(dto.sessionDate),

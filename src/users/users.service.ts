@@ -72,6 +72,7 @@ export class UsersService {
     const {
       search,
       roleId,
+      roleName,
       groupId,
       page = 1,
       limit = 20,
@@ -79,13 +80,21 @@ export class UsersService {
     } = query;
     const skip = (page - 1) * limit;
 
-    // Teacher faqat o'z guruhidagi studentlarni ko'ra oladi
+    // 1. Teacher faqat o'z guruhidagi studentlarni ko'ra oladi
     if (requesterRole === 'teacher') {
       return this.findStudentsByTeacher(requesterId, query);
     }
 
-    const where: Prisma.UserWhereInput = { tenantId, isActive: true };
+    // Base Query setting (super_admin bo'lsa barcha tenantlarni ko'rishi mumkin)
+    const where: Prisma.UserWhereInput = { isActive: true };
 
+    if (requesterRole !== 'super_admin') {
+      where.tenantId = tenantId;
+    } else if (query.tenantId) {
+      where.tenantId = query.tenantId;
+    }
+
+    // 2. Search logic
     if (search) {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
@@ -93,7 +102,19 @@ export class UsersService {
       ];
     }
 
-    if (roleId) where.roleId = roleId;
+    // 3. Role ID bo'yicha filtr
+    if (roleId) {
+      where.roleId = roleId;
+    }
+
+    // 4. Dinamik Role Name bo'yicha filtr (Frontend uchun eng muhim joyi)
+    if (roleName) {
+      where.role = {
+        name: roleName,
+      };
+    }
+
+    // 5. Group bo'yicha filtr
     if (groupId) {
       where.groupMemberships = {
         some: { groupId, isActive: true },
@@ -108,7 +129,8 @@ export class UsersService {
         orderBy: { [sortBy]: 'desc' },
         include: {
           role: true,
-          wallet: { select: { balance: true } },
+          wallet:
+            roleName === 'student' ? { select: { balance: true } } : false,
         },
       }),
       this.prisma.user.count({ where }),

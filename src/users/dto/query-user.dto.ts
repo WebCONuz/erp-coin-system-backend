@@ -55,4 +55,11 @@ export class QueryUserDto {
   @IsOptional()
   @IsEnum(UserSortBy)
   sortBy?: UserSortBy = UserSortBy.createdAt;
+
+  @ApiPropertyOptional({
+    description: "Rol nomi bo'yicha filtr (masalan: student, teacher, admin)",
+  })
+  @IsOptional()
+  @IsString()
+  roleName?: string;
 }

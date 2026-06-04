@@ -47,7 +47,7 @@ async function seedRoles(systemTenantId: string) {
     create: {
       name: 'super_admin',
       displayName: 'Super Admin',
-      level: 80,
+      level: 90,
       scope: 'system',
       canDelete: true,
       canManageAdmins: true,
@@ -55,36 +55,6 @@ async function seedRoles(systemTenantId: string) {
       isSystem: true,
       tenantId: systemTenantId,
     },
-  });
-
-  await prisma.role.createMany({
-    data: [
-      {
-        name: 'admin',
-        displayName: 'Tenant Admin',
-        level: 60,
-        scope: 'system',
-        isSystem: true,
-        tenantId: systemTenantId,
-      },
-      {
-        name: 'teacher',
-        displayName: "O'qituvchi",
-        level: 40,
-        scope: 'system',
-        isSystem: true,
-        tenantId: systemTenantId,
-      },
-      {
-        name: 'student',
-        displayName: "O'quvchi",
-        level: 20,
-        scope: 'system',
-        isSystem: true,
-        tenantId: systemTenantId,
-      },
-    ],
-    skipDuplicates: true,
   });
 
   return { creatorRole, superAdminRole };

@@ -37,6 +37,9 @@ export class TenantService {
         createdAt: true,
         _count: { select: { users: true, groups: true } },
       },
+      where: {
+        NOT: { OR: [{ name: 'Asosiy tashkilot' }, { name: 'System Tenant' }] },
+      },
     });
 
     return {

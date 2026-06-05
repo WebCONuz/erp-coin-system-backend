@@ -142,6 +142,71 @@ export class UsersService {
     };
   }
 
+  async findAllTeachers(
+    query: QueryUserDto,
+    tenantId: string,
+    requesterRole: string,
+  ) {
+    const { search, page = 1, limit = 20, sortBy = 'createdAt' } = query;
+    const skip = (page - 1) * limit;
+
+    // Base Query setting
+    const where: Prisma.UserWhereInput = {
+      role: {
+        name: 'teacher',
+      },
+    };
+
+    // Multi-tenant tekshiruvi
+    if (requesterRole !== 'super_admin') {
+      where.tenantId = tenantId;
+    } else if (query.tenantId) {
+      where.tenantId = query.tenantId;
+    }
+
+    // Search logic
+    if (search) {
+      where.OR = [
+        { fullName: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search } },
+      ];
+    }
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: 'desc' },
+        select: {
+          id: true,
+          phone: true,
+          fullName: true,
+          email: true,
+          avatarUrl: true,
+          createdAt: true,
+          updatedAt: true,
+          role: { select: { id: true, name: true, displayName: true } },
+          wallet: false,
+          taughtGroups: {
+            select: {
+              id: true,
+              name: true,
+              maxStudents: true,
+            },
+          },
+        },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      status: 'success',
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
   // Teacher o'z guruhidagi studentlar
   private async findStudentsByTeacher(teacherId: string, query: QueryUserDto) {
     const { search, page = 1, limit = 20 } = query;

@@ -51,14 +51,14 @@ export class GroupsService {
       search,
       courseId,
       teacherId,
-      isActive,
+      // isActive,
     } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.GroupWhereInput = { tenantId, isDeleted: false };
 
-    if (isActive !== undefined) where.isActive = isActive;
-    else where.isActive = true;
+    // if (isActive !== undefined) where.isActive = isActive;
+    // else where.isActive = true;
 
     if (courseId) where.courseId = courseId;
     if (teacherId) where.teacherId = teacherId;
@@ -75,6 +75,7 @@ export class GroupsService {
           id: true,
           name: true,
           maxStudents: true,
+          isActive: true,
           createdAt: true,
           updatedAt: true,
           course: { select: { id: true, title: true } },

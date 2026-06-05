@@ -54,17 +54,28 @@ export class CoursesService {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' }, // ID bo'yicha emas, vaqt bo'yicha tartiblash yaxshiroq indexlanadi
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+        },
       }),
       this.prisma.course.count({ where }),
     ]);
 
     return {
+      status: 'success',
       data,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
     };
   }
 

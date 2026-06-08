@@ -37,9 +37,16 @@ export class GroupsService {
         tenantId,
         createdById,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        maxStudents: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
         course: { select: { id: true, title: true, description: true } },
         teacher: { select: { id: true, fullName: true, phone: true } },
+        _count: { select: { students: { where: { isDeleted: false } } } },
       },
     });
   }

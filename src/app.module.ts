@@ -17,6 +17,8 @@ import { CoinRulesModule } from './coin-rules/coin-rules.module';
 import { CoinTransactionsModule } from './coin-transaction/coin-transaction.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { PurchasesModule } from './purchases/purchases.module';
+import { StudentsModule } from './students/students.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { PurchasesModule } from './purchases/purchases.module';
     CoinTransactionsModule,
     SessionsModule,
     PurchasesModule,
+    StudentsModule,
+    MessagesModule,
   ],
   controllers: [],
   providers: [

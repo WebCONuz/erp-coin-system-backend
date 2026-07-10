@@ -266,7 +266,7 @@ export class UsersService {
     };
   }
 
-  // Teacher o'z guruhidagi studentlar
+  // Teacher o’z guruhidagi studentlar
   private async findStudentsByTeacher(teacherId: string, query: QueryUserDto) {
     const { search, page = 1, limit = 20 } = query;
     const skip = (page - 1) * limit;

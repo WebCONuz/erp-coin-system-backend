@@ -12,12 +12,32 @@ export class MailService {
     },
   });
 
+  async sendCustomMessage(params: {
+    to: string;
+    message: string;
+    senderName: string;
+  }) {
+    await this.transporter.sendMail({
+      to: params.to,
+      subject: `CoinLearn — ${params.senderName} dan xabar`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: auto;">
+          <h3>Yangi xabar</h3>
+          <p>${params.message.replace(/\n/g, '<br>')}</p>
+          <p style="color:#888;font-size:13px;margin-top:16px;">
+            Yuboruvchi: <b>${params.senderName}</b>
+          </p>
+        </div>
+      `,
+    });
+  }
+
   async sendPasswordReset(params: {
     to: string;
     fullName: string;
     token: string;
   }) {
-    const resetLink = `${process.env.FRONTEND_URL!}/reset-password?token=${params.token}`;
+    const resetLink = `${process.env.FRONTEND_DOMEN!}/reset-password?token=${params.token}`;
 
     await this.transporter.sendMail({
       to: params.to,

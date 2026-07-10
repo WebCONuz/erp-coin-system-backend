@@ -73,17 +73,6 @@ export class UsersController {
     return this.usersService.findAllTeachers(query, tenantId, requesterId);
   }
 
-  @Get('students')
-  @Roles('admin', 'super_admin')
-  @ApiOperation({ summary: "O'qituvchilar ro'yxati (filter + pagination)" })
-  findAllStudents(
-    @Query() query: QueryUserDto,
-    @TenantContext() tenantId: string,
-    @CurrentUser('id') requesterId: string,
-  ) {
-    return this.usersService.findAllStudents(query, tenantId, requesterId);
-  }
-
   // ─── O'z profili ─────────────────────────────────────────────
   @Get('me')
   @ApiOperation({ summary: "O'z profil ma'lumotlari" })

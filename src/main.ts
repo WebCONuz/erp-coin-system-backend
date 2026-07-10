@@ -6,6 +6,8 @@ import * as cookieParser from 'cookie-parser';
 import * as basicAuth from 'express-basic-auth';
 import { Handler } from 'express';
 import helmet from 'helmet';
+import { join } from 'path';
+import * as express from 'express';
 
 async function start() {
   // port
@@ -16,6 +18,9 @@ async function start() {
 
   // cookie-parser
   app.use(cookieParser());
+
+  // avatar rasmlari uchun statik fayl servisi
+  app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
   // global validation
   app.useGlobalPipes(

@@ -19,6 +19,8 @@ import { SessionsModule } from './sessions/sessions.module';
 import { PurchasesModule } from './purchases/purchases.module';
 import { StudentsModule } from './students/students.module';
 import { MessagesModule } from './messages/messages.module';
+import { ScheduleModule } from './schedule/schedule.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -52,6 +54,8 @@ import { MessagesModule } from './messages/messages.module';
     PurchasesModule,
     StudentsModule,
     MessagesModule,
+    ScheduleModule,
+    AuditLogModule,
   ],
   controllers: [],
   providers: [

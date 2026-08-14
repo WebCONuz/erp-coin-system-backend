@@ -490,6 +490,7 @@ model CoinRule {
   coinAmount  Int           @map("coin_amount")
   direction   CoinDirection
   triggerType TriggerType   @default(manual) @map("trigger_type")
+  sourceType  SourceType?   @map("source_type")
   isActive    Boolean       @default(true) @map("is_active")
   isDeleted   Boolean       @default(false) @map("is_deleted")
   archivedAt  DateTime?     @map("archived_at") @db.Timestamptz

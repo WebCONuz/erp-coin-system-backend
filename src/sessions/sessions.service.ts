@@ -2,10 +2,12 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSessionDto } from './dto/create-session.dto';
+import { UpdateSessionDto } from './dto/update-session.dto';
 import { QuerySessionDto } from './dto/query-session.dto';
 import { BulkAttendanceDto } from './dto/record-attendance.dto';
 import {
@@ -25,7 +27,6 @@ export class SessionsService {
 
   // 1. DARS YARATISH
   async create(tenantId: string, dto: CreateSessionDto) {
-    // session oldin yatilmaganini tekshirish
     const existingSession = await this.prisma.session.findFirst({
       where: {
         sessionDate: dto.sessionDate,
@@ -59,7 +60,60 @@ export class SessionsService {
     });
   }
 
-  // 2. DARSLAR RO‘YXATINI OLISH
+  // 2. DARSNI TAHRIRLASH
+  async update(id: string, tenantId: string, dto: UpdateSessionDto) {
+    const session = await this.prisma.session.findFirst({
+      where: { id, tenantId, isDeleted: false },
+    });
+    if (!session) throw new NotFoundException('Dars topilmadi');
+    if (session.isLocked) {
+      throw new ForbiddenException(
+        'Dars qulflangan -- tahrirlash mumkin emas. Avval qulfni oching.',
+      );
+    }
+    return this.prisma.session.update({
+      where: { id },
+      data: dto,
+      include: {
+        group: { select: { name: true } },
+        room: { select: { name: true } },
+        teacher: { select: { fullName: true } },
+      },
+    });
+  }
+
+  // 3. DARSNI QULFLASH / QULFDAN CHIQARISH
+  async lock(id: string, tenantId: string, requesterId: string) {
+    const session = await this.prisma.session.findFirst({
+      where: { id, tenantId, isDeleted: false },
+    });
+    if (!session) throw new NotFoundException('Dars topilmadi');
+    if (session.isLocked)
+      throw new BadRequestException('Dars allaqachon qulflangan');
+
+    return this.prisma.session.update({
+      where: { id },
+      data: { isLocked: true, lockedAt: new Date(), lockedById: requesterId },
+      select: { id: true, isLocked: true, lockedAt: true },
+    });
+  }
+
+  async unlock(id: string, tenantId: string) {
+    const session = await this.prisma.session.findFirst({
+      where: { id, tenantId, isDeleted: false },
+    });
+    if (!session) throw new NotFoundException('Dars topilmadi');
+    if (!session.isLocked)
+      throw new BadRequestException('Dars qulflangan emas');
+
+    return this.prisma.session.update({
+      where: { id },
+      data: { isLocked: false, lockedAt: null, lockedById: null },
+      select: { id: true, isLocked: true },
+    });
+  }
+
+  // 4. DARSLAR RO'YXATINI OLISH
   async findAll(query: QuerySessionDto, tenantId: string) {
     const {
       page = 1,
@@ -102,7 +156,7 @@ export class SessionsService {
     };
   }
 
-  // 3. BITTA DARS TAFSILOTI
+  // 5. BITTA DARS TAFSILOTI
   async findOne(id: string, tenantId: string) {
     const session = await this.prisma.session.findFirst({
       where: { id, tenantId, isDeleted: false },
@@ -112,18 +166,17 @@ export class SessionsService {
         teacher: { select: { fullName: true } },
       },
     });
-    if (!session) throw new NotFoundException('Dars mashg‘uloti topilmadi');
+    if (!session) throw new NotFoundException('Dars mashguloti topilmadi');
     return session;
   }
 
-  // 4. YO‘QLAMANI SAQLASH VA TANGALARNI AVTOMATIK HISOBLASH (ENG MUHIM BIZNES LOGIKA)
+  // 6. YO'QLAMANI SAQLASH VA TANGALARNI AVTOMATIK HISOBLASH
   async saveAttendanceAndProcessCoins(
     sessionId: string,
     tenantId: string,
     recordedById: string,
     dto: BulkAttendanceDto,
   ) {
-    // A. Dars borligi va qulflanmaganligini (isLocked) tekshiramiz
     const session = await this.prisma.session.findFirst({
       where: { id: sessionId, tenantId, isDeleted: false },
     });
@@ -131,11 +184,10 @@ export class SessionsService {
     if (!session) throw new NotFoundException('Dars topilmadi');
     if (session.isLocked) {
       throw new BadRequestException(
-        'Ushbu dars faoliyati qulflangan (arxivlangan). Yo‘qlamani o‘zgartirib bo‘lmaydi.',
+        'Ushbu dars faoliyati qulflangan. Yoqlamani ozgartirib bolmaydi.',
       );
     }
 
-    // B. Tizimdagi shu tenant uchun avtomatik ("auto") triggerli Tanga Qoidalarini (`CoinRule`) qidiramiz
     const coinRules = await this.prisma.coinRule.findMany({
       where: {
         tenantId,
@@ -145,28 +197,31 @@ export class SessionsService {
       },
     });
 
-    // Ssenariy uchun standart qoidalar (Agar bazada maxsus yaratilmagan bo'lsa, xato bermasligi uchun default miqdorlar)
+    // sourceType bo'yicha qoida topish — xavfsiz va aniq usul
     const attendanceRule = coinRules.find(
       (r) =>
-        r.name.toLowerCase().includes('dars') ||
-        r.name.toLowerCase().includes('kelgan'),
+        r.sourceType === SourceType.attendance &&
+        r.direction === CoinDirection.earn,
     );
     const homeworkRule = coinRules.find(
       (r) =>
-        r.name.toLowerCase().includes('vazifa') ||
-        r.name.toLowerCase().includes('vazifasini'),
+        r.sourceType === SourceType.homework &&
+        r.direction === CoinDirection.earn,
+    );
+    const absenceRule = coinRules.find(
+      (r) =>
+        r.sourceType === SourceType.attendance &&
+        r.direction === CoinDirection.deduct,
     );
 
     const coinRewardForAttendance = attendanceRule
       ? attendanceRule.coinAmount
-      : 5; // default 5 tanga
-    const coinRewardForHomework = homeworkRule ? homeworkRule.coinAmount : 10; // default 10 tanga
+      : 5;
+    const coinRewardForHomework = homeworkRule ? homeworkRule.coinAmount : 10;
 
-    // C. Har bir o‘quvchi bo‘yicha sikl aylanib, tranzaksiyaviy yo‘qlama kiritamiz
     const results: AttendanceRecord[] = [];
 
     for (const record of dto.records) {
-      // Yo‘qlama yozuvini yaratamiz yoki eskisini yangilaymiz (Upsert)
       const attendanceRecord = await this.prisma.attendanceRecord.upsert({
         where: {
           sessionId_studentId: { sessionId, studentId: record.studentId },
@@ -185,9 +240,6 @@ export class SessionsService {
         },
       });
 
-      // ---- Tanga hisoblash triggerlari boshlanadi ----
-
-      // Ssenariy 1: Darsda qatnashgani uchun coin berish
       if (record.isPresent) {
         await this.coinTrxService.createInternalTransaction(tenantId, {
           studentId: record.studentId,
@@ -202,14 +254,13 @@ export class SessionsService {
         });
       }
 
-      // Ssenariy 2: Uy vazifasini bajargani uchun qo‘shimcha coin berish
       if (record.homeworkDone) {
         await this.coinTrxService.createInternalTransaction(tenantId, {
           studentId: record.studentId,
           amount: coinRewardForHomework,
           direction: CoinDirection.earn,
           sourceType: SourceType.homework,
-          note: `Uy vazifasini muvaffaqiyatli bajargani uchun bonus. Dars ID: ${sessionId}`,
+          note: `Uy vazifasini bajargani uchun bonus. Dars ID: ${sessionId}`,
           teacherId: recordedById,
           ruleId: homeworkRule?.id,
           groupId: session.groupId,
@@ -217,28 +268,20 @@ export class SessionsService {
         });
       }
 
-      // Ssenariy 3: Darsga KELMAGANI uchun jazo sifatida coin ayirish (hozircha commetda)
-
-      //   if (!record.isPresent) {
-      //     const absenceRule = coinRules.find(
-      //       (r) =>
-      //         r.name.toLowerCase().includes('kelmadi') ||
-      //         r.name.toLowerCase().includes('kelmaslik'),
-      //     );
-      //     const coinDeductForAbsence = absenceRule ? absenceRule.coinAmount : 3; // topilmasa default 3 coin ayiramiz
-
-      //     await this.coinTrxService.createInternalTransaction(tenantId, {
-      //       studentId: record.studentId,
-      //       amount: coinDeductForAbsence,
-      //       direction: CoinDirection.deduct, // 🔴 AYIRISH (DEDUCT)
-      //       sourceType: SourceType.manual, // yoki sizda boshqa enum turi bo'lsa (masalan penalty)
-      //       note: `Darsda qatnashmagani (Sababsiz) uchun avtomatik jarima. Dars ID: ${sessionId}`,
-      //       teacherId: recordedById,
-      //       ruleId: absenceRule?.id,
-      //       groupId: session.groupId,
-      //       sessionId: session.id,
-      //     });
-      //   }
+      // Kelmaganlarga jarima (faqat absenceRule mavjud bolsa)
+      if (!record.isPresent && absenceRule) {
+        await this.coinTrxService.createInternalTransaction(tenantId, {
+          studentId: record.studentId,
+          amount: absenceRule.coinAmount,
+          direction: CoinDirection.deduct,
+          sourceType: SourceType.attendance,
+          note: `Darsga sababsiz kelmagani uchun jarima. Dars ID: ${sessionId}`,
+          teacherId: recordedById,
+          ruleId: absenceRule.id,
+          groupId: session.groupId,
+          sessionId: session.id,
+        });
+      }
 
       if (attendanceRecord) {
         results.push(attendanceRecord);
@@ -247,15 +290,13 @@ export class SessionsService {
 
     return {
       success: true,
-      message:
-        'Yo‘qlama muvaffaqiyatli saqlandi va o‘quvchilarning hamyonlariga bonus tangalar hisoblandi.',
+      message: 'Yoqlama muvaffaqiyatli saqlandi va tangalar hisoblandi.',
       processedRecordsCount: results.length,
     };
   }
 
-  // 5. YO‘QLAMA RO‘YXATINI OLISH
+  // 7. YO'QLAMA RO'YXATINI OLISH
   async getAttendanceBySession(sessionId: string, tenantId: string) {
-    // Oldin darsni tekshiramiz
     await this.findOne(sessionId, tenantId);
 
     return this.prisma.attendanceRecord.findMany({
@@ -266,7 +307,7 @@ export class SessionsService {
     });
   }
 
-  // 6. DARSNI O‘CHIRISH
+  // 8. DARSNI O'CHIRISH
   async remove(id: string, tenantId: string) {
     await this.findOne(id, tenantId);
     return this.prisma.session.update({

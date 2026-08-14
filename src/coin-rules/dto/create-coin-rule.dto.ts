@@ -8,7 +8,11 @@ import {
   IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CoinDirection, TriggerType } from 'src/generated/prisma/enums';
+import {
+  CoinDirection,
+  SourceType,
+  TriggerType,
+} from 'src/generated/prisma/enums';
 
 export class CreateCoinRuleDto {
   @ApiProperty({
@@ -21,8 +25,7 @@ export class CreateCoinRuleDto {
   name: string;
 
   @ApiPropertyOptional({
-    example:
-      'Dars davomida topshiriqlarni birinchilardan bo‘lib bajargan talabalar uchun bonus tangalar',
+    example: 'Dars davomida faol ishtirok etgan talabalar uchun bonus',
     description: 'Qoida haqida batafsil izoh',
   })
   @IsString()
@@ -40,11 +43,10 @@ export class CreateCoinRuleDto {
   @ApiProperty({
     example: 'earn',
     enum: CoinDirection,
-    description:
-      'Tangalar harakati yo‘nalishi: earn (tangani qo‘shish) yoki deduct (tangani ayirish)',
+    description: 'Tangalar harakati: earn (qoshish) yoki deduct (ayirish)',
   })
   @IsEnum(CoinDirection, {
-    message: 'direction faqat earn yoki deduct bo‘lishi mumkin',
+    message: 'direction faqat earn yoki deduct bolishi mumkin',
   })
   @IsNotEmpty()
   direction: CoinDirection;
@@ -52,19 +54,27 @@ export class CreateCoinRuleDto {
   @ApiProperty({
     example: 'manual',
     enum: TriggerType,
-    description:
-      'Ishga tushish turi: auto (avtomatik tizim tomonidan) yoki manual (o‘qituvchi tomonidan qo‘lda)',
+    description: 'Ishga tushish turi: auto (avtomatik) yoki manual (qolda)',
   })
   @IsEnum(TriggerType, {
-    message: 'triggerType faqat auto yoki manual bo‘lishi mumkin',
+    message: 'triggerType faqat auto yoki manual bolishi mumkin',
   })
   @IsNotEmpty()
   triggerType: TriggerType;
 
   @ApiPropertyOptional({
-    example: 'group-uuid-here',
+    example: 'attendance',
+    enum: SourceType,
     description:
-      'Agar qoida faqat ma’lum bir guruhga tegishli bo‘lsa, o‘sha guruh IDsi yuboriladi',
+      'Auto qoidalar uchun trigger manbasi: attendance, homework, competition ...',
+  })
+  @IsOptional()
+  @IsEnum(SourceType)
+  sourceType?: SourceType;
+
+  @ApiPropertyOptional({
+    example: 'group-uuid-here',
+    description: 'Qoida faqat bitta guruhga tegishli bolsa, guruh IDsi',
   })
   @IsOptional()
   @IsUUID()

@@ -4,16 +4,16 @@ O'quv markazlari uchun **multi-tenant gamifikatsiya backend**. O'quvchilar davom
 
 ## Stack
 
-| | |
-|---|---|
-| Framework | NestJS 11 |
-| ORM | Prisma 7 (PrismaPg adapter) |
-| Database | PostgreSQL |
-| Auth | Passport JWT (HttpOnly cookie) |
-| API Docs | Swagger (Basic auth) |
-| Validation | class-validator + class-transformer |
-| Upload | Multer |
-| Notifications | Gmail SMTP + Eskiz SMS |
+|               |                                     |
+| ------------- | ----------------------------------- |
+| Framework     | NestJS 11                           |
+| ORM           | Prisma 7 (PrismaPg adapter)         |
+| Database      | PostgreSQL                          |
+| Auth          | Passport JWT (HttpOnly cookie)      |
+| API Docs      | Swagger (Basic auth)                |
+| Validation    | class-validator + class-transformer |
+| Upload        | Multer                              |
+| Notifications | Gmail SMTP + Eskiz SMS              |
 
 ---
 
@@ -109,6 +109,7 @@ npm run test:e2e
 ### Multi-Tenancy
 
 Barcha ma'lumotlar `tenantId` bo'yicha izolyatsiya qilingan. Controllerda `@TenantContext()` dekoratori ishlatiladi:
+
 - **Oddiy foydalanuvchilar** (admin, teacher, student): tokendan avtomatik
 - **Elevated rollar** (super_admin, creator): URL params yoki `?tenantId=...` query'dan
 
@@ -130,11 +131,13 @@ creator (lv 100) > super_admin (lv 90) > admin > teacher > student
 ### Prisma
 
 Prisma client **custom path**ga generate qilinadi:
+
 ```
 src/generated/prisma
 ```
 
 Import doim shu yo'ldan:
+
 ```typescript
 import { PrismaClient } from '../generated/prisma/client';
 ```
@@ -182,16 +185,19 @@ src/
 **Asosiy invariant**: Wallet balansi hech qachon to'g'ridan-to'g'ri o'zgartirilmaydi. Faqat `CoinTransaction` orqali `increment`/`decrement` qilinadi (`$transaction` ichida).
 
 `CoinTransactionsService` ikki xil interfeys:
+
 - `createManualTransaction()` — controller chaqiradi (teacher qo'lda beradi)
 - `createInternalTransaction()` — tizim ichki servislari chaqiradi (SessionsService)
 
 **Avtomatik coin logikasi** (`SessionsService.saveAttendanceAndProcessCoins`):
+
 1. Yo'qlama saqlanadi
 2. `triggerType: auto` va `isActive: true` coin qoidalari topiladi
 3. `sourceType` bo'yicha: `attendance earn` → kelganlarga, `homework earn` → uy vazifasi bajarganlarga, `attendance deduct` → kelmanganlarga (jarima, agar qoida mavjud bo'lsa)
 4. Har bir student uchun `createInternalTransaction()` chaqiriladi
 
 **Coin qoidalarini to'g'ri sozlash uchun 3 ta qoida yarating:**
+
 ```
 sourceType: attendance, direction: earn   → Darsga kelgani uchun tanga
 sourceType: homework,   direction: earn   → Uy vazifasi uchun tanga
@@ -208,6 +214,7 @@ Jadval tizimi ikki qatlamli:
 2. **ScheduleException** — istisno kunlar (bekor qilinish yoki vaqt o'zgarishi)
 
 **`generate-sessions` API** jadval shablonlari asosida belgilangan sana oralig'ida avtomatik `Session` yozuvlari yaratadi:
+
 - Bekor qilingan istisnolar o'tkazib yuboriladi
 - Vaqt o'zgargan istisnolar yangi vaqt bilan yaratiladi
 - Allaqachon mavjud sessiyalar qaytadan yaratilmaydi
@@ -218,6 +225,7 @@ Jadval tizimi ikki qatlamli:
 ## Seed ma'lumotlari
 
 `npx prisma db seed` quyidagilarni yaratadi:
+
 - `system` slug li System Tenant
 - `creator` (level 100) va `super_admin` (level 90) rollari
 - Creator va Super Admin userlari (`.env` dagi `CREATOR_*` va `SUPER_ADMIN_*` dan)
@@ -227,6 +235,7 @@ Jadval tizimi ikki qatlamli:
 ## Pre-commit Hook
 
 Husky orqali har commit oldidan ishga tushadi:
+
 ```bash
 npm run lint && npm run format
 ```

@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   UseGuards,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { RewardCategoryService } from './reward-category.service';
@@ -18,6 +19,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
+import { QueryRewardCategoryDto } from './dto/query-reward-category.dto';
 
 @ApiTags('Reward Categories')
 @ApiBearerAuth()
@@ -30,7 +33,7 @@ export class RewardCategoryController {
   @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Yangi kategoriya yaratish' })
   create(
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @CurrentUser('id') userId: string,
     @Body() dto: CreateRewardCategoryDto,
   ) {
@@ -40,8 +43,11 @@ export class RewardCategoryController {
   @Get()
   @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Barcha kategoriyalar' })
-  findAll(@CurrentUser('tenantId') tenantId: string) {
-    return this.service.findAll(tenantId);
+  findAll(
+    @TenantContext() tenantId: string,
+    @Query() query: QueryRewardCategoryDto,
+  ) {
+    return this.service.findAll(query, tenantId);
   }
 
   @Get(':id')
@@ -49,7 +55,7 @@ export class RewardCategoryController {
   @ApiOperation({ summary: 'Bitta kategoriya' })
   findOne(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
   ) {
     return this.service.findOne(id, tenantId);
   }
@@ -59,7 +65,7 @@ export class RewardCategoryController {
   @ApiOperation({ summary: 'Kategoriyani yangilash' })
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
     @Body() dto: UpdateRewardCategoryDto,
   ) {
     return this.service.update(id, tenantId, dto);
@@ -71,7 +77,7 @@ export class RewardCategoryController {
   @ApiOperation({ summary: "Kategoriyani o'chirish" })
   remove(
     @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser('tenantId') tenantId: string,
+    @TenantContext() tenantId: string,
   ) {
     return this.service.remove(id, tenantId);
   }

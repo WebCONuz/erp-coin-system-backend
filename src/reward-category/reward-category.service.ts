@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRewardCategoryDto } from './dto/create-reward-category.dto';
 import { UpdateRewardCategoryDto } from './dto/update-reward-category.dto';
+import { QueryRewardCategoryDto } from './dto/query-reward-category.dto';
 
 @Injectable()
 export class RewardCategoryService {
@@ -27,9 +28,12 @@ export class RewardCategoryService {
     });
   }
 
-  async findAll(tenantId: string) {
+  async findAll(query: QueryRewardCategoryDto, tenantId: string) {
+    const { isActive } = query;
+    const where = { tenantId, isActive: isActive === false ? false : true };
+
     return this.prisma.rewardCategory.findMany({
-      where: { tenantId },
+      where,
       orderBy: { name: 'asc' },
       include: {
         _count: { select: { rewards: true } },

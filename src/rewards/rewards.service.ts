@@ -35,17 +35,28 @@ export class RewardsService {
   }
 
   async findAll(query: QueryRewardDto, tenantId: string) {
-    const { page = 1, limit = 10, search, onlyInStock } = query;
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      onlyInStock,
+      isActive,
+      categoryId,
+    } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.RewardWhereInput = {
       tenantId,
       isDeleted: false,
-      isActive: true,
+      isActive: isActive ? true : false,
     };
 
     if (search) {
       where.title = { contains: search, mode: 'insensitive' };
+    }
+
+    if (categoryId) {
+      where.categoryId = categoryId;
     }
 
     if (onlyInStock) {

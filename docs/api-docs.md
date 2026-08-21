@@ -394,12 +394,15 @@ Ruxsat: `admin`, `super_admin`
   "weekday": "monday",
   "startTime": "09:00",
   "endTime": "11:00",
-  "groupId": "uuid",
-  "roomId": "uuid"
+  "groupId": "group-uuid",
+  "roomId": "room-uuid",
+  "tenantId": "tenant-uuid"
 }
 ```
 
 `weekday` qiymatlari: `monday` | `tuesday` | `wednesday` | `thursday` | `friday` | `saturday` | `sunday`
+
+> `tenantId` faqat `super_admin` uchun majburiy, boshqalar uchun tokendan olinadi.
 
 ---
 
@@ -407,11 +410,49 @@ Ruxsat: `admin`, `super_admin`
 
 Ruxsat: `admin`, `super_admin`, `teacher`
 
-| Query             |                     |
-| ----------------- | ------------------- |
-| `?groupId=uuid`   | Guruh bo'yicha      |
-| `?roomId=uuid`    | Xona bo'yicha       |
-| `?weekday=monday` | Hafta kuni bo'yicha |
+Barcha query parametrlar optional:
+
+| Query             | Tur    |
+| ----------------- | ------ |
+| `?tenantId=uuid`  | string |
+| `?groupId=uuid`   | string |
+| `?roomId=uuid`    | string |
+| `?weekday=monday` | string |
+| `?page=1`         | number |
+| `?limit=50`       | number |
+
+**200 Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": "9e82223f-798b-4930-a0f3-792adfb403e4",
+      "weekday": "monday",
+      "startTime": "09:00",
+      "endTime": "11:00",
+      "isActive": true,
+      "isDeleted": false,
+      "createdAt": "2026-08-21T10:38:22.946Z",
+      "updatedAt": "2026-08-21T10:38:22.946Z",
+      "deletedAt": null,
+      "tenantId": "2396f098-636a-435f-9c24-1ae8f3dcce72",
+      "groupId": "7f389b3c-9a4d-4fb4-9547-15815044bc06",
+      "roomId": "d02b8a0c-3b88-46ba-90d1-e4a010d76c91",
+      "createdById": "33f041c5-6137-4904-a74e-d94cce13289a",
+      "group": { "id": "7f389b3c-...", "name": "5-B" },
+      "room": { "id": "d02b8a0c-...", "name": "al-Xorazmiy" },
+      "_count": { "exceptions": 0 }
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "limit": 50,
+    "totalPages": 1
+  }
+}
+```
 
 ---
 
@@ -419,28 +460,110 @@ Ruxsat: `admin`, `super_admin`, `teacher`
 
 Ruxsat: `admin`, `teacher`
 
-| Query     |        |              |
+| Query     | Tur    |              |
 | --------- | ------ | ------------ |
 | `groupId` | UUID   | **required** |
 | `year`    | number | **required** |
 | `month`   | number | **required** |
 
-**200 Response** — har sana uchun template + istisno + sessiyalar:
+**200 Response** — faqat o'sha guruhning dars kunlari qaytadi (dars bo'lmagan kunlar kelmaydi):
 
 ```json
 {
-  "2026-09-01": [{
-    "template": { "id": "uuid", "weekday": "monday", "startTime": "09:00", "endTime": "11:00", "room": {...} },
-    "exception": null,
-    "sessions": [{ "id": "uuid", "isLocked": false, "topic": "Mavzu" }]
-  }],
-  "2026-09-08": [{
-    "template": {...},
-    "exception": { "isCancelled": true, "note": "Bayram" },
-    "sessions": []
-  }]
+  "2026-08-02": [
+    {
+      "template": {
+        "id": "9e82223f-798b-4930-a0f3-792adfb403e4",
+        "weekday": "monday",
+        "startTime": "09:00",
+        "endTime": "11:00",
+        "room": { "id": "d02b8a0c-...", "name": "al-Xorazmiy" }
+      },
+      "exception": null,
+      "sessions": [
+        {
+          "id": "session-uuid",
+          "sessionDate": "2026-08-02T00:00:00.000Z",
+          "startTime": "09:00",
+          "endTime": "11:00",
+          "isLocked": false,
+          "sessionType": "lesson",
+          "topic": null
+        }
+      ]
+    }
+  ],
+  "2026-08-09": [
+    {
+      "template": { "id": "9e82223f-...", "weekday": "monday", "startTime": "09:00", "endTime": "11:00", "room": {...} },
+      "exception": null,
+      "sessions": []
+    }
+  ],
+  "2026-08-16": [
+    {
+      "template": { "...": "..." },
+      "exception": { "isCancelled": true, "note": "Bayram" },
+      "sessions": []
+    }
+  ]
 }
 ```
+
+> `sessions: []` — shablon bor, lekin sessiya hali yaratilmagan. `generate-sessions` chaqirilgandan keyin to'ladi.
+
+---
+
+### `GET /schedule-templates/:id`
+
+Ruxsat: `admin`, `super_admin`, `teacher`
+
+**200 Response:**
+
+```json
+{
+  "id": "9e82223f-798b-4930-a0f3-792adfb403e4",
+  "weekday": "monday",
+  "startTime": "09:00",
+  "endTime": "11:00",
+  "isActive": true,
+  "isDeleted": false,
+  "createdAt": "2026-08-21T10:38:22.946Z",
+  "updatedAt": "2026-08-21T10:38:22.946Z",
+  "deletedAt": null,
+  "tenantId": "2396f098-636a-435f-9c24-1ae8f3dcce72",
+  "groupId": "7f389b3c-9a4d-4fb4-9547-15815044bc06",
+  "roomId": "d02b8a0c-3b88-46ba-90d1-e4a010d76c91",
+  "createdById": "33f041c5-6137-4904-a74e-d94cce13289a",
+  "group": { "id": "7f389b3c-...", "name": "5-B" },
+  "room": { "id": "d02b8a0c-...", "name": "al-Xorazmiy" },
+  "exceptions": []
+}
+```
+
+---
+
+### `PATCH /schedule-templates/:id`
+
+Ruxsat: `admin`, `super_admin`
+
+```json
+{
+  "startTime": "10:00",
+  "endTime": "12:00",
+  "roomId": "room-uuid"
+}
+```
+
+> Barchasi optional — faqat yuborilgan maydonlar yangilanadi.
+
+---
+
+### `DELETE /schedule-templates/:id`
+
+Ruxsat: `admin`, `super_admin`
+
+Body kerak emas. Soft delete. Allaqachon yaratilgan sessiyalarga ta'sir etmaydi.
 
 ---
 
@@ -452,7 +575,7 @@ Jadval shablonlaridan avtomatik Session yozuvlari yaratadi. Istisno kunlar va ma
 
 ```json
 {
-  "groupId": "uuid",
+  "groupId": "group-uuid",
   "fromDate": "2026-09-01",
   "toDate": "2026-09-30"
 }
@@ -466,55 +589,57 @@ Jadval shablonlaridan avtomatik Session yozuvlari yaratadi. Istisno kunlar va ma
 
 ---
 
-### `GET /schedule-templates/:id`
-
-### `PATCH /schedule-templates/:id`
-
-### `DELETE /schedule-templates/:id`
-
-Ruxsat: `admin`, `super_admin`
-
-**PATCH body** (barchasi optional):
-
-```json
-{ "startTime": "10:00", "endTime": "12:00", "roomId": "uuid" }
-```
-
----
-
 ### `POST /schedule-templates/:id/exceptions`
 
 Ruxsat: `admin`, `super_admin`
 
+Bekor qilish (`isCancelled: true`):
+
 ```json
 {
-  "exceptionDate": "2026-09-08",
+  "exceptionDate": "2026-08-25",
   "isCancelled": true,
-  "note": "Bayram sababli"
+  "note": "Bayram sababli dars ko'chirildi"
 }
 ```
 
-Agar `isCancelled: false` bo'lsa (vaqt o'zgardi):
+Vaqtini o'zgartirish (`isCancelled: false`) — `startTime` va `endTime` majburiy:
 
 ```json
 {
-  "exceptionDate": "2026-09-15",
+  "exceptionDate": "2026-08-25",
   "isCancelled": false,
   "startTime": "10:00",
   "endTime": "12:00",
-  "note": "Xona almashtirish sababli"
+  "note": "Bayram sababli dars ko'chirildi"
 }
 ```
 
 ---
 
-### `GET /schedule-templates/:id/exceptions`
-
 ### `PATCH /schedule-exceptions/:id`
+
+Ruxsat: `admin`, `super_admin`
+
+```json
+{
+  "exceptionDate": "2026-08-25",
+  "isCancelled": true,
+  "startTime": "10:00",
+  "endTime": "12:00",
+  "note": "Yangilangan izoh"
+}
+```
+
+> Barchasi optional.
+
+---
 
 ### `DELETE /schedule-exceptions/:id`
 
 Ruxsat: `admin`, `super_admin`
+
+Body kerak emas.
 
 ---
 

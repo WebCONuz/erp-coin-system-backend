@@ -279,9 +279,9 @@ export class ScheduleService {
     month: number,
     tenantId: string,
   ) {
-    // O'sha oyning barcha kunlari
-    const start = new Date(year, month - 1, 1);
-    const end = new Date(year, month, 0); // Oyning oxirgi kuni
+    // O'sha oyning barcha kunlari (UTC asosida — timezone shift oldini olish uchun)
+    const start = new Date(Date.UTC(year, month - 1, 1));
+    const end = new Date(Date.UTC(year, month, 0));
 
     const templates = await this.prisma.scheduleTemplate.findMany({
       where: { groupId, tenantId, isDeleted: false, isActive: true },
@@ -335,10 +335,10 @@ export class ScheduleService {
 
     const calendar: Record<string, unknown> = {};
 
-    // Oydagi har bir kunga aylanish
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    // Oydagi har bir kunga aylanish (UTC metodlari — getDay/getDate local time xatosini oldini oladi)
+    for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
-      const jsDay = d.getDay(); // 0=Sunday, 1=Monday...
+      const jsDay = d.getUTCDay(); // 0=Sunday, 1=Monday...
       const weekday = Object.entries(WEEKDAY_ORDER).find(
         ([, v]) => v === jsDay,
       )?.[0] as Weekday | undefined;
@@ -446,9 +446,9 @@ export class ScheduleService {
     const toCreate: Prisma.SessionCreateManyInput[] = [];
     let cancelledCount = 0;
 
-    for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
+    for (let d = new Date(from); d <= to; d.setUTCDate(d.getUTCDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
-      const jsDay = d.getDay();
+      const jsDay = d.getUTCDay();
       const weekday = Object.entries(WEEKDAY_ORDER).find(
         ([, v]) => v === jsDay,
       )?.[0] as Weekday | undefined;

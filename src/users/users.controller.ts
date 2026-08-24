@@ -62,6 +62,21 @@ export class UsersController {
     return this.usersService.findAll(query, tenantId, requesterId, role);
   }
 
+  // ─── Xodimlar (student dan boshqa) ──────────────────────────────
+  @Get('staff')
+  @Roles('admin')
+  @ApiOperation({
+    summary:
+      "Xodimlar ro'yxati — student dan boshqa barcha (rol iyerarxiyasi bo'yicha filtrlangan)",
+  })
+  findAllStaff(
+    @Query() query: QueryUserDto,
+    @CurrentUser('role') role: string,
+    @CurrentUser('tenantId') userTenantId: string,
+  ) {
+    return this.usersService.findAllStaff(query, role, userTenantId);
+  }
+
   @Get('teachers')
   @Roles('admin', 'super_admin')
   @ApiOperation({ summary: "O'qituvchilar ro'yxati (filter + pagination)" })

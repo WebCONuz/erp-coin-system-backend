@@ -95,7 +95,15 @@ export class ScheduleService {
         skip,
         take: limit,
         orderBy: [{ weekday: 'asc' }, { startTime: 'asc' }],
-        include: {
+        select: {
+          id: true,
+          weekday: true,
+          startTime: true,
+          endTime: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+          deletedAt: true,
           group: { select: { id: true, name: true } },
           room: { select: { id: true, name: true } },
           _count: { select: { exceptions: { where: { isDeleted: false } } } },
@@ -136,6 +144,7 @@ export class ScheduleService {
     });
     if (!existing) throw new NotFoundException('Dars jadvali topilmadi');
 
+    const newWeekday = dto.weekday ?? existing.weekday;
     const newStart = dto.startTime ?? existing.startTime;
     const newEnd = dto.endTime ?? existing.endTime;
     const newRoom = dto.roomId ?? existing.roomId;
@@ -146,10 +155,10 @@ export class ScheduleService {
       );
     }
 
-    if (dto.startTime || dto.endTime || dto.roomId) {
+    if (dto.weekday || dto.startTime || dto.endTime || dto.roomId) {
       await this.checkRoomConflict(
         newRoom,
-        existing.weekday,
+        newWeekday,
         newStart,
         newEnd,
         tenantId,
@@ -157,7 +166,7 @@ export class ScheduleService {
       );
       await this.checkGroupConflict(
         existing.groupId,
-        existing.weekday,
+        newWeekday,
         newStart,
         newEnd,
         tenantId,
@@ -167,7 +176,7 @@ export class ScheduleService {
 
     return this.prisma.scheduleTemplate.update({
       where: { id },
-      data: { startTime: newStart, endTime: newEnd, roomId: newRoom },
+      data: { weekday: newWeekday, startTime: newStart, endTime: newEnd, roomId: newRoom },
       include: {
         group: { select: { id: true, name: true } },
         room: { select: { id: true, name: true } },

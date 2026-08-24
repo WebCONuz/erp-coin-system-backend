@@ -4,8 +4,7 @@ import { IsOptional, IsString, MinLength } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto extends PartialType(
-  // password va roleId ni PartialType dan chiqaramiz — ular alohida endpoint orqali o'zgartiriladi
-  OmitType(CreateUserDto, ['password', 'roleId'] as const),
+  OmitType(CreateUserDto, ['password'] as const),
 ) {}
 
 export class ChangePasswordDto {

@@ -142,6 +142,86 @@ export class UsersService {
     };
   }
 
+  // ─── Xodimlar ro'yxati (student dan boshqa barcha) ─────────────
+  async findAllStaff(
+    query: QueryUserDto,
+    requesterRole: string,
+    userTenantId: string,
+  ) {
+    const { search, page = 1, limit = 20, sortBy = 'createdAt' } = query;
+    const skip = (page - 1) * limit;
+
+    // creator=100, super_admin=90 — bulardan pastroqlar ko'rsatiladi
+    // creator barcha → hech qanday level cap yo'q
+    // super_admin → level < 100 (creator ko'rinmaydi)
+    // admin → level < 90 (creator va super_admin ko'rinmaydi)
+    const MAX_VISIBLE_LEVEL: Record<string, number> = {
+      creator: 1000,
+      super_admin: 99,
+      admin: 89,
+    };
+    const maxLevel = MAX_VISIBLE_LEVEL[requesterRole] ?? 0;
+
+    const roleFilter: Prisma.RoleWhereInput = { name: { not: 'student' } };
+    if (maxLevel < 1000) {
+      roleFilter.level = { lte: maxLevel };
+    }
+
+    const where: Prisma.UserWhereInput = { role: roleFilter };
+
+    // Tenant scope
+    const isElevated =
+      requesterRole === 'creator' || requesterRole === 'super_admin';
+    if (!isElevated) {
+      // admin: faqat o'z tenanti
+      where.tenantId = userTenantId;
+    } else if (query.tenantId) {
+      // elevated: ixtiyoriy filtr
+      where.tenantId = query.tenantId;
+    }
+
+    // isActive filtr (berilmasa ikkalasini ham ko'rsatadi)
+    if (typeof query.isActive === 'boolean') {
+      where.isActive = query.isActive;
+    }
+
+    if (search) {
+      where.OR = [
+        { fullName: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search } },
+      ];
+    }
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.user.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: 'desc' },
+        select: {
+          id: true,
+          fullName: true,
+          phone: true,
+          email: true,
+          avatarUrl: true,
+          isActive: true,
+          createdAt: true,
+          tenantId: true,
+          role: {
+            select: { id: true, name: true, displayName: true, level: true },
+          },
+          tenant: { select: { id: true, name: true } },
+        },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
   async findAllTeachers(
     query: QueryUserDto,
     tenantId: string,

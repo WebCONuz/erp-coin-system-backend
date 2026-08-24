@@ -54,7 +54,17 @@ export class RolesService {
         skip,
         take: limit,
         orderBy: { level: 'asc' },
-        include: { _count: { select: { users: true } } },
+        select: {
+          id: true,
+          name: true,
+          displayName: true,
+          level: true,
+          scope: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+          tenantId: true,
+        },
       }),
       this.prisma.role.count({ where }),
     ]);

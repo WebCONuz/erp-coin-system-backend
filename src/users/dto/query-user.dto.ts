@@ -4,10 +4,11 @@ import {
   IsUUID,
   IsEnum,
   IsInt,
+  IsBoolean,
   Min,
   Max,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export enum UserSortBy {
@@ -62,4 +63,10 @@ export class QueryUserDto {
   @IsOptional()
   @IsString()
   roleName?: string;
+
+  @ApiPropertyOptional({ description: 'true = faol, false = arxivlangan' })
+  @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsBoolean()
+  isActive?: boolean;
 }

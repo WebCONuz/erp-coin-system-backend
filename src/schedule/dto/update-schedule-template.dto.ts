@@ -1,7 +1,13 @@
-import { IsOptional, IsString, IsUUID, Matches } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsUUID, Matches } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Weekday } from 'src/generated/prisma/enums';
 
 export class UpdateScheduleTemplateDto {
+  @ApiPropertyOptional({ example: 'thursday', enum: Weekday })
+  @IsOptional()
+  @IsEnum(Weekday)
+  weekday?: Weekday;
+
   @ApiPropertyOptional({ example: '10:00' })
   @IsOptional()
   @IsString()

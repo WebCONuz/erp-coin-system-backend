@@ -8,6 +8,7 @@ import { Handler } from 'express';
 import helmet from 'helmet';
 import { join } from 'path';
 import * as express from 'express';
+import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
 
 async function start() {
   // port
@@ -21,6 +22,9 @@ async function start() {
 
   // avatar rasmlari uchun statik fayl servisi
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
+
+  // global prisma exception filter
+  app.useGlobalFilters(new PrismaExceptionFilter());
 
   // global validation
   app.useGlobalPipes(

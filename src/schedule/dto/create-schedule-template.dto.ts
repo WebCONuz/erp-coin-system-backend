@@ -45,6 +45,15 @@ export class CreateScheduleTemplateDto {
   @IsNotEmpty()
   roomId: string;
 
+  @ApiPropertyOptional({
+    example: 'teacher-uuid',
+    description:
+      "Bu shablon uchun mas'ul o'qituvchi (berilmasa guruh o'qituvchisi ishlatiladi)",
+  })
+  @IsOptional()
+  @IsUUID()
+  teacherId?: string;
+
   @ApiPropertyOptional({ description: 'Faqat super_admin uchun' })
   @IsOptional()
   @IsUUID()

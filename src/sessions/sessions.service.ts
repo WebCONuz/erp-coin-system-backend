@@ -29,7 +29,7 @@ export class SessionsService {
   async create(tenantId: string, dto: CreateSessionDto) {
     const existingSession = await this.prisma.session.findFirst({
       where: {
-        sessionDate: dto.sessionDate,
+        sessionDate: new Date(dto.sessionDate),
         startTime: dto.startTime,
         endTime: dto.endTime,
         sessionType: dto.sessionType,
@@ -138,10 +138,21 @@ export class SessionsService {
         skip,
         take: limit,
         orderBy: { sessionDate: 'desc' },
-        include: {
-          group: { select: { name: true } },
-          room: { select: { name: true } },
-          teacher: { select: { fullName: true } },
+        select: {
+          id: true,
+          sessionDate: true,
+          startTime: true,
+          endTime: true,
+          sessionType: true,
+          topic: true,
+          isLocked: true,
+          isDeleted: true,
+          lockedAt: true,
+          deletedAt: true,
+          tenantId: true,
+          group: { select: { id: true, name: true } },
+          room: { select: { id: true, name: true } },
+          teacher: { select: { id: true, fullName: true } },
         },
       }),
       this.prisma.session.count({ where }),
@@ -149,10 +160,12 @@ export class SessionsService {
 
     return {
       data,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
     };
   }
 
@@ -160,10 +173,21 @@ export class SessionsService {
   async findOne(id: string, tenantId: string) {
     const session = await this.prisma.session.findFirst({
       where: { id, tenantId, isDeleted: false },
-      include: {
-        group: { select: { name: true } },
-        room: { select: { name: true } },
-        teacher: { select: { fullName: true } },
+      select: {
+        id: true,
+        sessionDate: true,
+        startTime: true,
+        endTime: true,
+        sessionType: true,
+        topic: true,
+        isLocked: true,
+        isDeleted: true,
+        lockedAt: true,
+        deletedAt: true,
+        tenantId: true,
+        group: { select: { id: true, name: true } },
+        room: { select: { id: true, name: true } },
+        teacher: { select: { id: true, fullName: true } },
       },
     });
     if (!session) throw new NotFoundException('Dars mashguloti topilmadi');

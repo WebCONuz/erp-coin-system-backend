@@ -67,6 +67,7 @@ export class ScheduleService {
         endTime: dto.endTime,
         groupId: dto.groupId,
         roomId: dto.roomId,
+        teacherId: dto.teacherId ?? null,
         tenantId: resolvedTenantId,
         createdById,
       },
@@ -148,6 +149,8 @@ export class ScheduleService {
     const newStart = dto.startTime ?? existing.startTime;
     const newEnd = dto.endTime ?? existing.endTime;
     const newRoom = dto.roomId ?? existing.roomId;
+    const newTeacher =
+      'teacherId' in dto ? (dto.teacherId ?? null) : existing.teacherId ?? null;
 
     if (!timeLt(newStart, newEnd)) {
       throw new BadRequestException(
@@ -176,7 +179,13 @@ export class ScheduleService {
 
     return this.prisma.scheduleTemplate.update({
       where: { id },
-      data: { weekday: newWeekday, startTime: newStart, endTime: newEnd, roomId: newRoom },
+      data: {
+        weekday: newWeekday,
+        startTime: newStart,
+        endTime: newEnd,
+        roomId: newRoom,
+        teacherId: newTeacher as string | null,
+      },
       include: {
         group: { select: { id: true, name: true } },
         room: { select: { id: true, name: true } },
@@ -359,6 +368,11 @@ export class ScheduleService {
 
       calendar[dateStr] = dayTemplates.map((template) => {
         const exc = exceptionMap.get(`${template.id}_${dateStr}`) ?? null;
+        // Exception vaqt o'zgartirgan bo'lsa shu startTime, aks holda template vaqti
+        const effectiveStartTime = exc?.startTime ?? template.startTime;
+        const matchedSession = (sessionMap.get(dateStr) ?? []).find(
+          (s) => s.startTime === effectiveStartTime,
+        );
         return {
           template: {
             id: template.id,
@@ -376,7 +390,7 @@ export class ScheduleService {
                 note: exc.note,
               }
             : null,
-          sessions: sessionMap.get(dateStr) ?? [],
+          session: matchedSession ?? null,
         };
       });
     }
@@ -486,7 +500,8 @@ export class ScheduleService {
           sessionType: SessionType.lesson,
           groupId: dto.groupId,
           roomId: template.roomId,
-          teacherId: group.teacherId,
+          // template da o'qituvchi biriktirilgan bo'lsa shu, aks holda guruh o'qituvchisi
+          teacherId: template.teacherId ?? group.teacherId,
           tenantId,
         });
       }

@@ -262,7 +262,8 @@ model User {
   smsLogsSentBy             SmsLog[]            @relation("SmsSentBy")
   emailLogsAsStudent        EmailLog[]          @relation("EmailStudent")
   emailLogsSentBy           EmailLog[]          @relation("EmailSentBy")
-  scheduleTemplatesCreated  ScheduleTemplate[]
+  scheduleTemplatesCreated  ScheduleTemplate[]  @relation("ScheduleTemplateCreatedBy")
+  scheduledTemplates        ScheduleTemplate[]  @relation("ScheduleTemplateTeacher")
   scheduleExceptionsCreated ScheduleException[]
   smsTemplatesCreated       SmsTemplate[]
   emailTemplatesCreated     EmailTemplate[]
@@ -432,15 +433,17 @@ model ScheduleTemplate {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz
 
-  tenantId    String @map("tenant_id") @db.Uuid
-  groupId     String @map("group_id") @db.Uuid
-  roomId      String @map("room_id") @db.Uuid
-  createdById String @map("created_by") @db.Uuid
+  tenantId    String  @map("tenant_id") @db.Uuid
+  groupId     String  @map("group_id") @db.Uuid
+  roomId      String  @map("room_id") @db.Uuid
+  teacherId   String? @map("teacher_id") @db.Uuid
+  createdById String  @map("created_by") @db.Uuid
 
   tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   group     Group  @relation(fields: [groupId], references: [id])
   room      Room   @relation(fields: [roomId], references: [id])
-  createdBy User   @relation(fields: [createdById], references: [id])
+  teacher   User?  @relation("ScheduleTemplateTeacher", fields: [teacherId], references: [id])
+  createdBy User   @relation("ScheduleTemplateCreatedBy", fields: [createdById], references: [id])
 
   exceptions ScheduleException[]
 

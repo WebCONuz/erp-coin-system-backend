@@ -148,7 +148,13 @@ export class UsersService {
     requesterRole: string,
     userTenantId: string,
   ) {
-    const { search, page = 1, limit = 20, sortBy = 'createdAt' } = query;
+    const {
+      search,
+      roleId,
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+    } = query;
     const skip = (page - 1) * limit;
 
     // creator=100, super_admin=90 — bulardan pastroqlar ko'rsatiladi
@@ -178,6 +184,11 @@ export class UsersService {
     } else if (query.tenantId) {
       // elevated: ixtiyoriy filtr
       where.tenantId = query.tenantId;
+    }
+
+    // roleId filtr
+    if (roleId) {
+      where.roleId = roleId;
     }
 
     // isActive filtr (berilmasa ikkalasini ham ko'rsatadi)
@@ -224,27 +235,28 @@ export class UsersService {
 
   async findAllTeachers(
     query: QueryUserDto,
-    tenantId: string,
     requesterRole: string,
+    userTenantId: string,
   ) {
     const { search, page = 1, limit = 20, sortBy = 'createdAt' } = query;
     const skip = (page - 1) * limit;
 
-    // Base Query setting
-    const where: Prisma.UserWhereInput = {
-      role: {
-        name: 'teacher',
-      },
-    };
+    const where: Prisma.UserWhereInput = { role: { name: 'teacher' } };
 
-    // Multi-tenant tekshiruvi
-    if (requesterRole !== 'super_admin') {
-      where.tenantId = tenantId;
+    // Tenant scope
+    const isElevated =
+      requesterRole === 'creator' || requesterRole === 'super_admin';
+    if (!isElevated) {
+      where.tenantId = userTenantId;
     } else if (query.tenantId) {
       where.tenantId = query.tenantId;
     }
 
-    // Search logic
+    // isActive filtr
+    if (typeof query.isActive === 'boolean') {
+      where.isActive = query.isActive;
+    }
+
     if (search) {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
@@ -264,16 +276,12 @@ export class UsersService {
           fullName: true,
           email: true,
           avatarUrl: true,
+          isActive: true,
           createdAt: true,
-          updatedAt: true,
           role: { select: { id: true, name: true, displayName: true } },
-          wallet: false,
           taughtGroups: {
-            select: {
-              id: true,
-              name: true,
-              maxStudents: true,
-            },
+            where: { isDeleted: false, isActive: true },
+            select: { id: true, name: true, maxStudents: true },
           },
         },
       }),
@@ -281,10 +289,65 @@ export class UsersService {
     ]);
 
     return {
-      status: 'success',
       data,
       meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
+  }
+
+  async findOneTeacher(
+    id: string,
+    requesterRole: string,
+    userTenantId: string,
+  ) {
+    const where: Prisma.UserWhereInput = {
+      id,
+      role: { name: 'teacher' },
+    };
+
+    const isElevated =
+      requesterRole === 'creator' || requesterRole === 'super_admin';
+    if (!isElevated) {
+      where.tenantId = userTenantId;
+    }
+
+    const teacher = await this.prisma.user.findFirst({
+      where,
+      select: {
+        id: true,
+        fullName: true,
+        phone: true,
+        email: true,
+        avatarUrl: true,
+        isActive: true,
+        createdAt: true,
+        tenantId: true,
+        role: { select: { id: true, name: true, displayName: true } },
+        taughtGroups: {
+          where: { isDeleted: false, isActive: true },
+          select: {
+            id: true,
+            name: true,
+            maxStudents: true,
+            course: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                isActive: true,
+              },
+            },
+            _count: {
+              select: {
+                students: { where: { isActive: true, isDeleted: false } },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!teacher) throw new NotFoundException("O'qituvchi topilmadi");
+    return teacher;
   }
 
   async findAllStudents(

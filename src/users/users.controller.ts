@@ -82,10 +82,22 @@ export class UsersController {
   @ApiOperation({ summary: "O'qituvchilar ro'yxati (filter + pagination)" })
   findAllTeachers(
     @Query() query: QueryUserDto,
-    @TenantContext() tenantId: string,
-    @CurrentUser('id') requesterId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('tenantId') userTenantId: string,
   ) {
-    return this.usersService.findAllTeachers(query, tenantId, requesterId);
+    return this.usersService.findAllTeachers(query, role, userTenantId);
+  }
+
+  @Get('teachers/:id')
+  @Roles('admin', 'super_admin')
+  @ApiOperation({ summary: "O'qituvchi tafsilotlari (guruhlari bilan)" })
+  @ApiParam({ name: 'id', description: 'Teacher UUID' })
+  findOneTeacher(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('tenantId') userTenantId: string,
+  ) {
+    return this.usersService.findOneTeacher(id, role, userTenantId);
   }
 
   // ─── O'z profili ─────────────────────────────────────────────

@@ -150,7 +150,9 @@ export class ScheduleService {
     const newEnd = dto.endTime ?? existing.endTime;
     const newRoom = dto.roomId ?? existing.roomId;
     const newTeacher =
-      'teacherId' in dto ? (dto.teacherId ?? null) : existing.teacherId ?? null;
+      'teacherId' in dto
+        ? (dto.teacherId ?? null)
+        : (existing.teacherId ?? null);
 
     if (!timeLt(newStart, newEnd)) {
       throw new BadRequestException(
@@ -184,7 +186,7 @@ export class ScheduleService {
         startTime: newStart,
         endTime: newEnd,
         roomId: newRoom,
-        teacherId: newTeacher as string | null,
+        teacherId: newTeacher,
       },
       include: {
         group: { select: { id: true, name: true } },

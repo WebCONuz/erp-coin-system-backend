@@ -65,8 +65,8 @@ export class AuthService {
       message: 'Login successfully',
       user: {
         id: user.id,
-        fullName: user.fullName,
         phone: user.phone,
+        fullName: user.fullName,
         role: user.role.name,
         tenantId: user.tenantId,
       },

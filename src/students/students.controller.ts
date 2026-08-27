@@ -79,7 +79,7 @@ export class StudentsController {
 
   // ─── To'liq profil ──────────────────────────────────────────────
   @Get(':id')
-  @Roles('admin', 'super_admin', 'teacher')
+  // @Roles('admin', 'super_admin', 'teacher', 'student')
   @ApiOperation({
     summary:
       "Student to'liq profili: wallet, guruhlar, davomat, tanga tarixi, statistika",

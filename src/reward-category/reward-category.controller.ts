@@ -41,7 +41,7 @@ export class RewardCategoryController {
   }
 
   @Get()
-  @Roles('admin', 'super_admin', 'teacher')
+  // @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Barcha kategoriyalar' })
   findAll(
     @TenantContext() tenantId: string,

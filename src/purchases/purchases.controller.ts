@@ -21,6 +21,7 @@ import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags('Geymifikatsiya: Xaridlar va Buyurtmalar')
 @ApiBearerAuth()
@@ -53,11 +54,14 @@ export class PurchasesController {
   findOne(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') currentUserId: string,
   ) {
-    return this.purchasesService.findOne(id, tenantId);
+    return this.purchasesService.findOne(id, tenantId, role, currentUserId);
   }
 
   @Patch(':id/status')
+  @Roles('admin', 'super_admin')
   @ApiOperation({
     summary:
       'Xarid holatini o‘zgartirish: Tasdiqlash yoki Rad etish (Faqat Admin)',

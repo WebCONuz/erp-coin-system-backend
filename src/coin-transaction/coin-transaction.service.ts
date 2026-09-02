@@ -6,6 +6,8 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCoinTransactionDto } from './dto/create-coin-transaction.dto';
 import { QueryCoinTransactionDto } from './dto/query-coin-transaction.dto';
+import { QueryMyCoinHistoryDto } from './dto/query-my-coin-history.dto';
+import { QueryCoinStatsDto } from './dto/query-coin-stats.dto';
 import { CoinDirection } from 'src/generated/prisma/enums';
 import { ExecuteCoinProcessData } from 'src/common/types';
 import { Prisma } from 'src/generated/prisma/client';
@@ -216,6 +218,118 @@ export class CoinTransactionsService {
     });
     if (!wallet) throw new NotFoundException('Hamyon topilmadi');
     return wallet;
+  }
+
+  // 6b. TALABANING O'Z TRANZAKSIYA TARIXI (Shaxsiy profil uchun, filtrlar bilan)
+  async getMyHistory(
+    studentId: string,
+    tenantId: string,
+    query: QueryMyCoinHistoryDto,
+  ) {
+    const { page = 1, limit = 20, direction, sourceType, from, to } = query;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.CoinTransactionWhereInput = {
+      studentId,
+      isDeleted: false,
+      student: { tenantId },
+    };
+
+    if (direction) where.direction = direction;
+    if (sourceType) where.sourceType = sourceType;
+    if (from || to) {
+      where.createdAt = {
+        ...(from ? { gte: new Date(from) } : {}),
+        ...(to ? { lte: new Date(to) } : {}),
+      };
+    }
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.coinTransaction.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          amount: true,
+          direction: true,
+          sourceType: true,
+          note: true,
+          createdAt: true,
+          teacher: { select: { id: true, fullName: true } },
+          group: { select: { id: true, name: true } },
+        },
+      }),
+      this.prisma.coinTransaction.count({ where }),
+    ]);
+
+    return {
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
+  // 6c. TALABANING TANGA STATISTIKASI (Chart uchun — earn/deduct trend)
+  async getMyStats(
+    studentId: string,
+    tenantId: string,
+    query: QueryCoinStatsDto,
+  ) {
+    const { period = 'week', count = 7 } = query;
+    const bucketDays = period === 'month' ? 7 : 1; // month → haftalik bucket, week → kunlik bucket
+    const totalDays = bucketDays * count;
+
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - totalDays + 1);
+
+    const transactions = await this.prisma.coinTransaction.findMany({
+      where: {
+        studentId,
+        isDeleted: false,
+        student: { tenantId },
+        createdAt: { gte: start },
+      },
+      select: { amount: true, direction: true, createdAt: true },
+    });
+
+    const buckets: {
+      from: string;
+      to: string;
+      earned: number;
+      deducted: number;
+    }[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const bucketStart = new Date(start);
+      bucketStart.setDate(start.getDate() + i * bucketDays);
+      const bucketEnd = new Date(bucketStart);
+      bucketEnd.setDate(bucketStart.getDate() + bucketDays);
+
+      let earned = 0;
+      let deducted = 0;
+      for (const t of transactions) {
+        if (t.createdAt >= bucketStart && t.createdAt < bucketEnd) {
+          if (t.direction === CoinDirection.earn) earned += t.amount;
+          else deducted += t.amount;
+        }
+      }
+
+      buckets.push({
+        from: bucketStart.toISOString().split('T')[0],
+        to: new Date(bucketEnd.getTime() - 1).toISOString().split('T')[0],
+        earned,
+        deducted,
+      });
+    }
+
+    return {
+      period,
+      buckets,
+      totalEarned: buckets.reduce((s, b) => s + b.earned, 0),
+      totalDeducted: buckets.reduce((s, b) => s + b.deducted, 0),
+    };
   }
 
   // 7. LEADERBOARD (REYTING)

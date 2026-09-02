@@ -77,6 +77,19 @@ export class StudentsController {
     return this.studentsService.findAllIncludingDeleted(query, tenantId);
   }
 
+  // ─── Talabaning shaxsiy Dashboard xulosasi ──────────────────────
+  @Get('me/dashboard')
+  @ApiOperation({
+    summary:
+      "Tizimga kirgan talabaning shaxsiy dashboard xulosasi: balans, davomat %, bugungi/shu haftalik darslar, so'nggi tranzaksiyalar",
+  })
+  getMyDashboard(
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') studentId: string,
+  ) {
+    return this.studentsService.getMyDashboard(studentId, tenantId);
+  }
+
   // ─── To'liq profil ──────────────────────────────────────────────
   @Get(':id')
   // @Roles('admin', 'super_admin', 'teacher', 'student')

@@ -18,10 +18,13 @@ import {
 import { CoinTransactionsService } from './coin-transaction.service';
 import { CreateCoinTransactionDto } from './dto/create-coin-transaction.dto';
 import { QueryCoinTransactionDto } from './dto/query-coin-transaction.dto';
+import { QueryMyCoinHistoryDto } from './dto/query-my-coin-history.dto';
+import { QueryCoinStatsDto } from './dto/query-coin-stats.dto';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags('Geymifikatsiya: Tanga Tranzaksiyalari va Hamyon')
 @ApiBearerAuth()
@@ -33,6 +36,7 @@ export class CoinTransactionsController {
   ) {}
 
   @Post('manual')
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({
     summary: 'Talabaga qo‘lda coin berish yoki chegirish (Admin / O‘qituvchi)',
   })
@@ -49,7 +53,11 @@ export class CoinTransactionsController {
   }
 
   @Get('history')
-  @ApiOperation({ summary: 'Tranzaksiyalar tarixini ko‘rish (Filtrlar bilan)' })
+  @Roles('admin', 'super_admin', 'teacher')
+  @ApiOperation({
+    summary:
+      'Tranzaksiyalar tarixini ko‘rish (Filtrlar bilan) — faqat xodimlar uchun',
+  })
   findAll(
     @TenantContext() tenantId: string,
     @Query() query: QueryCoinTransactionDto,
@@ -58,6 +66,7 @@ export class CoinTransactionsController {
   }
 
   @Delete(':id/cancel')
+  @Roles('admin', 'super_admin')
   @ApiOperation({
     summary: 'Tranzaksiyani bekor qilish (Soft-Delete va balansni qaytarish)',
   })
@@ -79,6 +88,36 @@ export class CoinTransactionsController {
     @CurrentUser('id') studentId: string,
   ) {
     return this.coinTransactionsService.getStudentWallet(studentId, tenantId);
+  }
+
+  @Get('my-history')
+  @ApiOperation({
+    summary:
+      "Tizimga kirgan talabaning o'z tanga tranzaksiyalari tarixi (pagination, sana/tur filtrlari bilan)",
+  })
+  getMyHistory(
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') studentId: string,
+    @Query() query: QueryMyCoinHistoryDto,
+  ) {
+    return this.coinTransactionsService.getMyHistory(
+      studentId,
+      tenantId,
+      query,
+    );
+  }
+
+  @Get('my-stats')
+  @ApiOperation({
+    summary:
+      'Talabaning tanga statistikasi (chart uchun): earn/deduct trend, haftalik yoki oylik',
+  })
+  getMyStats(
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') studentId: string,
+    @Query() query: QueryCoinStatsDto,
+  ) {
+    return this.coinTransactionsService.getMyStats(studentId, tenantId, query);
   }
 
   @Get('leaderboard')

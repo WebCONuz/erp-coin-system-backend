@@ -301,6 +301,11 @@ export class StudentsService {
       throw new BadRequestException('Bu foydalanuvchi student emas');
     }
 
+    // Student faqat o'z profilini ko'ra oladi
+    if (requesterRole === 'student' && id !== requesterId) {
+      throw new ForbiddenException("Siz faqat o'z profilingizni ko'ra olasiz");
+    }
+
     // Teacher faqat o'z guruhidagi studentni ko'ra oladi
     if (requesterRole === 'teacher') {
       const isInTeacherGroup = student.groupMemberships.some(
@@ -362,6 +367,223 @@ export class StudentsService {
         totalCoinsEarned: earnedAgg._sum.amount ?? 0,
         totalCoinsDeducted: deductedAgg._sum.amount ?? 0,
         totalPurchases: purchasesCount,
+      },
+    };
+  }
+
+  // ─── Talabaning shaxsiy Dashboard xulosasi ─────────────────────
+  async getMyDashboard(studentId: string, tenantId: string) {
+    const student = await this.prisma.user.findFirst({
+      where: { id: studentId, tenantId, isDeleted: false },
+      select: {
+        id: true,
+        fullName: true,
+        avatarUrl: true,
+        wallet: { select: { balance: true, updatedAt: true } },
+      },
+    });
+    if (!student) throw new NotFoundException("O'quvchi topilmadi");
+
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const thirtyDaysAgo = new Date(now);
+    thirtyDaysAgo.setDate(now.getDate() - 30);
+
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date(todayStart);
+    todayEnd.setDate(todayStart.getDate() + 1);
+
+    const weekEnd = new Date(todayStart);
+    weekEnd.setDate(todayStart.getDate() + 7);
+
+    const activeGroupIds = (
+      await this.prisma.groupStudent.findMany({
+        where: { studentId, isDeleted: false, group: { isDeleted: false } },
+        select: { groupId: true },
+      })
+    ).map((g) => g.groupId);
+
+    const [
+      weekEarnedAgg,
+      weekDeductedAgg,
+      monthEarnedAgg,
+      monthDeductedAgg,
+      totalSessions30d,
+      presentCount30d,
+      homeworkDoneCount30d,
+      todaySessions,
+      upcomingSessions,
+      recentTransactions,
+      pendingPurchasesCount,
+      recentPurchases,
+    ] = await this.prisma.$transaction([
+      this.prisma.coinTransaction.aggregate({
+        where: {
+          studentId,
+          direction: 'earn',
+          isDeleted: false,
+          createdAt: { gte: startOfWeek },
+        },
+        _sum: { amount: true },
+      }),
+      this.prisma.coinTransaction.aggregate({
+        where: {
+          studentId,
+          direction: 'deduct',
+          isDeleted: false,
+          createdAt: { gte: startOfWeek },
+        },
+        _sum: { amount: true },
+      }),
+      this.prisma.coinTransaction.aggregate({
+        where: {
+          studentId,
+          direction: 'earn',
+          isDeleted: false,
+          createdAt: { gte: startOfMonth },
+        },
+        _sum: { amount: true },
+      }),
+      this.prisma.coinTransaction.aggregate({
+        where: {
+          studentId,
+          direction: 'deduct',
+          isDeleted: false,
+          createdAt: { gte: startOfMonth },
+        },
+        _sum: { amount: true },
+      }),
+      this.prisma.attendanceRecord.count({
+        where: {
+          studentId,
+          isDeleted: false,
+          session: { sessionDate: { gte: thirtyDaysAgo } },
+        },
+      }),
+      this.prisma.attendanceRecord.count({
+        where: {
+          studentId,
+          isPresent: true,
+          isDeleted: false,
+          session: { sessionDate: { gte: thirtyDaysAgo } },
+        },
+      }),
+      this.prisma.attendanceRecord.count({
+        where: {
+          studentId,
+          homeworkDone: true,
+          isDeleted: false,
+          session: { sessionDate: { gte: thirtyDaysAgo } },
+        },
+      }),
+      this.prisma.session.findMany({
+        where: {
+          groupId: { in: activeGroupIds },
+          tenantId,
+          isDeleted: false,
+          sessionDate: { gte: todayStart, lt: todayEnd },
+        },
+        select: {
+          id: true,
+          sessionDate: true,
+          startTime: true,
+          endTime: true,
+          sessionType: true,
+          topic: true,
+          group: { select: { id: true, name: true } },
+          room: { select: { id: true, name: true } },
+        },
+        orderBy: { startTime: 'asc' },
+      }),
+      this.prisma.session.findMany({
+        where: {
+          groupId: { in: activeGroupIds },
+          tenantId,
+          isDeleted: false,
+          sessionDate: { gte: todayEnd, lt: weekEnd },
+        },
+        select: {
+          id: true,
+          sessionDate: true,
+          startTime: true,
+          endTime: true,
+          sessionType: true,
+          group: { select: { id: true, name: true } },
+        },
+        orderBy: [{ sessionDate: 'asc' }, { startTime: 'asc' }],
+      }),
+      this.prisma.coinTransaction.findMany({
+        where: { studentId, isDeleted: false },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        select: {
+          id: true,
+          amount: true,
+          direction: true,
+          sourceType: true,
+          note: true,
+          createdAt: true,
+        },
+      }),
+      this.prisma.purchase.count({
+        where: { studentId, status: 'pending' },
+      }),
+      this.prisma.purchase.findMany({
+        where: { studentId },
+        orderBy: { purchasedAt: 'desc' },
+        take: 5,
+        select: {
+          id: true,
+          coinSpent: true,
+          status: true,
+          purchasedAt: true,
+          reward: { select: { id: true, title: true, imageUrl: true } },
+        },
+      }),
+    ]);
+
+    return {
+      student: {
+        id: student.id,
+        fullName: student.fullName,
+        avatarUrl: student.avatarUrl,
+      },
+      wallet: {
+        balance: student.wallet?.balance ?? 0,
+        weekDelta:
+          (weekEarnedAgg._sum.amount ?? 0) - (weekDeductedAgg._sum.amount ?? 0),
+        monthDelta:
+          (monthEarnedAgg._sum.amount ?? 0) -
+          (monthDeductedAgg._sum.amount ?? 0),
+      },
+      attendance: {
+        last30Days: {
+          totalSessions: totalSessions30d,
+          presentCount: presentCount30d,
+          absentCount: totalSessions30d - presentCount30d,
+          attendanceRate:
+            totalSessions30d > 0
+              ? Math.round((presentCount30d / totalSessions30d) * 100)
+              : null,
+          homeworkDoneCount: homeworkDoneCount30d,
+          homeworkRate:
+            totalSessions30d > 0
+              ? Math.round((homeworkDoneCount30d / totalSessions30d) * 100)
+              : null,
+        },
+      },
+      todaySessions,
+      upcomingSessions,
+      recentTransactions,
+      purchases: {
+        pendingCount: pendingPurchasesCount,
+        recent: recentPurchases,
       },
     };
   }

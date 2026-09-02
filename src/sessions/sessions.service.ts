@@ -10,6 +10,7 @@ import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { QuerySessionDto } from './dto/query-session.dto';
 import { BulkAttendanceDto } from './dto/record-attendance.dto';
+import { QueryMyAttendanceDto } from './dto/query-my-attendance.dto';
 import {
   CoinDirection,
   SourceType,
@@ -170,7 +171,12 @@ export class SessionsService {
   }
 
   // 5. BITTA DARS TAFSILOTI
-  async findOne(id: string, tenantId: string) {
+  async findOne(
+    id: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const session = await this.prisma.session.findFirst({
       where: { id, tenantId, isDeleted: false },
       select: {
@@ -185,13 +191,88 @@ export class SessionsService {
         lockedAt: true,
         deletedAt: true,
         tenantId: true,
+        groupId: true,
         group: { select: { id: true, name: true } },
         room: { select: { id: true, name: true } },
         teacher: { select: { id: true, fullName: true } },
       },
     });
     if (!session) throw new NotFoundException('Dars mashguloti topilmadi');
+
+    if (requesterRole === 'student') {
+      const isMember = await this.prisma.groupStudent.findFirst({
+        where: {
+          groupId: session.groupId,
+          studentId: requesterId,
+          isDeleted: false,
+        },
+      });
+      if (!isMember) {
+        throw new ForbiddenException("Siz bu darsni ko'ra olmaysiz");
+      }
+    }
+
     return session;
+  }
+
+  // 5b. TALABANING O'Z DAVOMAT TARIXI (Shaxsiy profil uchun)
+  async getMyAttendance(
+    studentId: string,
+    tenantId: string,
+    query: QueryMyAttendanceDto,
+  ) {
+    const { page = 1, limit = 20, groupId, from, to } = query;
+    const skip = (page - 1) * limit;
+
+    const sessionFilter: Prisma.SessionWhereInput = {
+      tenantId,
+      isDeleted: false,
+    };
+
+    if (groupId) sessionFilter.groupId = groupId;
+
+    if (from || to) {
+      sessionFilter.sessionDate = {
+        ...(from ? { gte: new Date(from) } : {}),
+        ...(to ? { lte: new Date(to) } : {}),
+      };
+    }
+
+    const where: Prisma.AttendanceRecordWhereInput = {
+      studentId,
+      isDeleted: false,
+      session: sessionFilter,
+    };
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.attendanceRecord.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { session: { sessionDate: 'desc' } },
+        select: {
+          id: true,
+          isPresent: true,
+          homeworkDone: true,
+          recordedAt: true,
+          session: {
+            select: {
+              id: true,
+              sessionDate: true,
+              sessionType: true,
+              topic: true,
+              group: { select: { id: true, name: true } },
+            },
+          },
+        },
+      }),
+      this.prisma.attendanceRecord.count({ where }),
+    ]);
+
+    return {
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
   }
 
   // 6. YO'QLAMANI SAQLASH VA TANGALARNI AVTOMATIK HISOBLASH

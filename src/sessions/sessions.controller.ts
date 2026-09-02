@@ -22,6 +22,7 @@ import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { QuerySessionDto } from './dto/query-session.dto';
 import { BulkAttendanceDto } from './dto/record-attendance.dto';
+import { QueryMyAttendanceDto } from './dto/query-my-attendance.dto';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -36,15 +37,31 @@ export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Post()
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Yangi dars (mashgulot) ochish/rejalashtirish' })
   create(@TenantContext() tenantId: string, @Body() dto: CreateSessionDto) {
     return this.sessionsService.create(tenantId, dto);
   }
 
   @Get()
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Darslar jadvalini korish (Filtrlar bilan)' })
   findAll(@TenantContext() tenantId: string, @Query() query: QuerySessionDto) {
     return this.sessionsService.findAll(query, tenantId);
+  }
+
+  // ─── Talabaning o'z davomat tarixi (Shaxsiy profil uchun) ──────
+  @Get('me/attendance')
+  @ApiOperation({
+    summary:
+      "Tizimga kirgan talabaning o'z davomat tarixi (filtr: guruh, sana oralig'i)",
+  })
+  getMyAttendance(
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') studentId: string,
+    @Query() query: QueryMyAttendanceDto,
+  ) {
+    return this.sessionsService.getMyAttendance(studentId, tenantId, query);
   }
 
   @Get(':id')
@@ -53,11 +70,14 @@ export class SessionsController {
   findOne(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.sessionsService.findOne(id, tenantId);
+    return this.sessionsService.findOne(id, tenantId, role, requesterId);
   }
 
   @Post(':id/attendance')
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({
     summary:
       'Dars uchun oquvchilarni yoqlama qilish va tangalarni avtomatik hisoblash',
@@ -78,7 +98,11 @@ export class SessionsController {
   }
 
   @Get(':id/attendance')
-  @ApiOperation({ summary: 'Dars boyicha yoqlama royxatini korish' })
+  @Roles('admin', 'super_admin', 'teacher')
+  @ApiOperation({
+    summary:
+      "Dars boyicha yoqlama royxatini korish (barcha o'quvchilar — faqat xodimlar uchun)",
+  })
   @ApiParam({ name: 'id', format: 'uuid' })
   getAttendance(
     @Param('id', ParseUUIDPipe) sessionId: string,
@@ -88,6 +112,7 @@ export class SessionsController {
   }
 
   @Patch(':id')
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({
     summary: 'Dars malumotlarini yangilash (qulflanmagan bolsa)',
   })

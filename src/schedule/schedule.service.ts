@@ -400,6 +400,51 @@ export class ScheduleService {
     return calendar;
   }
 
+  // ─── Talabaning o'z kalendari (barcha faol guruhlari birlashtirilgan) ──
+  async getMyCalendar(
+    studentId: string,
+    year: number,
+    month: number,
+    tenantId: string,
+  ) {
+    const memberships = await this.prisma.groupStudent.findMany({
+      where: {
+        studentId,
+        isDeleted: false,
+        group: { tenantId, isDeleted: false },
+      },
+      select: { groupId: true, group: { select: { name: true } } },
+    });
+
+    if (!memberships.length) return {};
+
+    const merged: Record<
+      string,
+      Array<Record<string, unknown> & { group: { id: string; name: string } }>
+    > = {};
+
+    for (const m of memberships) {
+      const groupCalendar = await this.getCalendar(
+        m.groupId,
+        year,
+        month,
+        tenantId,
+      );
+
+      for (const [dateStr, entries] of Object.entries(groupCalendar)) {
+        if (!merged[dateStr]) merged[dateStr] = [];
+        for (const entry of entries as Record<string, unknown>[]) {
+          merged[dateStr].push({
+            ...entry,
+            group: { id: m.groupId, name: m.group.name },
+          });
+        }
+      }
+    }
+
+    return merged;
+  }
+
   // ─── Sessiyalarni generatsiya qilish ──────────────────────────
 
   async generateSessions(

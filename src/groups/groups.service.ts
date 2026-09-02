@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -51,7 +52,12 @@ export class GroupsService {
     });
   }
 
-  async findAll(query: QueryGroupDto, tenantId: string) {
+  async findAll(
+    query: QueryGroupDto,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const {
       page = 1,
       limit = 10,
@@ -71,6 +77,13 @@ export class GroupsService {
     if (teacherId) where.teacherId = teacherId;
     if (search) {
       where.name = { contains: search, mode: 'insensitive' };
+    }
+
+    // Student faqat o'zi a'zo bo'lgan guruhlarni ko'ra oladi
+    if (requesterRole === 'student') {
+      where.students = {
+        some: { studentId: requesterId, isDeleted: false },
+      };
     }
 
     const [data, total] = await this.prisma.$transaction([
@@ -103,7 +116,12 @@ export class GroupsService {
     };
   }
 
-  async findOne(id: string, tenantId: string) {
+  async findOne(
+    id: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const group = await this.prisma.group.findFirst({
       where: { id, tenantId, isDeleted: false },
       select: {
@@ -127,7 +145,67 @@ export class GroupsService {
     });
 
     if (!group) throw new NotFoundException('Guruh topilmadi');
+
+    // Student faqat o'zi a'zo bo'lgan guruhni ko'ra oladi
+    if (requesterRole === 'student') {
+      const isMember = group.students.some((s) => s.student.id === requesterId);
+      if (!isMember) {
+        throw new ForbiddenException("Siz bu guruhni ko'ra olmaysiz");
+      }
+    }
+
     return group;
+  }
+
+  // ─── Talabaning o'z guruhlari (Shaxsiy profil uchun) ───────────
+  async findMyGroups(userId: string, tenantId: string, role: string) {
+    if (role === 'teacher') {
+      return this.prisma.group.findMany({
+        where: { teacherId: userId, tenantId, isDeleted: false },
+        select: {
+          id: true,
+          name: true,
+          maxStudents: true,
+          isActive: true,
+          course: { select: { id: true, title: true } },
+          _count: { select: { students: { where: { isDeleted: false } } } },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+    }
+
+    const memberships = await this.prisma.groupStudent.findMany({
+      where: {
+        studentId: userId,
+        isDeleted: false,
+        group: { tenantId, isDeleted: false },
+      },
+      select: {
+        id: true,
+        joinedAt: true,
+        isActive: true,
+        group: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+            course: { select: { id: true, title: true } },
+            teacher: { select: { id: true, fullName: true, phone: true } },
+            _count: {
+              select: { students: { where: { isDeleted: false } } },
+            },
+          },
+        },
+      },
+      orderBy: { joinedAt: 'desc' },
+    });
+
+    return memberships.map((m) => ({
+      membershipId: m.id,
+      joinedAt: m.joinedAt,
+      membershipActive: m.isActive,
+      ...m.group,
+    }));
   }
 
   async update(id: string, dto: UpdateGroupDto, tenantId: string) {

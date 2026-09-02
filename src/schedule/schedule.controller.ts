@@ -80,6 +80,22 @@ export class ScheduleController {
     return this.scheduleService.getCalendar(groupId, year, month, tenantId);
   }
 
+  @Get('calendar/me')
+  @ApiOperation({
+    summary:
+      "Tizimga kirgan talabaning o'z oylik kalendari — barcha faol guruhlari birlashtirilgan holda",
+  })
+  @ApiQuery({ name: 'year', required: true, example: 2026 })
+  @ApiQuery({ name: 'month', required: true, example: 9 })
+  getMyCalendar(
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') studentId: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('month', ParseIntPipe) month: number,
+  ) {
+    return this.scheduleService.getMyCalendar(studentId, year, month, tenantId);
+  }
+
   @Post('generate-sessions')
   @Roles('admin', 'super_admin')
   @HttpCode(200)

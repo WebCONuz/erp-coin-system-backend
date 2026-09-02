@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QueryPurchaseDto } from './dto/query-purchase.dto';
@@ -54,7 +55,12 @@ export class PurchasesService {
   }
 
   // 2. BITTA XARID TAFSILOTI
-  async findOne(id: string, tenantId: string) {
+  async findOne(
+    id: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const purchase = await this.prisma.purchase.findFirst({
       where: { id, student: { tenantId } },
       include: {
@@ -66,6 +72,11 @@ export class PurchasesService {
     });
 
     if (!purchase) throw new NotFoundException('Xarid buyurtmasi topilmadi');
+
+    if (requesterRole === 'student' && purchase.studentId !== requesterId) {
+      throw new ForbiddenException("Siz bu xaridni ko'ra olmaysiz");
+    }
+
     return purchase;
   }
 

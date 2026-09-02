@@ -24,6 +24,7 @@ import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags('Geymifikatsiya: Sovg‘alar Do‘koni')
 @ApiBearerAuth()
@@ -33,6 +34,7 @@ export class RewardsController {
   constructor(private readonly rewardsService: RewardsService) {}
 
   @Post()
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Do‘konga yangi sovg‘a qo‘shish (Faqat Admin)' })
   create(
     @TenantContext() tenantId: string,
@@ -62,6 +64,7 @@ export class RewardsController {
   }
 
   @Patch(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Sovg‘a ma’lumotlarini tahrirlash (Faqat Admin)' })
   @ApiParam({ name: 'id', format: 'uuid' })
   update(
@@ -73,6 +76,7 @@ export class RewardsController {
   }
 
   @Delete(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({
     summary: 'Sovg‘ani do‘kondardan olib tashlash (Soft-Delete)',
   })

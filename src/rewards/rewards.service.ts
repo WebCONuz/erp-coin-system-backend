@@ -48,7 +48,7 @@ export class RewardsService {
     const where: Prisma.RewardWhereInput = {
       tenantId,
       isDeleted: false,
-      isActive: isActive ? true : false,
+      isActive: isActive !== undefined ? isActive : true,
     };
 
     if (search) {

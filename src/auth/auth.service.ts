@@ -211,7 +211,7 @@ export class AuthService {
       throw new BadRequestException("Token yaroqsiz yoki muddati o'tgan");
     }
 
-    const passwordHash = await bcrypt.hash(dto.newPassword, 12);
+    const passwordHash = await bcrypt.hash(dto.newPassword, 10);
 
     await this.prisma.user.update({
       where: { id: user.id },

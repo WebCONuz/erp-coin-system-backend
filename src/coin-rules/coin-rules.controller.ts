@@ -24,6 +24,7 @@ import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags('Geymifikatsiya: Tanga Qoidalari')
 @ApiBearerAuth()
@@ -33,6 +34,7 @@ export class CoinRulesController {
   constructor(private readonly coinRulesService: CoinRulesService) {}
 
   @Post()
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({
     summary: 'Yangi tanga berish qoidasini yaratish (Admin / O‘qituvchi)',
   })
@@ -45,6 +47,7 @@ export class CoinRulesController {
   }
 
   @Get()
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({
     summary: 'Barcha faol tanga qoidalarini ko‘rish (Filtrlar bilan)',
   })
@@ -53,6 +56,7 @@ export class CoinRulesController {
   }
 
   @Get(':id')
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'ID bo‘yicha tanga qoidasi tafsilotlarini ko‘rish' })
   @ApiParam({ name: 'id', format: 'uuid' })
   findOne(
@@ -63,6 +67,7 @@ export class CoinRulesController {
   }
 
   @Patch(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Tanga qoidasini tahrirlash' })
   @ApiParam({ name: 'id', format: 'uuid' })
   update(
@@ -74,6 +79,7 @@ export class CoinRulesController {
   }
 
   @Delete(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Tanga qoidasini o‘chirish (Soft-Delete)' })
   @ApiParam({ name: 'id', format: 'uuid' })
   remove(

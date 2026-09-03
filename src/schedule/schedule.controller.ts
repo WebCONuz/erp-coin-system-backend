@@ -59,8 +59,15 @@ export class ScheduleController {
   findAllTemplates(
     @TenantContext() tenantId: string,
     @Query() query: QueryScheduleDto,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.scheduleService.findAllTemplates(query, tenantId);
+    return this.scheduleService.findAllTemplates(
+      query,
+      tenantId,
+      role,
+      requesterId,
+    );
   }
 
   @Get('calendar')
@@ -76,8 +83,17 @@ export class ScheduleController {
     @Query('groupId', ParseUUIDPipe) groupId: string,
     @Query('year', ParseIntPipe) year: number,
     @Query('month', ParseIntPipe) month: number,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.scheduleService.getCalendar(groupId, year, month, tenantId);
+    return this.scheduleService.getCalendar(
+      groupId,
+      year,
+      month,
+      tenantId,
+      role,
+      requesterId,
+    );
   }
 
   @Get('calendar/me')
@@ -120,8 +136,15 @@ export class ScheduleController {
   findOneTemplate(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.scheduleService.findOneTemplate(id, tenantId);
+    return this.scheduleService.findOneTemplate(
+      id,
+      tenantId,
+      role,
+      requesterId,
+    );
   }
 
   @Patch(':id')
@@ -186,8 +209,15 @@ export class ScheduleController {
   findExceptions(
     @Param('id', ParseUUIDPipe) templateId: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.scheduleService.findExceptions(templateId, tenantId);
+    return this.scheduleService.findExceptions(
+      templateId,
+      tenantId,
+      role,
+      requesterId,
+    );
   }
 }
 

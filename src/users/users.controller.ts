@@ -20,7 +20,11 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto, ChangePasswordDto } from './dto/update-user.dto';
+import {
+  UpdateUserDto,
+  UpdateOwnProfileDto,
+  ChangePasswordDto,
+} from './dto/update-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -102,10 +106,25 @@ export class UsersController {
 
   // ─── O'z profili ─────────────────────────────────────────────
   @Get('me')
-  @ApiOperation({ summary: "O'z profil ma'lumotlari" })
+  @ApiOperation({
+    summary: "O'z profil ma'lumotlari (teacher uchun taughtGroups bilan)",
+  })
   getMe(@CurrentUser('id') userId: string) {
     // Barcha rollar o'z profilini ko'ra oladi
     return this.usersService.getProfile(userId);
+  }
+
+  // ─── O'zini o'zi tahrirlash (faqat xavfsiz maydonlar) ─────────
+  @Patch('me')
+  @ApiOperation({
+    summary:
+      "O'z profilini tahrirlash (faqat avatarUrl, email — rol/telefon shu yerdan o'zgarmaydi)",
+  })
+  updateMe(
+    @CurrentUser('id') userId: string,
+    @Body() dto: UpdateOwnProfileDto,
+  ) {
+    return this.usersService.updateOwnProfile(userId, dto);
   }
 
   // ─── Bitta user ──────────────────────────────────────────────
@@ -126,7 +145,10 @@ export class UsersController {
 
   // ─── Yangilash ───────────────────────────────────────────────
   @Patch(':id')
-  @ApiOperation({ summary: "Foydalanuvchi ma'lumotlarini yangilash" })
+  @Roles('admin', 'super_admin')
+  @ApiOperation({
+    summary: "Foydalanuvchi ma'lumotlarini yangilash (Faqat Admin)",
+  })
   @ApiParam({ name: 'id', description: 'User UUID' })
   update(
     @Param('id', ParseUUIDPipe) id: string,

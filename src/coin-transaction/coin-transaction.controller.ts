@@ -43,12 +43,14 @@ export class CoinTransactionsController {
   createManual(
     @TenantContext() tenantId: string,
     @CurrentUser('id') teacherId: string,
+    @CurrentUser('role') role: string,
     @Body() dto: CreateCoinTransactionDto,
   ) {
     return this.coinTransactionsService.createManualTransaction(
       tenantId,
       teacherId,
       dto,
+      role,
     );
   }
 
@@ -61,8 +63,15 @@ export class CoinTransactionsController {
   findAll(
     @TenantContext() tenantId: string,
     @Query() query: QueryCoinTransactionDto,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.coinTransactionsService.findAll(query, tenantId);
+    return this.coinTransactionsService.findAll(
+      query,
+      tenantId,
+      role,
+      requesterId,
+    );
   }
 
   @Delete(':id/cancel')

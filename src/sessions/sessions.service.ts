@@ -27,7 +27,29 @@ export class SessionsService {
   ) {}
 
   // 1. DARS YARATISH
-  async create(tenantId: string, dto: CreateSessionDto) {
+  async create(
+    tenantId: string,
+    dto: CreateSessionDto,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
+    let teacherId = dto.teacherId;
+
+    // Teacher faqat o'zi dars beradigan guruhga sessiya qo'sha oladi
+    if (requesterRole === 'teacher') {
+      const group = await this.prisma.group.findFirst({
+        where: { id: dto.groupId, tenantId, isDeleted: false },
+        select: { teacherId: true },
+      });
+      if (!group) throw new NotFoundException('Guruh topilmadi');
+      if (group.teacherId !== requesterId) {
+        throw new ForbiddenException(
+          "Siz faqat o'zingiz dars beradigan guruhga sessiya qo'sha olasiz",
+        );
+      }
+      teacherId = requesterId; // client yuborgan teacherId e'tiborsiz qoldiriladi
+    }
+
     const existingSession = await this.prisma.session.findFirst({
       where: {
         sessionDate: new Date(dto.sessionDate),
@@ -35,7 +57,7 @@ export class SessionsService {
         endTime: dto.endTime,
         sessionType: dto.sessionType,
         groupId: dto.groupId,
-        teacherId: dto.teacherId,
+        teacherId,
         tenantId,
       },
     });
@@ -55,18 +77,31 @@ export class SessionsService {
         topic: dto.topic || null,
         groupId: dto.groupId,
         roomId: dto.roomId,
-        teacherId: dto.teacherId,
+        teacherId,
         tenantId,
       },
     });
   }
 
   // 2. DARSNI TAHRIRLASH
-  async update(id: string, tenantId: string, dto: UpdateSessionDto) {
+  async update(
+    id: string,
+    tenantId: string,
+    dto: UpdateSessionDto,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const session = await this.prisma.session.findFirst({
       where: { id, tenantId, isDeleted: false },
     });
     if (!session) throw new NotFoundException('Dars topilmadi');
+
+    if (requesterRole === 'teacher' && session.teacherId !== requesterId) {
+      throw new ForbiddenException(
+        "Siz faqat o'z darsingizni tahrirlay olasiz",
+      );
+    }
+
     if (session.isLocked) {
       throw new ForbiddenException(
         'Dars qulflangan -- tahrirlash mumkin emas. Avval qulfni oching.',
@@ -84,11 +119,21 @@ export class SessionsService {
   }
 
   // 3. DARSNI QULFLASH / QULFDAN CHIQARISH
-  async lock(id: string, tenantId: string, requesterId: string) {
+  async lock(
+    id: string,
+    tenantId: string,
+    requesterId: string,
+    requesterRole?: string,
+  ) {
     const session = await this.prisma.session.findFirst({
       where: { id, tenantId, isDeleted: false },
     });
     if (!session) throw new NotFoundException('Dars topilmadi');
+
+    if (requesterRole === 'teacher' && session.teacherId !== requesterId) {
+      throw new ForbiddenException("Siz faqat o'z darsingizni qulflay olasiz");
+    }
+
     if (session.isLocked)
       throw new BadRequestException('Dars allaqachon qulflangan');
 
@@ -115,7 +160,12 @@ export class SessionsService {
   }
 
   // 4. DARSLAR RO'YXATINI OLISH
-  async findAll(query: QuerySessionDto, tenantId: string) {
+  async findAll(
+    query: QuerySessionDto,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const {
       page = 1,
       limit = 10,
@@ -132,6 +182,11 @@ export class SessionsService {
     if (teacherId) where.teacherId = teacherId;
     if (sessionType) where.sessionType = sessionType;
     if (date) where.sessionDate = new Date(date);
+
+    // Teacher faqat o'zi dars beradigan sessiyalarni ko'radi
+    if (requesterRole === 'teacher') {
+      where.teacherId = requesterId;
+    }
 
     const [data, total] = await this.prisma.$transaction([
       this.prisma.session.findMany({
@@ -212,6 +267,10 @@ export class SessionsService {
       }
     }
 
+    if (requesterRole === 'teacher' && session.teacher.id !== requesterId) {
+      throw new ForbiddenException("Siz bu darsni ko'ra olmaysiz");
+    }
+
     return session;
   }
 
@@ -281,12 +340,20 @@ export class SessionsService {
     tenantId: string,
     recordedById: string,
     dto: BulkAttendanceDto,
+    requesterRole?: string,
   ) {
     const session = await this.prisma.session.findFirst({
       where: { id: sessionId, tenantId, isDeleted: false },
     });
 
     if (!session) throw new NotFoundException('Dars topilmadi');
+
+    if (requesterRole === 'teacher' && session.teacherId !== recordedById) {
+      throw new ForbiddenException(
+        "Siz faqat o'z darsingiz uchun yo'qlama qila olasiz",
+      );
+    }
+
     if (session.isLocked) {
       throw new BadRequestException(
         'Ushbu dars faoliyati qulflangan. Yoqlamani ozgartirib bolmaydi.',
@@ -401,8 +468,13 @@ export class SessionsService {
   }
 
   // 7. YO'QLAMA RO'YXATINI OLISH
-  async getAttendanceBySession(sessionId: string, tenantId: string) {
-    await this.findOne(sessionId, tenantId);
+  async getAttendanceBySession(
+    sessionId: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
+    await this.findOne(sessionId, tenantId, requesterRole, requesterId);
 
     return this.prisma.attendanceRecord.findMany({
       where: { sessionId, isDeleted: false },

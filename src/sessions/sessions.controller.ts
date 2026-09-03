@@ -39,15 +39,25 @@ export class SessionsController {
   @Post()
   @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Yangi dars (mashgulot) ochish/rejalashtirish' })
-  create(@TenantContext() tenantId: string, @Body() dto: CreateSessionDto) {
-    return this.sessionsService.create(tenantId, dto);
+  create(
+    @TenantContext() tenantId: string,
+    @Body() dto: CreateSessionDto,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
+  ) {
+    return this.sessionsService.create(tenantId, dto, role, requesterId);
   }
 
   @Get()
   @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Darslar jadvalini korish (Filtrlar bilan)' })
-  findAll(@TenantContext() tenantId: string, @Query() query: QuerySessionDto) {
-    return this.sessionsService.findAll(query, tenantId);
+  findAll(
+    @TenantContext() tenantId: string,
+    @Query() query: QuerySessionDto,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
+  ) {
+    return this.sessionsService.findAll(query, tenantId, role, requesterId);
   }
 
   // ─── Talabaning o'z davomat tarixi (Shaxsiy profil uchun) ──────
@@ -87,6 +97,7 @@ export class SessionsController {
     @Param('id', ParseUUIDPipe) sessionId: string,
     @TenantContext() tenantId: string,
     @CurrentUser('id') recordedById: string,
+    @CurrentUser('role') role: string,
     @Body() dto: BulkAttendanceDto,
   ) {
     return this.sessionsService.saveAttendanceAndProcessCoins(
@@ -94,6 +105,7 @@ export class SessionsController {
       tenantId,
       recordedById,
       dto,
+      role,
     );
   }
 
@@ -107,8 +119,15 @@ export class SessionsController {
   getAttendance(
     @Param('id', ParseUUIDPipe) sessionId: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.sessionsService.getAttendanceBySession(sessionId, tenantId);
+    return this.sessionsService.getAttendanceBySession(
+      sessionId,
+      tenantId,
+      role,
+      requesterId,
+    );
   }
 
   @Patch(':id')
@@ -121,8 +140,10 @@ export class SessionsController {
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
     @Body() dto: UpdateSessionDto,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
   ) {
-    return this.sessionsService.update(id, tenantId, dto);
+    return this.sessionsService.update(id, tenantId, dto, role, requesterId);
   }
 
   @Post(':id/lock')
@@ -136,8 +157,9 @@ export class SessionsController {
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
     @CurrentUser('id') requesterId: string,
+    @CurrentUser('role') role: string,
   ) {
-    return this.sessionsService.lock(id, tenantId, requesterId);
+    return this.sessionsService.lock(id, tenantId, requesterId, role);
   }
 
   @Post(':id/unlock')

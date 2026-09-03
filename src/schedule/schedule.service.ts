@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, Weekday } from 'src/generated/prisma/client';
@@ -78,7 +79,12 @@ export class ScheduleService {
     });
   }
 
-  async findAllTemplates(query: QueryScheduleDto, tenantId: string) {
+  async findAllTemplates(
+    query: QueryScheduleDto,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const { groupId, roomId, weekday, page = 1, limit = 50 } = query;
     const skip = (page - 1) * limit;
 
@@ -89,6 +95,11 @@ export class ScheduleService {
     if (groupId) where.groupId = groupId;
     if (roomId) where.roomId = roomId;
     if (weekday) where.weekday = weekday;
+
+    // Teacher faqat o'zi dars beradigan guruhlar jadvalini ko'radi
+    if (requesterRole === 'teacher') {
+      where.group = { teacherId: requesterId };
+    }
 
     const [data, total] = await this.prisma.$transaction([
       this.prisma.scheduleTemplate.findMany({
@@ -119,11 +130,16 @@ export class ScheduleService {
     };
   }
 
-  async findOneTemplate(id: string, tenantId: string) {
+  async findOneTemplate(
+    id: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const template = await this.prisma.scheduleTemplate.findFirst({
       where: { id, tenantId, isDeleted: false },
       include: {
-        group: { select: { id: true, name: true } },
+        group: { select: { id: true, name: true, teacherId: true } },
         room: { select: { id: true, name: true } },
         exceptions: {
           where: { isDeleted: false },
@@ -132,6 +148,14 @@ export class ScheduleService {
       },
     });
     if (!template) throw new NotFoundException('Dars jadvali topilmadi');
+
+    if (
+      requesterRole === 'teacher' &&
+      template.group.teacherId !== requesterId
+    ) {
+      throw new ForbiddenException("Siz bu dars jadvalini ko'ra olmaysiz");
+    }
+
     return template;
   }
 
@@ -245,11 +269,24 @@ export class ScheduleService {
     });
   }
 
-  async findExceptions(templateId: string, tenantId: string) {
+  async findExceptions(
+    templateId: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const template = await this.prisma.scheduleTemplate.findFirst({
       where: { id: templateId, tenantId, isDeleted: false },
+      include: { group: { select: { teacherId: true } } },
     });
     if (!template) throw new NotFoundException('Dars jadvali topilmadi');
+
+    if (
+      requesterRole === 'teacher' &&
+      template.group.teacherId !== requesterId
+    ) {
+      throw new ForbiddenException("Siz bu dars jadvalini ko'ra olmaysiz");
+    }
 
     return this.prisma.scheduleException.findMany({
       where: { templateId, isDeleted: false },
@@ -298,7 +335,22 @@ export class ScheduleService {
     year: number,
     month: number,
     tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
   ) {
+    if (requesterRole === 'teacher') {
+      const group = await this.prisma.group.findFirst({
+        where: { id: groupId, tenantId, isDeleted: false },
+        select: { teacherId: true },
+      });
+      if (!group) throw new NotFoundException('Guruh topilmadi');
+      if (group.teacherId !== requesterId) {
+        throw new ForbiddenException(
+          "Siz bu guruhning kalendarini ko'ra olmaysiz",
+        );
+      }
+    }
+
     // O'sha oyning barcha kunlari (UTC asosida — timezone shift oldini olish uchun)
     const start = new Date(Date.UTC(year, month - 1, 1));
     const end = new Date(Date.UTC(year, month, 0));

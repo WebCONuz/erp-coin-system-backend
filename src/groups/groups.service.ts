@@ -86,6 +86,11 @@ export class GroupsService {
       };
     }
 
+    // Teacher faqat o'zi dars beradigan guruhlarni ko'ra oladi
+    if (requesterRole === 'teacher') {
+      where.teacherId = requesterId;
+    }
+
     const [data, total] = await this.prisma.$transaction([
       this.prisma.group.findMany({
         where,
@@ -152,6 +157,11 @@ export class GroupsService {
       if (!isMember) {
         throw new ForbiddenException("Siz bu guruhni ko'ra olmaysiz");
       }
+    }
+
+    // Teacher faqat o'zi dars beradigan guruhni ko'ra oladi
+    if (requesterRole === 'teacher' && group.teacher.id !== requesterId) {
+      throw new ForbiddenException("Siz bu guruhni ko'ra olmaysiz");
     }
 
     return group;

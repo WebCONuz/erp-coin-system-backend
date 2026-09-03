@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCoinTransactionDto } from './dto/create-coin-transaction.dto';
@@ -21,7 +22,24 @@ export class CoinTransactionsService {
     tenantId: string,
     teacherId: string,
     dto: CreateCoinTransactionDto,
+    requesterRole?: string,
   ) {
+    // Teacher faqat o'zi dars beradigan guruhdagi o'quvchiga coin bera oladi
+    if (requesterRole === 'teacher') {
+      const isOwnStudent = await this.prisma.groupStudent.findFirst({
+        where: {
+          studentId: dto.studentId,
+          isDeleted: false,
+          group: { teacherId, tenantId, isDeleted: false },
+        },
+      });
+      if (!isOwnStudent) {
+        throw new ForbiddenException(
+          "Siz faqat o'z guruhingizdagi o'quvchiga tanga bera olasiz",
+        );
+      }
+    }
+
     return this.executeCoinProcess(tenantId, {
       studentId: dto.studentId,
       amount: dto.amount,
@@ -122,7 +140,12 @@ export class CoinTransactionsService {
   }
 
   // 4. TRANZAKSIYALAR TARIXINI OLISH
-  async findAll(query: QueryCoinTransactionDto, tenantId: string) {
+  async findAll(
+    query: QueryCoinTransactionDto,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
     const {
       page = 1,
       limit = 10,
@@ -142,6 +165,11 @@ export class CoinTransactionsService {
     if (teacherId) where.teacherId = teacherId;
     if (direction) where.direction = direction;
     if (sourceType) where.sourceType = sourceType;
+
+    // Teacher faqat o'zi bergan/qayd etgan tranzaksiyalarni ko'radi
+    if (requesterRole === 'teacher') {
+      where.teacherId = requesterId;
+    }
 
     const [data, total] = await this.prisma.$transaction([
       this.prisma.coinTransaction.findMany({

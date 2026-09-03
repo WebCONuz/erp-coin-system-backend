@@ -6,7 +6,11 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto, ChangePasswordDto } from './dto/update-user.dto';
+import {
+  UpdateUserDto,
+  UpdateOwnProfileDto,
+  ChangePasswordDto,
+} from './dto/update-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from 'src/generated/prisma/client';
@@ -594,6 +598,20 @@ export class UsersService {
           where: { isActive: true },
           include: { group: { include: { course: true } } },
         },
+        taughtGroups: {
+          where: { isDeleted: false, isActive: true },
+          select: {
+            id: true,
+            name: true,
+            maxStudents: true,
+            course: { select: { id: true, title: true } },
+            _count: {
+              select: {
+                students: { where: { isActive: true, isDeleted: false } },
+              },
+            },
+          },
+        },
       },
     });
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
@@ -603,6 +621,27 @@ export class UsersService {
       'passwordResetToken',
       'passwordResetExpiry',
     ]);
+  }
+
+  // ─── O'zini o'zi tahrirlash (har qanday rol, faqat xavfsiz maydonlar) ──
+  async updateOwnProfile(userId: string, dto: UpdateOwnProfileDto) {
+    if (dto.email) {
+      const existing = await this.prisma.user.findFirst({
+        where: { email: dto.email, id: { not: userId } },
+      });
+      if (existing) throw new ConflictException('Bu email band');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(dto.email !== undefined ? { email: dto.email } : {}),
+        ...(dto.avatarUrl !== undefined ? { avatarUrl: dto.avatarUrl } : {}),
+      },
+      include: { role: true },
+    });
+
+    return this.exclude(user, ['passwordHash']);
   }
 
   // Arxivdan qaytarish

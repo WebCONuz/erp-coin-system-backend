@@ -18,6 +18,7 @@ import { CoinTransactionsModule } from './coin-transaction/coin-transaction.modu
 import { SessionsModule } from './sessions/sessions.module';
 import { PurchasesModule } from './purchases/purchases.module';
 import { StudentsModule } from './students/students.module';
+import { TeachersModule } from './teachers/teachers.module';
 import { MessagesModule } from './messages/messages.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
@@ -53,6 +54,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
     SessionsModule,
     PurchasesModule,
     StudentsModule,
+    TeachersModule,
     MessagesModule,
     ScheduleModule,
     AuditLogModule,

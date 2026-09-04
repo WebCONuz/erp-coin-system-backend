@@ -10,6 +10,7 @@ import { TenantModule } from './tenant/tenant.module';
 import { RewardCategoryModule } from './reward-category/reward-category.module';
 import { RolesModule } from './roles/roles.module';
 import { CoursesModule } from './courses/courses.module';
+import { SubjectsModule } from './subjects/subjects.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { GroupsModule } from './groups/groups.module';
 import { RewardsModule } from './rewards/rewards.module';
@@ -46,6 +47,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
     RewardCategoryModule,
     RolesModule,
     CoursesModule,
+    SubjectsModule,
     RoomsModule,
     GroupsModule,
     RewardsModule,

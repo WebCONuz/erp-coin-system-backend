@@ -11,6 +11,14 @@ datasource db {
 // ENUMS
 // ─────────────────────────────────────────
 
+enum TenantType {
+  learning_center
+  school
+  academic_lyceum
+  college
+  university
+}
+
 enum CoinDirection {
   earn
   deduct
@@ -133,6 +141,7 @@ model Tenant {
   name      String   @db.VarChar(200)
   slug      String   @unique @db.VarChar(100)
   plan      String   @default("basic") @db.VarChar(50)
+  type      TenantType? @map("tenant_type")
   isActive  Boolean  @default(true) @map("is_active")
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -141,6 +150,7 @@ model Tenant {
 
   users              User[]
   courses            Course[]
+  subjects           Subject[]
   groups             Group[]
   rooms              Room[]
   coinRules          CoinRule[]
@@ -258,6 +268,7 @@ model User {
   purchasesApproved         Purchase[]          @relation("ApprovedByUser")
   importLogs                ImportLog[]
   createdCourses            Course[]
+  createdSubjects           Subject[]
   smsLogsAsStudent          SmsLog[]            @relation("SmsStudent")
   smsLogsSentBy             SmsLog[]            @relation("SmsSentBy")
   emailLogsAsStudent        EmailLog[]          @relation("EmailStudent")
@@ -324,6 +335,40 @@ model Course {
   @@index([isActive])
   @@index([isDeleted])
   @@map("courses")
+}
+
+// ─────────────────────────────────────────
+// SUBJECTS (fanlar — dars jadvali va sessiyalarga bog'lanadi;
+// Course/Group'dan mustaqil, ixtiyoriy: maktab uchun kerak,
+// o'quv markaz uchun ishlatilmasligi mumkin)
+// ─────────────────────────────────────────
+
+model Subject {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String    @db.VarChar(150)
+  description  String?
+  isActive     Boolean   @default(true) @map("is_active")
+  isDeleted    Boolean   @default(false) @map("is_deleted")
+  archivedAt   DateTime? @map("archived_at") @db.Timestamptz
+  archivedById String?   @map("archived_by") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdBy User   @relation(fields: [createdById], references: [id])
+
+  scheduleTemplates ScheduleTemplate[]
+  sessions          Session[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@index([isActive])
+  @@index([isDeleted])
+  @@map("subjects")
 }
 
 // ─────────────────────────────────────────
@@ -437,19 +482,22 @@ model ScheduleTemplate {
   groupId     String  @map("group_id") @db.Uuid
   roomId      String  @map("room_id") @db.Uuid
   teacherId   String? @map("teacher_id") @db.Uuid
+  subjectId   String? @map("subject_id") @db.Uuid
   createdById String  @map("created_by") @db.Uuid
 
-  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  group     Group  @relation(fields: [groupId], references: [id])
-  room      Room   @relation(fields: [roomId], references: [id])
-  teacher   User?  @relation("ScheduleTemplateTeacher", fields: [teacherId], references: [id])
-  createdBy User   @relation("ScheduleTemplateCreatedBy", fields: [createdById], references: [id])
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  group     Group    @relation(fields: [groupId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
+  teacher   User?    @relation("ScheduleTemplateTeacher", fields: [teacherId], references: [id])
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+  createdBy User     @relation("ScheduleTemplateCreatedBy", fields: [createdById], references: [id])
 
   exceptions ScheduleException[]
 
   @@index([tenantId])
   @@index([groupId])
   @@index([roomId])
+  @@index([subjectId])
   @@index([isDeleted])
   @@map("schedule_templates")
 }
@@ -536,15 +584,17 @@ model Session {
   createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz
   deletedAt   DateTime?   @map("deleted_at") @db.Timestamptz
 
-  tenantId  String @map("tenant_id") @db.Uuid
-  groupId   String @map("group_id") @db.Uuid
-  roomId    String @map("room_id") @db.Uuid
-  teacherId String @map("teacher_id") @db.Uuid
+  tenantId  String  @map("tenant_id") @db.Uuid
+  groupId   String  @map("group_id") @db.Uuid
+  roomId    String  @map("room_id") @db.Uuid
+  teacherId String  @map("teacher_id") @db.Uuid
+  subjectId String? @map("subject_id") @db.Uuid
 
-  tenant  Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  group   Group  @relation(fields: [groupId], references: [id])
-  room    Room   @relation(fields: [roomId], references: [id])
-  teacher User   @relation(fields: [teacherId], references: [id])
+  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  group   Group    @relation(fields: [groupId], references: [id])
+  room    Room     @relation(fields: [roomId], references: [id])
+  teacher User     @relation(fields: [teacherId], references: [id])
+  subject Subject? @relation(fields: [subjectId], references: [id])
 
   attendanceRecords AttendanceRecord[]
   transactions      CoinTransaction[]
@@ -553,6 +603,7 @@ model Session {
   @@index([groupId, sessionDate(sort: Desc)])
   @@index([roomId])
   @@index([teacherId])
+  @@index([subjectId])
   @@index([isDeleted])
   @@map("sessions")
 }

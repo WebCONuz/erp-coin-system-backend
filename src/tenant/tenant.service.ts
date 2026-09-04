@@ -33,6 +33,7 @@ export class TenantService {
         name: true,
         slug: true,
         plan: true,
+        type: true,
         isActive: true,
         createdAt: true,
         _count: { select: { users: true, groups: true } },

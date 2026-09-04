@@ -44,4 +44,9 @@ export class UpdateSessionDto {
   @IsOptional()
   @IsUUID()
   teacherId?: string;
+
+  @ApiPropertyOptional({ example: 'subject-uuid', description: 'Dars fani' })
+  @IsOptional()
+  @IsUUID()
+  subjectId?: string;
 }

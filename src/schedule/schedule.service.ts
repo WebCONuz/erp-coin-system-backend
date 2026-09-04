@@ -69,12 +69,14 @@ export class ScheduleService {
         groupId: dto.groupId,
         roomId: dto.roomId,
         teacherId: dto.teacherId ?? null,
+        subjectId: dto.subjectId ?? null,
         tenantId: resolvedTenantId,
         createdById,
       },
       include: {
         group: { select: { id: true, name: true } },
         room: { select: { id: true, name: true } },
+        subject: { select: { id: true, name: true } },
       },
     });
   }
@@ -118,6 +120,7 @@ export class ScheduleService {
           deletedAt: true,
           group: { select: { id: true, name: true } },
           room: { select: { id: true, name: true } },
+          subject: { select: { id: true, name: true } },
           _count: { select: { exceptions: { where: { isDeleted: false } } } },
         },
       }),
@@ -141,6 +144,7 @@ export class ScheduleService {
       include: {
         group: { select: { id: true, name: true, teacherId: true } },
         room: { select: { id: true, name: true } },
+        subject: { select: { id: true, name: true } },
         exceptions: {
           where: { isDeleted: false },
           orderBy: { exceptionDate: 'asc' },
@@ -177,6 +181,10 @@ export class ScheduleService {
       'teacherId' in dto
         ? (dto.teacherId ?? null)
         : (existing.teacherId ?? null);
+    const newSubject =
+      'subjectId' in dto
+        ? (dto.subjectId ?? null)
+        : (existing.subjectId ?? null);
 
     if (!timeLt(newStart, newEnd)) {
       throw new BadRequestException(
@@ -211,10 +219,12 @@ export class ScheduleService {
         endTime: newEnd,
         roomId: newRoom,
         teacherId: newTeacher,
+        subjectId: newSubject,
       },
       include: {
         group: { select: { id: true, name: true } },
         room: { select: { id: true, name: true } },
+        subject: { select: { id: true, name: true } },
       },
     });
   }
@@ -357,7 +367,10 @@ export class ScheduleService {
 
     const templates = await this.prisma.scheduleTemplate.findMany({
       where: { groupId, tenantId, isDeleted: false, isActive: true },
-      include: { room: { select: { id: true, name: true } } },
+      include: {
+        room: { select: { id: true, name: true } },
+        subject: { select: { id: true, name: true } },
+      },
     });
 
     if (!templates.length) return {};
@@ -387,6 +400,7 @@ export class ScheduleService {
           isLocked: true,
           sessionType: true,
           topic: true,
+          subject: { select: { id: true, name: true } },
         },
       }),
     ]);
@@ -434,6 +448,7 @@ export class ScheduleService {
             startTime: template.startTime,
             endTime: template.endTime,
             room: template.room,
+            subject: template.subject,
           },
           exception: exc
             ? {
@@ -601,6 +616,8 @@ export class ScheduleService {
           roomId: template.roomId,
           // template da o'qituvchi biriktirilgan bo'lsa shu, aks holda guruh o'qituvchisi
           teacherId: template.teacherId ?? group.teacherId,
+          // shablondagi fan sessionga nusxalanadi — keyin shablon o'zgarsa ham session o'z fanini saqlab qoladi
+          subjectId: template.subjectId ?? null,
           tenantId,
         });
       }

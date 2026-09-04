@@ -54,6 +54,15 @@ export class CreateScheduleTemplateDto {
   @IsUUID()
   teacherId?: string;
 
+  @ApiPropertyOptional({
+    example: 'subject-uuid',
+    description:
+      "Bu dars slotining fani (maktab uchun; o'quv markaz uchun berilmasligi mumkin)",
+  })
+  @IsOptional()
+  @IsUUID()
+  subjectId?: string;
+
   @ApiPropertyOptional({ description: 'Faqat super_admin uchun' })
   @IsOptional()
   @IsUUID()

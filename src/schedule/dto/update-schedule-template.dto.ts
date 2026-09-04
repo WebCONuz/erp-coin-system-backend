@@ -33,4 +33,9 @@ export class UpdateScheduleTemplateDto {
   @IsOptional()
   @IsUUID()
   teacherId?: string;
+
+  @ApiPropertyOptional({ example: 'subject-uuid' })
+  @IsOptional()
+  @IsUUID()
+  subjectId?: string;
 }

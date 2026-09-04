@@ -78,6 +78,7 @@ export class SessionsService {
         groupId: dto.groupId,
         roomId: dto.roomId,
         teacherId,
+        subjectId: dto.subjectId ?? null,
         tenantId,
       },
     });
@@ -114,6 +115,7 @@ export class SessionsService {
         group: { select: { name: true } },
         room: { select: { name: true } },
         teacher: { select: { fullName: true } },
+        subject: { select: { id: true, name: true } },
       },
     });
   }
@@ -209,6 +211,7 @@ export class SessionsService {
           group: { select: { id: true, name: true } },
           room: { select: { id: true, name: true } },
           teacher: { select: { id: true, fullName: true } },
+          subject: { select: { id: true, name: true } },
         },
       }),
       this.prisma.session.count({ where }),
@@ -321,6 +324,7 @@ export class SessionsService {
               sessionType: true,
               topic: true,
               group: { select: { id: true, name: true } },
+              subject: { select: { id: true, name: true } },
             },
           },
         },
@@ -344,9 +348,12 @@ export class SessionsService {
   ) {
     const session = await this.prisma.session.findFirst({
       where: { id: sessionId, tenantId, isDeleted: false },
+      include: { subject: { select: { name: true } } },
     });
 
     if (!session) throw new NotFoundException('Dars topilmadi');
+
+    const subjectLabel = session.subject ? ` (${session.subject.name})` : '';
 
     if (requesterRole === 'teacher' && session.teacherId !== recordedById) {
       throw new ForbiddenException(
@@ -418,7 +425,7 @@ export class SessionsService {
           amount: coinRewardForAttendance,
           direction: CoinDirection.earn,
           sourceType: SourceType.attendance,
-          note: `Darsda qatnashgani uchun avtomatik bonus. Dars ID: ${sessionId}`,
+          note: `Darsda qatnashgani uchun avtomatik bonus${subjectLabel}. Dars ID: ${sessionId}`,
           teacherId: recordedById,
           ruleId: attendanceRule?.id,
           groupId: session.groupId,
@@ -432,7 +439,7 @@ export class SessionsService {
           amount: coinRewardForHomework,
           direction: CoinDirection.earn,
           sourceType: SourceType.homework,
-          note: `Uy vazifasini bajargani uchun bonus. Dars ID: ${sessionId}`,
+          note: `Uy vazifasini bajargani uchun bonus${subjectLabel}. Dars ID: ${sessionId}`,
           teacherId: recordedById,
           ruleId: homeworkRule?.id,
           groupId: session.groupId,
@@ -447,7 +454,7 @@ export class SessionsService {
           amount: absenceRule.coinAmount,
           direction: CoinDirection.deduct,
           sourceType: SourceType.attendance,
-          note: `Darsga sababsiz kelmagani uchun jarima. Dars ID: ${sessionId}`,
+          note: `Darsga sababsiz kelmagani uchun jarima${subjectLabel}. Dars ID: ${sessionId}`,
           teacherId: recordedById,
           ruleId: absenceRule.id,
           groupId: session.groupId,

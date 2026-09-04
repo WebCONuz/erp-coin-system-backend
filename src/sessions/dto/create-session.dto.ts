@@ -72,4 +72,13 @@ export class CreateSessionDto {
   @IsUUID()
   @IsNotEmpty()
   teacherId: string;
+
+  @ApiPropertyOptional({
+    example: 'subject-uuid-here',
+    description:
+      "Dars fani (maktab uchun; o'quv markaz uchun berilmasligi mumkin)",
+  })
+  @IsUUID()
+  @IsOptional()
+  subjectId?: string;
 }

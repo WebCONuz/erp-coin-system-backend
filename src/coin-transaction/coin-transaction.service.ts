@@ -9,9 +9,19 @@ import { CreateCoinTransactionDto } from './dto/create-coin-transaction.dto';
 import { QueryCoinTransactionDto } from './dto/query-coin-transaction.dto';
 import { QueryMyCoinHistoryDto } from './dto/query-my-coin-history.dto';
 import { QueryCoinStatsDto } from './dto/query-coin-stats.dto';
-import { CoinDirection } from 'src/generated/prisma/enums';
+import { BulkGiveCoinDto } from './dto/bulk-give-coin.dto';
+import { ApplyCoinRuleDto } from './dto/apply-coin-rule.dto';
+import { CoinDirection, SourceType } from 'src/generated/prisma/enums';
 import { ExecuteCoinProcessData } from 'src/common/types';
 import { Prisma } from 'src/generated/prisma/client';
+
+export interface BulkCoinResultItem {
+  studentId: string;
+  success: boolean;
+  transactionId?: string;
+  newBalance?: number;
+  error?: string;
+}
 
 @Injectable()
 export class CoinTransactionsService {
@@ -137,6 +147,164 @@ export class CoinTransactionsService {
         newBalance: updatedWallet.balance,
       };
     });
+  }
+
+  // 3b. BIR NECHTA O'QUVCHIGA BIRDANIGA BIR XIL MIQDORDA COIN BERISH/AYIRISH
+  async giveBulkManual(
+    tenantId: string,
+    teacherId: string,
+    dto: BulkGiveCoinDto,
+    requesterRole?: string,
+  ) {
+    const uniqueStudentIds = Array.from(new Set(dto.studentIds));
+    const results: BulkCoinResultItem[] = [];
+
+    for (const studentId of uniqueStudentIds) {
+      try {
+        // Teacher faqat o'zi dars beradigan guruhdagi o'quvchiga coin bera oladi
+        if (requesterRole === 'teacher') {
+          const isOwnStudent = await this.prisma.groupStudent.findFirst({
+            where: {
+              studentId,
+              isDeleted: false,
+              group: { teacherId, tenantId, isDeleted: false },
+            },
+          });
+          if (!isOwnStudent) {
+            throw new ForbiddenException(
+              "Siz faqat o'z guruhingizdagi o'quvchiga tanga bera olasiz",
+            );
+          }
+        }
+
+        const result = await this.executeCoinProcess(tenantId, {
+          studentId,
+          amount: dto.amount,
+          direction: dto.direction,
+          sourceType: dto.sourceType,
+          note: dto.note,
+          teacherId,
+          groupId: dto.groupId,
+          sessionId: dto.sessionId,
+        });
+
+        results.push({
+          studentId,
+          success: true,
+          transactionId: result.transactionId,
+          newBalance: result.newBalance,
+        });
+      } catch (err) {
+        results.push({
+          studentId,
+          success: false,
+          error: err instanceof Error ? err.message : "Noma'lum xatolik",
+        });
+      }
+    }
+
+    return {
+      totalRequested: uniqueStudentIds.length,
+      successCount: results.filter((r) => r.success).length,
+      failedCount: results.filter((r) => !r.success).length,
+      results,
+    };
+  }
+
+  // 3c. MAVJUD COIN QOIDASINI BIR YOKI BIR NECHTA STUDENTGA QO'LLASH
+  async applyRuleToStudents(
+    tenantId: string,
+    teacherId: string,
+    dto: ApplyCoinRuleDto,
+    requesterRole?: string,
+  ) {
+    const rule = await this.prisma.coinRule.findFirst({
+      where: {
+        id: dto.ruleId,
+        tenantId,
+        isDeleted: false,
+        isActive: true,
+      },
+    });
+
+    if (!rule) {
+      throw new NotFoundException('Tanga qoidasi topilmadi yoki nofaol');
+    }
+
+    const uniqueStudentIds = Array.from(new Set(dto.studentIds));
+    const results: BulkCoinResultItem[] = [];
+    const note = dto.note || `"${rule.name}" qoidasi asosida`;
+
+    for (const studentId of uniqueStudentIds) {
+      try {
+        // Agar qoida ma'lum bir guruhga biriktirilgan bo'lsa,
+        // faqat shu guruh a'zolariga qo'llash mumkin
+        if (rule.groupId) {
+          const isMember = await this.prisma.groupStudent.findFirst({
+            where: { studentId, groupId: rule.groupId, isDeleted: false },
+          });
+          if (!isMember) {
+            throw new BadRequestException(
+              "Bu qoida faqat biriktirilgan guruh a'zolariga qo'llanadi, o'quvchi shu guruhda emas",
+            );
+          }
+        }
+
+        // Teacher faqat o'zi dars beradigan guruhdagi o'quvchiga coin bera oladi
+        if (requesterRole === 'teacher') {
+          const isOwnStudent = await this.prisma.groupStudent.findFirst({
+            where: {
+              studentId,
+              isDeleted: false,
+              group: { teacherId, tenantId, isDeleted: false },
+            },
+          });
+          if (!isOwnStudent) {
+            throw new ForbiddenException(
+              "Siz faqat o'z guruhingizdagi o'quvchiga tanga bera olasiz",
+            );
+          }
+        }
+
+        const result = await this.executeCoinProcess(tenantId, {
+          studentId,
+          amount: rule.coinAmount,
+          direction: rule.direction,
+          sourceType: rule.sourceType ?? SourceType.manual,
+          note,
+          teacherId,
+          ruleId: rule.id,
+          groupId: rule.groupId,
+          sessionId: dto.sessionId,
+        });
+
+        results.push({
+          studentId,
+          success: true,
+          transactionId: result.transactionId,
+          newBalance: result.newBalance,
+        });
+      } catch (err) {
+        results.push({
+          studentId,
+          success: false,
+          error: err instanceof Error ? err.message : "Noma'lum xatolik",
+        });
+      }
+    }
+
+    return {
+      rule: {
+        id: rule.id,
+        name: rule.name,
+        coinAmount: rule.coinAmount,
+        direction: rule.direction,
+      },
+      totalRequested: uniqueStudentIds.length,
+      successCount: results.filter((r) => r.success).length,
+      failedCount: results.filter((r) => !r.success).length,
+      results,
+    };
   }
 
   // 4. TRANZAKSIYALAR TARIXINI OLISH

@@ -20,6 +20,8 @@ import { CreateCoinTransactionDto } from './dto/create-coin-transaction.dto';
 import { QueryCoinTransactionDto } from './dto/query-coin-transaction.dto';
 import { QueryMyCoinHistoryDto } from './dto/query-my-coin-history.dto';
 import { QueryCoinStatsDto } from './dto/query-coin-stats.dto';
+import { BulkGiveCoinDto } from './dto/bulk-give-coin.dto';
+import { ApplyCoinRuleDto } from './dto/apply-coin-rule.dto';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -47,6 +49,46 @@ export class CoinTransactionsController {
     @Body() dto: CreateCoinTransactionDto,
   ) {
     return this.coinTransactionsService.createManualTransaction(
+      tenantId,
+      teacherId,
+      dto,
+      role,
+    );
+  }
+
+  @Post('bulk-manual')
+  @Roles('admin', 'super_admin', 'teacher')
+  @ApiOperation({
+    summary:
+      "Bir nechta o'quvchiga birdaniga bir xil miqdorda coin berish/ayirish (Admin / O'qituvchi)",
+  })
+  createBulkManual(
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') teacherId: string,
+    @CurrentUser('role') role: string,
+    @Body() dto: BulkGiveCoinDto,
+  ) {
+    return this.coinTransactionsService.giveBulkManual(
+      tenantId,
+      teacherId,
+      dto,
+      role,
+    );
+  }
+
+  @Post('apply-rule')
+  @Roles('admin', 'super_admin', 'teacher')
+  @ApiOperation({
+    summary:
+      "Mavjud tanga qoidasini bir yoki bir nechta o'quvchiga qo'llash (Admin / O'qituvchi)",
+  })
+  applyRule(
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') teacherId: string,
+    @CurrentUser('role') role: string,
+    @Body() dto: ApplyCoinRuleDto,
+  ) {
+    return this.coinTransactionsService.applyRuleToStudents(
       tenantId,
       teacherId,
       dto,

@@ -23,6 +23,7 @@ import { TeachersModule } from './teachers/teachers.module';
 import { MessagesModule } from './messages/messages.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
     MessagesModule,
     ScheduleModule,
     AuditLogModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [

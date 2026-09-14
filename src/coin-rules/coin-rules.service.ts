@@ -32,14 +32,20 @@ export class CoinRulesService {
       triggerType,
       direction,
       groupId,
+      isActive,
     } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.CoinRuleWhereInput = {
       tenantId,
       isDeleted: false,
-      isActive: true,
     };
+
+    if (isActive !== undefined) {
+      where.isActive = isActive;
+    } else {
+      where.isActive = true;
+    }
 
     if (search) {
       where.name = { contains: search, mode: 'insensitive' };

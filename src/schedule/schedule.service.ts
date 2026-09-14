@@ -33,6 +33,17 @@ const WEEKDAY_ORDER: Record<Weekday, number> = {
 export class ScheduleService {
   constructor(private readonly prisma: PrismaService) {}
 
+  // Shablonda o'z teacheri belgilanmagan bo'lsa, guruh teacheriga tushadi
+  // (generate-sessions'dagi bilan bir xil fallback mantiq)
+  private withEffectiveTeacher<
+    T extends {
+      teacher: { id: string; fullName: string } | null;
+      group: { teacher: { id: string; fullName: string } };
+    },
+  >(row: T): T {
+    return { ...row, teacher: row.teacher ?? row.group.teacher };
+  }
+
   // ─── ScheduleTemplate CRUD ─────────────────────────────────────
 
   async createTemplate(
@@ -61,7 +72,7 @@ export class ScheduleService {
       resolvedTenantId,
     );
 
-    return this.prisma.scheduleTemplate.create({
+    const created = await this.prisma.scheduleTemplate.create({
       data: {
         weekday: dto.weekday,
         startTime: dto.startTime,
@@ -74,11 +85,20 @@ export class ScheduleService {
         createdById,
       },
       include: {
-        group: { select: { id: true, name: true } },
+        group: {
+          select: {
+            id: true,
+            name: true,
+            teacher: { select: { id: true, fullName: true } },
+          },
+        },
         room: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true } },
+        teacher: { select: { id: true, fullName: true } },
       },
     });
+
+    return this.withEffectiveTeacher(created);
   }
 
   async findAllTemplates(
@@ -118,9 +138,16 @@ export class ScheduleService {
           createdAt: true,
           updatedAt: true,
           deletedAt: true,
-          group: { select: { id: true, name: true } },
+          group: {
+            select: {
+              id: true,
+              name: true,
+              teacher: { select: { id: true, fullName: true } },
+            },
+          },
           room: { select: { id: true, name: true } },
           subject: { select: { id: true, name: true } },
+          teacher: { select: { id: true, fullName: true } },
           _count: { select: { exceptions: { where: { isDeleted: false } } } },
         },
       }),
@@ -128,7 +155,7 @@ export class ScheduleService {
     ]);
 
     return {
-      data,
+      data: data.map((t) => this.withEffectiveTeacher(t)),
       meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   }
@@ -142,9 +169,17 @@ export class ScheduleService {
     const template = await this.prisma.scheduleTemplate.findFirst({
       where: { id, tenantId, isDeleted: false },
       include: {
-        group: { select: { id: true, name: true, teacherId: true } },
+        group: {
+          select: {
+            id: true,
+            name: true,
+            teacherId: true,
+            teacher: { select: { id: true, fullName: true } },
+          },
+        },
         room: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true } },
+        teacher: { select: { id: true, fullName: true } },
         exceptions: {
           where: { isDeleted: false },
           orderBy: { exceptionDate: 'asc' },
@@ -160,7 +195,7 @@ export class ScheduleService {
       throw new ForbiddenException("Siz bu dars jadvalini ko'ra olmaysiz");
     }
 
-    return template;
+    return this.withEffectiveTeacher(template);
   }
 
   async updateTemplate(
@@ -211,7 +246,7 @@ export class ScheduleService {
       );
     }
 
-    return this.prisma.scheduleTemplate.update({
+    const updated = await this.prisma.scheduleTemplate.update({
       where: { id },
       data: {
         weekday: newWeekday,
@@ -222,11 +257,20 @@ export class ScheduleService {
         subjectId: newSubject,
       },
       include: {
-        group: { select: { id: true, name: true } },
+        group: {
+          select: {
+            id: true,
+            name: true,
+            teacher: { select: { id: true, fullName: true } },
+          },
+        },
         room: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true } },
+        teacher: { select: { id: true, fullName: true } },
       },
     });
+
+    return this.withEffectiveTeacher(updated);
   }
 
   async removeTemplate(id: string, tenantId: string) {
@@ -348,11 +392,16 @@ export class ScheduleService {
     requesterRole?: string,
     requesterId?: string,
   ) {
+    // Shablonda o'z teacheri bo'lmagan kunlar uchun fallback sifatida kerak bo'ladi
+    const group = await this.prisma.group.findFirst({
+      where: { id: groupId, tenantId, isDeleted: false },
+      select: {
+        teacherId: true,
+        teacher: { select: { id: true, fullName: true } },
+      },
+    });
+
     if (requesterRole === 'teacher') {
-      const group = await this.prisma.group.findFirst({
-        where: { id: groupId, tenantId, isDeleted: false },
-        select: { teacherId: true },
-      });
       if (!group) throw new NotFoundException('Guruh topilmadi');
       if (group.teacherId !== requesterId) {
         throw new ForbiddenException(
@@ -370,6 +419,7 @@ export class ScheduleService {
       include: {
         room: { select: { id: true, name: true } },
         subject: { select: { id: true, name: true } },
+        teacher: { select: { id: true, fullName: true } },
       },
     });
 
@@ -401,6 +451,7 @@ export class ScheduleService {
           sessionType: true,
           topic: true,
           subject: { select: { id: true, name: true } },
+          teacher: { select: { id: true, fullName: true } },
         },
       }),
     ]);
@@ -449,6 +500,7 @@ export class ScheduleService {
             endTime: template.endTime,
             room: template.room,
             subject: template.subject,
+            teacher: template.teacher ?? group?.teacher ?? null,
           },
           exception: exc
             ? {

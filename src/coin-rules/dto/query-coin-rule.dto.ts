@@ -5,8 +5,9 @@ import {
   IsString,
   IsUUID,
   IsEnum,
+  IsBoolean,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { TriggerType, CoinDirection } from 'src/generated/prisma/enums';
 
@@ -58,4 +59,13 @@ export class QueryCoinRuleDto {
   @IsOptional()
   @IsUUID()
   groupId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Nofaol qoidalarni ham ko‘rish uchun',
+    example: true,
+  })
+  @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsBoolean()
+  isActive?: boolean;
 }

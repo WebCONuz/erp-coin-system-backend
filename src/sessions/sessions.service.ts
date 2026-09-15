@@ -104,9 +104,22 @@ export class SessionsService {
     }
 
     if (session.isLocked) {
-      throw new ForbiddenException(
-        'Dars qulflangan -- tahrirlash mumkin emas. Avval qulfni oching.',
-      );
+      // Qulflangan sessionda ham yo'qlama/coinga ta'sir qilmaydigan
+      // metama'lumotlarni (mavzu, fan) tahrirlashga ruxsat beramiz —
+      // faqat vaqt/xona/o'qituvchi/tur kabi struktura maydonlari bloklanadi.
+      const structuralFields: (keyof UpdateSessionDto)[] = [
+        'startTime',
+        'endTime',
+        'roomId',
+        'teacherId',
+        'sessionType',
+      ];
+      const hasStructuralChange = structuralFields.some((f) => f in dto);
+      if (hasStructuralChange) {
+        throw new ForbiddenException(
+          "Dars qulflangan -- vaqt/xona/o'qituvchi/tur maydonlarini o'zgartirib bo'lmaydi. Avval qulfni oching.",
+        );
+      }
     }
     return this.prisma.session.update({
       where: { id },
@@ -204,6 +217,7 @@ export class SessionsService {
           sessionType: true,
           topic: true,
           isLocked: true,
+          isChecked: true,
           isDeleted: true,
           lockedAt: true,
           deletedAt: true,
@@ -245,6 +259,7 @@ export class SessionsService {
         sessionType: true,
         topic: true,
         isLocked: true,
+        isChecked: true,
         isDeleted: true,
         lockedAt: true,
         deletedAt: true,
@@ -253,6 +268,7 @@ export class SessionsService {
         group: { select: { id: true, name: true } },
         room: { select: { id: true, name: true } },
         teacher: { select: { id: true, fullName: true } },
+        subject: { select: { id: true, name: true } },
       },
     });
     if (!session) throw new NotFoundException('Dars mashguloti topilmadi');
@@ -348,12 +364,17 @@ export class SessionsService {
   ) {
     const session = await this.prisma.session.findFirst({
       where: { id: sessionId, tenantId, isDeleted: false },
-      include: { subject: { select: { name: true } } },
+      include: {
+        subject: { select: { name: true } },
+        group: { select: { name: true } },
+      },
     });
 
     if (!session) throw new NotFoundException('Dars topilmadi');
 
-    const subjectLabel = session.subject ? ` (${session.subject.name})` : '';
+    // Foydalanuvchiga tushunarli bo'lishi uchun: fan nomi bo'lsa shu, aks holda guruh nomi
+    // (xom sessionId endi matnda ko'rsatilmaydi — u allaqachon CoinTransaction.sessionId'da saqlanadi)
+    const sessionLabel = session.subject?.name ?? session.group.name;
 
     if (requesterRole === 'teacher' && session.teacherId !== recordedById) {
       throw new ForbiddenException(
@@ -376,22 +397,22 @@ export class SessionsService {
       },
     });
 
-    // sourceType bo'yicha qoida topish — xavfsiz va aniq usul
-    const attendanceRule = coinRules.find(
-      (r) =>
-        r.sourceType === SourceType.attendance &&
-        r.direction === CoinDirection.earn,
-    );
-    const homeworkRule = coinRules.find(
-      (r) =>
-        r.sourceType === SourceType.homework &&
-        r.direction === CoinDirection.earn,
-    );
-    const absenceRule = coinRules.find(
-      (r) =>
-        r.sourceType === SourceType.attendance &&
-        r.direction === CoinDirection.deduct,
-    );
+    // sourceType + direction bo'yicha qoida topish. Guruhga xos qoida
+    // (groupId shu sessiondagi guruhga teng) tenant darajasidagi umumiy
+    // qoidadan (groupId: null) ustun turadi — eng aniq mos qoida tanlanadi.
+    const findRule = (sourceType: SourceType, direction: CoinDirection) => {
+      const candidates = coinRules.filter(
+        (r) => r.sourceType === sourceType && r.direction === direction,
+      );
+      return (
+        candidates.find((r) => r.groupId === session.groupId) ??
+        candidates.find((r) => r.groupId === null)
+      );
+    };
+
+    const attendanceRule = findRule(SourceType.attendance, CoinDirection.earn);
+    const homeworkRule = findRule(SourceType.homework, CoinDirection.earn);
+    const absenceRule = findRule(SourceType.attendance, CoinDirection.deduct);
 
     const coinRewardForAttendance = attendanceRule
       ? attendanceRule.coinAmount
@@ -399,6 +420,7 @@ export class SessionsService {
     const coinRewardForHomework = homeworkRule ? homeworkRule.coinAmount : 10;
 
     const results: AttendanceRecord[] = [];
+    const coinsSkippedFor: { studentId: string; reason: string }[] = [];
 
     for (const record of dto.records) {
       const attendanceRecord = await this.prisma.attendanceRecord.upsert({
@@ -419,13 +441,36 @@ export class SessionsService {
         },
       });
 
+      if (attendanceRecord) {
+        results.push(attendanceRecord);
+      }
+
+      // Yo'qlama qayta saqlanganda avvalgi (shu session+student uchun)
+      // avtomatik attendance/homework tranzaksiyalari bekor qilinadi —
+      // shunda coin dublikat berilmaydi, har doim joriy holatga mos yangilanadi.
+      const reversal = await this.coinTrxService.reverseAutoSessionTransactions(
+        tenantId,
+        sessionId,
+        record.studentId,
+      );
+
+      if (reversal.skipped) {
+        coinsSkippedFor.push({
+          studentId: record.studentId,
+          reason:
+            reversal.skipReason ??
+            "Avvalgi coinlarni avtomatik yangilab bo'lmadi",
+        });
+        continue; // eski tranzaksiya tegilmagan holda qoladi, yangisi berilmaydi
+      }
+
       if (record.isPresent) {
         await this.coinTrxService.createInternalTransaction(tenantId, {
           studentId: record.studentId,
           amount: coinRewardForAttendance,
           direction: CoinDirection.earn,
           sourceType: SourceType.attendance,
-          note: `Darsda qatnashgani uchun avtomatik bonus${subjectLabel}. Dars ID: ${sessionId}`,
+          note: `Darsda qatnashgani uchun avtomatik bonus (${sessionLabel})`,
           teacherId: recordedById,
           ruleId: attendanceRule?.id,
           groupId: session.groupId,
@@ -439,7 +484,7 @@ export class SessionsService {
           amount: coinRewardForHomework,
           direction: CoinDirection.earn,
           sourceType: SourceType.homework,
-          note: `Uy vazifasini bajargani uchun bonus${subjectLabel}. Dars ID: ${sessionId}`,
+          note: `Uy vazifasini bajargani uchun bonus (${sessionLabel})`,
           teacherId: recordedById,
           ruleId: homeworkRule?.id,
           groupId: session.groupId,
@@ -454,23 +499,25 @@ export class SessionsService {
           amount: absenceRule.coinAmount,
           direction: CoinDirection.deduct,
           sourceType: SourceType.attendance,
-          note: `Darsga sababsiz kelmagani uchun jarima${subjectLabel}. Dars ID: ${sessionId}`,
+          note: `Darsga sababsiz kelmagani uchun jarima (${sessionLabel})`,
           teacherId: recordedById,
           ruleId: absenceRule.id,
           groupId: session.groupId,
           sessionId: session.id,
         });
       }
-
-      if (attendanceRecord) {
-        results.push(attendanceRecord);
-      }
     }
+
+    await this.prisma.session.update({
+      where: { id: sessionId },
+      data: { isChecked: true },
+    });
 
     return {
       success: true,
       message: 'Yoqlama muvaffaqiyatli saqlandi va tangalar hisoblandi.',
       processedRecordsCount: results.length,
+      coinsSkippedFor,
     };
   }
 

@@ -578,6 +578,7 @@ model Session {
   sessionType SessionType @default(lesson) @map("session_type")
   topic       String?     @db.VarChar(300)
   isLocked    Boolean     @default(false) @map("is_locked")
+  isChecked   Boolean     @default(false) @map("is_checked")
   isDeleted   Boolean     @default(false) @map("is_deleted")
   lockedAt    DateTime?   @map("locked_at") @db.Timestamptz
   lockedById  String?     @map("locked_by") @db.Uuid

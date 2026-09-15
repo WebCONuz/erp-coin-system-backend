@@ -11,6 +11,7 @@ import { QueryGroupDto } from './dto/query-group.dto';
 import { AddStudentDto } from './dto/add-student.dto';
 import { AddStudentsBulkDto } from './dto/add-students-bulk.dto';
 import { Prisma } from 'src/generated/prisma/client';
+import { CoinDirection } from 'src/generated/prisma/enums';
 
 @Injectable()
 export class GroupsService {
@@ -165,6 +166,119 @@ export class GroupsService {
     }
 
     return group;
+  }
+
+  // ─── Guruh statistikasi (o'rtacha balans va haftalik faollik trendlari) ──
+  async getStats(
+    id: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
+    // Mavjudligi va ko'rish ruxsati findOne'dagi bilan bir xil mantiqda tekshiriladi
+    await this.findOne(id, tenantId, requesterRole, requesterId);
+
+    const memberships = await this.prisma.groupStudent.findMany({
+      where: { groupId: id, isDeleted: false },
+      select: { studentId: true },
+    });
+    const studentIds = memberships.map((m) => m.studentId);
+    const studentCount = studentIds.length;
+
+    if (studentCount === 0) {
+      return {
+        avgBalance: { current: 0, trend: [] },
+        weeklyActivity: { totalTransactions: 0, trend: [] },
+      };
+    }
+
+    // UTC asosida — timezone shift oldini olish uchun
+    const now = new Date();
+    const todayStart = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
+    const thirtyDaysAgoStart = new Date(todayStart);
+    thirtyDaysAgoStart.setUTCDate(todayStart.getUTCDate() - 29); // bugun bilan birga 30 kun
+    const sevenDaysAgoStart = new Date(todayStart);
+    sevenDaysAgoStart.setUTCDate(todayStart.getUTCDate() - 6); // bugun bilan birga 7 kun
+
+    const [walletAgg, transactions] = await this.prisma.$transaction([
+      this.prisma.wallet.aggregate({
+        where: { userId: { in: studentIds } },
+        _sum: { balance: true },
+      }),
+      this.prisma.coinTransaction.findMany({
+        where: {
+          studentId: { in: studentIds },
+          isDeleted: false,
+          createdAt: { gte: thirtyDaysAgoStart },
+        },
+        select: { amount: true, direction: true, createdAt: true },
+      }),
+    ]);
+
+    const currentSum = walletAgg._sum.balance ?? 0;
+
+    // Kunlik net o'zgarish (earn - deduct) va earn/deduct alohida yig'indisi
+    const dailyNet = new Map<string, number>();
+    const dailyEarn = new Map<string, number>();
+    const dailyDeduct = new Map<string, number>();
+
+    for (const t of transactions) {
+      const dateStr = t.createdAt.toISOString().split('T')[0];
+      const delta = t.direction === CoinDirection.earn ? t.amount : -t.amount;
+      dailyNet.set(dateStr, (dailyNet.get(dateStr) ?? 0) + delta);
+      if (t.direction === CoinDirection.earn) {
+        dailyEarn.set(dateStr, (dailyEarn.get(dateStr) ?? 0) + t.amount);
+      } else {
+        dailyDeduct.set(dateStr, (dailyDeduct.get(dateStr) ?? 0) + t.amount);
+      }
+    }
+
+    // avgBalance.trend — Wallet.balance tarixi saqlanmaydi, lekin balans
+    // faqat CoinTransaction orqali o'zgargani uchun (invariant), joriy yig'indidan
+    // orqaga qarab har kunning net o'zgarishini ayirib borish orqali tiklanadi
+    const avgBalanceTrend: { date: string; avgBalance: number }[] = [];
+    let runningSum = currentSum;
+    for (let i = 0; i < 30; i++) {
+      const dayStart = new Date(todayStart);
+      dayStart.setUTCDate(todayStart.getUTCDate() - i);
+      const dateStr = dayStart.toISOString().split('T')[0];
+      avgBalanceTrend.unshift({
+        date: dateStr,
+        avgBalance: Math.round((runningSum / studentCount) * 100) / 100,
+      });
+      runningSum -= dailyNet.get(dateStr) ?? 0;
+    }
+
+    // weeklyActivity.trend — oxirgi 7 kun, eskisidan yangisiga qarab
+    const weeklyTrend: { date: string; earned: number; deducted: number }[] =
+      [];
+    for (let i = 6; i >= 0; i--) {
+      const dayStart = new Date(todayStart);
+      dayStart.setUTCDate(todayStart.getUTCDate() - i);
+      const dateStr = dayStart.toISOString().split('T')[0];
+      weeklyTrend.push({
+        date: dateStr,
+        earned: dailyEarn.get(dateStr) ?? 0,
+        deducted: dailyDeduct.get(dateStr) ?? 0,
+      });
+    }
+
+    const totalTransactions = transactions.filter(
+      (t) => t.createdAt >= sevenDaysAgoStart,
+    ).length;
+
+    return {
+      avgBalance: {
+        current: Math.round((currentSum / studentCount) * 100) / 100,
+        trend: avgBalanceTrend,
+      },
+      weeklyActivity: {
+        totalTransactions,
+        trend: weeklyTrend,
+      },
+    };
   }
 
   // ─── Talabaning o'z guruhlari (Shaxsiy profil uchun) ───────────

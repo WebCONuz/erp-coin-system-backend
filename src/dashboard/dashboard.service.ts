@@ -9,18 +9,22 @@ export class DashboardService {
   async getAdminDashboard(tenantId: string) {
     const now = new Date();
 
-    const todayStart = new Date(now);
-    todayStart.setHours(0, 0, 0, 0);
+    // UTC asosida — timezone shift oldini olish uchun (Session.sessionDate ham UTC-midnight sifatida saqlanadi)
+    const todayStart = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
     const todayEnd = new Date(todayStart);
-    todayEnd.setDate(todayStart.getDate() + 1);
+    todayEnd.setUTCDate(todayStart.getUTCDate() + 1);
 
     const sevenDaysAgo = new Date(todayStart);
-    sevenDaysAgo.setDate(todayStart.getDate() - 6); // bugun bilan birga 7 kun
+    sevenDaysAgo.setUTCDate(todayStart.getUTCDate() - 6); // bugun bilan birga 7 kun
 
     const twoWeeksAgo = new Date(todayStart);
-    twoWeeksAgo.setDate(todayStart.getDate() - 14);
+    twoWeeksAgo.setUTCDate(todayStart.getUTCDate() - 14);
 
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfMonth = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1),
+    );
 
     const [
       groupsCount,
@@ -143,9 +147,9 @@ export class DashboardService {
       [];
     for (let i = 0; i < 7; i++) {
       const bucketStart = new Date(sevenDaysAgo);
-      bucketStart.setDate(sevenDaysAgo.getDate() + i);
+      bucketStart.setUTCDate(sevenDaysAgo.getUTCDate() + i);
       const bucketEnd = new Date(bucketStart);
-      bucketEnd.setDate(bucketStart.getDate() + 1);
+      bucketEnd.setUTCDate(bucketStart.getUTCDate() + 1);
 
       let earned = 0;
       let deducted = 0;

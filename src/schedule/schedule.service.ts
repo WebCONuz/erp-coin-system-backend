@@ -448,6 +448,7 @@ export class ScheduleService {
           startTime: true,
           endTime: true,
           isLocked: true,
+          isChecked: true,
           sessionType: true,
           topic: true,
           subject: { select: { id: true, name: true } },

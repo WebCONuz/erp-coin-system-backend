@@ -149,6 +149,65 @@ export class CoinTransactionsService {
     });
   }
 
+  // 3a2. SESSION UCHUN OLDINGI AVTOMATIK (attendance/homework) TRANZAKSIYALARNI
+  // BEKOR QILISH — yo'qlama qayta saqlanganda dublikat coin berilmasligi uchun.
+  // Agar biror tranzaksiyani bekor qilib bo'lmasa (talaba coinni allaqachon
+  // sarflab bo'lgan), shu student uchun HECH NARSA bekor qilinmaydi (hammasi
+  // yoki hech biri) — chaqiruvchi shu holatni "skipped" sifatida ko'radi.
+  async reverseAutoSessionTransactions(
+    tenantId: string,
+    sessionId: string,
+    studentId: string,
+  ): Promise<{ reversed: number; skipped: boolean; skipReason?: string }> {
+    const activeTransactions = await this.prisma.coinTransaction.findMany({
+      where: {
+        sessionId,
+        studentId,
+        isDeleted: false,
+        sourceType: { in: [SourceType.attendance, SourceType.homework] },
+        student: { tenantId },
+      },
+      include: { wallet: true },
+    });
+
+    if (!activeTransactions.length) {
+      return { reversed: 0, skipped: false };
+    }
+
+    for (const trx of activeTransactions) {
+      if (
+        trx.direction === CoinDirection.earn &&
+        trx.wallet.balance < trx.amount
+      ) {
+        return {
+          reversed: 0,
+          skipped: true,
+          skipReason: `Balans yetarli emas (joriy: ${trx.wallet.balance}, kerak: ${trx.amount}) — talaba avvalgi coinlarni allaqachon sarflab bo'lgan`,
+        };
+      }
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      for (const trx of activeTransactions) {
+        await tx.wallet.update({
+          where: { id: trx.walletId },
+          data: {
+            balance:
+              trx.direction === CoinDirection.earn
+                ? { decrement: trx.amount }
+                : { increment: trx.amount },
+          },
+        });
+        await tx.coinTransaction.update({
+          where: { id: trx.id },
+          data: { isDeleted: true, deletedAt: new Date() },
+        });
+      }
+    });
+
+    return { reversed: activeTransactions.length, skipped: false };
+  }
+
   // 3b. BIR NECHTA O'QUVCHIGA BIRDANIGA BIR XIL MIQDORDA COIN BERISH/AYIRISH
   async giveBulkManual(
     tenantId: string,

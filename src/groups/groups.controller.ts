@@ -83,6 +83,21 @@ export class GroupsController {
     return this.groupsService.findOne(id, tenantId, role, requesterId);
   }
 
+  @Get(':id/stats')
+  @ApiOperation({
+    summary:
+      "Guruh statistikasi: o'rtacha coin balansi (30 kunlik trend) va haftalik faollik (7 kunlik earn/deduct trend)",
+  })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  getStats(
+    @Param('id', ParseUUIDPipe) id: string,
+    @TenantContext() tenantId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
+  ) {
+    return this.groupsService.getStats(id, tenantId, role, requesterId);
+  }
+
   @Patch(':id')
   @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Guruhni tahrirlash' })

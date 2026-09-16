@@ -9,9 +9,13 @@ export class DashboardService {
   async getAdminDashboard(tenantId: string) {
     const now = new Date();
 
-    // UTC asosida — timezone shift oldini olish uchun (Session.sessionDate ham UTC-midnight sifatida saqlanadi)
+    // "Bugun" server LOKAL vaqti bo'yicha aniqlanadi (getFullYear/getMonth/getDate —
+    // getUTC* EMAS), keyin UTC-yarim tun sifatida kodlanadi — chunki Session.sessionDate
+    // xuddi shunday saqlanadi (lokal kalendar sana, UTC-midnight sifatida). Agar UTC
+    // getterlar ishlatilsa, lokal yarim tundan keyingi bir necha soat davomida "bugun"
+    // noto'g'ri kechagi kun sifatida hisoblanib qoladi.
     const todayStart = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()),
     );
     const todayEnd = new Date(todayStart);
     todayEnd.setUTCDate(todayStart.getUTCDate() + 1);
@@ -23,7 +27,7 @@ export class DashboardService {
     twoWeeksAgo.setUTCDate(todayStart.getUTCDate() - 14);
 
     const startOfMonth = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1),
+      Date.UTC(now.getFullYear(), now.getMonth(), 1),
     );
 
     const [

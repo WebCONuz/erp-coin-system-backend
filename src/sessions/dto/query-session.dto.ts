@@ -5,8 +5,9 @@ import {
   IsUUID,
   IsEnum,
   IsDateString,
+  IsBoolean,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { SessionType } from 'src/generated/prisma/enums';
 
@@ -49,4 +50,14 @@ export class QuerySessionDto {
   @IsOptional()
   @IsDateString()
   date?: string;
+
+  @ApiPropertyOptional({
+    description:
+      "Yo'qlama qilingan/qilinmagan sessiyalar bo'yicha filtr. false berilganda faqat vaqti (endTime) allaqachon o'tgan, lekin hali yo'qlama qilinmagan sessiyalar qaytadi — hali vaqti kelmagan sessiyalar 'tekshirilmagan' sifatida hisoblanmaydi.",
+    example: false,
+  })
+  @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsBoolean()
+  isChecked?: boolean;
 }

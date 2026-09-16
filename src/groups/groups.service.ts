@@ -192,10 +192,12 @@ export class GroupsService {
       };
     }
 
-    // UTC asosida — timezone shift oldini olish uchun
+    // "Bugun" server LOKAL vaqti bo'yicha aniqlanadi (getUTC* emas), keyin
+    // UTC-yarim tun sifatida kodlanadi — Session.sessionDate saqlanish
+    // konventsiyasiga mos (batafsil izoh: dashboard.service.ts)
     const now = new Date();
     const todayStart = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()),
     );
     const thirtyDaysAgoStart = new Date(todayStart);
     thirtyDaysAgoStart.setUTCDate(todayStart.getUTCDate() - 29); // bugun bilan birga 30 kun

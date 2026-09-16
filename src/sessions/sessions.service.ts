@@ -188,6 +188,7 @@ export class SessionsService {
       teacherId,
       sessionType,
       date,
+      isChecked,
     } = query;
     const skip = (page - 1) * limit;
 
@@ -201,6 +202,32 @@ export class SessionsService {
     // Teacher faqat o'zi dars beradigan sessiyalarni ko'radi
     if (requesterRole === 'teacher') {
       where.teacherId = requesterId;
+    }
+
+    if (isChecked !== undefined) {
+      where.isChecked = isChecked;
+
+      if (!isChecked) {
+        // "Tekshirilmagan" faqat vaqti (endTime) allaqachon o'tgan sessiyalarni
+        // bildiradi — hali vaqti kelmagan (kelajakdagi) sessiyalar bu yerga kirmaydi.
+        // Sana/vaqt solishtirish server LOKAL vaqti asosida qilinadi (getFullYear/
+        // getMonth/getDate/getHours/getMinutes — getUTC* emas), chunki
+        // sessionDate "lokal kalendar sana, UTC-yarim tun sifatida kodlangan"
+        // konventsiyasida saqlanadi (generate-sessions/schedule bilan bir xil
+        // yondashuv) va startTime/endTime lokal soat sifatida kiritiladi.
+        const now = new Date();
+        const todayAsUtcMidnight = new Date(
+          Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()),
+        );
+        const nowTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(
+          now.getMinutes(),
+        ).padStart(2, '0')}`;
+
+        where.OR = [
+          { sessionDate: { lt: todayAsUtcMidnight } },
+          { sessionDate: todayAsUtcMidnight, endTime: { lte: nowTimeStr } },
+        ];
+      }
     }
 
     const [data, total] = await this.prisma.$transaction([

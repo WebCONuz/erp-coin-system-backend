@@ -263,6 +263,8 @@ export class StudentsService {
                 sessionDate: true,
                 sessionType: true,
                 topic: true,
+                startTime: true,
+                endTime: true,
                 group: { select: { id: true, name: true } },
                 subject: { select: { id: true, name: true } },
               },

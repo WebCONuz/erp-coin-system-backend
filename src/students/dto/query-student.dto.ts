@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsEnum,
   IsInt,
   IsOptional,
   IsString,
@@ -9,6 +10,17 @@ import {
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+
+export enum StudentSortBy {
+  fullName = 'fullName',
+  coin = 'coin',
+  createdAt = 'createdAt',
+}
+
+export enum SortOrder {
+  asc = 'asc',
+  desc = 'desc',
+}
 
 export class QueryStudentDto {
   @ApiPropertyOptional({ description: 'Faqat super_admin uchun' })
@@ -53,4 +65,23 @@ export class QueryStudentDto {
   @Min(1)
   @Max(100)
   limit?: number = 20;
+
+  @ApiPropertyOptional({
+    enum: StudentSortBy,
+    default: StudentSortBy.createdAt,
+    description:
+      "Saralash maydoni: fullName (ism-sharif alifbo bo'yicha), coin (wallet balansi bo'yicha), createdAt (qo'shilgan sana bo'yicha)",
+  })
+  @IsOptional()
+  @IsEnum(StudentSortBy)
+  sortBy?: StudentSortBy = StudentSortBy.createdAt;
+
+  @ApiPropertyOptional({
+    enum: SortOrder,
+    default: SortOrder.desc,
+    description: 'asc — o‘sish tartibida, desc — kamayish tartibida',
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  sortOrder?: SortOrder = SortOrder.desc;
 }

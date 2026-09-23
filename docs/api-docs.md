@@ -175,16 +175,18 @@ Tizimga kirgan foydalanuvchining to'liq profili.
 
 Ruxsat: `admin`, `super_admin`, `teacher`
 
-| Query param | Tur     | Izoh                             |
-| ----------- | ------- | -------------------------------- |
-| `search`    | string  | Ism yoki telefon bo'yicha        |
-| `groupId`   | UUID    | Guruh bo'yicha filter            |
-| `isActive`  | boolean | `true`=faol, `false`=arxivlangan |
-| `page`      | number  | Default: 1                       |
-| `limit`     | number  | Default: 20                      |
-| `tenantId`  | UUID    | Faqat `super_admin` uchun        |
+| Query param | Tur     | Izoh                                                             |
+| ----------- | ------- | ----------------------------------------------------------------|
+| `search`    | string  | Ism yoki telefon bo'yicha                                        |
+| `groupId`   | UUID    | Guruh bo'yicha filter                                            |
+| `isActive`  | boolean | `true`=faol, `false`=arxivlangan                                 |
+| `sortBy`    | string  | `fullName` \| `coin` \| `createdAt` (default: `createdAt`)       |
+| `sortOrder` | string  | `asc` \| `desc` (default: `desc`)                                |
+| `page`      | number  | Default: 1                                                       |
+| `limit`     | number  | Default: 20                                                      |
+| `tenantId`  | UUID    | Faqat `super_admin` uchun                                        |
 
-> Teacher faqat o'z guruhidagi studentlarni ko'radi.
+> Teacher faqat o'z guruhidagi studentlarni ko'radi — `groupId` va `sortBy`/`sortOrder` teacher uchun ham ishlaydi. To'liq tafsilot: [students-list-filters-api.md](./students-list-filters-api.md)
 
 ---
 

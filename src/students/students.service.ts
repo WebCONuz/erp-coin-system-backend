@@ -6,12 +6,33 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ArchiveStudentDto } from './dto/archive-student.dto';
-import { QueryStudentDto } from './dto/query-student.dto';
+import {
+  QueryStudentDto,
+  StudentSortBy,
+  SortOrder,
+} from './dto/query-student.dto';
 import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class StudentsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // ─── (private) sortBy/sortOrder → Prisma orderBy ────────────────
+  private buildStudentOrderBy(
+    sortBy?: StudentSortBy,
+    sortOrder?: SortOrder,
+  ): Prisma.UserOrderByWithRelationInput {
+    const order = sortOrder ?? SortOrder.desc;
+    switch (sortBy) {
+      case StudentSortBy.fullName:
+        return { fullName: order };
+      case StudentSortBy.coin:
+        return { wallet: { balance: order } };
+      case StudentSortBy.createdAt:
+      default:
+        return { createdAt: order };
+    }
+  }
 
   // ─── Studentlar ro'yxati (isDeleted:false default) ─────────────
   async findAll(
@@ -60,7 +81,7 @@ export class StudentsService {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: this.buildStudentOrderBy(query.sortBy, query.sortOrder),
         select: {
           id: true,
           fullName: true,
@@ -609,7 +630,7 @@ export class StudentsService {
 
   // ─── (private) Teacher o'z guruhidagi studentlar ───────────────
   private async findByTeacher(teacherId: string, query: QueryStudentDto) {
-    const { search, page = 1, limit = 20 } = query;
+    const { search, groupId, page = 1, limit = 20 } = query;
     const skip = (page - 1) * limit;
 
     const where: Prisma.UserWhereInput = {
@@ -618,6 +639,7 @@ export class StudentsService {
       groupMemberships: {
         some: {
           isDeleted: false,
+          groupId: groupId ?? undefined,
           group: { teacherId },
         },
       },
@@ -635,7 +657,7 @@ export class StudentsService {
         where,
         skip,
         take: limit,
-        orderBy: { fullName: 'asc' },
+        orderBy: this.buildStudentOrderBy(query.sortBy, query.sortOrder),
         select: {
           id: true,
           fullName: true,

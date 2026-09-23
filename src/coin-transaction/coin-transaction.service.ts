@@ -18,6 +18,7 @@ import { Prisma } from 'src/generated/prisma/client';
 export interface BulkCoinResultItem {
   studentId: string;
   success: boolean;
+  direction?: CoinDirection;
   transactionId?: string;
   newBalance?: number;
   error?: string;
@@ -250,6 +251,7 @@ export class CoinTransactionsService {
         results.push({
           studentId,
           success: true,
+          direction: dto.direction,
           transactionId: result.transactionId,
           newBalance: result.newBalance,
         });
@@ -257,6 +259,7 @@ export class CoinTransactionsService {
         results.push({
           studentId,
           success: false,
+          direction: dto.direction,
           error: err instanceof Error ? err.message : "Noma'lum xatolik",
         });
       }
@@ -340,6 +343,7 @@ export class CoinTransactionsService {
         results.push({
           studentId,
           success: true,
+          direction: rule.direction,
           transactionId: result.transactionId,
           newBalance: result.newBalance,
         });
@@ -347,6 +351,7 @@ export class CoinTransactionsService {
         results.push({
           studentId,
           success: false,
+          direction: rule.direction,
           error: err instanceof Error ? err.message : "Noma'lum xatolik",
         });
       }

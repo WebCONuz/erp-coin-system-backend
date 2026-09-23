@@ -144,7 +144,14 @@ export class GroupsService {
             id: true,
             joinedAt: true,
             addedById: true,
-            student: { select: { id: true, fullName: true, phone: true } },
+            student: {
+              select: {
+                id: true,
+                fullName: true,
+                phone: true,
+                wallet: { select: { balance: true } },
+              },
+            },
           },
         },
       },

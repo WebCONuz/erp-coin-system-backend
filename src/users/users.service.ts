@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -41,6 +42,8 @@ export class UsersService {
       }
     }
 
+    await this.assertRoleInTenant(dto.roleId, tenantId);
+
     const passwordHash = await bcrypt.hash(dto.password, 12);
 
     const user = await this.prisma.user.create({
@@ -64,6 +67,20 @@ export class UsersService {
     });
 
     return this.exclude(user, ['passwordHash']);
+  }
+
+  // Rol shu tenantga tegishli va faol bo'lishi shart — aks holda boshqa tenantning
+  // (masalan system tenantdagi super_admin) roleId sini berib huquqni oshirish mumkin bo'lardi
+  private async assertRoleInTenant(roleId: string, tenantId: string) {
+    const role = await this.prisma.role.findFirst({
+      where: { id: roleId, tenantId, isDeleted: false, isActive: true },
+      select: { id: true },
+    });
+    if (!role) {
+      throw new BadRequestException(
+        'Bu tenantga tegishli bunday rol topilmadi',
+      );
+    }
   }
 
   // ─── Ro'yxat ────────────────────────────────────────────────
@@ -506,7 +523,7 @@ export class UsersService {
   ) {
     console.log(requesterId);
 
-    await this.findOneOrFail(id, tenantId, requesterRole);
+    const target = await this.findOneOrFail(id, tenantId, requesterRole);
 
     if (dto.phone) {
       const existing = await this.prisma.user.findFirst({
@@ -520,6 +537,12 @@ export class UsersService {
         where: { email: dto.email, id: { not: id } },
       });
       if (existing) throw new ConflictException('Bu email band');
+    }
+
+    // super_admin uchun findOneOrFail tenant bo'yicha filtrlamaydi, shuning uchun
+    // rolni query dagi tenantId emas, userning haqiqiy tenanti bo'yicha tekshiramiz
+    if (dto.roleId) {
+      await this.assertRoleInTenant(dto.roleId, target.tenantId);
     }
 
     const user = await this.prisma.user.update({

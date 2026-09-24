@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { DEFAULT_TENANT_ROLES } from '../roles/constants';
 
 @Injectable()
 export class TenantService {
@@ -17,7 +18,20 @@ export class TenantService {
     });
     if (existing) throw new ConflictException('Bu slug allaqachon mavjud');
 
-    const data = await this.prisma.tenant.create({ data: dto });
+    // Atomic operation: Creating tenant & default roles
+    const data = await this.prisma.tenant.create({
+      data: {
+        ...dto,
+        roles: {
+          create: DEFAULT_TENANT_ROLES.map((role) => ({ ...role })),
+        },
+      },
+      include: {
+        roles: {
+          select: { id: true, name: true, displayName: true, level: true },
+        },
+      },
+    });
     return {
       status: 'success',
       message: 'Successfully created',

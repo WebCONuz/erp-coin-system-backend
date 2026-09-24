@@ -1,6 +1,6 @@
 # ERP Coin System — Backend
 
-O'quv markazlari uchun **multi-tenant gamifikatsiya backend**. O'quvchilar davomat va uy vazifasi asosida avtomatik tanga (coin) oladi, yig'gan tangalarini virtual do'kondan sovg'alarga almashtiradi.
+O'quv markazlari va maktablar uchun **multi-tenant gamifikatsiya backend**. O'quvchilar davomat va uy vazifasi asosida avtomatik tanga (coin) oladi, yig'gan tangalarini virtual do'kondan sovg'alarga almashtiradi.
 
 ## Stack
 
@@ -12,7 +12,7 @@ O'quv markazlari uchun **multi-tenant gamifikatsiya backend**. O'quvchilar davom
 | Auth          | Passport JWT (HttpOnly cookie)      |
 | API Docs      | Swagger (Basic auth)                |
 | Validation    | class-validator + class-transformer |
-| Upload        | Multer                              |
+| Upload        | Multer (`/uploads` static)          |
 | Notifications | Gmail SMTP + Eskiz SMS              |
 
 ---
@@ -27,7 +27,7 @@ npm install
 
 ### 2. Environment o'zgaruvchilar
 
-`.env.example` asosida `.env` yarating:
+Loyiha ildizida `.env` fayl yarating:
 
 ```env
 PORT=3031
@@ -55,19 +55,21 @@ SUPER_ADMIN_PASSWORD="StrongPass123!"
 SUPER_ADMIN_NAME="Super Admin"
 SUPER_ADMIN_EMAIL="superadmin@email.com"
 
-FRONTEND_DOMEN="http://localhost:3000"
-NODE_ENV="development"
+FRONTEND_DOMEN="http://localhost:3000"   # CORS uchun ruxsat berilgan origin
+NODE_ENV="development"                   # "production" da cookie'lar secure bo'ladi
 ```
 
 ### 3. Database va seed
 
 ```bash
-# Migration ishga tushirish
+# Migrationlarni qo'llash
 npx prisma migrate dev
 
-# Boshlang'ich ma'lumotlar (creator + super_admin)
+# Boshlang'ich ma'lumotlar (system tenant, creator, super_admin, tenant rollari)
 npx prisma db seed
 ```
+
+Seed **idempotent** — qayta ishga tushirish xavfsiz (qarang: [Seed ma'lumotlari](#seed-malumotlari)).
 
 ### 4. Dev server
 
@@ -75,8 +77,8 @@ npx prisma db seed
 npm run start:dev
 ```
 
-API: `http://localhost:3031/api`
-Swagger: `http://localhost:3031/api/docs` (login: `kottaAdmin` / `12345`)
+- API: `http://localhost:3031/api`
+- Swagger: `http://localhost:3031/api/docs` (login: `kottaAdmin` / `12345`)
 
 ---
 
@@ -91,7 +93,7 @@ npm run format           # Prettier
 
 # Prisma
 npx prisma migrate dev --name <migration_name>
-npx prisma generate
+npx prisma generate      # Client → src/generated/prisma
 npx prisma db seed
 npx prisma studio        # DB GUI — localhost:5555
 
@@ -111,21 +113,32 @@ npm run test:e2e
 Barcha ma'lumotlar `tenantId` bo'yicha izolyatsiya qilingan. Controllerda `@TenantContext()` dekoratori ishlatiladi:
 
 - **Oddiy foydalanuvchilar** (admin, teacher, student): tokendan avtomatik
-- **Elevated rollar** (super_admin, creator): URL params yoki `?tenantId=...` query'dan
+- **Elevated rollar** (super_admin, creator): URL params yoki `?tenantId=...` query'dan (majburiy)
 
-### Rol Iyerarxiyasi
+Tenant turi (`Tenant.type`): `learning_center`, `school`, `academic_lyceum`, `college`, `university`.
 
-```
-creator (lv 100) > super_admin (lv 90) > admin > teacher > student
-```
+### Rollar
 
-`RolesGuard` rol nomini emas, **darajasini (level)** tekshiradi. `@Roles('admin')` yozsangiz — admin va undan yuqori barcha rollar kirishi mumkin.
+| `name`        | `level` | Qayerda                    | Kim yaratadi                          |
+| ------------- | ------- | -------------------------- | ------------------------------------- |
+| `creator`     | 100     | system tenant              | seed                                  |
+| `super_admin` | 90      | system tenant              | seed                                  |
+| `admin`       | 60      | har bir tenant             | `POST /tenants` (avtomatik)           |
+| `teacher`     | 40      | har bir tenant             | `POST /tenants` (avtomatik)           |
+| `student`     | 20      | har bir tenant             | `POST /tenants` (avtomatik)           |
+
+- **Rollar faqat backend tomonidan boshqariladi.** API'da faqat `GET /roles` va `GET /roles/:id` bor — create/update/delete ataylab yo'q.
+- Tenant yaratilganda 3 ta default rol **bitta atomik nested write**da yaratiladi (tenant rolsiz qolib ketmaydi). Ro'yxat: [src/roles/constants/default-roles.ts](src/roles/constants/default-roles.ts).
+- **Rol nomlari (`name`) kod bo'ylab qattiq tekshiriladi** (`@Roles('admin')`, `requesterRole === 'teacher'` va h.k.) — ularni o'zgartirmang. Foydalanuvchiga ko'rinadigan nom — `displayName`.
+- `RolesGuard` rol nomini emas, **darajasini (level)** tekshiradi: `@Roles('admin', 'super_admin')` — talab qilingan rollarning eng kichik levelidan yuqori har qanday rol kira oladi. Guard levelni nom bo'yicha **tenantdan qat'i nazar** qidiradi, shuning uchun bir nomdagi rol barcha tenantlarda **bir xil level**ga ega bo'lishi shart.
+- `POST /users` / `PATCH /users/:id` da `roleId` userning tenantiga tegishli faol rol bo'lishi tekshiriladi (boshqa tenant rolini berib huquq oshirishning oldi olinadi).
 
 ### Autentifikatsiya
 
 - JWT tokenlar **HttpOnly cookie**da saqlanadi (`access_token` 15 daqiqa, `refresh_token` 1 kun)
 - `JwtStrategy` cookie'dan token o'qiydi — Authorization header ishlatilmaydi
 - Refresh token hash sifatida DB da saqlanadi, logout bo'lganda `null` bo'ladi
+- `@CurrentUser('id')`, `@CurrentUser('role')` — `req.user` dan maydon oladi
 - Frontend: `credentials: 'include'` (fetch) yoki `withCredentials: true` (axios) bo'lishi shart
 
 ### Prisma
@@ -146,36 +159,46 @@ import { PrismaClient } from '../generated/prisma/client';
 
 ### Soft Delete
 
-Deyarli barcha modellarda `isDeleted: Boolean @default(false)` va `deletedAt` bor. Hech qachon real `DELETE` ishlatilmaydi. Barcha query'larda `isDeleted: false` filtr qo'shiladi.
+Deyarli barcha modellarda `isDeleted: Boolean @default(false)` va `deletedAt` bor. Real `DELETE` ishlatilmaydi (yagona istisno — `Tenant.remove`). Barcha query'larda `isDeleted: false` filtr qo'shiladi.
 
 ---
 
 ## Modul tuzilmasi
 
+Har bir domen o'z modulida: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `dto/`.
+
 ```
 src/
 ├── auth/                # Login, logout, refresh, JWT strategy
-├── users/               # Foydalanuvchilar (teacher, admin yaratish)
-├── students/            # O'quvchilar CRUD + profil + statistika
+│   ├── decorators/      # @CurrentUser, @TenantContext, @Roles, @Public
+│   ├── guards/          # JwtAuthGuard, RolesGuard
+│   └── strategies/      # JwtStrategy (cookie)
+├── tenant/              # Tenantlar (faqat super_admin) + default rollar yaratish
+├── roles/               # Rollar (faqat o'qish) + DEFAULT_TENANT_ROLES
+├── users/               # Foydalanuvchilar (xodimlar, teacherlar, studentlar)
+├── students/            # O'quvchilar ro'yxati, profil, statistika
+├── teachers/            # O'qituvchi profili va dashboard
+├── dashboard/           # Admin dashboard
+├── courses/             # Kurslar (maktabda — sinf)
+├── subjects/            # Fanlar (ixtiyoriy, asosan maktab uchun)
 ├── groups/              # Guruhlar, student qo'shish/chiqarish
-├── sessions/            # Darslar, yo'qlama, lock/unlock
-├── schedule/            # Haftalik jadval shablonlari + istisno kunlar
-│   ├── dto/
-│   ├── schedule.controller.ts
-│   ├── schedule.service.ts
-│   └── schedule.module.ts
-├── coin-rules/          # Tanga qoidalari (auto/manual, earn/deduct)
-├── coin-transaction/    # Tanga tranzaksiyalari + wallet
+├── rooms/               # Xonalar
+├── schedule/            # Haftalik jadval shablonlari + istisno kunlar + kalendar
+├── sessions/            # Darslar, yo'qlama, lock/unlock, avtomatik coin
+├── coin-rules/          # Tanga qoidalari (auto/manual, earn/deduct, guruh ustuvorligi)
+├── coin-transaction/    # Tanga tranzaksiyalari (manual, bulk) + wallet
+├── reward-category/     # Sovg'a kategoriyalari
 ├── rewards/             # Sovg'alar do'koni
 ├── purchases/           # Xaridlar
-├── messages/            # SMS + email yuborish
+├── messages/            # SMS (Eskiz) + email yuborish
+├── mail/                # SMTP mailer
 ├── audit-log/           # Audit trail (kim, qachon, nima qildi)
-├── common/              # Guard, decorator, interceptor, filter
-│   ├── decorators/      # @CurrentUser, @TenantContext, @Roles
-│   ├── guards/          # JwtAuthGuard, RolesGuard
-│   └── filters/         # Global exception filter
-├── prisma/              # PrismaService
-└── generated/prisma/    # Prisma client (auto-generated)
+├── common/
+│   ├── filters/         # Prisma exception filter
+│   ├── middleware/      # Tenant middleware
+│   └── types/           # Umumiy tiplar (auth, coin)
+├── prisma/              # PrismaService + seed.ts
+└── generated/prisma/    # Prisma client (auto-generated, tahrirlamang)
 ```
 
 ---
@@ -186,23 +209,21 @@ src/
 
 `CoinTransactionsService` ikki xil interfeys:
 
-- `createManualTransaction()` — controller chaqiradi (teacher qo'lda beradi)
+- `createManualTransaction()` — controller chaqiradi (teacher qo'lda beradi; bulk variant ham bor)
 - `createInternalTransaction()` — tizim ichki servislari chaqiradi (SessionsService)
 
-**Avtomatik coin logikasi** (`SessionsService.saveAttendanceAndProcessCoins`):
+**Avtomatik coin logikasi** (`POST /sessions/:id/attendance` → `SessionsService.saveAttendanceAndProcessCoins`):
 
-1. Yo'qlama saqlanadi
+1. Yo'qlama saqlanadi (`upsert`), sessiya `isChecked: true` bo'ladi
 2. `triggerType: auto` va `isActive: true` coin qoidalari topiladi
-3. `sourceType` bo'yicha: `attendance earn` → kelganlarga, `homework earn` → uy vazifasi bajarganlarga, `attendance deduct` → kelmanganlarga (jarima, agar qoida mavjud bo'lsa)
-4. Har bir student uchun `createInternalTransaction()` chaqiriladi
+3. Qoida tanlash ustuvorligi: **guruhga maxsus** qoida (`groupId === session.groupId`) → **tenant-wide** qoida (`groupId: null`) → hardcoded default
+4. Har bir o'quvchi uchun shu sessiya bo'yicha avvalgi avtomatik tranzaksiyalar bekor qilinib, joriy holatga mos yangisi yaratiladi — qayta saqlashda **coin dublikat bo'lmaydi**. O'quvchi coinni allaqachon sarflagan bo'lsa, u o'tkazib yuboriladi (`coinsSkippedFor`)
 
-**Coin qoidalarini to'g'ri sozlash uchun 3 ta qoida yarating:**
-
-```
-sourceType: attendance, direction: earn   → Darsga kelgani uchun tanga
-sourceType: homework,   direction: earn   → Uy vazifasi uchun tanga
-sourceType: attendance, direction: deduct → Darsga kelmagani uchun jarima (optional)
-```
+| `sourceType` | `direction` | Nima uchun                   | Qoida bo'lmasa |
+| ------------ | ----------- | ---------------------------- | -------------- |
+| `attendance` | `earn`      | Darsga kelgani uchun         | 5 coin         |
+| `homework`   | `earn`      | Uy vazifasini bajargani uchun | 10 coin        |
+| `attendance` | `deduct`    | Sababsiz kelmagani uchun     | jarima yo'q    |
 
 ---
 
@@ -210,7 +231,7 @@ sourceType: attendance, direction: deduct → Darsga kelmagani uchun jarima (opt
 
 Jadval tizimi ikki qatlamli:
 
-1. **ScheduleTemplate** — haftalik takrorlanuvchi jadval (masalan, Dushanba 09:00–11:00, 101-xona)
+1. **ScheduleTemplate** — haftalik takrorlanuvchi jadval (masalan, Dushanba 09:00–11:00, 101-xona, ixtiyoriy fan)
 2. **ScheduleException** — istisno kunlar (bekor qilinish yoki vaqt o'zgarishi)
 
 **`generate-sessions` API** jadval shablonlari asosida belgilangan sana oralig'ida avtomatik `Session` yozuvlari yaratadi:
@@ -218,17 +239,38 @@ Jadval tizimi ikki qatlamli:
 - Bekor qilingan istisnolar o'tkazib yuboriladi
 - Vaqt o'zgargan istisnolar yangi vaqt bilan yaratiladi
 - Allaqachon mavjud sessiyalar qaytadan yaratilmaydi
-- Guruhning teacherId'si avtomatik olinadi
+- Guruhning teacherId'si va shablonning `subjectId`'si sessiyaga nusxalanadi
+
+Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin `topic`/`subjectId` kabi metama'lumotlar tahrirlanadi.
 
 ---
 
 ## Seed ma'lumotlari
 
-`npx prisma db seed` quyidagilarni yaratadi:
+`npx prisma db seed` (idempotent, `upsert` asosida):
 
 - `system` slug li System Tenant
 - `creator` (level 100) va `super_admin` (level 90) rollari
 - Creator va Super Admin userlari (`.env` dagi `CREATOR_*` va `SUPER_ADMIN_*` dan)
+- **Backfill:** mavjud barcha tenantlarga yetishmayotgan `admin`/`teacher`/`student` rollarini yaratadi va ularning `level`ini standart qiymatga keltiradi
+
+---
+
+## Frontend uchun hujjatlar
+
+API o'zgarishlari bo'yicha batafsil qo'llanmalar [docs/](docs/) papkasida:
+
+| Fayl | Mavzu |
+| --- | --- |
+| [api-docs.md](docs/api-docs.md) | Umumiy API qo'llanma |
+| [roles-readonly-api.md](docs/roles-readonly-api.md) | Rollar faqat o'qish uchun, tenant bilan avtomatik yaratilishi |
+| [subject-fani-api.md](docs/subject-fani-api.md) | Fanlar (Subject) |
+| [coin-rules-priority-and-session-lock-api.md](docs/coin-rules-priority-and-session-lock-api.md) | Coin qoidalari ustuvorligi, qulflangan sessiya |
+| [attendance-coin-dedup-and-ischecked-api.md](docs/attendance-coin-dedup-and-ischecked-api.md) | Yo'qlamada coin dublikati tuzatilishi, `isChecked` |
+| [bulk-coin-api.md](docs/bulk-coin-api.md) | Bir nechta o'quvchiga coin berish |
+| [students-list-filters-api.md](docs/students-list-filters-api.md) | O'quvchilar ro'yxati filtrlari |
+| [student-parent-profile-api.md](docs/student-parent-profile-api.md) | O'quvchi / ota-ona profili |
+| [teacher-profile-api.md](docs/teacher-profile-api.md) | O'qituvchi profili |
 
 ---
 

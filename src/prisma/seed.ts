@@ -2,6 +2,7 @@ import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
+import { DEFAULT_TENANT_ROLES } from '../roles/constants';
 
 dotenv.config();
 
@@ -58,6 +59,25 @@ async function seedRoles(systemTenantId: string) {
   });
 
   return { creatorRole, superAdminRole };
+}
+
+// Mavjud tenantlar uchun backfill: yetishmayotgan default rollarni yaratadi va
+// levelini barcha tenantlarda bir xil qiladi (RolesGuard shunga tayanadi)
+async function seedTenantDefaultRoles(systemTenantId: string) {
+  const tenants = await prisma.tenant.findMany({
+    where: { id: { not: systemTenantId } },
+    select: { id: true },
+  });
+
+  for (const tenant of tenants) {
+    for (const role of DEFAULT_TENANT_ROLES) {
+      await prisma.role.upsert({
+        where: { tenantId_name: { tenantId: tenant.id, name: role.name } },
+        update: { level: role.level },
+        create: { ...role, tenantId: tenant.id },
+      });
+    }
+  }
 }
 
 async function seedCreator(systemTenantId: string, creatorRoleId: string) {
@@ -129,6 +149,7 @@ async function main() {
 
   await seedCreator(systemTenant.id, creatorRole.id);
   await seedSuperAdmin(systemTenant.id, superAdminRole.id);
+  await seedTenantDefaultRoles(systemTenant.id);
 
   console.log('\n✅ Seed muvaffaqiyatli yakunlandi!');
 }

@@ -162,10 +162,13 @@ Tenant va uning 3 ta rolli **bitta atomik operatsiyada** yaratiladi: yoki hammas
       { "id": "e9a3…", "name": "admin", "displayName": "Administrator", "level": 60 },
       { "id": "d4e1…", "name": "teacher", "displayName": "O'qituvchi", "level": 40 },
       { "id": "c1f0…", "name": "student", "displayName": "O'quvchi", "level": 20 }
-    ]
+    ],
+    "coinRules": [ /* asosiy coin qoidalari — qarang: coin-rules-built-in-api.md */ ]
   }
 }
 ```
+
+> `coinRules` — tenant bilan birga yaratiladigan asosiy coin qoidalari (Davomat, Uyga vazifa). Batafsil: [coin-rules-built-in-api.md](coin-rules-built-in-api.md).
 
 Bu javobdagi `roles` dan foydalanib, tenant yaratilgandan keyin **darhol** uning birinchi adminini yaratish mumkin — `GET /roles` ni alohida chaqirish shart emas:
 

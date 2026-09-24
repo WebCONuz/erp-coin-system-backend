@@ -3,6 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import { DEFAULT_TENANT_ROLES } from '../roles/constants';
+import { DEFAULT_TENANT_COIN_RULES } from '../coin-rules/constants';
 
 dotenv.config();
 
@@ -80,6 +81,55 @@ async function seedTenantDefaultRoles(systemTenantId: string) {
   }
 }
 
+// Mavjud tenantlar uchun backfill: har bir asosiy coin qoidasi uchun tenantda mos
+// umumiy auto qoida (groupId: null) bo'lsa — uni isBuiltIn deb belgilaydi (coin
+// miqdori saqlanadi), bo'lmasa default qiymat bilan yangisini yaratadi
+async function seedTenantDefaultCoinRules(
+  systemTenantId: string,
+  createdById: string | undefined,
+) {
+  if (!createdById) {
+    console.warn(
+      "Coin qoidalari backfill o'tkazib yuborildi: createdBy uchun super_admin/creator user topilmadi",
+    );
+    return;
+  }
+
+  const tenants = await prisma.tenant.findMany({
+    where: { id: { not: systemTenantId } },
+    select: { id: true },
+  });
+
+  for (const tenant of tenants) {
+    for (const rule of DEFAULT_TENANT_COIN_RULES) {
+      const existing = await prisma.coinRule.findFirst({
+        where: {
+          tenantId: tenant.id,
+          isDeleted: false,
+          triggerType: rule.triggerType,
+          sourceType: rule.sourceType,
+          direction: rule.direction,
+          groupId: null,
+        },
+        orderBy: { createdAt: 'asc' },
+      });
+
+      if (existing) {
+        if (!existing.isBuiltIn) {
+          await prisma.coinRule.update({
+            where: { id: existing.id },
+            data: { isBuiltIn: true },
+          });
+        }
+      } else {
+        await prisma.coinRule.create({
+          data: { ...rule, isBuiltIn: true, tenantId: tenant.id, createdById },
+        });
+      }
+    }
+  }
+}
+
 async function seedCreator(systemTenantId: string, creatorRoleId: string) {
   const phone = process.env.CREATOR_PHONE;
   const password = process.env.CREATOR_PASSWORD;
@@ -147,9 +197,13 @@ async function main() {
   const systemTenant = await seedSystemTenant();
   const { creatorRole, superAdminRole } = await seedRoles(systemTenant.id);
 
-  await seedCreator(systemTenant.id, creatorRole.id);
-  await seedSuperAdmin(systemTenant.id, superAdminRole.id);
+  const creator = await seedCreator(systemTenant.id, creatorRole.id);
+  const superAdmin = await seedSuperAdmin(systemTenant.id, superAdminRole.id);
   await seedTenantDefaultRoles(systemTenant.id);
+  await seedTenantDefaultCoinRules(
+    systemTenant.id,
+    superAdmin?.id ?? creator?.id,
+  );
 
   console.log('\n✅ Seed muvaffaqiyatli yakunlandi!');
 }

@@ -7,28 +7,47 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { DEFAULT_TENANT_ROLES } from '../roles/constants';
+import { DEFAULT_TENANT_COIN_RULES } from '../coin-rules/constants';
 
 @Injectable()
 export class TenantService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateTenantDto) {
+  async create(dto: CreateTenantDto, createdById: string) {
     const existing = await this.prisma.tenant.findUnique({
       where: { slug: dto.slug },
     });
     if (existing) throw new ConflictException('Bu slug allaqachon mavjud');
 
-    // Atomic operation: Creating tenant & default roles
+    // Atomic operation: Creating tenant & default roles & built-in coin rules
     const data = await this.prisma.tenant.create({
       data: {
         ...dto,
         roles: {
           create: DEFAULT_TENANT_ROLES.map((role) => ({ ...role })),
         },
+        coinRules: {
+          create: DEFAULT_TENANT_COIN_RULES.map((rule) => ({
+            ...rule,
+            isBuiltIn: true,
+            createdById,
+          })),
+        },
       },
       include: {
         roles: {
           select: { id: true, name: true, displayName: true, level: true },
+        },
+        coinRules: {
+          select: {
+            id: true,
+            name: true,
+            coinAmount: true,
+            direction: true,
+            triggerType: true,
+            sourceType: true,
+            isBuiltIn: true,
+          },
         },
       },
     });

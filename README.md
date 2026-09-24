@@ -119,13 +119,13 @@ Tenant turi (`Tenant.type`): `learning_center`, `school`, `academic_lyceum`, `co
 
 ### Rollar
 
-| `name`        | `level` | Qayerda                    | Kim yaratadi                          |
-| ------------- | ------- | -------------------------- | ------------------------------------- |
-| `creator`     | 100     | system tenant              | seed                                  |
-| `super_admin` | 90      | system tenant              | seed                                  |
-| `admin`       | 60      | har bir tenant             | `POST /tenants` (avtomatik)           |
-| `teacher`     | 40      | har bir tenant             | `POST /tenants` (avtomatik)           |
-| `student`     | 20      | har bir tenant             | `POST /tenants` (avtomatik)           |
+| `name`        | `level` | Qayerda        | Kim yaratadi                |
+| ------------- | ------- | -------------- | --------------------------- |
+| `creator`     | 100     | system tenant  | seed                        |
+| `super_admin` | 90      | system tenant  | seed                        |
+| `admin`       | 60      | har bir tenant | `POST /tenants` (avtomatik) |
+| `teacher`     | 40      | har bir tenant | `POST /tenants` (avtomatik) |
+| `student`     | 20      | har bir tenant | `POST /tenants` (avtomatik) |
 
 - **Rollar faqat backend tomonidan boshqariladi.** API'da faqat `GET /roles` va `GET /roles/:id` bor — create/update/delete ataylab yo'q.
 - Tenant yaratilganda 3 ta default rol **bitta atomik nested write**da yaratiladi (tenant rolsiz qolib ketmaydi). Ro'yxat: [src/roles/constants/default-roles.ts](src/roles/constants/default-roles.ts).
@@ -173,7 +173,7 @@ src/
 │   ├── decorators/      # @CurrentUser, @TenantContext, @Roles, @Public
 │   ├── guards/          # JwtAuthGuard, RolesGuard
 │   └── strategies/      # JwtStrategy (cookie)
-├── tenant/              # Tenantlar (faqat super_admin) + default rollar yaratish
+├── tenant/              # Tenantlar (faqat super_admin) + default rollar va coin qoidalari
 ├── roles/               # Rollar (faqat o'qish) + DEFAULT_TENANT_ROLES
 ├── users/               # Foydalanuvchilar (xodimlar, teacherlar, studentlar)
 ├── students/            # O'quvchilar ro'yxati, profil, statistika
@@ -185,7 +185,7 @@ src/
 ├── rooms/               # Xonalar
 ├── schedule/            # Haftalik jadval shablonlari + istisno kunlar + kalendar
 ├── sessions/            # Darslar, yo'qlama, lock/unlock, avtomatik coin
-├── coin-rules/          # Tanga qoidalari (auto/manual, earn/deduct, guruh ustuvorligi)
+├── coin-rules/          # Tanga qoidalari (auto/manual, earn/deduct, guruh ustuvorligi) + DEFAULT_TENANT_COIN_RULES
 ├── coin-transaction/    # Tanga tranzaksiyalari (manual, bulk) + wallet
 ├── reward-category/     # Sovg'a kategoriyalari
 ├── rewards/             # Sovg'alar do'koni
@@ -219,11 +219,24 @@ src/
 3. Qoida tanlash ustuvorligi: **guruhga maxsus** qoida (`groupId === session.groupId`) → **tenant-wide** qoida (`groupId: null`) → hardcoded default
 4. Har bir o'quvchi uchun shu sessiya bo'yicha avvalgi avtomatik tranzaksiyalar bekor qilinib, joriy holatga mos yangisi yaratiladi — qayta saqlashda **coin dublikat bo'lmaydi**. O'quvchi coinni allaqachon sarflagan bo'lsa, u o'tkazib yuboriladi (`coinsSkippedFor`)
 
-| `sourceType` | `direction` | Nima uchun                   | Qoida bo'lmasa |
-| ------------ | ----------- | ---------------------------- | -------------- |
-| `attendance` | `earn`      | Darsga kelgani uchun         | 5 coin         |
+| `sourceType` | `direction` | Nima uchun                    | Qoida bo'lmasa |
+| ------------ | ----------- | ----------------------------- | -------------- |
+| `attendance` | `earn`      | Darsga kelgani uchun          | 5 coin         |
 | `homework`   | `earn`      | Uy vazifasini bajargani uchun | 10 coin        |
-| `attendance` | `deduct`    | Sababsiz kelmagani uchun     | jarima yo'q    |
+| `attendance` | `deduct`    | Sababsiz kelmagani uchun      | jarima yo'q    |
+
+### Asosiy (built-in) coin qoidalari
+
+Tenant yaratilganda (`POST /tenants`) rollar bilan **bitta atomik nested write**da 2 ta asosiy qoida yaratiladi — `isBuiltIn: true`. Ro'yxat: [src/coin-rules/constants/default-coin-rules.ts](src/coin-rules/constants/default-coin-rules.ts).
+
+| `name`      | `sourceType` | `direction` | `triggerType` | Default coin |
+| ----------- | ------------ | ----------- | ------------- | ------------ |
+| Davomat     | `attendance` | `earn`      | `auto`        | 5            |
+| Uyga vazifa | `homework`   | `earn`      | `auto`        | 10           |
+
+- Tenant o'z qoidasida `coinAmount`, `name`, `description` ni o'zgartiradi. `direction`, `triggerType`, `sourceType`, `groupId` o'zgartirilsa — `409`. Asosiy qoidani o'chirib bo'lmaydi (`409`).
+- Har bir `sourceType` + `direction` uchun **umumiy** (`groupId: null`) auto qoida tenantda bittadan ortiq bo'lmaydi — dublikat yaratish/ga aylantirish `409`. Guruhga xos qoidalar (`groupId` bilan) cheklanmaydi va umumiy qoidadan ustun turadi.
+- Qoida nomi logikada ishlatilmaydi — yo'qlama qoidani `triggerType` + `sourceType` + `direction` bo'yicha topadi.
 
 ---
 
@@ -253,6 +266,7 @@ Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin 
 - `creator` (level 100) va `super_admin` (level 90) rollari
 - Creator va Super Admin userlari (`.env` dagi `CREATOR_*` va `SUPER_ADMIN_*` dan)
 - **Backfill:** mavjud barcha tenantlarga yetishmayotgan `admin`/`teacher`/`student` rollarini yaratadi va ularning `level`ini standart qiymatga keltiradi
+- **Backfill:** har bir tenantda asosiy coin qoidalari (Davomat, Uyga vazifa) bo'lishini ta'minlaydi — mos umumiy auto qoida bo'lsa `isBuiltIn: true` deb belgilaydi (coin miqdori saqlanadi), bo'lmasa default qiymat bilan yaratadi (`createdBy` — super_admin)
 
 ---
 
@@ -260,17 +274,18 @@ Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin 
 
 API o'zgarishlari bo'yicha batafsil qo'llanmalar [docs/](docs/) papkasida:
 
-| Fayl | Mavzu |
-| --- | --- |
-| [api-docs.md](docs/api-docs.md) | Umumiy API qo'llanma |
-| [roles-readonly-api.md](docs/roles-readonly-api.md) | Rollar faqat o'qish uchun, tenant bilan avtomatik yaratilishi |
-| [subject-fani-api.md](docs/subject-fani-api.md) | Fanlar (Subject) |
-| [coin-rules-priority-and-session-lock-api.md](docs/coin-rules-priority-and-session-lock-api.md) | Coin qoidalari ustuvorligi, qulflangan sessiya |
-| [attendance-coin-dedup-and-ischecked-api.md](docs/attendance-coin-dedup-and-ischecked-api.md) | Yo'qlamada coin dublikati tuzatilishi, `isChecked` |
-| [bulk-coin-api.md](docs/bulk-coin-api.md) | Bir nechta o'quvchiga coin berish |
-| [students-list-filters-api.md](docs/students-list-filters-api.md) | O'quvchilar ro'yxati filtrlari |
-| [student-parent-profile-api.md](docs/student-parent-profile-api.md) | O'quvchi / ota-ona profili |
-| [teacher-profile-api.md](docs/teacher-profile-api.md) | O'qituvchi profili |
+| Fayl                                                                                            | Mavzu                                                         |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| [api-docs.md](docs/api-docs.md)                                                                 | Umumiy API qo'llanma                                          |
+| [roles-readonly-api.md](docs/roles-readonly-api.md)                                             | Rollar faqat o'qish uchun, tenant bilan avtomatik yaratilishi |
+| [coin-rules-built-in-api.md](docs/coin-rules-built-in-api.md) | Asosiy coin qoidalari (`isBuiltIn`), tenant bilan avtomatik yaratilishi |
+| [subject-fani-api.md](docs/subject-fani-api.md)                                                 | Fanlar (Subject)                                              |
+| [coin-rules-priority-and-session-lock-api.md](docs/coin-rules-priority-and-session-lock-api.md) | Coin qoidalari ustuvorligi, qulflangan sessiya                |
+| [attendance-coin-dedup-and-ischecked-api.md](docs/attendance-coin-dedup-and-ischecked-api.md)   | Yo'qlamada coin dublikati tuzatilishi, `isChecked`            |
+| [bulk-coin-api.md](docs/bulk-coin-api.md)                                                       | Bir nechta o'quvchiga coin berish                             |
+| [students-list-filters-api.md](docs/students-list-filters-api.md)                               | O'quvchilar ro'yxati filtrlari                                |
+| [student-parent-profile-api.md](docs/student-parent-profile-api.md)                             | O'quvchi / ota-ona profili                                    |
+| [teacher-profile-api.md](docs/teacher-profile-api.md)                                           | O'qituvchi profili                                            |
 
 ---
 
@@ -281,3 +296,12 @@ Husky orqali har commit oldidan ishga tushadi:
 ```bash
 npm run lint && npm run format
 ```
+
+---
+
+## 📞 Kontakt
+
+- **Yaratuvchi**: Muxammadi Toshtemirov
+- **Telefon**: +998(94) 542-63-07
+- **Email**: muxammadi0799@gmail.com
+- **Telegram**: @Mukhammadi_Dev

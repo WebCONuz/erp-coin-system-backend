@@ -81,7 +81,7 @@ export class StudentsController {
   @Get('me/dashboard')
   @ApiOperation({
     summary:
-      "Tizimga kirgan talabaning shaxsiy dashboard xulosasi: balans, davomat %, bugungi/shu haftalik darslar, so'nggi tranzaksiyalar",
+      "Tizimga kirgan talabaning shaxsiy dashboard xulosasi: balans, davomat %, bugungi/shu haftalik darslar, so'nggi tranzaksiyalar, sovg'alarning eng arzon/eng qimmat narxi",
   })
   getMyDashboard(
     @TenantContext() tenantId: string,

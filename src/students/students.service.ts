@@ -446,6 +446,7 @@ export class StudentsService {
       recentTransactions,
       pendingPurchasesCount,
       recentPurchases,
+      rewardPriceAgg,
     ] = await this.prisma.$transaction([
       this.prisma.coinTransaction.aggregate({
         where: {
@@ -572,6 +573,13 @@ export class StudentsService {
           reward: { select: { id: true, title: true, imageUrl: true } },
         },
       }),
+      // Do'kondagi faol sovg'alarning eng arzon va eng qimmat narxi (GardenPath uchun)
+      this.prisma.reward.aggregate({
+        where: { tenantId, isDeleted: false, isActive: true },
+        _min: { coinPrice: true },
+        _max: { coinPrice: true },
+        _count: { _all: true },
+      }),
     ]);
 
     return {
@@ -610,6 +618,11 @@ export class StudentsService {
       purchases: {
         pendingCount: pendingPurchasesCount,
         recent: recentPurchases,
+      },
+      rewards: {
+        minPrice: rewardPriceAgg._min.coinPrice ?? null,
+        maxPrice: rewardPriceAgg._max.coinPrice ?? null,
+        activeCount: rewardPriceAgg._count._all,
       },
     };
   }

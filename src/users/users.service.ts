@@ -22,32 +22,15 @@ export class UsersService {
 
   // ─── Yaratish ───────────────────────────────────────────────
   async create(dto: CreateUserDto, tenantId: string, createdById: string) {
-    // Telefon band emasligini tekshirish
-    const existingPhone = await this.prisma.user.findUnique({
-      where: { phone: dto.phone },
-    });
-    if (existingPhone) {
-      throw new ConflictException(
-        "Bu telefon raqam allaqachon ro'yxatdan o'tgan",
-      );
-    }
-
-    // Email band emasligini tekshirish (agar berilgan bo'lsa)
-    if (dto.email) {
-      const existingEmail = await this.prisma.user.findUnique({
-        where: { email: dto.email },
-      });
-      if (existingEmail) {
-        throw new ConflictException("Bu email allaqachon ro'yxatdan o'tgan");
-      }
-    }
-
+    await this.assertUsernameFree(dto.username);
+    await this.assertPhoneFreeInTenant(dto.phone, tenantId);
     await this.assertRoleInTenant(dto.roleId, tenantId);
 
     const passwordHash = await bcrypt.hash(dto.password, 12);
 
     const user = await this.prisma.user.create({
       data: {
+        username: dto.username,
         phone: dto.phone,
         passwordHash,
         fullName: dto.fullName,
@@ -67,6 +50,41 @@ export class UsersService {
     });
 
     return this.exclude(user, ['passwordHash']);
+  }
+
+  // Username butun tizimda unique (login shu orqali)
+  private async assertUsernameFree(username: string, excludeUserId?: string) {
+    const existing = await this.prisma.user.findFirst({
+      where: {
+        username,
+        ...(excludeUserId ? { id: { not: excludeUserId } } : {}),
+      },
+      select: { id: true },
+    });
+    if (existing) {
+      throw new ConflictException('Bu username band');
+    }
+  }
+
+  // Telefon faqat tenant ichida unique — boshqa tenantda shu raqamli user bo'lishi mumkin
+  private async assertPhoneFreeInTenant(
+    phone: string,
+    tenantId: string,
+    excludeUserId?: string,
+  ) {
+    const existing = await this.prisma.user.findFirst({
+      where: {
+        phone,
+        tenantId,
+        ...(excludeUserId ? { id: { not: excludeUserId } } : {}),
+      },
+      select: { id: true },
+    });
+    if (existing) {
+      throw new ConflictException(
+        "Bu telefon raqam ushbu tenantda allaqachon ro'yxatdan o'tgan",
+      );
+    }
   }
 
   // Rol shu tenantga tegishli va faol bo'lishi shart — aks holda boshqa tenantning
@@ -120,6 +138,7 @@ export class UsersService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -221,6 +240,7 @@ export class UsersService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -232,6 +252,7 @@ export class UsersService {
         orderBy: { [sortBy]: 'desc' },
         select: {
           id: true,
+          username: true,
           fullName: true,
           phone: true,
           email: true,
@@ -282,6 +303,7 @@ export class UsersService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -293,6 +315,7 @@ export class UsersService {
         orderBy: { [sortBy]: 'desc' },
         select: {
           id: true,
+          username: true,
           phone: true,
           fullName: true,
           email: true,
@@ -335,6 +358,7 @@ export class UsersService {
       where,
       select: {
         id: true,
+        username: true,
         fullName: true,
         phone: true,
         email: true,
@@ -398,6 +422,7 @@ export class UsersService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -409,6 +434,7 @@ export class UsersService {
         orderBy: { [sortBy]: 'desc' },
         select: {
           id: true,
+          username: true,
           phone: true,
           fullName: true,
           email: true,
@@ -449,6 +475,7 @@ export class UsersService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -525,22 +552,16 @@ export class UsersService {
 
     const target = await this.findOneOrFail(id, tenantId, requesterRole);
 
-    if (dto.phone) {
-      const existing = await this.prisma.user.findFirst({
-        where: { phone: dto.phone, id: { not: id } },
-      });
-      if (existing) throw new ConflictException('Bu telefon raqam band');
-    }
-
-    if (dto.email) {
-      const existing = await this.prisma.user.findFirst({
-        where: { email: dto.email, id: { not: id } },
-      });
-      if (existing) throw new ConflictException('Bu email band');
+    if (dto.username) {
+      await this.assertUsernameFree(dto.username, id);
     }
 
     // super_admin uchun findOneOrFail tenant bo'yicha filtrlamaydi, shuning uchun
-    // rolni query dagi tenantId emas, userning haqiqiy tenanti bo'yicha tekshiramiz
+    // telefon va rolni query dagi tenantId emas, userning haqiqiy tenanti bo'yicha tekshiramiz
+    if (dto.phone) {
+      await this.assertPhoneFreeInTenant(dto.phone, target.tenantId, id);
+    }
+
     if (dto.roleId) {
       await this.assertRoleInTenant(dto.roleId, target.tenantId);
     }
@@ -616,6 +637,7 @@ export class UsersService {
       where: { id: userId },
       include: {
         role: true,
+        tenant: { select: { id: true, name: true, slug: true, type: true } },
         wallet: { select: { balance: true } },
         groupMemberships: {
           where: { isActive: true },
@@ -648,23 +670,42 @@ export class UsersService {
 
   // ─── O'zini o'zi tahrirlash (har qanday rol, faqat xavfsiz maydonlar) ──
   async updateOwnProfile(userId: string, dto: UpdateOwnProfileDto) {
-    if (dto.email) {
-      const existing = await this.prisma.user.findFirst({
-        where: { email: dto.email, id: { not: userId } },
-      });
-      if (existing) throw new ConflictException('Bu email band');
+    const me = await this.prisma.user.findFirst({
+      where: { id: userId, isActive: true },
+      select: { id: true, tenantId: true },
+    });
+    if (!me) throw new NotFoundException('Foydalanuvchi topilmadi');
+
+    if (dto.username) {
+      await this.assertUsernameFree(dto.username, userId);
+    }
+
+    // Telefon userning o'z tenanti ichida band emasligi tekshiriladi
+    if (dto.phone) {
+      await this.assertPhoneFreeInTenant(dto.phone, me.tenantId, userId);
     }
 
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
+        ...(dto.username !== undefined ? { username: dto.username } : {}),
+        ...(dto.fullName !== undefined ? { fullName: dto.fullName } : {}),
+        ...(dto.phone !== undefined ? { phone: dto.phone } : {}),
+        ...(dto.parentPhone !== undefined
+          ? { parentPhone: dto.parentPhone }
+          : {}),
         ...(dto.email !== undefined ? { email: dto.email } : {}),
         ...(dto.avatarUrl !== undefined ? { avatarUrl: dto.avatarUrl } : {}),
       },
       include: { role: true },
     });
 
-    return this.exclude(user, ['passwordHash']);
+    return this.exclude(user, [
+      'passwordHash',
+      'refreshTokenHash',
+      'passwordResetToken',
+      'passwordResetExpiry',
+    ]);
   }
 
   // Arxivdan qaytarish

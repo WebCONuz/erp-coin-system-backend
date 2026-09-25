@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import { DEFAULT_TENANT_ROLES } from '../roles/constants';
 import { DEFAULT_TENANT_COIN_RULES } from '../coin-rules/constants';
+import { normalizeUsername, USERNAME_REGEX } from '../users/constants/username';
 
 dotenv.config();
 
@@ -130,75 +131,103 @@ async function seedTenantDefaultCoinRules(
   }
 }
 
-async function seedCreator(systemTenantId: string, creatorRoleId: string) {
-  const phone = process.env.CREATOR_PHONE;
-  const password = process.env.CREATOR_PASSWORD;
-  const fullName = process.env.CREATOR_NAME ?? 'Creator';
-  const email = process.env.CREATOR_EMAIL ?? 'creator@system.local';
+// System tenantdagi user (creator / super_admin): yo'q bo'lsa yaratadi, bor bo'lsa
+// username'ini .env dagi qiymatga keltiradi (migratsiyada username = telefon qo'yilgan edi)
+async function seedSystemUser(params: {
+  envPrefix: 'CREATOR' | 'SUPER_ADMIN';
+  systemTenantId: string;
+  roleId: string;
+  defaultName: string;
+  defaultEmail: string;
+}) {
+  const { envPrefix, systemTenantId, roleId } = params;
+  const phone = process.env[`${envPrefix}_PHONE`];
+  const password = process.env[`${envPrefix}_PASSWORD`];
+  const rawUsername = process.env[`${envPrefix}_USERNAME`];
+  const fullName = process.env[`${envPrefix}_NAME`] ?? params.defaultName;
+  const email = process.env[`${envPrefix}_EMAIL`] ?? params.defaultEmail;
 
-  if (!phone || !password) {
-    console.warn('CREATOR_PHONE yoki CREATOR_PASSWORD .env da topilmadi');
+  if (!phone || !password || !rawUsername) {
+    console.warn(
+      `${envPrefix}_PHONE, ${envPrefix}_PASSWORD yoki ${envPrefix}_USERNAME .env da topilmadi`,
+    );
     return null;
   }
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  const username = normalizeUsername(rawUsername);
+  if (!USERNAME_REGEX.test(username)) {
+    console.warn(
+      `${envPrefix}_USERNAME noto'g'ri formatda ("${username}"): 3–30 belgi, faqat a-z, 0-9, '_' va '.'`,
+    );
+    return null;
+  }
 
-  const creator = await prisma.user.upsert({
-    where: { phone },
-    update: {},
-    create: {
-      phone,
-      email,
-      passwordHash,
-      fullName,
-      tenantId: systemTenantId,
-      roleId: creatorRoleId,
-    },
+  // Username boshqa userda band bo'lmasligi kerak
+  const usernameOwner = await prisma.user.findUnique({
+    where: { username },
+    select: { id: true, phone: true, tenantId: true },
   });
 
-  return creator;
-}
+  const existing = await prisma.user.findUnique({
+    where: { tenantId_phone: { tenantId: systemTenantId, phone } },
+  });
 
-async function seedSuperAdmin(
-  systemTenantId: string,
-  superAdminRoleId: string,
-) {
-  const phone = process.env.SUPER_ADMIN_PHONE;
-  const password = process.env.SUPER_ADMIN_PASSWORD;
-  const fullName = process.env.SUPER_ADMIN_NAME ?? 'Super Admin';
-  const email = process.env.SUPER_ADMIN_EMAIL ?? 'superadmin@system.local';
+  if (existing) {
+    if (existing.username === username) return existing;
 
-  if (!phone || !password) {
+    if (usernameOwner && usernameOwner.id !== existing.id) {
+      console.warn(
+        `${envPrefix}_USERNAME "${username}" boshqa userda band — username yangilanmadi`,
+      );
+      return existing;
+    }
+
+    return prisma.user.update({
+      where: { id: existing.id },
+      data: { username },
+    });
+  }
+
+  if (usernameOwner) {
     console.warn(
-      'SUPER_ADMIN_PHONE yoki SUPER_ADMIN_PASSWORD .env da topilmadi',
+      `${envPrefix}_USERNAME "${username}" boshqa userda band — ${envPrefix} yaratilmadi`,
     );
     return null;
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
 
-  const superAdmin = await prisma.user.upsert({
-    where: { phone },
-    update: {},
-    create: {
+  return prisma.user.create({
+    data: {
+      username,
       phone,
       email,
       passwordHash,
       fullName,
       tenantId: systemTenantId,
-      roleId: superAdminRoleId,
+      roleId,
     },
   });
-
-  return superAdmin;
 }
 
 async function main() {
   const systemTenant = await seedSystemTenant();
   const { creatorRole, superAdminRole } = await seedRoles(systemTenant.id);
 
-  const creator = await seedCreator(systemTenant.id, creatorRole.id);
-  const superAdmin = await seedSuperAdmin(systemTenant.id, superAdminRole.id);
+  const creator = await seedSystemUser({
+    envPrefix: 'CREATOR',
+    systemTenantId: systemTenant.id,
+    roleId: creatorRole.id,
+    defaultName: 'Creator',
+    defaultEmail: 'creator@system.local',
+  });
+  const superAdmin = await seedSystemUser({
+    envPrefix: 'SUPER_ADMIN',
+    systemTenantId: systemTenant.id,
+    roleId: superAdminRole.id,
+    defaultName: 'Super Admin',
+    defaultEmail: 'superadmin@system.local',
+  });
   await seedTenantDefaultRoles(systemTenant.id);
   await seedTenantDefaultCoinRules(
     systemTenant.id,

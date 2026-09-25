@@ -44,7 +44,10 @@ export class UsersController {
   @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Yangi foydalanuvchi yaratish' })
   @ApiResponse({ status: 201, description: 'Muvaffaqiyatli yaratildi' })
-  @ApiResponse({ status: 409, description: 'Telefon yoki email band' })
+  @ApiResponse({
+    status: 409,
+    description: 'Username band yoki telefon shu tenantda band',
+  })
   create(
     @Body() dto: CreateUserDto,
     @TenantContext() tenantId: string,
@@ -107,7 +110,8 @@ export class UsersController {
   // ─── O'z profili ─────────────────────────────────────────────
   @Get('me')
   @ApiOperation({
-    summary: "O'z profil ma'lumotlari (teacher uchun taughtGroups bilan)",
+    summary:
+      "O'z profil ma'lumotlari — barcha rollar (student, teacher, admin, super_admin, creator). Teacher uchun taughtGroups bilan",
   })
   getMe(@CurrentUser('id') userId: string) {
     // Barcha rollar o'z profilini ko'ra oladi
@@ -118,7 +122,11 @@ export class UsersController {
   @Patch('me')
   @ApiOperation({
     summary:
-      "O'z profilini tahrirlash (faqat avatarUrl, email — rol/telefon shu yerdan o'zgarmaydi)",
+      "O'z profilini tahrirlash — barcha rollar. Maydonlar: username, fullName, phone, parentPhone, email, avatarUrl (rol/tenant/parol shu yerdan o'zgarmaydi)",
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Username band yoki telefon shu tenantda band',
   })
   updateMe(
     @CurrentUser('id') userId: string,

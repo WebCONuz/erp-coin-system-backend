@@ -25,22 +25,24 @@ export class AuthService {
 
   // ─── Login ────────────────────────────────────────────────────
   async login(dto: LoginDto, res: Response) {
+    // Username butun tizimda unique — telefon esa turli tenantlarda takrorlanishi mumkin
     const user = await this.prisma.user.findUnique({
-      where: { phone: dto.phone },
+      where: { username: dto.username },
       include: { role: true },
     });
 
     if (!user || !user.isActive) {
-      throw new BadRequestException("Telefon raqam yoki parol noto'g'ri");
+      throw new BadRequestException("Username yoki parol noto'g'ri");
     }
 
     const passwordMatch = await bcrypt.compare(dto.password, user.passwordHash);
     if (!passwordMatch) {
-      throw new BadRequestException("Telefon raqam yoki parol noto'g'ri");
+      throw new BadRequestException("Username yoki parol noto'g'ri");
     }
 
     const payload: AuthPayloadType = {
       sub: user.id,
+      username: user.username,
       phone: user.phone,
       role: user.role.name,
       tenantId: user.tenantId,
@@ -65,6 +67,7 @@ export class AuthService {
       message: 'Login successfully',
       user: {
         id: user.id,
+        username: user.username,
         phone: user.phone,
         fullName: user.fullName,
         role: user.role.name,
@@ -107,6 +110,7 @@ export class AuthService {
 
     const newPayload: AuthPayloadType = {
       sub: user.id,
+      username: user.username,
       phone: user.phone,
       role: user.role.name,
       tenantId: user.tenantId,
@@ -166,13 +170,17 @@ export class AuthService {
 
   // ─── Forgot password ─────────────────────────────────────────
   async forgotPassword(dto: ForgotPasswordDto) {
+    // Email unique emas (bir odam turli tenantlarda bir xil email ishlatishi mumkin),
+    // shuning uchun user username bo'yicha topiladi va xat uning emailiga yuboriladi
     const user = await this.prisma.user.findUnique({
-      where: { email: dto.email },
+      where: { username: dto.username },
     });
 
-    // Xavfsizlik uchun: user topilmasa ham xato ko'rsatmaymiz
-    if (!user || !user.isActive) {
-      return { message: "Agar email ro'yxatda bo'lsa, xabar yuborildi" };
+    // Xavfsizlik uchun: user topilmasa yoki emaili bo'lmasa ham xato ko'rsatmaymiz
+    if (!user || !user.isActive || !user.email) {
+      return {
+        message: "Agar foydalanuvchining emaili bo'lsa, unga xabar yuborildi",
+      };
     }
 
     // Bir martalik token yaratish
@@ -189,12 +197,14 @@ export class AuthService {
 
     // Emailga xabar yuborish
     await this.mail.sendPasswordReset({
-      to: user.email!,
+      to: user.email,
       fullName: user.fullName,
       token: resetToken,
     });
 
-    return { message: "Agar email ro'yxatda bo'lsa, xabar yuborildi" };
+    return {
+      message: "Agar foydalanuvchining emaili bo'lsa, unga xabar yuborildi",
+    };
   }
 
   // ─── Reset password ───────────────────────────────────────────

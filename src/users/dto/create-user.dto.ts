@@ -7,9 +7,21 @@ import {
   Matches,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsUsername } from './username.decorator';
 
 export class CreateUserDto {
-  @ApiProperty({ example: '+998901234567' })
+  @ApiProperty({
+    example: 'ali_valiyev',
+    description:
+      "Login uchun, butun tizimda unique. 3–30 belgi: a-z, 0-9, '_', '.' (kichik harfga keltiriladi)",
+  })
+  @IsUsername()
+  username: string;
+
+  @ApiProperty({
+    example: '+998901234567',
+    description: 'Tenant ichida unique',
+  })
   @IsString()
   @Matches(/^\+998[0-9]{9}$/, {
     message: 'Telefon raqam formati: +998XXXXXXXXX',

@@ -224,10 +224,11 @@ model RolePermission {
 
 model User {
   id           String    @id @default(uuid()) @db.Uuid
-  phone        String    @unique @db.VarChar(20)
+  username     String    @unique @db.VarChar(30)
+  phone        String    @db.VarChar(20)
   passwordHash String    @map("password_hash")
   fullName     String    @map("full_name") @db.VarChar(150)
-  email        String?   @unique @db.VarChar(150)
+  email        String?   @db.VarChar(150)
   avatarUrl    String?   @map("avatar_url")
   parentPhone  String?   @map("parent_phone") @db.VarChar(20)
   isActive     Boolean   @default(true) @map("is_active")
@@ -281,8 +282,11 @@ model User {
   rewardCategories          RewardCategory[]
   auditLogsCreatedBy        AuditLog[]          @relation("AuditCreatedBy")
 
+  // Telefon faqat tenant ichida unique — turli tenantlarda bir xil raqamli alohida userlar bo'lishi mumkin
+  @@unique([tenantId, phone])
   @@index([tenantId])
   @@index([phone])
+  @@index([email])
   @@index([roleId])
   @@index([isActive])
   @@index([isDeleted])

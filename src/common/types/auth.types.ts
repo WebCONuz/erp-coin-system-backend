@@ -2,6 +2,7 @@ import { Request } from 'express';
 
 export type AuthPayloadType = {
   sub: string;
+  username: string;
   phone: string;
   role: string;
   tenantId: string;
@@ -14,6 +15,7 @@ export interface RequestWithUser extends Request {
 
 export type ReqUserType = {
   id: string;
+  username: string;
   phone: string;
   fullName: string;
   tenantId: string;

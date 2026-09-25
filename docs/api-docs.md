@@ -127,20 +127,26 @@ Response:
 
 ```json
 {
-  "phone": "+998901234567",
+  "username": "ali_valiyev",
   "password": "Parol123!"
 }
 ```
+
+> Login **username** orqali (telefon orqali emas). Batafsil: [username-auth-and-profile-api.md](./username-auth-and-profile-api.md)
 
 **200 Response:**
 
 ```json
 {
+  "status": "success",
+  "message": "Login successfully",
   "user": {
     "id": "uuid",
-    "fullName": "Ali Valiyev",
+    "username": "ali_valiyev",
     "phone": "+998901234567",
-    "role": { "name": "admin", "level": 50 }
+    "fullName": "Ali Valiyev",
+    "role": "admin",
+    "tenantId": "uuid"
   }
 }
 ```
@@ -165,7 +171,7 @@ Yangi `access_token` hosil qiladi. `refresh_token` cookie'dan o'qiladi. Body ker
 
 Ruxsat: **barcha rollar**
 
-Tizimga kirgan foydalanuvchining to'liq profili.
+Tizimga kirgan foydalanuvchining to'liq profili. O'zini tahrirlash: `PATCH /users/me` — batafsil [username-auth-and-profile-api.md](./username-auth-and-profile-api.md).
 
 ---
 
@@ -175,16 +181,16 @@ Tizimga kirgan foydalanuvchining to'liq profili.
 
 Ruxsat: `admin`, `super_admin`, `teacher`
 
-| Query param | Tur     | Izoh                                                             |
-| ----------- | ------- | ----------------------------------------------------------------|
-| `search`    | string  | Ism yoki telefon bo'yicha                                        |
-| `groupId`   | UUID    | Guruh bo'yicha filter                                            |
-| `isActive`  | boolean | `true`=faol, `false`=arxivlangan                                 |
-| `sortBy`    | string  | `fullName` \| `coin` \| `createdAt` (default: `createdAt`)       |
-| `sortOrder` | string  | `asc` \| `desc` (default: `desc`)                                |
-| `page`      | number  | Default: 1                                                       |
-| `limit`     | number  | Default: 20                                                      |
-| `tenantId`  | UUID    | Faqat `super_admin` uchun                                        |
+| Query param | Tur     | Izoh                                                       |
+| ----------- | ------- | ---------------------------------------------------------- |
+| `search`    | string  | Ism yoki telefon bo'yicha                                  |
+| `groupId`   | UUID    | Guruh bo'yicha filter                                      |
+| `isActive`  | boolean | `true`=faol, `false`=arxivlangan                           |
+| `sortBy`    | string  | `fullName` \| `coin` \| `createdAt` (default: `createdAt`) |
+| `sortOrder` | string  | `asc` \| `desc` (default: `desc`)                          |
+| `page`      | number  | Default: 1                                                 |
+| `limit`     | number  | Default: 20                                                |
+| `tenantId`  | UUID    | Faqat `super_admin` uchun                                  |
 
 > Teacher faqat o'z guruhidagi studentlarni ko'radi — `groupId` va `sortBy`/`sortOrder` teacher uchun ham ishlaydi. To'liq tafsilot: [students-list-filters-api.md](./students-list-filters-api.md)
 
@@ -275,15 +281,16 @@ await api.patch(`/students/${id}/avatar`, form);
 
 Ruxsat: `admin`, `super_admin`
 
-| Maydon        | Tur    |              | Izoh                   |
-| ------------- | ------ | ------------ | ---------------------- |
-| `phone`       | string | **required** | `+998XXXXXXXXX`        |
-| `fullName`    | string | **required** |                        |
-| `password`    | string | **required** | min 6 belgi            |
-| `roleId`      | UUID   | **required** | `GET /roles` dan oling |
-| `email`       | string | optional     |                        |
-| `parentPhone` | string | optional     | `+998XXXXXXXXX`        |
-| `avatarUrl`   | string | optional     |                        |
+| Maydon        | Tur    |              | Izoh                                            |
+| ------------- | ------ | ------------ | ----------------------------------------------- |
+| `username`    | string | **required** | Butun tizimda unique, 3–30 belgi: `a-z 0-9 _ .` |
+| `phone`       | string | **required** | `+998XXXXXXXXX`, tenant ichida unique           |
+| `fullName`    | string | **required** |                                                 |
+| `password`    | string | **required** | min 6 belgi                                     |
+| `roleId`      | UUID   | **required** | `GET /roles` dan oling                          |
+| `email`       | string | optional     |                                                 |
+| `parentPhone` | string | optional     | `+998XXXXXXXXX`                                 |
+| `avatarUrl`   | string | optional     |                                                 |
 
 ---
 

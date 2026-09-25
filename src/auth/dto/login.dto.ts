@@ -1,13 +1,11 @@
-import { IsString, Matches, MinLength } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsUsername } from 'src/users/dto/username.decorator';
 
 export class LoginDto {
-  @ApiProperty({ example: '+998901234567' })
-  @IsString()
-  @Matches(/^\+998[0-9]{9}$/, {
-    message: 'Telefon raqam formati: +998XXXXXXXXX',
-  })
-  phone: string;
+  @ApiProperty({ example: 'ali_valiyev' })
+  @IsUsername()
+  username: string;
 
   @ApiProperty({ example: 'Parol123!' })
   @IsString()

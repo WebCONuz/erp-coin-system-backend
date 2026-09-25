@@ -30,6 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     // req.user ga yoziladi — barcha controllerlarda ishlatiladi
     return {
       id: user.id,
+      username: user.username,
       phone: user.phone,
       fullName: user.fullName,
       tenantId: user.tenantId,

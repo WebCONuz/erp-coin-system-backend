@@ -45,11 +45,13 @@ ESKIZ_EMAIL="your@email.com"
 ESKIZ_PASSWORD="eskiz_password"
 ESKIZ_SENDER="4546"
 
+CREATOR_USERNAME="creator"               # login uchun (3–30 belgi: a-z, 0-9, _ .)
 CREATOR_PHONE="+998901234567"
 CREATOR_PASSWORD="StrongPass123!"
 CREATOR_NAME="Creator User"
 CREATOR_EMAIL="creator@email.com"
 
+SUPER_ADMIN_USERNAME="superadmin"
 SUPER_ADMIN_PHONE="+998907654321"
 SUPER_ADMIN_PASSWORD="StrongPass123!"
 SUPER_ADMIN_NAME="Super Admin"
@@ -135,6 +137,7 @@ Tenant turi (`Tenant.type`): `learning_center`, `school`, `academic_lyceum`, `co
 
 ### Autentifikatsiya
 
+- Login **`username` + parol** orqali. `username` butun tizimda unique; `phone` faqat tenant ichida unique (bir odam turli tenantlarda bir xil raqam bilan alohida user bo'la oladi); `email` unique emas, parol tiklash username orqali
 - JWT tokenlar **HttpOnly cookie**da saqlanadi (`access_token` 15 daqiqa, `refresh_token` 1 kun)
 - `JwtStrategy` cookie'dan token o'qiydi — Authorization header ishlatilmaydi
 - Refresh token hash sifatida DB da saqlanadi, logout bo'lganda `null` bo'ladi
@@ -264,7 +267,7 @@ Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin 
 
 - `system` slug li System Tenant
 - `creator` (level 100) va `super_admin` (level 90) rollari
-- Creator va Super Admin userlari (`.env` dagi `CREATOR_*` va `SUPER_ADMIN_*` dan)
+- Creator va Super Admin userlari (`.env` dagi `CREATOR_*` va `SUPER_ADMIN_*` dan). Mavjud bo'lsa, `username`i `CREATOR_USERNAME` / `SUPER_ADMIN_USERNAME` ga keltiriladi
 - **Backfill:** mavjud barcha tenantlarga yetishmayotgan `admin`/`teacher`/`student` rollarini yaratadi va ularning `level`ini standart qiymatga keltiradi
 - **Backfill:** har bir tenantda asosiy coin qoidalari (Davomat, Uyga vazifa) bo'lishini ta'minlaydi — mos umumiy auto qoida bo'lsa `isBuiltIn: true` deb belgilaydi (coin miqdori saqlanadi), bo'lmasa default qiymat bilan yaratadi (`createdBy` — super_admin)
 
@@ -274,19 +277,20 @@ Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin 
 
 API o'zgarishlari bo'yicha batafsil qo'llanmalar [docs/](docs/) papkasida:
 
-| Fayl                                                                                            | Mavzu                                                                   |
-| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [api-docs.md](docs/api-docs.md)                                                                 | Umumiy API qo'llanma                                                    |
-| [roles-readonly-api.md](docs/roles-readonly-api.md)                                             | Rollar faqat o'qish uchun, tenant bilan avtomatik yaratilishi           |
-| [coin-rules-built-in-api.md](docs/coin-rules-built-in-api.md)                                   | Asosiy coin qoidalari (`isBuiltIn`), tenant bilan avtomatik yaratilishi |
-| [subject-fani-api.md](docs/subject-fani-api.md)                                                 | Fanlar (Subject)                                                        |
-| [coin-rules-priority-and-session-lock-api.md](docs/coin-rules-priority-and-session-lock-api.md) | Coin qoidalari ustuvorligi, qulflangan sessiya                          |
-| [attendance-coin-dedup-and-ischecked-api.md](docs/attendance-coin-dedup-and-ischecked-api.md)   | Yo'qlamada coin dublikati tuzatilishi, `isChecked`                      |
-| [bulk-coin-api.md](docs/bulk-coin-api.md)                                                       | Bir nechta o'quvchiga coin berish                                       |
-| [students-list-filters-api.md](docs/students-list-filters-api.md)                               | O'quvchilar ro'yxati filtrlari                                          |
-| [student-parent-profile-api.md](docs/student-parent-profile-api.md)                             | O'quvchi / ota-ona profili                                              |
-| [teacher-profile-api.md](docs/teacher-profile-api.md)                                           | O'qituvchi profili                                                      |
-| [student-dashboard-reward-prices-api.md](docs/student-dashboard-reward-prices-api.md)           | Student dashboard'da sovg'a narxlari oralig'i (GardenPath)              |
+| Fayl                                                                                            | Mavzu                                                                        |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [api-docs.md](docs/api-docs.md)                                                                 | Umumiy API qo'llanma                                                         |
+| [roles-readonly-api.md](docs/roles-readonly-api.md)                                             | Rollar faqat o'qish uchun, tenant bilan avtomatik yaratilishi                |
+| [coin-rules-built-in-api.md](docs/coin-rules-built-in-api.md)                                   | Asosiy coin qoidalari (`isBuiltIn`), tenant bilan avtomatik yaratilishi      |
+| [subject-fani-api.md](docs/subject-fani-api.md)                                                 | Fanlar (Subject)                                                             |
+| [coin-rules-priority-and-session-lock-api.md](docs/coin-rules-priority-and-session-lock-api.md) | Coin qoidalari ustuvorligi, qulflangan sessiya                               |
+| [attendance-coin-dedup-and-ischecked-api.md](docs/attendance-coin-dedup-and-ischecked-api.md)   | Yo'qlamada coin dublikati tuzatilishi, `isChecked`                           |
+| [bulk-coin-api.md](docs/bulk-coin-api.md)                                                       | Bir nechta o'quvchiga coin berish                                            |
+| [students-list-filters-api.md](docs/students-list-filters-api.md)                               | O'quvchilar ro'yxati filtrlari                                               |
+| [student-parent-profile-api.md](docs/student-parent-profile-api.md)                             | O'quvchi / ota-ona profili                                                   |
+| [teacher-profile-api.md](docs/teacher-profile-api.md)                                           | O'qituvchi profili                                                           |
+| [student-dashboard-reward-prices-api.md](docs/student-dashboard-reward-prices-api.md)           | Student dashboard'da sovg'a narxlari oralig'i (GardenPath)                   |
+| [username-auth-and-profile-api.md](docs/username-auth-and-profile-api.md)                       | Username bilan login, tenant ichida unique telefon, o'z profilini tahrirlash |
 
 ---
 

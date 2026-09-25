@@ -69,6 +69,7 @@ export class StudentsService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -84,6 +85,7 @@ export class StudentsService {
         orderBy: this.buildStudentOrderBy(query.sortBy, query.sortOrder),
         select: {
           id: true,
+          username: true,
           fullName: true,
           phone: true,
           email: true,
@@ -125,6 +127,7 @@ export class StudentsService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -136,6 +139,7 @@ export class StudentsService {
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
+          username: true,
           fullName: true,
           phone: true,
           email: true,
@@ -401,6 +405,7 @@ export class StudentsService {
       where: { id: studentId, tenantId, isDeleted: false },
       select: {
         id: true,
+        username: true,
         fullName: true,
         avatarUrl: true,
         wallet: { select: { balance: true, updatedAt: true } },
@@ -585,6 +590,7 @@ export class StudentsService {
     return {
       student: {
         id: student.id,
+        username: student.username,
         fullName: student.fullName,
         avatarUrl: student.avatarUrl,
       },
@@ -662,6 +668,7 @@ export class StudentsService {
       where.OR = [
         { fullName: { contains: search, mode: 'insensitive' } },
         { phone: { contains: search } },
+        { username: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -673,6 +680,7 @@ export class StudentsService {
         orderBy: this.buildStudentOrderBy(query.sortBy, query.sortOrder),
         select: {
           id: true,
+          username: true,
           fullName: true,
           phone: true,
           email: true,

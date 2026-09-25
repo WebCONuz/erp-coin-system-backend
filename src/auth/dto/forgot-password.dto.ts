@@ -1,8 +1,9 @@
-import { IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsUsername } from 'src/users/dto/username.decorator';
 
 export class ForgotPasswordDto {
-  @ApiProperty({ example: 'ali@gmail.com' })
-  @IsEmail()
-  email: string;
+  // Email endi unique emas — user username bo'yicha topiladi, xat uning emailiga yuboriladi
+  @ApiProperty({ example: 'ali_valiyev' })
+  @IsUsername()
+  username: string;
 }

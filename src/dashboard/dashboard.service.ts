@@ -40,6 +40,7 @@ export class DashboardService {
       monthEarnedAgg,
       monthDeductedAgg,
       pendingPurchasesCount,
+      approvedPurchasesCount,
       todaySessionsCount,
       pendingAttendanceCount,
       recentTransactions,
@@ -94,7 +95,11 @@ export class DashboardService {
         _sum: { amount: true },
       }),
       this.prisma.purchase.count({
-        where: { status: 'pending', student: { tenantId } },
+        where: { status: 'pending', isDeleted: false, student: { tenantId } },
+      }),
+      // Tasdiqlangan, lekin hali talabaga topshirilmagan xaridlar
+      this.prisma.purchase.count({
+        where: { status: 'approved', isDeleted: false, student: { tenantId } },
       }),
       this.prisma.session.count({
         where: {
@@ -187,6 +192,7 @@ export class DashboardService {
       },
       needsAttention: {
         pendingPurchases: pendingPurchasesCount,
+        approvedPurchases: approvedPurchasesCount,
         pendingAttendanceSessions: pendingAttendanceCount,
       },
       todaySessionsCount,

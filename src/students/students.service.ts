@@ -567,7 +567,7 @@ export class StudentsService {
         where: { studentId, status: 'pending' },
       }),
       this.prisma.purchase.findMany({
-        where: { studentId },
+        where: { studentId, isDeleted: false },
         orderBy: { purchasedAt: 'desc' },
         take: 5,
         select: {
@@ -575,6 +575,7 @@ export class StudentsService {
           coinSpent: true,
           status: true,
           purchasedAt: true,
+          deliveredAt: true,
           reward: { select: { id: true, title: true, imageUrl: true } },
         },
       }),

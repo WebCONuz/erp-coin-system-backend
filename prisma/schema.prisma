@@ -267,6 +267,7 @@ model User {
   rewardsCreated            Reward[]
   purchases                 Purchase[]          @relation("StudentPurchases")
   purchasesApproved         Purchase[]          @relation("ApprovedByUser")
+  purchasesDelivered        Purchase[]          @relation("DeliveredByUser")
   importLogs                ImportLog[]
   createdCourses            Course[]
   createdSubjects           Subject[]
@@ -747,16 +748,19 @@ model Purchase {
   deliveryNote String?        @map("delivery_note")
   isDeleted    Boolean        @default(false) @map("is_deleted")
   purchasedAt  DateTime       @default(now()) @map("purchased_at") @db.Timestamptz
+  deliveredAt  DateTime?      @map("delivered_at") @db.Timestamptz
   updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt    DateTime?      @map("deleted_at") @db.Timestamptz
 
-  studentId    String  @map("student_id") @db.Uuid
-  rewardId     String  @map("reward_id") @db.Uuid
-  approvedById String? @map("approved_by") @db.Uuid
+  studentId     String  @map("student_id") @db.Uuid
+  rewardId      String  @map("reward_id") @db.Uuid
+  approvedById  String? @map("approved_by") @db.Uuid
+  deliveredById String? @map("delivered_by") @db.Uuid
 
-  student    User    @relation("StudentPurchases", fields: [studentId], references: [id])
-  reward     Reward  @relation(fields: [rewardId], references: [id])
-  approvedBy User?   @relation("ApprovedByUser", fields: [approvedById], references: [id])
+  student     User    @relation("StudentPurchases", fields: [studentId], references: [id])
+  reward      Reward  @relation(fields: [rewardId], references: [id])
+  approvedBy  User?   @relation("ApprovedByUser", fields: [approvedById], references: [id])
+  deliveredBy User?   @relation("DeliveredByUser", fields: [deliveredById], references: [id])
 
   @@index([studentId])
   @@index([status])

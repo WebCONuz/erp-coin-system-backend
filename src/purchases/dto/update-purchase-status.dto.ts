@@ -1,25 +1,43 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PurchaseStatus } from 'src/generated/prisma/enums';
+
+// Admin o'rnata oladigan statuslar. `pending` — faqat xarid yaratilganda.
+export const ADMIN_SETTABLE_PURCHASE_STATUSES = [
+  PurchaseStatus.approved,
+  PurchaseStatus.delivered,
+  PurchaseStatus.cancelled,
+] as const;
+
+export type AdminSettablePurchaseStatus =
+  (typeof ADMIN_SETTABLE_PURCHASE_STATUSES)[number];
 
 export class UpdatePurchaseStatusDto {
   @ApiProperty({
     example: 'approved',
-    enum: PurchaseStatus,
+    enum: ADMIN_SETTABLE_PURCHASE_STATUSES,
     description:
-      'Xarid holati: approved (tasdiqlash/topshirish) yoki rejected (rad etish)',
+      'approved — tasdiqlash (sovg‘a tayyor), delivered — qo‘lga berildi, cancelled — bekor qilish (coin qaytadi)',
   })
-  @IsEnum(PurchaseStatus, {
-    message: 'Status faqat approved yoki rejected bo‘lishi mumkin',
+  @IsIn(ADMIN_SETTABLE_PURCHASE_STATUSES, {
+    message: 'Status faqat approved, delivered yoki cancelled bo‘lishi mumkin',
   })
   @IsNotEmpty()
-  status: PurchaseStatus;
+  status: AdminSettablePurchaseStatus;
 
   @ApiPropertyOptional({
-    example: 'Ushbu sovg‘a vaqtincha tugab qolgani sababli xarid rad etildi',
-    description: 'Xarid rad etilganda yoki tasdiqlanganda yoziladigan izoh',
+    example: 'Ushbu sovg‘a vaqtincha tugab qolgani sababli xarid bekor qilindi',
+    description:
+      'Admin izohi. Berilsa, xaridning `deliveryNote` maydoniga yoziladi',
   })
   @IsString()
   @IsOptional()
+  @MaxLength(500)
   adminNote?: string;
 }

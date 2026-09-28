@@ -349,6 +349,7 @@ export type UserWhereInput = {
   rewardsCreated?: Prisma.RewardListRelationFilter;
   purchases?: Prisma.PurchaseListRelationFilter;
   purchasesApproved?: Prisma.PurchaseListRelationFilter;
+  purchasesDelivered?: Prisma.PurchaseListRelationFilter;
   importLogs?: Prisma.ImportLogListRelationFilter;
   createdCourses?: Prisma.CourseListRelationFilter;
   createdSubjects?: Prisma.SubjectListRelationFilter;
@@ -407,6 +408,7 @@ export type UserOrderByWithRelationInput = {
   rewardsCreated?: Prisma.RewardOrderByRelationAggregateInput;
   purchases?: Prisma.PurchaseOrderByRelationAggregateInput;
   purchasesApproved?: Prisma.PurchaseOrderByRelationAggregateInput;
+  purchasesDelivered?: Prisma.PurchaseOrderByRelationAggregateInput;
   importLogs?: Prisma.ImportLogOrderByRelationAggregateInput;
   createdCourses?: Prisma.CourseOrderByRelationAggregateInput;
   createdSubjects?: Prisma.SubjectOrderByRelationAggregateInput;
@@ -486,6 +488,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
     rewardsCreated?: Prisma.RewardListRelationFilter;
     purchases?: Prisma.PurchaseListRelationFilter;
     purchasesApproved?: Prisma.PurchaseListRelationFilter;
+    purchasesDelivered?: Prisma.PurchaseListRelationFilter;
     importLogs?: Prisma.ImportLogListRelationFilter;
     createdCourses?: Prisma.CourseListRelationFilter;
     createdSubjects?: Prisma.SubjectListRelationFilter;
@@ -624,6 +627,7 @@ export type UserCreateInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -678,6 +682,7 @@ export type UserUncheckedCreateInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -750,6 +755,7 @@ export type UserUpdateInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -825,6 +831,7 @@ export type UserUncheckedUpdateInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -1937,6 +1944,15 @@ export type UserCreateNestedOneWithoutPurchasesApprovedInput = {
   connect?: Prisma.UserWhereUniqueInput;
 };
 
+export type UserCreateNestedOneWithoutPurchasesDeliveredInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutPurchasesDeliveredInput,
+    Prisma.UserUncheckedCreateWithoutPurchasesDeliveredInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchasesDeliveredInput;
+  connect?: Prisma.UserWhereUniqueInput;
+};
+
 export type UserUpdateOneRequiredWithoutPurchasesNestedInput = {
   create?: Prisma.XOR<
     Prisma.UserCreateWithoutPurchasesInput,
@@ -1970,6 +1986,25 @@ export type UserUpdateOneWithoutPurchasesApprovedNestedInput = {
       Prisma.UserUpdateWithoutPurchasesApprovedInput
     >,
     Prisma.UserUncheckedUpdateWithoutPurchasesApprovedInput
+  >;
+};
+
+export type UserUpdateOneWithoutPurchasesDeliveredNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutPurchasesDeliveredInput,
+    Prisma.UserUncheckedCreateWithoutPurchasesDeliveredInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPurchasesDeliveredInput;
+  upsert?: Prisma.UserUpsertWithoutPurchasesDeliveredInput;
+  disconnect?: Prisma.UserWhereInput | boolean;
+  delete?: Prisma.UserWhereInput | boolean;
+  connect?: Prisma.UserWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.UserUpdateToOneWithWhereWithoutPurchasesDeliveredInput,
+      Prisma.UserUpdateWithoutPurchasesDeliveredInput
+    >,
+    Prisma.UserUncheckedUpdateWithoutPurchasesDeliveredInput
   >;
 };
 
@@ -2218,6 +2253,7 @@ export type UserCreateWithoutTenantInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -2271,6 +2307,7 @@ export type UserUncheckedCreateWithoutTenantInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -2396,6 +2433,7 @@ export type UserCreateWithoutRoleInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -2449,6 +2487,7 @@ export type UserUncheckedCreateWithoutRoleInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -2543,6 +2582,7 @@ export type UserCreateWithoutCreatedUsersInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -2596,6 +2636,7 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -2657,6 +2698,7 @@ export type UserCreateWithoutCreatedByInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -2710,6 +2752,7 @@ export type UserUncheckedCreateWithoutCreatedByInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -2778,6 +2821,7 @@ export type UserCreateWithoutArchivedUsersInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -2831,6 +2875,7 @@ export type UserUncheckedCreateWithoutArchivedUsersInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -2892,6 +2937,7 @@ export type UserCreateWithoutArchivedByInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -2945,6 +2991,7 @@ export type UserUncheckedCreateWithoutArchivedByInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -3051,6 +3098,7 @@ export type UserUpdateWithoutCreatedUsersInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -3125,6 +3173,7 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -3244,6 +3293,7 @@ export type UserUpdateWithoutArchivedUsersInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -3318,6 +3368,7 @@ export type UserUncheckedUpdateWithoutArchivedUsersInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -3399,6 +3450,7 @@ export type UserCreateWithoutWalletInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -3452,6 +3504,7 @@ export type UserUncheckedCreateWithoutWalletInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -3551,6 +3604,7 @@ export type UserUpdateWithoutWalletInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -3625,6 +3679,7 @@ export type UserUncheckedUpdateWithoutWalletInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -3679,6 +3734,7 @@ export type UserCreateWithoutCreatedCoursesInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -3732,6 +3788,7 @@ export type UserUncheckedCreateWithoutCreatedCoursesInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -3831,6 +3888,7 @@ export type UserUpdateWithoutCreatedCoursesInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -3905,6 +3963,7 @@ export type UserUncheckedUpdateWithoutCreatedCoursesInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -3958,6 +4017,7 @@ export type UserCreateWithoutCreatedSubjectsInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -4011,6 +4071,7 @@ export type UserUncheckedCreateWithoutCreatedSubjectsInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -4110,6 +4171,7 @@ export type UserUpdateWithoutCreatedSubjectsInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -4184,6 +4246,7 @@ export type UserUncheckedUpdateWithoutCreatedSubjectsInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -4236,6 +4299,7 @@ export type UserCreateWithoutTaughtGroupsInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -4289,6 +4353,7 @@ export type UserUncheckedCreateWithoutTaughtGroupsInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -4350,6 +4415,7 @@ export type UserCreateWithoutCreatedGroupsInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -4403,6 +4469,7 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -4502,6 +4569,7 @@ export type UserUpdateWithoutTaughtGroupsInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -4576,6 +4644,7 @@ export type UserUncheckedUpdateWithoutTaughtGroupsInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -4667,6 +4736,7 @@ export type UserUpdateWithoutCreatedGroupsInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -4741,6 +4811,7 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -4794,6 +4865,7 @@ export type UserCreateWithoutGroupMembershipsInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -4847,6 +4919,7 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -4908,6 +4981,7 @@ export type UserCreateWithoutAddedGroupStudentsInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -4961,6 +5035,7 @@ export type UserUncheckedCreateWithoutAddedGroupStudentsInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -5060,6 +5135,7 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -5134,6 +5210,7 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -5225,6 +5302,7 @@ export type UserUpdateWithoutAddedGroupStudentsInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -5299,6 +5377,7 @@ export type UserUncheckedUpdateWithoutAddedGroupStudentsInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -5353,6 +5432,7 @@ export type UserCreateWithoutScheduledTemplatesInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -5406,6 +5486,7 @@ export type UserUncheckedCreateWithoutScheduledTemplatesInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -5467,6 +5548,7 @@ export type UserCreateWithoutScheduleTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -5520,6 +5602,7 @@ export type UserUncheckedCreateWithoutScheduleTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -5619,6 +5702,7 @@ export type UserUpdateWithoutScheduledTemplatesInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -5693,6 +5777,7 @@ export type UserUncheckedUpdateWithoutScheduledTemplatesInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -5784,6 +5869,7 @@ export type UserUpdateWithoutScheduleTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -5858,6 +5944,7 @@ export type UserUncheckedUpdateWithoutScheduleTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -5911,6 +5998,7 @@ export type UserCreateWithoutScheduleExceptionsCreatedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -5964,6 +6052,7 @@ export type UserUncheckedCreateWithoutScheduleExceptionsCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -6063,6 +6152,7 @@ export type UserUpdateWithoutScheduleExceptionsCreatedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -6137,6 +6227,7 @@ export type UserUncheckedUpdateWithoutScheduleExceptionsCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -6189,6 +6280,7 @@ export type UserCreateWithoutCoinRulesCreatedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -6242,6 +6334,7 @@ export type UserUncheckedCreateWithoutCoinRulesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -6341,6 +6434,7 @@ export type UserUpdateWithoutCoinRulesCreatedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -6415,6 +6509,7 @@ export type UserUncheckedUpdateWithoutCoinRulesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -6468,6 +6563,7 @@ export type UserCreateWithoutLedSessionsInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -6521,6 +6617,7 @@ export type UserUncheckedCreateWithoutLedSessionsInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -6620,6 +6717,7 @@ export type UserUpdateWithoutLedSessionsInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -6694,6 +6792,7 @@ export type UserUncheckedUpdateWithoutLedSessionsInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -6747,6 +6846,7 @@ export type UserCreateWithoutAttendanceAsStudentInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -6800,6 +6900,7 @@ export type UserUncheckedCreateWithoutAttendanceAsStudentInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -6861,6 +6962,7 @@ export type UserCreateWithoutAttendanceRecordedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -6914,6 +7016,7 @@ export type UserUncheckedCreateWithoutAttendanceRecordedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -7013,6 +7116,7 @@ export type UserUpdateWithoutAttendanceAsStudentInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -7087,6 +7191,7 @@ export type UserUncheckedUpdateWithoutAttendanceAsStudentInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -7178,6 +7283,7 @@ export type UserUpdateWithoutAttendanceRecordedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -7252,6 +7358,7 @@ export type UserUncheckedUpdateWithoutAttendanceRecordedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -7305,6 +7412,7 @@ export type UserCreateWithoutCoinTransactionsReceivedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -7358,6 +7466,7 @@ export type UserUncheckedCreateWithoutCoinTransactionsReceivedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -7419,6 +7528,7 @@ export type UserCreateWithoutCoinTransactionsGivenInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -7472,6 +7582,7 @@ export type UserUncheckedCreateWithoutCoinTransactionsGivenInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -7571,6 +7682,7 @@ export type UserUpdateWithoutCoinTransactionsReceivedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -7645,6 +7757,7 @@ export type UserUncheckedUpdateWithoutCoinTransactionsReceivedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -7736,6 +7849,7 @@ export type UserUpdateWithoutCoinTransactionsGivenInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -7810,6 +7924,7 @@ export type UserUncheckedUpdateWithoutCoinTransactionsGivenInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -7864,6 +7979,7 @@ export type UserCreateWithoutRewardCategoriesInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -7917,6 +8033,7 @@ export type UserUncheckedCreateWithoutRewardCategoriesInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -8016,6 +8133,7 @@ export type UserUpdateWithoutRewardCategoriesInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -8090,6 +8208,7 @@ export type UserUncheckedUpdateWithoutRewardCategoriesInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -8142,6 +8261,7 @@ export type UserCreateWithoutRewardsCreatedInput = {
   coinRulesCreated?: Prisma.CoinRuleCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -8195,6 +8315,7 @@ export type UserUncheckedCreateWithoutRewardsCreatedInput = {
   coinRulesCreated?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -8294,6 +8415,7 @@ export type UserUpdateWithoutRewardsCreatedInput = {
   coinRulesCreated?: Prisma.CoinRuleUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -8368,6 +8490,7 @@ export type UserUncheckedUpdateWithoutRewardsCreatedInput = {
   coinRulesCreated?: Prisma.CoinRuleUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -8421,6 +8544,7 @@ export type UserCreateWithoutPurchasesInput = {
   coinRulesCreated?: Prisma.CoinRuleCreateNestedManyWithoutCreatedByInput;
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -8474,6 +8598,7 @@ export type UserUncheckedCreateWithoutPurchasesInput = {
   coinRulesCreated?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -8535,6 +8660,7 @@ export type UserCreateWithoutPurchasesApprovedInput = {
   coinRulesCreated?: Prisma.CoinRuleCreateNestedManyWithoutCreatedByInput;
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -8588,6 +8714,7 @@ export type UserUncheckedCreateWithoutPurchasesApprovedInput = {
   coinRulesCreated?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -8609,6 +8736,122 @@ export type UserCreateOrConnectWithoutPurchasesApprovedInput = {
   create: Prisma.XOR<
     Prisma.UserCreateWithoutPurchasesApprovedInput,
     Prisma.UserUncheckedCreateWithoutPurchasesApprovedInput
+  >;
+};
+
+export type UserCreateWithoutPurchasesDeliveredInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  refreshTokenHash?: string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
+  role: Prisma.RoleCreateNestedOneWithoutUsersInput;
+  createdBy?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput;
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatedByInput;
+  archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
+  archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
+  createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+};
+
+export type UserUncheckedCreateWithoutPurchasesDeliveredInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  archivedById?: string | null;
+  createdById?: string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  refreshTokenHash?: string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenantId: string;
+  roleId: string;
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
+  archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
+  createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+};
+
+export type UserCreateOrConnectWithoutPurchasesDeliveredInput = {
+  where: Prisma.UserWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutPurchasesDeliveredInput,
+    Prisma.UserUncheckedCreateWithoutPurchasesDeliveredInput
   >;
 };
 
@@ -8687,6 +8930,7 @@ export type UserUpdateWithoutPurchasesInput = {
   coinRulesCreated?: Prisma.CoinRuleUpdateManyWithoutCreatedByNestedInput;
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -8761,6 +9005,7 @@ export type UserUncheckedUpdateWithoutPurchasesInput = {
   coinRulesCreated?: Prisma.CoinRuleUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -8852,6 +9097,7 @@ export type UserUpdateWithoutPurchasesApprovedInput = {
   coinRulesCreated?: Prisma.CoinRuleUpdateManyWithoutCreatedByNestedInput;
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -8926,6 +9172,174 @@ export type UserUncheckedUpdateWithoutPurchasesApprovedInput = {
   coinRulesCreated?: Prisma.CoinRuleUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
+  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
+  createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+};
+
+export type UserUpsertWithoutPurchasesDeliveredInput = {
+  update: Prisma.XOR<
+    Prisma.UserUpdateWithoutPurchasesDeliveredInput,
+    Prisma.UserUncheckedUpdateWithoutPurchasesDeliveredInput
+  >;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutPurchasesDeliveredInput,
+    Prisma.UserUncheckedCreateWithoutPurchasesDeliveredInput
+  >;
+  where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutPurchasesDeliveredInput = {
+  where?: Prisma.UserWhereInput;
+  data: Prisma.XOR<
+    Prisma.UserUpdateWithoutPurchasesDeliveredInput,
+    Prisma.UserUncheckedUpdateWithoutPurchasesDeliveredInput
+  >;
+};
+
+export type UserUpdateWithoutPurchasesDeliveredInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  refreshTokenHash?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput;
+  role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
+  createdBy?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput;
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatedByNestedInput;
+  archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
+  archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
+  createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutPurchasesDeliveredInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  archivedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  refreshTokenHash?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roleId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
+  archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUncheckedUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -8980,6 +9394,7 @@ export type UserCreateWithoutSmsTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -9033,6 +9448,7 @@ export type UserUncheckedCreateWithoutSmsTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -9132,6 +9548,7 @@ export type UserUpdateWithoutSmsTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -9206,6 +9623,7 @@ export type UserUncheckedUpdateWithoutSmsTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -9259,6 +9677,7 @@ export type UserCreateWithoutSmsLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -9312,6 +9731,7 @@ export type UserUncheckedCreateWithoutSmsLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -9373,6 +9793,7 @@ export type UserCreateWithoutSmsLogsSentByInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -9426,6 +9847,7 @@ export type UserUncheckedCreateWithoutSmsLogsSentByInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -9525,6 +9947,7 @@ export type UserUpdateWithoutSmsLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -9599,6 +10022,7 @@ export type UserUncheckedUpdateWithoutSmsLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -9690,6 +10114,7 @@ export type UserUpdateWithoutSmsLogsSentByInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -9764,6 +10189,7 @@ export type UserUncheckedUpdateWithoutSmsLogsSentByInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -9817,6 +10243,7 @@ export type UserCreateWithoutEmailTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -9870,6 +10297,7 @@ export type UserUncheckedCreateWithoutEmailTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -9969,6 +10397,7 @@ export type UserUpdateWithoutEmailTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -10043,6 +10472,7 @@ export type UserUncheckedUpdateWithoutEmailTemplatesCreatedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -10096,6 +10526,7 @@ export type UserCreateWithoutEmailLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -10149,6 +10580,7 @@ export type UserUncheckedCreateWithoutEmailLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -10210,6 +10642,7 @@ export type UserCreateWithoutEmailLogsSentByInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -10263,6 +10696,7 @@ export type UserUncheckedCreateWithoutEmailLogsSentByInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -10362,6 +10796,7 @@ export type UserUpdateWithoutEmailLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -10436,6 +10871,7 @@ export type UserUncheckedUpdateWithoutEmailLogsAsStudentInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -10527,6 +10963,7 @@ export type UserUpdateWithoutEmailLogsSentByInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -10601,6 +11038,7 @@ export type UserUncheckedUpdateWithoutEmailLogsSentByInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -10654,6 +11092,7 @@ export type UserCreateWithoutAuditLogsCreatedByInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
@@ -10707,6 +11146,7 @@ export type UserUncheckedCreateWithoutAuditLogsCreatedByInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
@@ -10806,6 +11246,7 @@ export type UserUpdateWithoutAuditLogsCreatedByInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -10880,6 +11321,7 @@ export type UserUncheckedUpdateWithoutAuditLogsCreatedByInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -10933,6 +11375,7 @@ export type UserCreateWithoutImportLogsInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -10986,6 +11429,7 @@ export type UserUncheckedCreateWithoutImportLogsInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -11085,6 +11529,7 @@ export type UserUpdateWithoutImportLogsInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -11159,6 +11604,7 @@ export type UserUncheckedUpdateWithoutImportLogsInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11252,6 +11698,7 @@ export type UserUpdateWithoutTenantInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -11326,6 +11773,7 @@ export type UserUncheckedUpdateWithoutTenantInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -11464,6 +11912,7 @@ export type UserUpdateWithoutRoleInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -11538,6 +11987,7 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -11699,6 +12149,7 @@ export type UserUpdateWithoutCreatedByInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -11773,6 +12224,7 @@ export type UserUncheckedUpdateWithoutCreatedByInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -11888,6 +12340,7 @@ export type UserUpdateWithoutArchivedByInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
@@ -11959,6 +12412,7 @@ export type UserUncheckedUpdateWithoutArchivedByInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
   importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
@@ -12036,6 +12490,7 @@ export type UserCountOutputType = {
   rewardsCreated: number;
   purchases: number;
   purchasesApproved: number;
+  purchasesDelivered: number;
   importLogs: number;
   createdCourses: number;
   createdSubjects: number;
@@ -12077,6 +12532,7 @@ export type UserCountOutputTypeSelect<
   rewardsCreated?: boolean | UserCountOutputTypeCountRewardsCreatedArgs;
   purchases?: boolean | UserCountOutputTypeCountPurchasesArgs;
   purchasesApproved?: boolean | UserCountOutputTypeCountPurchasesApprovedArgs;
+  purchasesDelivered?: boolean | UserCountOutputTypeCountPurchasesDeliveredArgs;
   importLogs?: boolean | UserCountOutputTypeCountImportLogsArgs;
   createdCourses?: boolean | UserCountOutputTypeCountCreatedCoursesArgs;
   createdSubjects?: boolean | UserCountOutputTypeCountCreatedSubjectsArgs;
@@ -12258,6 +12714,16 @@ export type UserCountOutputTypeCountPurchasesArgs<
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountPurchasesApprovedArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.PurchaseWhereInput;
+};
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPurchasesDeliveredArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
@@ -12456,6 +12922,7 @@ export type UserSelect<
     rewardsCreated?: boolean | Prisma.User$rewardsCreatedArgs<ExtArgs>;
     purchases?: boolean | Prisma.User$purchasesArgs<ExtArgs>;
     purchasesApproved?: boolean | Prisma.User$purchasesApprovedArgs<ExtArgs>;
+    purchasesDelivered?: boolean | Prisma.User$purchasesDeliveredArgs<ExtArgs>;
     importLogs?: boolean | Prisma.User$importLogsArgs<ExtArgs>;
     createdCourses?: boolean | Prisma.User$createdCoursesArgs<ExtArgs>;
     createdSubjects?: boolean | Prisma.User$createdSubjectsArgs<ExtArgs>;
@@ -12630,6 +13097,7 @@ export type UserInclude<
   rewardsCreated?: boolean | Prisma.User$rewardsCreatedArgs<ExtArgs>;
   purchases?: boolean | Prisma.User$purchasesArgs<ExtArgs>;
   purchasesApproved?: boolean | Prisma.User$purchasesApprovedArgs<ExtArgs>;
+  purchasesDelivered?: boolean | Prisma.User$purchasesDeliveredArgs<ExtArgs>;
   importLogs?: boolean | Prisma.User$importLogsArgs<ExtArgs>;
   createdCourses?: boolean | Prisma.User$createdCoursesArgs<ExtArgs>;
   createdSubjects?: boolean | Prisma.User$createdSubjectsArgs<ExtArgs>;
@@ -12697,6 +13165,7 @@ export type $UserPayload<
     rewardsCreated: Prisma.$RewardPayload<ExtArgs>[];
     purchases: Prisma.$PurchasePayload<ExtArgs>[];
     purchasesApproved: Prisma.$PurchasePayload<ExtArgs>[];
+    purchasesDelivered: Prisma.$PurchasePayload<ExtArgs>[];
     importLogs: Prisma.$ImportLogPayload<ExtArgs>[];
     createdCourses: Prisma.$CoursePayload<ExtArgs>[];
     createdSubjects: Prisma.$SubjectPayload<ExtArgs>[];
@@ -13518,6 +13987,19 @@ export interface Prisma__UserClient<
   >;
   purchasesApproved<T extends Prisma.User$purchasesApprovedArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.User$purchasesApprovedArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$PurchasePayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  purchasesDelivered<
+    T extends Prisma.User$purchasesDeliveredArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.User$purchasesDeliveredArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$PurchasePayload<ExtArgs>,
@@ -14699,6 +15181,35 @@ export type User$purchasesArgs<
  * User.purchasesApproved
  */
 export type User$purchasesApprovedArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the Purchase
+   */
+  select?: Prisma.PurchaseSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the Purchase
+   */
+  omit?: Prisma.PurchaseOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseInclude<ExtArgs> | null;
+  where?: Prisma.PurchaseWhereInput;
+  orderBy?:
+    | Prisma.PurchaseOrderByWithRelationInput
+    | Prisma.PurchaseOrderByWithRelationInput[];
+  cursor?: Prisma.PurchaseWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: Prisma.PurchaseScalarFieldEnum | Prisma.PurchaseScalarFieldEnum[];
+};
+
+/**
+ * User.purchasesDelivered
+ */
+export type User$purchasesDeliveredArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {

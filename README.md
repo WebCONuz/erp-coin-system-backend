@@ -277,20 +277,21 @@ Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin 
 
 API o'zgarishlari bo'yicha batafsil qo'llanmalar [docs/](docs/) papkasida:
 
-| Fayl                                                                                            | Mavzu                                                                        |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [api-docs.md](docs/api-docs.md)                                                                 | Umumiy API qo'llanma                                                         |
-| [roles-readonly-api.md](docs/roles-readonly-api.md)                                             | Rollar faqat o'qish uchun, tenant bilan avtomatik yaratilishi                |
-| [coin-rules-built-in-api.md](docs/coin-rules-built-in-api.md)                                   | Asosiy coin qoidalari (`isBuiltIn`), tenant bilan avtomatik yaratilishi      |
-| [subject-fani-api.md](docs/subject-fani-api.md)                                                 | Fanlar (Subject)                                                             |
-| [coin-rules-priority-and-session-lock-api.md](docs/coin-rules-priority-and-session-lock-api.md) | Coin qoidalari ustuvorligi, qulflangan sessiya                               |
-| [attendance-coin-dedup-and-ischecked-api.md](docs/attendance-coin-dedup-and-ischecked-api.md)   | Yo'qlamada coin dublikati tuzatilishi, `isChecked`                           |
-| [bulk-coin-api.md](docs/bulk-coin-api.md)                                                       | Bir nechta o'quvchiga coin berish                                            |
-| [students-list-filters-api.md](docs/students-list-filters-api.md)                               | O'quvchilar ro'yxati filtrlari                                               |
-| [student-parent-profile-api.md](docs/student-parent-profile-api.md)                             | O'quvchi / ota-ona profili                                                   |
-| [teacher-profile-api.md](docs/teacher-profile-api.md)                                           | O'qituvchi profili                                                           |
-| [student-dashboard-reward-prices-api.md](docs/student-dashboard-reward-prices-api.md)           | Student dashboard'da sovg'a narxlari oralig'i (GardenPath)                   |
-| [username-auth-and-profile-api.md](docs/username-auth-and-profile-api.md)                       | Username bilan login, tenant ichida unique telefon, o'z profilini tahrirlash |
+| Fayl                                                                                            | Mavzu                                                                            |
+| ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [api-docs.md](docs/api-docs.md)                                                                 | Umumiy API qo'llanma                                                             |
+| [roles-readonly-api.md](docs/roles-readonly-api.md)                                             | Rollar faqat o'qish uchun, tenant bilan avtomatik yaratilishi                    |
+| [coin-rules-built-in-api.md](docs/coin-rules-built-in-api.md)                                   | Asosiy coin qoidalari (`isBuiltIn`), tenant bilan avtomatik yaratilishi          |
+| [subject-fani-api.md](docs/subject-fani-api.md)                                                 | Fanlar (Subject)                                                                 |
+| [coin-rules-priority-and-session-lock-api.md](docs/coin-rules-priority-and-session-lock-api.md) | Coin qoidalari ustuvorligi, qulflangan sessiya                                   |
+| [attendance-coin-dedup-and-ischecked-api.md](docs/attendance-coin-dedup-and-ischecked-api.md)   | Yo'qlamada coin dublikati tuzatilishi, `isChecked`                               |
+| [bulk-coin-api.md](docs/bulk-coin-api.md)                                                       | Bir nechta o'quvchiga coin berish                                                |
+| [students-list-filters-api.md](docs/students-list-filters-api.md)                               | O'quvchilar ro'yxati filtrlari                                                   |
+| [student-parent-profile-api.md](docs/student-parent-profile-api.md)                             | O'quvchi / ota-ona profili                                                       |
+| [teacher-profile-api.md](docs/teacher-profile-api.md)                                           | O'qituvchi profili                                                               |
+| [student-dashboard-reward-prices-api.md](docs/student-dashboard-reward-prices-api.md)           | Student dashboard'da sovg'a narxlari oralig'i (GardenPath)                       |
+| [username-auth-and-profile-api.md](docs/username-auth-and-profile-api.md)                       | Username bilan login, tenant ichida unique telefon, o'z profilini tahrirlash     |
+| [purchases-flow-api.md](docs/purchases-flow-api.md)                                             | Xaridlar: tasdiqlash → topshirish (`delivered`) yoki bekor qilish (coin qaytadi) |
 
 ---
 

@@ -33,7 +33,7 @@ export class PurchasesController {
   @Get()
   @ApiOperation({
     summary:
-      'Barcha xaridlar/buyurtmalar tarixini ko‘rish (Admin va Talabalar uchun)',
+      'Xaridlar ro‘yxati (Admin — tenantdagi barchasi, Talaba — faqat o‘ziniki; Teacher — ruxsat yo‘q)',
   })
   findAll(
     @TenantContext() tenantId: string,
@@ -41,15 +41,13 @@ export class PurchasesController {
     @CurrentUser('id') currentUserId: string,
     @CurrentUser('role') role: string,
   ) {
-    // Agar so‘rov yuborgan foydalanuvchi talaba bo‘lsa, u faqat o‘zining xaridlarini ko‘ra oladi
-    if (role === 'student') {
-      query.studentId = currentUserId;
-    }
-    return this.purchasesService.findAll(query, tenantId);
+    return this.purchasesService.findAll(query, tenantId, role, currentUserId);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Xaridning batafsil tafsilotlarini ko‘rish' })
+  @ApiOperation({
+    summary: 'Xaridning batafsil tafsilotlari (Teacher — ruxsat yo‘q)',
+  })
   @ApiParam({ name: 'id', format: 'uuid' })
   findOne(
     @Param('id', ParseUUIDPipe) id: string,
@@ -64,7 +62,7 @@ export class PurchasesController {
   @Roles('admin', 'super_admin')
   @ApiOperation({
     summary:
-      'Xarid holatini o‘zgartirish: Tasdiqlash yoki Rad etish (Faqat Admin)',
+      'Xarid holatini o‘zgartirish: pending→approved→delivered yoki cancelled (coin qaytadi). Faqat Admin',
   })
   @ApiParam({ name: 'id', format: 'uuid' })
   updateStatus(

@@ -148,23 +148,40 @@ export class RewardsService {
 
     // 3. Kompleks Tranzaksiya boshlanadi
     return this.prisma.$transaction(async (tx) => {
-      // A. Talabaning hamyonidan (Wallet) tangalarni AYIRAMIZ
-      const updatedWallet = await tx.wallet.update({
-        where: { id: wallet.id },
+      // A. Talabaning hamyonidan (Wallet) tangalarni AYIRAMIZ.
+      // Shartli update: parallel xaridlarda balans manfiyga tushmasligi uchun.
+      const walletDebit = await tx.wallet.updateMany({
+        where: { id: wallet.id, balance: { gte: reward.coinPrice } },
         data: {
           balance: { decrement: reward.coinPrice },
         },
       });
 
-      // B. Sovg'a zaxirasini (stock) 1 taga kamaytirish (Agar cheksiz bo'lmasa, ya'ni -1 ga teng bo'lmasa)
+      if (walletDebit.count === 0) {
+        throw new BadRequestException('Tangalaringiz yetarli emas.');
+      }
+
+      // B. Sovg'a zaxirasini (stock) 1 taga kamaytirish (Agar cheksiz bo'lmasa, ya'ni -1 ga teng bo'lmasa).
+      // Shartli update: oxirgi dona bir vaqtda ikki kishiga sotilmasligi uchun.
       if (reward.stock !== -1) {
-        await tx.reward.update({
-          where: { id: rewardId },
+        const stockDebit = await tx.reward.updateMany({
+          where: { id: rewardId, stock: { gt: 0 } },
           data: {
             stock: { decrement: 1 },
           },
         });
+
+        if (stockDebit.count === 0) {
+          throw new BadRequestException(
+            'Afsuski, ushbu sovg‘a omborda qolmagan.',
+          );
+        }
       }
+
+      const updatedWallet = await tx.wallet.findUniqueOrThrow({
+        where: { id: wallet.id },
+        select: { balance: true },
+      });
 
       // C. Xarid tarixiga (`Purchase` jadvali) yangi yozuv qo'shamiz
       const purchaseRecord = await tx.purchase.create({

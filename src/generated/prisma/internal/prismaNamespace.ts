@@ -2761,11 +2761,13 @@ export const PurchaseScalarFieldEnum = {
   deliveryNote: 'deliveryNote',
   isDeleted: 'isDeleted',
   purchasedAt: 'purchasedAt',
+  deliveredAt: 'deliveredAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
   studentId: 'studentId',
   rewardId: 'rewardId',
   approvedById: 'approvedById',
+  deliveredById: 'deliveredById',
 } as const;
 
 export type PurchaseScalarFieldEnum =

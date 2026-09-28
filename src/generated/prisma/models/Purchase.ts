@@ -41,11 +41,13 @@ export type PurchaseMinAggregateOutputType = {
   deliveryNote: string | null;
   isDeleted: boolean | null;
   purchasedAt: Date | null;
+  deliveredAt: Date | null;
   updatedAt: Date | null;
   deletedAt: Date | null;
   studentId: string | null;
   rewardId: string | null;
   approvedById: string | null;
+  deliveredById: string | null;
 };
 
 export type PurchaseMaxAggregateOutputType = {
@@ -55,11 +57,13 @@ export type PurchaseMaxAggregateOutputType = {
   deliveryNote: string | null;
   isDeleted: boolean | null;
   purchasedAt: Date | null;
+  deliveredAt: Date | null;
   updatedAt: Date | null;
   deletedAt: Date | null;
   studentId: string | null;
   rewardId: string | null;
   approvedById: string | null;
+  deliveredById: string | null;
 };
 
 export type PurchaseCountAggregateOutputType = {
@@ -69,11 +73,13 @@ export type PurchaseCountAggregateOutputType = {
   deliveryNote: number;
   isDeleted: number;
   purchasedAt: number;
+  deliveredAt: number;
   updatedAt: number;
   deletedAt: number;
   studentId: number;
   rewardId: number;
   approvedById: number;
+  deliveredById: number;
   _all: number;
 };
 
@@ -92,11 +98,13 @@ export type PurchaseMinAggregateInputType = {
   deliveryNote?: true;
   isDeleted?: true;
   purchasedAt?: true;
+  deliveredAt?: true;
   updatedAt?: true;
   deletedAt?: true;
   studentId?: true;
   rewardId?: true;
   approvedById?: true;
+  deliveredById?: true;
 };
 
 export type PurchaseMaxAggregateInputType = {
@@ -106,11 +114,13 @@ export type PurchaseMaxAggregateInputType = {
   deliveryNote?: true;
   isDeleted?: true;
   purchasedAt?: true;
+  deliveredAt?: true;
   updatedAt?: true;
   deletedAt?: true;
   studentId?: true;
   rewardId?: true;
   approvedById?: true;
+  deliveredById?: true;
 };
 
 export type PurchaseCountAggregateInputType = {
@@ -120,11 +130,13 @@ export type PurchaseCountAggregateInputType = {
   deliveryNote?: true;
   isDeleted?: true;
   purchasedAt?: true;
+  deliveredAt?: true;
   updatedAt?: true;
   deletedAt?: true;
   studentId?: true;
   rewardId?: true;
   approvedById?: true;
+  deliveredById?: true;
   _all?: true;
 };
 
@@ -228,11 +240,13 @@ export type PurchaseGroupByOutputType = {
   deliveryNote: string | null;
   isDeleted: boolean;
   purchasedAt: Date;
+  deliveredAt: Date | null;
   updatedAt: Date;
   deletedAt: Date | null;
   studentId: string;
   rewardId: string;
   approvedById: string | null;
+  deliveredById: string | null;
   _count: PurchaseCountAggregateOutputType | null;
   _avg: PurchaseAvgAggregateOutputType | null;
   _sum: PurchaseSumAggregateOutputType | null;
@@ -263,17 +277,27 @@ export type PurchaseWhereInput = {
   deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
   isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
   purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
+  deliveredAt?:
+    | Prisma.DateTimeNullableFilter<'Purchase'>
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'Purchase'> | Date | string | null;
   studentId?: Prisma.UuidFilter<'Purchase'> | string;
   rewardId?: Prisma.UuidFilter<'Purchase'> | string;
   approvedById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
+  deliveredById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
   student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
   reward?: Prisma.XOR<
     Prisma.RewardScalarRelationFilter,
     Prisma.RewardWhereInput
   >;
   approvedBy?: Prisma.XOR<
+    Prisma.UserNullableScalarRelationFilter,
+    Prisma.UserWhereInput
+  > | null;
+  deliveredBy?: Prisma.XOR<
     Prisma.UserNullableScalarRelationFilter,
     Prisma.UserWhereInput
   > | null;
@@ -286,14 +310,17 @@ export type PurchaseOrderByWithRelationInput = {
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
+  deliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder;
+  deliveredById?: Prisma.SortOrderInput | Prisma.SortOrder;
   student?: Prisma.UserOrderByWithRelationInput;
   reward?: Prisma.RewardOrderByWithRelationInput;
   approvedBy?: Prisma.UserOrderByWithRelationInput;
+  deliveredBy?: Prisma.UserOrderByWithRelationInput;
 };
 
 export type PurchaseWhereUniqueInput = Prisma.AtLeast<
@@ -309,6 +336,11 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<
     deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
     isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
     purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
+    deliveredAt?:
+      | Prisma.DateTimeNullableFilter<'Purchase'>
+      | Date
+      | string
+      | null;
     updatedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
     deletedAt?:
       | Prisma.DateTimeNullableFilter<'Purchase'>
@@ -318,6 +350,7 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<
     studentId?: Prisma.UuidFilter<'Purchase'> | string;
     rewardId?: Prisma.UuidFilter<'Purchase'> | string;
     approvedById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
+    deliveredById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
     student?: Prisma.XOR<
       Prisma.UserScalarRelationFilter,
       Prisma.UserWhereInput
@@ -327,6 +360,10 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<
       Prisma.RewardWhereInput
     >;
     approvedBy?: Prisma.XOR<
+      Prisma.UserNullableScalarRelationFilter,
+      Prisma.UserWhereInput
+    > | null;
+    deliveredBy?: Prisma.XOR<
       Prisma.UserNullableScalarRelationFilter,
       Prisma.UserWhereInput
     > | null;
@@ -341,11 +378,13 @@ export type PurchaseOrderByWithAggregationInput = {
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
+  deliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder;
+  deliveredById?: Prisma.SortOrderInput | Prisma.SortOrder;
   _count?: Prisma.PurchaseCountOrderByAggregateInput;
   _avg?: Prisma.PurchaseAvgOrderByAggregateInput;
   _max?: Prisma.PurchaseMaxOrderByAggregateInput;
@@ -372,6 +411,11 @@ export type PurchaseScalarWhereWithAggregatesInput = {
     | null;
   isDeleted?: Prisma.BoolWithAggregatesFilter<'Purchase'> | boolean;
   purchasedAt?: Prisma.DateTimeWithAggregatesFilter<'Purchase'> | Date | string;
+  deliveredAt?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'Purchase'>
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<'Purchase'> | Date | string;
   deletedAt?:
     | Prisma.DateTimeNullableWithAggregatesFilter<'Purchase'>
@@ -384,6 +428,10 @@ export type PurchaseScalarWhereWithAggregatesInput = {
     | Prisma.UuidNullableWithAggregatesFilter<'Purchase'>
     | string
     | null;
+  deliveredById?:
+    | Prisma.UuidNullableWithAggregatesFilter<'Purchase'>
+    | string
+    | null;
 };
 
 export type PurchaseCreateInput = {
@@ -393,11 +441,13 @@ export type PurchaseCreateInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
+  deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
 };
 
 export type PurchaseUncheckedCreateInput = {
@@ -407,11 +457,13 @@ export type PurchaseUncheckedCreateInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
   approvedById?: string | null;
+  deliveredById?: string | null;
 };
 
 export type PurchaseUpdateInput = {
@@ -426,6 +478,11 @@ export type PurchaseUpdateInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -435,6 +492,7 @@ export type PurchaseUpdateInput = {
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
+  deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
 };
 
 export type PurchaseUncheckedUpdateInput = {
@@ -449,6 +507,11 @@ export type PurchaseUncheckedUpdateInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -461,6 +524,10 @@ export type PurchaseUncheckedUpdateInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  deliveredById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
 };
 
 export type PurchaseCreateManyInput = {
@@ -470,11 +537,13 @@ export type PurchaseCreateManyInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
   approvedById?: string | null;
+  deliveredById?: string | null;
 };
 
 export type PurchaseUpdateManyMutationInput = {
@@ -489,6 +558,11 @@ export type PurchaseUpdateManyMutationInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -509,6 +583,11 @@ export type PurchaseUncheckedUpdateManyInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -518,6 +597,10 @@ export type PurchaseUncheckedUpdateManyInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  deliveredById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -540,11 +623,13 @@ export type PurchaseCountOrderByAggregateInput = {
   deliveryNote?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
+  deliveredAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrder;
+  deliveredById?: Prisma.SortOrder;
 };
 
 export type PurchaseAvgOrderByAggregateInput = {
@@ -558,11 +643,13 @@ export type PurchaseMaxOrderByAggregateInput = {
   deliveryNote?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
+  deliveredAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrder;
+  deliveredById?: Prisma.SortOrder;
 };
 
 export type PurchaseMinOrderByAggregateInput = {
@@ -572,11 +659,13 @@ export type PurchaseMinOrderByAggregateInput = {
   deliveryNote?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
+  deliveredAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrder;
+  deliveredById?: Prisma.SortOrder;
 };
 
 export type PurchaseSumOrderByAggregateInput = {
@@ -613,6 +702,21 @@ export type PurchaseCreateNestedManyWithoutApprovedByInput = {
   connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
 };
 
+export type PurchaseCreateNestedManyWithoutDeliveredByInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutDeliveredByInput,
+        Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput
+      >
+    | Prisma.PurchaseCreateWithoutDeliveredByInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput[];
+  createMany?: Prisma.PurchaseCreateManyDeliveredByInputEnvelope;
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+};
+
 export type PurchaseUncheckedCreateNestedManyWithoutStudentInput = {
   create?:
     | Prisma.XOR<
@@ -640,6 +744,21 @@ export type PurchaseUncheckedCreateNestedManyWithoutApprovedByInput = {
     | Prisma.PurchaseCreateOrConnectWithoutApprovedByInput
     | Prisma.PurchaseCreateOrConnectWithoutApprovedByInput[];
   createMany?: Prisma.PurchaseCreateManyApprovedByInputEnvelope;
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+};
+
+export type PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutDeliveredByInput,
+        Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput
+      >
+    | Prisma.PurchaseCreateWithoutDeliveredByInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput[];
+  createMany?: Prisma.PurchaseCreateManyDeliveredByInputEnvelope;
   connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
 };
 
@@ -707,6 +826,38 @@ export type PurchaseUpdateManyWithoutApprovedByNestedInput = {
     | Prisma.PurchaseScalarWhereInput[];
 };
 
+export type PurchaseUpdateManyWithoutDeliveredByNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutDeliveredByInput,
+        Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput
+      >
+    | Prisma.PurchaseCreateWithoutDeliveredByInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput[];
+  upsert?:
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutDeliveredByInput
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutDeliveredByInput[];
+  createMany?: Prisma.PurchaseCreateManyDeliveredByInputEnvelope;
+  set?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  disconnect?:
+    | Prisma.PurchaseWhereUniqueInput
+    | Prisma.PurchaseWhereUniqueInput[];
+  delete?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  update?:
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutDeliveredByInput
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutDeliveredByInput[];
+  updateMany?:
+    | Prisma.PurchaseUpdateManyWithWhereWithoutDeliveredByInput
+    | Prisma.PurchaseUpdateManyWithWhereWithoutDeliveredByInput[];
+  deleteMany?:
+    | Prisma.PurchaseScalarWhereInput
+    | Prisma.PurchaseScalarWhereInput[];
+};
+
 export type PurchaseUncheckedUpdateManyWithoutStudentNestedInput = {
   create?:
     | Prisma.XOR<
@@ -766,6 +917,38 @@ export type PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput = {
   updateMany?:
     | Prisma.PurchaseUpdateManyWithWhereWithoutApprovedByInput
     | Prisma.PurchaseUpdateManyWithWhereWithoutApprovedByInput[];
+  deleteMany?:
+    | Prisma.PurchaseScalarWhereInput
+    | Prisma.PurchaseScalarWhereInput[];
+};
+
+export type PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutDeliveredByInput,
+        Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput
+      >
+    | Prisma.PurchaseCreateWithoutDeliveredByInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput
+    | Prisma.PurchaseCreateOrConnectWithoutDeliveredByInput[];
+  upsert?:
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutDeliveredByInput
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutDeliveredByInput[];
+  createMany?: Prisma.PurchaseCreateManyDeliveredByInputEnvelope;
+  set?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  disconnect?:
+    | Prisma.PurchaseWhereUniqueInput
+    | Prisma.PurchaseWhereUniqueInput[];
+  delete?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  update?:
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutDeliveredByInput
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutDeliveredByInput[];
+  updateMany?:
+    | Prisma.PurchaseUpdateManyWithWhereWithoutDeliveredByInput
+    | Prisma.PurchaseUpdateManyWithWhereWithoutDeliveredByInput[];
   deleteMany?:
     | Prisma.PurchaseScalarWhereInput
     | Prisma.PurchaseScalarWhereInput[];
@@ -876,10 +1059,12 @@ export type PurchaseCreateWithoutStudentInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
+  deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
 };
 
 export type PurchaseUncheckedCreateWithoutStudentInput = {
@@ -889,10 +1074,12 @@ export type PurchaseUncheckedCreateWithoutStudentInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   rewardId: string;
   approvedById?: string | null;
+  deliveredById?: string | null;
 };
 
 export type PurchaseCreateOrConnectWithoutStudentInput = {
@@ -917,10 +1104,12 @@ export type PurchaseCreateWithoutApprovedByInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
+  deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
 };
 
 export type PurchaseUncheckedCreateWithoutApprovedByInput = {
@@ -930,10 +1119,12 @@ export type PurchaseUncheckedCreateWithoutApprovedByInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  deliveredById?: string | null;
 };
 
 export type PurchaseCreateOrConnectWithoutApprovedByInput = {
@@ -948,6 +1139,51 @@ export type PurchaseCreateManyApprovedByInputEnvelope = {
   data:
     | Prisma.PurchaseCreateManyApprovedByInput
     | Prisma.PurchaseCreateManyApprovedByInput[];
+  skipDuplicates?: boolean;
+};
+
+export type PurchaseCreateWithoutDeliveredByInput = {
+  id?: string;
+  coinSpent: number;
+  status?: $Enums.PurchaseStatus;
+  deliveryNote?: string | null;
+  isDeleted?: boolean;
+  purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
+  reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
+  approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
+};
+
+export type PurchaseUncheckedCreateWithoutDeliveredByInput = {
+  id?: string;
+  coinSpent: number;
+  status?: $Enums.PurchaseStatus;
+  deliveryNote?: string | null;
+  isDeleted?: boolean;
+  purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  studentId: string;
+  rewardId: string;
+  approvedById?: string | null;
+};
+
+export type PurchaseCreateOrConnectWithoutDeliveredByInput = {
+  where: Prisma.PurchaseWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.PurchaseCreateWithoutDeliveredByInput,
+    Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput
+  >;
+};
+
+export type PurchaseCreateManyDeliveredByInputEnvelope = {
+  data:
+    | Prisma.PurchaseCreateManyDeliveredByInput
+    | Prisma.PurchaseCreateManyDeliveredByInput[];
   skipDuplicates?: boolean;
 };
 
@@ -989,11 +1225,17 @@ export type PurchaseScalarWhereInput = {
   deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
   isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
   purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
+  deliveredAt?:
+    | Prisma.DateTimeNullableFilter<'Purchase'>
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'Purchase'> | Date | string | null;
   studentId?: Prisma.UuidFilter<'Purchase'> | string;
   rewardId?: Prisma.UuidFilter<'Purchase'> | string;
   approvedById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
+  deliveredById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
 };
 
 export type PurchaseUpsertWithWhereUniqueWithoutApprovedByInput = {
@@ -1024,6 +1266,34 @@ export type PurchaseUpdateManyWithWhereWithoutApprovedByInput = {
   >;
 };
 
+export type PurchaseUpsertWithWhereUniqueWithoutDeliveredByInput = {
+  where: Prisma.PurchaseWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.PurchaseUpdateWithoutDeliveredByInput,
+    Prisma.PurchaseUncheckedUpdateWithoutDeliveredByInput
+  >;
+  create: Prisma.XOR<
+    Prisma.PurchaseCreateWithoutDeliveredByInput,
+    Prisma.PurchaseUncheckedCreateWithoutDeliveredByInput
+  >;
+};
+
+export type PurchaseUpdateWithWhereUniqueWithoutDeliveredByInput = {
+  where: Prisma.PurchaseWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.PurchaseUpdateWithoutDeliveredByInput,
+    Prisma.PurchaseUncheckedUpdateWithoutDeliveredByInput
+  >;
+};
+
+export type PurchaseUpdateManyWithWhereWithoutDeliveredByInput = {
+  where: Prisma.PurchaseScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.PurchaseUpdateManyMutationInput,
+    Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByInput
+  >;
+};
+
 export type PurchaseCreateWithoutRewardInput = {
   id?: string;
   coinSpent: number;
@@ -1031,10 +1301,12 @@ export type PurchaseCreateWithoutRewardInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
+  deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
 };
 
 export type PurchaseUncheckedCreateWithoutRewardInput = {
@@ -1044,10 +1316,12 @@ export type PurchaseUncheckedCreateWithoutRewardInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
   approvedById?: string | null;
+  deliveredById?: string | null;
 };
 
 export type PurchaseCreateOrConnectWithoutRewardInput = {
@@ -1100,10 +1374,12 @@ export type PurchaseCreateManyStudentInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   rewardId: string;
   approvedById?: string | null;
+  deliveredById?: string | null;
 };
 
 export type PurchaseCreateManyApprovedByInput = {
@@ -1113,10 +1389,27 @@ export type PurchaseCreateManyApprovedByInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  deliveredById?: string | null;
+};
+
+export type PurchaseCreateManyDeliveredByInput = {
+  id?: string;
+  coinSpent: number;
+  status?: $Enums.PurchaseStatus;
+  deliveryNote?: string | null;
+  isDeleted?: boolean;
+  purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  studentId: string;
+  rewardId: string;
+  approvedById?: string | null;
 };
 
 export type PurchaseUpdateWithoutStudentInput = {
@@ -1131,6 +1424,11 @@ export type PurchaseUpdateWithoutStudentInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1139,6 +1437,7 @@ export type PurchaseUpdateWithoutStudentInput = {
     | null;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
+  deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
 };
 
 export type PurchaseUncheckedUpdateWithoutStudentInput = {
@@ -1153,6 +1452,11 @@ export type PurchaseUncheckedUpdateWithoutStudentInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1161,6 +1465,10 @@ export type PurchaseUncheckedUpdateWithoutStudentInput = {
     | null;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  deliveredById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1178,6 +1486,11 @@ export type PurchaseUncheckedUpdateManyWithoutStudentInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1186,6 +1499,10 @@ export type PurchaseUncheckedUpdateManyWithoutStudentInput = {
     | null;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  deliveredById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1203,6 +1520,11 @@ export type PurchaseUpdateWithoutApprovedByInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1211,6 +1533,7 @@ export type PurchaseUpdateWithoutApprovedByInput = {
     | null;
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
+  deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
 };
 
 export type PurchaseUncheckedUpdateWithoutApprovedByInput = {
@@ -1225,6 +1548,11 @@ export type PurchaseUncheckedUpdateWithoutApprovedByInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1233,6 +1561,10 @@ export type PurchaseUncheckedUpdateWithoutApprovedByInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  deliveredById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
 };
 
 export type PurchaseUncheckedUpdateManyWithoutApprovedByInput = {
@@ -1247,6 +1579,11 @@ export type PurchaseUncheckedUpdateManyWithoutApprovedByInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1255,6 +1592,100 @@ export type PurchaseUncheckedUpdateManyWithoutApprovedByInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  deliveredById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+};
+
+export type PurchaseUpdateWithoutDeliveredByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  coinSpent?: Prisma.IntFieldUpdateOperationsInput | number;
+  status?:
+    | Prisma.EnumPurchaseStatusFieldUpdateOperationsInput
+    | $Enums.PurchaseStatus;
+  deliveryNote?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
+  reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
+  approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
+};
+
+export type PurchaseUncheckedUpdateWithoutDeliveredByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  coinSpent?: Prisma.IntFieldUpdateOperationsInput | number;
+  status?:
+    | Prisma.EnumPurchaseStatusFieldUpdateOperationsInput
+    | $Enums.PurchaseStatus;
+  deliveryNote?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+};
+
+export type PurchaseUncheckedUpdateManyWithoutDeliveredByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  coinSpent?: Prisma.IntFieldUpdateOperationsInput | number;
+  status?:
+    | Prisma.EnumPurchaseStatusFieldUpdateOperationsInput
+    | $Enums.PurchaseStatus;
+  deliveryNote?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
 };
 
 export type PurchaseCreateManyRewardInput = {
@@ -1264,10 +1695,12 @@ export type PurchaseCreateManyRewardInput = {
   deliveryNote?: string | null;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
   approvedById?: string | null;
+  deliveredById?: string | null;
 };
 
 export type PurchaseUpdateWithoutRewardInput = {
@@ -1282,6 +1715,11 @@ export type PurchaseUpdateWithoutRewardInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1290,6 +1728,7 @@ export type PurchaseUpdateWithoutRewardInput = {
     | null;
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
+  deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
 };
 
 export type PurchaseUncheckedUpdateWithoutRewardInput = {
@@ -1304,6 +1743,11 @@ export type PurchaseUncheckedUpdateWithoutRewardInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1312,6 +1756,10 @@ export type PurchaseUncheckedUpdateWithoutRewardInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  deliveredById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1329,6 +1777,11 @@ export type PurchaseUncheckedUpdateManyWithoutRewardInput = {
     | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1337,6 +1790,10 @@ export type PurchaseUncheckedUpdateManyWithoutRewardInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  deliveredById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
@@ -1353,14 +1810,17 @@ export type PurchaseSelect<
     deliveryNote?: boolean;
     isDeleted?: boolean;
     purchasedAt?: boolean;
+    deliveredAt?: boolean;
     updatedAt?: boolean;
     deletedAt?: boolean;
     studentId?: boolean;
     rewardId?: boolean;
     approvedById?: boolean;
+    deliveredById?: boolean;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
     approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
+    deliveredBy?: boolean | Prisma.Purchase$deliveredByArgs<ExtArgs>;
   },
   ExtArgs['result']['purchase']
 >;
@@ -1376,14 +1836,17 @@ export type PurchaseSelectCreateManyAndReturn<
     deliveryNote?: boolean;
     isDeleted?: boolean;
     purchasedAt?: boolean;
+    deliveredAt?: boolean;
     updatedAt?: boolean;
     deletedAt?: boolean;
     studentId?: boolean;
     rewardId?: boolean;
     approvedById?: boolean;
+    deliveredById?: boolean;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
     approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
+    deliveredBy?: boolean | Prisma.Purchase$deliveredByArgs<ExtArgs>;
   },
   ExtArgs['result']['purchase']
 >;
@@ -1399,14 +1862,17 @@ export type PurchaseSelectUpdateManyAndReturn<
     deliveryNote?: boolean;
     isDeleted?: boolean;
     purchasedAt?: boolean;
+    deliveredAt?: boolean;
     updatedAt?: boolean;
     deletedAt?: boolean;
     studentId?: boolean;
     rewardId?: boolean;
     approvedById?: boolean;
+    deliveredById?: boolean;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
     approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
+    deliveredBy?: boolean | Prisma.Purchase$deliveredByArgs<ExtArgs>;
   },
   ExtArgs['result']['purchase']
 >;
@@ -1418,11 +1884,13 @@ export type PurchaseSelectScalar = {
   deliveryNote?: boolean;
   isDeleted?: boolean;
   purchasedAt?: boolean;
+  deliveredAt?: boolean;
   updatedAt?: boolean;
   deletedAt?: boolean;
   studentId?: boolean;
   rewardId?: boolean;
   approvedById?: boolean;
+  deliveredById?: boolean;
 };
 
 export type PurchaseOmit<
@@ -1435,11 +1903,13 @@ export type PurchaseOmit<
   | 'deliveryNote'
   | 'isDeleted'
   | 'purchasedAt'
+  | 'deliveredAt'
   | 'updatedAt'
   | 'deletedAt'
   | 'studentId'
   | 'rewardId'
-  | 'approvedById',
+  | 'approvedById'
+  | 'deliveredById',
   ExtArgs['result']['purchase']
 >;
 export type PurchaseInclude<
@@ -1449,6 +1919,7 @@ export type PurchaseInclude<
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
   approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
+  deliveredBy?: boolean | Prisma.Purchase$deliveredByArgs<ExtArgs>;
 };
 export type PurchaseIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
@@ -1457,6 +1928,7 @@ export type PurchaseIncludeCreateManyAndReturn<
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
   approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
+  deliveredBy?: boolean | Prisma.Purchase$deliveredByArgs<ExtArgs>;
 };
 export type PurchaseIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
@@ -1465,6 +1937,7 @@ export type PurchaseIncludeUpdateManyAndReturn<
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
   approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
+  deliveredBy?: boolean | Prisma.Purchase$deliveredByArgs<ExtArgs>;
 };
 
 export type $PurchasePayload<
@@ -1476,6 +1949,7 @@ export type $PurchasePayload<
     student: Prisma.$UserPayload<ExtArgs>;
     reward: Prisma.$RewardPayload<ExtArgs>;
     approvedBy: Prisma.$UserPayload<ExtArgs> | null;
+    deliveredBy: Prisma.$UserPayload<ExtArgs> | null;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1485,11 +1959,13 @@ export type $PurchasePayload<
       deliveryNote: string | null;
       isDeleted: boolean;
       purchasedAt: Date;
+      deliveredAt: Date | null;
       updatedAt: Date;
       deletedAt: Date | null;
       studentId: string;
       rewardId: string;
       approvedById: string | null;
+      deliveredById: string | null;
     },
     ExtArgs['result']['purchase']
   >;
@@ -2081,6 +2557,19 @@ export interface Prisma__PurchaseClient<
     ExtArgs,
     GlobalOmitOptions
   >;
+  deliveredBy<T extends Prisma.Purchase$deliveredByArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Purchase$deliveredByArgs<ExtArgs>>,
+  ): Prisma.Prisma__UserClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$UserPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2129,11 +2618,13 @@ export interface PurchaseFieldRefs {
   readonly deliveryNote: Prisma.FieldRef<'Purchase', 'String'>;
   readonly isDeleted: Prisma.FieldRef<'Purchase', 'Boolean'>;
   readonly purchasedAt: Prisma.FieldRef<'Purchase', 'DateTime'>;
+  readonly deliveredAt: Prisma.FieldRef<'Purchase', 'DateTime'>;
   readonly updatedAt: Prisma.FieldRef<'Purchase', 'DateTime'>;
   readonly deletedAt: Prisma.FieldRef<'Purchase', 'DateTime'>;
   readonly studentId: Prisma.FieldRef<'Purchase', 'String'>;
   readonly rewardId: Prisma.FieldRef<'Purchase', 'String'>;
   readonly approvedById: Prisma.FieldRef<'Purchase', 'String'>;
+  readonly deliveredById: Prisma.FieldRef<'Purchase', 'String'>;
 }
 
 // Custom InputTypes
@@ -2603,6 +3094,28 @@ export type PurchaseDeleteManyArgs<
  * Purchase.approvedBy
  */
 export type Purchase$approvedByArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  where?: Prisma.UserWhereInput;
+};
+
+/**
+ * Purchase.deliveredBy
+ */
+export type Purchase$deliveredByArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {

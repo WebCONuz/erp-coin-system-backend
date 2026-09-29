@@ -746,6 +746,9 @@ model Purchase {
   coinSpent    Int            @map("coin_spent")
   status       PurchaseStatus @default(pending)
   deliveryNote String?        @map("delivery_note")
+  // Xarid paytida sovg'a zaxirasidan 1 dona ayirilganmi (cheksiz sovg'ada — false).
+  // Bekor qilishda faqat haqiqatda ayirilgan dona zaxiraga qaytariladi.
+  stockReserved Boolean       @default(false) @map("stock_reserved")
   isDeleted    Boolean        @default(false) @map("is_deleted")
   purchasedAt  DateTime       @default(now()) @map("purchased_at") @db.Timestamptz
   deliveredAt  DateTime?      @map("delivered_at") @db.Timestamptz

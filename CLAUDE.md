@@ -28,6 +28,6 @@ Quyida — kod yozishda buzib bo'lmaydigan qoidalar va README'da yo'q nozik joyl
 ## Ish uslubi
 
 - Foydalanuvchi bilan **o'zbek tilida** muloqot qilinadi; kod izohlari ham o'zbekcha.
-- API o'zgarishidan keyin frontend uchun `docs/<mavzu>-api.md` hujjat yoziladi (mavjud `docs/` fayllari uslubida: Base URL, mundarija, request/response misollari, xato holatlari, o'zgarishlar jurnali) va README'dagi docs jadvaliga qo'shiladi.
+- API o'zgarishidan keyin frontend uchun `docs/<mavzu>-api.md` hujjat yoziladi (mavjud `docs/` fayllari uslubida: Base URL, mundarija, request/response misollari, xato holatlari, o'zgarishlar jurnali). README'ga docs jadvali qo'shilmaydi.
 - Tekshirish: `npx tsc --noEmit -p tsconfig.json`, `npx eslint <fayllar>`, `npx prettier --write <fayllar>`. Loyihada hozircha test (`*.spec.ts`) yo'q.
 - Pre-commit (Husky): `npm run lint && npm run format`.

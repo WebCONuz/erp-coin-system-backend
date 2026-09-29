@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -40,4 +41,14 @@ export class UpdatePurchaseStatusDto {
   @IsOptional()
   @MaxLength(500)
   adminNote?: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    default: true,
+    description:
+      'Faqat `cancelled` uchun: bekor qilingan dona sovg‘a zaxirasiga qaytarilsinmi. false — zaxira o‘zgarmaydi (masalan, sotuv to‘xtatilgan yoki sovg‘a yo‘qolgan)',
+  })
+  @IsBoolean()
+  @IsOptional()
+  restock?: boolean;
 }

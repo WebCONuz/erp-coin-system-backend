@@ -60,7 +60,8 @@ export class RewardsService {
     }
 
     if (onlyInStock) {
-      where.stock = { gt: 0 }; // noldan katta bo'lganlar
+      // Sotuvda bor: noldan katta yoki cheksiz (-1)
+      where.OR = [{ stock: { gt: 0 } }, { stock: -1 }];
     }
 
     const [data, total] = await this.prisma.$transaction([
@@ -74,7 +75,7 @@ export class RewardsService {
     ]);
 
     return {
-      data,
+      data: await this.withReservedCounts(data),
       total,
       page,
       limit,
@@ -83,6 +84,60 @@ export class RewardsService {
   }
 
   async findOne(id: string, tenantId: string) {
+    const reward = await this.findOneOrFail(id, tenantId);
+    const [withCount] = await this.withReservedCounts([reward]);
+    return withCount;
+  }
+
+  async update(id: string, dto: UpdateRewardDto, tenantId: string) {
+    const reward = await this.findOneOrFail(id, tenantId);
+    const { stockDelta, ...data } = dto;
+
+    if (stockDelta !== undefined && data.stock !== undefined) {
+      throw new BadRequestException(
+        '`stock` va `stockDelta` birga yuborilmaydi — bittasini tanlang',
+      );
+    }
+    if (stockDelta !== undefined && reward.stock === -1) {
+      throw new BadRequestException(
+        'Cheksiz (-1) sovg‘a zaxirasini stockDelta bilan o‘zgartirib bo‘lmaydi. Aniq son uchun `stock` yuboring',
+      );
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      if (Object.keys(data).length > 0) {
+        await tx.reward.update({ where: { id }, data });
+      }
+
+      if (stockDelta !== undefined) {
+        // Nisbiy o'zgartirish: shu orada sotilgan donalar yo'qolmaydi (increment),
+        // shart esa zaxira manfiyga tushmasligini va sovg'a cheksiz bo'lmasligini ta'minlaydi.
+        const { count } = await tx.reward.updateMany({
+          where: {
+            id,
+            stock: { gte: stockDelta < 0 ? -stockDelta : 0 },
+          },
+          data: { stock: { increment: stockDelta } },
+        });
+
+        if (count === 0) {
+          const current = await tx.reward.findUnique({
+            where: { id },
+            select: { stock: true },
+          });
+          throw new BadRequestException(
+            current?.stock === -1
+              ? 'Sovg‘a cheksiz (-1) — stockDelta qo‘llanmaydi'
+              : `Zaxirani ${stockDelta} ga o‘zgartirib bo‘lmaydi: joriy zaxira ${current?.stock ?? 0}`,
+          );
+        }
+      }
+    });
+
+    return this.findOne(id, tenantId);
+  }
+
+  private async findOneOrFail(id: string, tenantId: string) {
     const reward = await this.prisma.reward.findFirst({
       where: { id, tenantId, isDeleted: false },
     });
@@ -90,16 +145,32 @@ export class RewardsService {
     return reward;
   }
 
-  async update(id: string, dto: UpdateRewardDto, tenantId: string) {
-    await this.findOne(id, tenantId);
-    return this.prisma.reward.update({
-      where: { id },
-      data: dto,
+  // Har bir sovg'aga `reservedCount` qo'shadi — sotib olingan, lekin hali
+  // topshirilmagan (pending + approved) xaridlar soni. Bu donalar `stock` dan
+  // allaqachon ayirilgan: omborda jismonan turgan son ≈ stock + reservedCount.
+  private async withReservedCounts<T extends { id: string }>(rewards: T[]) {
+    if (rewards.length === 0) return [];
+
+    const groups = await this.prisma.purchase.groupBy({
+      by: ['rewardId'],
+      where: {
+        rewardId: { in: rewards.map((r) => r.id) },
+        isDeleted: false,
+        status: { in: [PurchaseStatus.pending, PurchaseStatus.approved] },
+      },
+      _count: { _all: true },
     });
+
+    const counts = new Map(groups.map((g) => [g.rewardId, g._count._all]));
+
+    return rewards.map((r) => ({
+      ...r,
+      reservedCount: counts.get(r.id) ?? 0,
+    }));
   }
 
   async remove(id: string, tenantId: string) {
-    await this.findOne(id, tenantId);
+    await this.findOneOrFail(id, tenantId);
     return this.prisma.reward.update({
       where: { id },
       data: { isDeleted: true, isActive: false },
@@ -163,6 +234,7 @@ export class RewardsService {
 
       // B. Sovg'a zaxirasini (stock) 1 taga kamaytirish (Agar cheksiz bo'lmasa, ya'ni -1 ga teng bo'lmasa).
       // Shartli update: oxirgi dona bir vaqtda ikki kishiga sotilmasligi uchun.
+      let stockReserved = false;
       if (reward.stock !== -1) {
         const stockDebit = await tx.reward.updateMany({
           where: { id: rewardId, stock: { gt: 0 } },
@@ -171,10 +243,19 @@ export class RewardsService {
           },
         });
 
-        if (stockDebit.count === 0) {
-          throw new BadRequestException(
-            'Afsuski, ushbu sovg‘a omborda qolmagan.',
-          );
+        if (stockDebit.count > 0) {
+          stockReserved = true;
+        } else {
+          // Shu orada admin sovg'ani cheksiz (-1) qilgan bo'lishi mumkin — unda dona ayirilmaydi
+          const current = await tx.reward.findUnique({
+            where: { id: rewardId },
+            select: { stock: true },
+          });
+          if (current?.stock !== -1) {
+            throw new BadRequestException(
+              'Afsuski, ushbu sovg‘a omborda qolmagan.',
+            );
+          }
         }
       }
 
@@ -190,6 +271,7 @@ export class RewardsService {
           rewardId,
           coinSpent: reward.coinPrice,
           status: PurchaseStatus.pending, // Dastlab tasdiqlash kutish rejimida bo'ladi
+          stockReserved,
         },
         include: {
           reward: { select: { title: true } },

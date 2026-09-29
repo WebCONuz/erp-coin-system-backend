@@ -39,6 +39,7 @@ export type PurchaseMinAggregateOutputType = {
   coinSpent: number | null;
   status: $Enums.PurchaseStatus | null;
   deliveryNote: string | null;
+  stockReserved: boolean | null;
   isDeleted: boolean | null;
   purchasedAt: Date | null;
   deliveredAt: Date | null;
@@ -55,6 +56,7 @@ export type PurchaseMaxAggregateOutputType = {
   coinSpent: number | null;
   status: $Enums.PurchaseStatus | null;
   deliveryNote: string | null;
+  stockReserved: boolean | null;
   isDeleted: boolean | null;
   purchasedAt: Date | null;
   deliveredAt: Date | null;
@@ -71,6 +73,7 @@ export type PurchaseCountAggregateOutputType = {
   coinSpent: number;
   status: number;
   deliveryNote: number;
+  stockReserved: number;
   isDeleted: number;
   purchasedAt: number;
   deliveredAt: number;
@@ -96,6 +99,7 @@ export type PurchaseMinAggregateInputType = {
   coinSpent?: true;
   status?: true;
   deliveryNote?: true;
+  stockReserved?: true;
   isDeleted?: true;
   purchasedAt?: true;
   deliveredAt?: true;
@@ -112,6 +116,7 @@ export type PurchaseMaxAggregateInputType = {
   coinSpent?: true;
   status?: true;
   deliveryNote?: true;
+  stockReserved?: true;
   isDeleted?: true;
   purchasedAt?: true;
   deliveredAt?: true;
@@ -128,6 +133,7 @@ export type PurchaseCountAggregateInputType = {
   coinSpent?: true;
   status?: true;
   deliveryNote?: true;
+  stockReserved?: true;
   isDeleted?: true;
   purchasedAt?: true;
   deliveredAt?: true;
@@ -238,6 +244,7 @@ export type PurchaseGroupByOutputType = {
   coinSpent: number;
   status: $Enums.PurchaseStatus;
   deliveryNote: string | null;
+  stockReserved: boolean;
   isDeleted: boolean;
   purchasedAt: Date;
   deliveredAt: Date | null;
@@ -275,6 +282,7 @@ export type PurchaseWhereInput = {
   coinSpent?: Prisma.IntFilter<'Purchase'> | number;
   status?: Prisma.EnumPurchaseStatusFilter<'Purchase'> | $Enums.PurchaseStatus;
   deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
+  stockReserved?: Prisma.BoolFilter<'Purchase'> | boolean;
   isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
   purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
   deliveredAt?:
@@ -308,6 +316,7 @@ export type PurchaseOrderByWithRelationInput = {
   coinSpent?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder;
+  stockReserved?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
   deliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -334,6 +343,7 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<
       | Prisma.EnumPurchaseStatusFilter<'Purchase'>
       | $Enums.PurchaseStatus;
     deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
+    stockReserved?: Prisma.BoolFilter<'Purchase'> | boolean;
     isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
     purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
     deliveredAt?:
@@ -376,6 +386,7 @@ export type PurchaseOrderByWithAggregationInput = {
   coinSpent?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder;
+  stockReserved?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
   deliveredAt?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -409,6 +420,7 @@ export type PurchaseScalarWhereWithAggregatesInput = {
     | Prisma.StringNullableWithAggregatesFilter<'Purchase'>
     | string
     | null;
+  stockReserved?: Prisma.BoolWithAggregatesFilter<'Purchase'> | boolean;
   isDeleted?: Prisma.BoolWithAggregatesFilter<'Purchase'> | boolean;
   purchasedAt?: Prisma.DateTimeWithAggregatesFilter<'Purchase'> | Date | string;
   deliveredAt?:
@@ -439,6 +451,7 @@ export type PurchaseCreateInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -455,6 +468,7 @@ export type PurchaseUncheckedCreateInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -476,6 +490,7 @@ export type PurchaseUpdateInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -505,6 +520,7 @@ export type PurchaseUncheckedUpdateInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -535,6 +551,7 @@ export type PurchaseCreateManyInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -556,6 +573,7 @@ export type PurchaseUpdateManyMutationInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -581,6 +599,7 @@ export type PurchaseUncheckedUpdateManyInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -621,6 +640,7 @@ export type PurchaseCountOrderByAggregateInput = {
   coinSpent?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   deliveryNote?: Prisma.SortOrder;
+  stockReserved?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
   deliveredAt?: Prisma.SortOrder;
@@ -641,6 +661,7 @@ export type PurchaseMaxOrderByAggregateInput = {
   coinSpent?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   deliveryNote?: Prisma.SortOrder;
+  stockReserved?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
   deliveredAt?: Prisma.SortOrder;
@@ -657,6 +678,7 @@ export type PurchaseMinOrderByAggregateInput = {
   coinSpent?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
   deliveryNote?: Prisma.SortOrder;
+  stockReserved?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   purchasedAt?: Prisma.SortOrder;
   deliveredAt?: Prisma.SortOrder;
@@ -1057,6 +1079,7 @@ export type PurchaseCreateWithoutStudentInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1072,6 +1095,7 @@ export type PurchaseUncheckedCreateWithoutStudentInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1102,6 +1126,7 @@ export type PurchaseCreateWithoutApprovedByInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1117,6 +1142,7 @@ export type PurchaseUncheckedCreateWithoutApprovedByInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1147,6 +1173,7 @@ export type PurchaseCreateWithoutDeliveredByInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1162,6 +1189,7 @@ export type PurchaseUncheckedCreateWithoutDeliveredByInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1223,6 +1251,7 @@ export type PurchaseScalarWhereInput = {
   coinSpent?: Prisma.IntFilter<'Purchase'> | number;
   status?: Prisma.EnumPurchaseStatusFilter<'Purchase'> | $Enums.PurchaseStatus;
   deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
+  stockReserved?: Prisma.BoolFilter<'Purchase'> | boolean;
   isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
   purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
   deliveredAt?:
@@ -1299,6 +1328,7 @@ export type PurchaseCreateWithoutRewardInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1314,6 +1344,7 @@ export type PurchaseUncheckedCreateWithoutRewardInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1372,6 +1403,7 @@ export type PurchaseCreateManyStudentInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1387,6 +1419,7 @@ export type PurchaseCreateManyApprovedByInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1402,6 +1435,7 @@ export type PurchaseCreateManyDeliveredByInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1422,6 +1456,7 @@ export type PurchaseUpdateWithoutStudentInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1450,6 +1485,7 @@ export type PurchaseUncheckedUpdateWithoutStudentInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1484,6 +1520,7 @@ export type PurchaseUncheckedUpdateManyWithoutStudentInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1518,6 +1555,7 @@ export type PurchaseUpdateWithoutApprovedByInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1546,6 +1584,7 @@ export type PurchaseUncheckedUpdateWithoutApprovedByInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1577,6 +1616,7 @@ export type PurchaseUncheckedUpdateManyWithoutApprovedByInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1608,6 +1648,7 @@ export type PurchaseUpdateWithoutDeliveredByInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1636,6 +1677,7 @@ export type PurchaseUncheckedUpdateWithoutDeliveredByInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1667,6 +1709,7 @@ export type PurchaseUncheckedUpdateManyWithoutDeliveredByInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1693,6 +1736,7 @@ export type PurchaseCreateManyRewardInput = {
   coinSpent: number;
   status?: $Enums.PurchaseStatus;
   deliveryNote?: string | null;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: Date | string;
   deliveredAt?: Date | string | null;
@@ -1713,6 +1757,7 @@ export type PurchaseUpdateWithoutRewardInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1741,6 +1786,7 @@ export type PurchaseUncheckedUpdateWithoutRewardInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1775,6 +1821,7 @@ export type PurchaseUncheckedUpdateManyWithoutRewardInput = {
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deliveredAt?:
@@ -1808,6 +1855,7 @@ export type PurchaseSelect<
     coinSpent?: boolean;
     status?: boolean;
     deliveryNote?: boolean;
+    stockReserved?: boolean;
     isDeleted?: boolean;
     purchasedAt?: boolean;
     deliveredAt?: boolean;
@@ -1834,6 +1882,7 @@ export type PurchaseSelectCreateManyAndReturn<
     coinSpent?: boolean;
     status?: boolean;
     deliveryNote?: boolean;
+    stockReserved?: boolean;
     isDeleted?: boolean;
     purchasedAt?: boolean;
     deliveredAt?: boolean;
@@ -1860,6 +1909,7 @@ export type PurchaseSelectUpdateManyAndReturn<
     coinSpent?: boolean;
     status?: boolean;
     deliveryNote?: boolean;
+    stockReserved?: boolean;
     isDeleted?: boolean;
     purchasedAt?: boolean;
     deliveredAt?: boolean;
@@ -1882,6 +1932,7 @@ export type PurchaseSelectScalar = {
   coinSpent?: boolean;
   status?: boolean;
   deliveryNote?: boolean;
+  stockReserved?: boolean;
   isDeleted?: boolean;
   purchasedAt?: boolean;
   deliveredAt?: boolean;
@@ -1901,6 +1952,7 @@ export type PurchaseOmit<
   | 'coinSpent'
   | 'status'
   | 'deliveryNote'
+  | 'stockReserved'
   | 'isDeleted'
   | 'purchasedAt'
   | 'deliveredAt'
@@ -1957,6 +2009,7 @@ export type $PurchasePayload<
       coinSpent: number;
       status: $Enums.PurchaseStatus;
       deliveryNote: string | null;
+      stockReserved: boolean;
       isDeleted: boolean;
       purchasedAt: Date;
       deliveredAt: Date | null;
@@ -2616,6 +2669,7 @@ export interface PurchaseFieldRefs {
   readonly coinSpent: Prisma.FieldRef<'Purchase', 'Int'>;
   readonly status: Prisma.FieldRef<'Purchase', 'PurchaseStatus'>;
   readonly deliveryNote: Prisma.FieldRef<'Purchase', 'String'>;
+  readonly stockReserved: Prisma.FieldRef<'Purchase', 'Boolean'>;
   readonly isDeleted: Prisma.FieldRef<'Purchase', 'Boolean'>;
   readonly purchasedAt: Prisma.FieldRef<'Purchase', 'DateTime'>;
   readonly deliveredAt: Prisma.FieldRef<'Purchase', 'DateTime'>;

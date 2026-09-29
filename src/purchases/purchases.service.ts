@@ -193,12 +193,16 @@ export class PurchasesService {
         data: { balance: { increment: purchase.coinSpent } },
       });
 
-      // 2. Zaxira cheksiz bo'lmasa (stock !== -1), 1 taga qayta ko'paytiramiz
-      if (purchase.reward.stock !== -1) {
-        await tx.reward.update({
-          where: { id: purchase.rewardId },
+      // 2. Zaxiraga qaytarish: faqat xarid paytida haqiqatda dona ayirilgan bo'lsa
+      // (stockReserved) va admin rad etmagan bo'lsa (restock !== false).
+      // Sovg'a hozir cheksiz (-1) bo'lsa — zaxira o'zgarmaydi (stock >= 0 sharti).
+      let stockRestored = false;
+      if (purchase.stockReserved && dto.restock !== false) {
+        const { count } = await tx.reward.updateMany({
+          where: { id: purchase.rewardId, stock: { gte: 0 } },
           data: { stock: { increment: 1 } },
         });
+        stockRestored = count > 0;
       }
 
       // 3. Tranzaksiyalar tarixiga qaytarilgan coin (kirim) yoziladi
@@ -226,6 +230,7 @@ export class PurchasesService {
         refund: {
           coins: purchase.coinSpent,
           currentBalance: updatedWallet.balance,
+          stockRestored,
         },
       };
     });

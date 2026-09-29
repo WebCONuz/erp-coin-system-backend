@@ -430,6 +430,7 @@ export const PurchaseScalarFieldEnum = {
   coinSpent: 'coinSpent',
   status: 'status',
   deliveryNote: 'deliveryNote',
+  stockReserved: 'stockReserved',
   isDeleted: 'isDeleted',
   purchasedAt: 'purchasedAt',
   deliveredAt: 'deliveredAt',

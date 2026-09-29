@@ -33,12 +33,15 @@ export class CreateRewardDto {
   @Min(1, { message: 'Narx kamida 1 tanga bo‘lishi kerak' })
   coinPrice: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 10,
-    description: 'Omborda nechta mavjudligi (Zaxira)',
+    description:
+      'Yana nechta sotish mumkin (band qilingan xaridlar bunga kirmaydi). -1 — cheksiz. Berilmasa 0',
   })
   @IsInt()
-  @Min(0, { message: 'Zaxira 0 dan kam bo‘lishi mumkin emas' })
+  @Min(-1, {
+    message: 'Zaxira 0 yoki undan katta bo‘lishi kerak (-1 — cheksiz)',
+  })
   @IsOptional()
   stock?: number;
 

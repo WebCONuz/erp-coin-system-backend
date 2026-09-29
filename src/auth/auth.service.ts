@@ -154,6 +154,8 @@ export class AuthService {
       include: {
         role: true,
         wallet: { select: { balance: true } },
+        // Frontend tenant turiga qarab menyu/maydonlarni ko'rsatadi (TenantController faqat super_admin uchun)
+        tenant: { select: { id: true, name: true, slug: true, type: true } },
       },
     });
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');

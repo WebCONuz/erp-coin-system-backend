@@ -6,6 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { teacherGroupAccessWhere } from '../common/utils/teacher-group-access';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
   UpdateUserDto,
@@ -464,7 +465,7 @@ export class UsersService {
     const where: Prisma.UserWhereInput = {
       groupMemberships: {
         some: {
-          group: { teacherId },
+          group: { isDeleted: false, ...teacherGroupAccessWhere(teacherId) },
           isActive: true,
         },
       },

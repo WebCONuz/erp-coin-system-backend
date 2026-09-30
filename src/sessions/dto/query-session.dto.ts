@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { SessionType } from 'src/generated/prisma/enums';
+import { EvaluationMode, SessionType } from 'src/generated/prisma/enums';
 
 export class QuerySessionDto {
   @ApiPropertyOptional()
@@ -45,6 +45,11 @@ export class QuerySessionDto {
   @IsOptional()
   @IsEnum(SessionType)
   sessionType?: SessionType;
+
+  @ApiPropertyOptional({ enum: EvaluationMode })
+  @IsOptional()
+  @IsEnum(EvaluationMode)
+  evaluationMode?: EvaluationMode;
 
   @ApiPropertyOptional({ example: '2026-06-03' })
   @IsOptional()

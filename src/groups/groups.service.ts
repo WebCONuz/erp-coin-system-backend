@@ -12,6 +12,10 @@ import { AddStudentDto } from './dto/add-student.dto';
 import { AddStudentsBulkDto } from './dto/add-students-bulk.dto';
 import { Prisma } from 'src/generated/prisma/client';
 import { CoinDirection } from 'src/generated/prisma/enums';
+import {
+  canTeacherAccessGroup,
+  teacherGroupAccessWhere,
+} from 'src/common/utils/teacher-group-access';
 
 @Injectable()
 export class GroupsService {
@@ -87,9 +91,9 @@ export class GroupsService {
       };
     }
 
-    // Teacher faqat o'zi dars beradigan guruhlarni ko'ra oladi
-    if (requesterRole === 'teacher') {
-      where.teacherId = requesterId;
+    // Teacher o'zi dars beradigan va unga sessiya/jadval biriktirilgan guruhlarni ko'radi
+    if (requesterRole === 'teacher' && requesterId) {
+      Object.assign(where, teacherGroupAccessWhere(requesterId));
     }
 
     const [data, total] = await this.prisma.$transaction([
@@ -167,8 +171,16 @@ export class GroupsService {
       }
     }
 
-    // Teacher faqat o'zi dars beradigan guruhni ko'ra oladi
-    if (requesterRole === 'teacher' && group.teacher.id !== requesterId) {
+    // Teacher o'zi dars beradigan, yoki shu guruhda unga sessiya/jadval
+    // biriktirilgan guruhni ko'ra oladi
+    if (
+      requesterRole === 'teacher' &&
+      group.teacher?.id !== requesterId &&
+      !(
+        requesterId &&
+        (await canTeacherAccessGroup(this.prisma, id, requesterId, tenantId))
+      )
+    ) {
       throw new ForbiddenException("Siz bu guruhni ko'ra olmaysiz");
     }
 
@@ -294,13 +306,18 @@ export class GroupsService {
   async findMyGroups(userId: string, tenantId: string, role: string) {
     if (role === 'teacher') {
       return this.prisma.group.findMany({
-        where: { teacherId: userId, tenantId, isDeleted: false },
+        where: {
+          tenantId,
+          isDeleted: false,
+          ...teacherGroupAccessWhere(userId),
+        },
         select: {
           id: true,
           name: true,
           maxStudents: true,
           isActive: true,
           course: { select: { id: true, title: true } },
+          teacher: { select: { id: true, fullName: true } },
           _count: { select: { students: { where: { isDeleted: false } } } },
         },
         orderBy: { createdAt: 'desc' },

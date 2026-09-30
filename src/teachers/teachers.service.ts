@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { teacherGroupAccessWhere } from 'src/common/utils/teacher-group-access';
 
 @Injectable()
 export class TeachersService {
@@ -33,7 +34,12 @@ export class TeachersService {
       recentCoinTransactions,
     ] = await this.prisma.$transaction([
       this.prisma.group.findMany({
-        where: { teacherId, tenantId, isDeleted: false, isActive: true },
+        where: {
+          tenantId,
+          isDeleted: false,
+          isActive: true,
+          ...teacherGroupAccessWhere(teacherId),
+        },
         select: {
           id: true,
           name: true,

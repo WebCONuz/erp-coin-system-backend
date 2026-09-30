@@ -22,6 +22,8 @@ Quyida — kod yozishda buzib bo'lmaydigan qoidalar va README'da yo'q nozik joyl
 
 - `@TenantContext()` super_admin/creator uchun `?tenantId=` ni **majburiy** qiladi (yo'q bo'lsa 403). Lekin ayrim servislar (`findOneOrFail`, `students.service`) `requesterRole !== 'super_admin'` bo'lsa tenant filtri qo'yadi — ya'ni super_admin'da tenant filtri yo'q, creator'da bor. Super_admin uchun tekshiruvda query'dagi emas, yozuvning haqiqiy `tenantId` sini ishlating.
 - Servis javob formati bir xil emas: ba'zilari `{ status, message, data }`, ba'zilari `{ data, meta }` qaytaradi. Mavjud modul uslubiga moslang.
+- Sessiya tekshiruvi logikasi `sessionType` ga emas, `evaluationMode` ga qaraydi (`src/sessions/constants/session-types.ts`). Tekshiruv coinlari `CoinTransactionsService.replaceSessionTransactions()` orqali `AttendanceRecord` upsert bilan bitta `tx` da almashtiriladi — `sessionId` + `SESSION_MANAGED_SOURCE_TYPES` dagi manbali tranzaksiyalar qayta saqlashda bekor qilinadi.
+- Teacher'ning guruhga kirish huquqi — faqat `src/common/utils/teacher-group-access.ts` (`teacherGroupAccessWhere` / `canTeacherAccessGroup`): asosiy o'qituvchi **yoki** guruhda unga sessiya/jadval shabloni biriktirilgan. `group: { teacherId }` deb qo'lda yozmang. Istisno: sessiya yaratish (`SessionsService.create`) faqat asosiy o'qituvchiga.
 - `.env` faqat lokal; `.env.example` yo'q.
 - Mavjud DB'ga ta'sir qiladigan buyruqlar (`prisma migrate`, `prisma db seed`, yozuvchi SQL) — foydalanuvchi tasdig'isiz ishga tushirilmaydi.
 

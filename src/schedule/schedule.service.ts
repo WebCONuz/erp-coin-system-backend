@@ -13,6 +13,10 @@ import { UpdateScheduleTemplateDto } from './dto/update-schedule-template.dto';
 import { CreateScheduleExceptionDto } from './dto/create-schedule-exception.dto';
 import { GenerateSessionsDto } from './dto/generate-sessions.dto';
 import { QueryScheduleDto } from './dto/query-schedule.dto';
+import {
+  canTeacherAccessGroup,
+  teacherGroupAccessWhere,
+} from 'src/common/utils/teacher-group-access';
 
 // HH:MM solishtirish uchun yordamchi — '09:00' < '11:00' → true
 const timeLt = (a: string, b: string) => a < b;
@@ -32,6 +36,16 @@ const WEEKDAY_ORDER: Record<Weekday, number> = {
 @Injectable()
 export class ScheduleService {
   constructor(private readonly prisma: PrismaService) {}
+
+  // Teacher shu guruhga kira oladimi (asosiy o'qituvchi / sessiya / jadval orqali)
+  private teacherCanAccess(
+    groupId: string,
+    tenantId: string,
+    requesterId?: string,
+  ) {
+    if (!requesterId) return Promise.resolve(false);
+    return canTeacherAccessGroup(this.prisma, groupId, requesterId, tenantId);
+  }
 
   // Shablonda o'z teacheri belgilanmagan bo'lsa, guruh teacheriga tushadi
   // (generate-sessions'dagi bilan bir xil fallback mantiq)
@@ -118,9 +132,9 @@ export class ScheduleService {
     if (roomId) where.roomId = roomId;
     if (weekday) where.weekday = weekday;
 
-    // Teacher faqat o'zi dars beradigan guruhlar jadvalini ko'radi
-    if (requesterRole === 'teacher') {
-      where.group = { teacherId: requesterId };
+    // Teacher o'zi dars beradigan va unga sessiya/jadval biriktirilgan guruhlar jadvalini ko'radi
+    if (requesterRole === 'teacher' && requesterId) {
+      where.group = teacherGroupAccessWhere(requesterId);
     }
 
     const [data, total] = await this.prisma.$transaction([
@@ -190,7 +204,7 @@ export class ScheduleService {
 
     if (
       requesterRole === 'teacher' &&
-      template.group.teacherId !== requesterId
+      !(await this.teacherCanAccess(template.groupId, tenantId, requesterId))
     ) {
       throw new ForbiddenException("Siz bu dars jadvalini ko'ra olmaysiz");
     }
@@ -337,7 +351,7 @@ export class ScheduleService {
 
     if (
       requesterRole === 'teacher' &&
-      template.group.teacherId !== requesterId
+      !(await this.teacherCanAccess(template.groupId, tenantId, requesterId))
     ) {
       throw new ForbiddenException("Siz bu dars jadvalini ko'ra olmaysiz");
     }
@@ -403,7 +417,7 @@ export class ScheduleService {
 
     if (requesterRole === 'teacher') {
       if (!group) throw new NotFoundException('Guruh topilmadi');
-      if (group.teacherId !== requesterId) {
+      if (!(await this.teacherCanAccess(groupId, tenantId, requesterId))) {
         throw new ForbiddenException(
           "Siz bu guruhning kalendarini ko'ra olmaysiz",
         );

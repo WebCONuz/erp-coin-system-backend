@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { teacherGroupAccessWhere } from 'src/common/utils/teacher-group-access';
 import { ArchiveStudentDto } from './dto/archive-student.dto';
 import {
   QueryStudentDto,
@@ -281,12 +282,16 @@ export class StudentsService {
             id: true,
             isPresent: true,
             homeworkDone: true,
+            score: true,
+            note: true,
             recordedAt: true,
             session: {
               select: {
                 id: true,
                 sessionDate: true,
                 sessionType: true,
+                evaluationMode: true,
+                maxScore: true,
                 topic: true,
                 startTime: true,
                 endTime: true,
@@ -334,11 +339,17 @@ export class StudentsService {
       throw new ForbiddenException("Siz faqat o'z profilingizni ko'ra olasiz");
     }
 
-    // Teacher faqat o'z guruhidagi studentni ko'ra oladi
-    if (requesterRole === 'teacher') {
-      const isInTeacherGroup = student.groupMemberships.some(
-        (m) => m.group.teacher.id === requesterId,
-      );
+    // Teacher faqat o'ziga tegishli (asosiy / sessiya / jadval orqali) guruhdagi studentni ko'ra oladi
+    if (requesterRole === 'teacher' && requesterId) {
+      const isInTeacherGroup = await this.prisma.group.findFirst({
+        where: {
+          tenantId: student.tenantId,
+          isDeleted: false,
+          students: { some: { studentId: id, isDeleted: false } },
+          ...teacherGroupAccessWhere(requesterId),
+        },
+        select: { id: true },
+      });
       if (!isInTeacherGroup) {
         throw new ForbiddenException("Siz bu o'quvchini ko'ra olmaysiz");
       }
@@ -660,7 +671,7 @@ export class StudentsService {
         some: {
           isDeleted: false,
           groupId: groupId ?? undefined,
-          group: { teacherId },
+          group: { isDeleted: false, ...teacherGroupAccessWhere(teacherId) },
         },
       },
     };

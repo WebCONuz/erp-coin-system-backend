@@ -10,11 +10,13 @@ import {
   UseGuards,
   ParseUUIDPipe,
   HttpCode,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { SessionsService } from './sessions.service';
@@ -22,6 +24,7 @@ import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { QuerySessionDto } from './dto/query-session.dto';
 import { BulkAttendanceDto } from './dto/record-attendance.dto';
+import { BulkResultsDto } from './dto/record-results.dto';
 import { QueryMyAttendanceDto } from './dto/query-my-attendance.dto';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
@@ -58,6 +61,15 @@ export class SessionsController {
     @CurrentUser('id') requesterId: string,
   ) {
     return this.sessionsService.findAll(query, tenantId, role, requesterId);
+  }
+
+  @Get('types')
+  @ApiOperation({
+    summary:
+      'Sessiya turlari va ularning tekshirish rejimlari (default + ruxsat etilganlar)',
+  })
+  getTypes() {
+    return this.sessionsService.getTypes();
   }
 
   // ─── Talabaning o'z davomat tarixi (Shaxsiy profil uchun) ──────
@@ -109,11 +121,34 @@ export class SessionsController {
     );
   }
 
+  @Post(':id/results')
+  @Roles('admin', 'super_admin', 'teacher')
+  @ApiOperation({
+    summary:
+      "Imtihon/musobaqa (scored rejim) natijalarini saqlash — har bir o'quvchiga ball va coin alohida",
+  })
+  @ApiParam({ name: 'id', format: 'uuid', description: 'Dars (Session) IDsi' })
+  recordResults(
+    @Param('id', ParseUUIDPipe) sessionId: string,
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') recordedById: string,
+    @CurrentUser('role') role: string,
+    @Body() dto: BulkResultsDto,
+  ) {
+    return this.sessionsService.saveResultsAndProcessCoins(
+      sessionId,
+      tenantId,
+      recordedById,
+      dto,
+      role,
+    );
+  }
+
   @Get(':id/attendance')
   @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({
     summary:
-      "Dars boyicha yoqlama royxatini korish (barcha o'quvchilar — faqat xodimlar uchun)",
+      'Dars boyicha yoqlama/natijalar royxatini korish (ball, izoh va berilgan coin bilan — faqat xodimlar uchun)',
   })
   @ApiParam({ name: 'id', format: 'uuid' })
   getAttendance(
@@ -176,12 +211,23 @@ export class SessionsController {
 
   @Delete(':id')
   @Roles('admin', 'super_admin')
-  @ApiOperation({ summary: 'Darsni ochirish (Soft-Delete)' })
+  @ApiOperation({
+    summary:
+      'Darsni ochirish (Soft-Delete) — shu sessiya orqali berilgan coinlar qaytariladi',
+  })
   @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiQuery({
+    name: 'keepCoins',
+    required: false,
+    type: Boolean,
+    description: 'true — coinlar qaytarilmaydi',
+  })
   remove(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @Query('keepCoins', new ParseBoolPipe({ optional: true }))
+    keepCoins?: boolean,
   ) {
-    return this.sessionsService.remove(id, tenantId);
+    return this.sessionsService.remove(id, tenantId, keepCoins ?? false);
   }
 }

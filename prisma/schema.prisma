@@ -36,6 +36,13 @@ enum SessionType {
   extra
 }
 
+// Sessiya qanday tekshiriladi: attendance — yo'qlama + uy vazifasi (coin qoidadan),
+// scored — har bir o'quvchiga ball va coin alohida kiritiladi
+enum EvaluationMode {
+  attendance
+  scored
+}
+
 enum RewardType {
   digital
   privilege
@@ -53,6 +60,7 @@ enum SourceType {
   attendance
   homework
   competition
+  exam
   manual
   bonus
   purchase
@@ -582,6 +590,8 @@ model Session {
   startTime   String?     @map("start_time") @db.VarChar(5)
   endTime     String?     @map("end_time") @db.VarChar(5)
   sessionType SessionType @default(lesson) @map("session_type")
+  evaluationMode EvaluationMode @default(attendance) @map("evaluation_mode")
+  maxScore    Int?        @map("max_score")
   topic       String?     @db.VarChar(300)
   isLocked    Boolean     @default(false) @map("is_locked")
   isChecked   Boolean     @default(false) @map("is_checked")
@@ -623,6 +633,8 @@ model AttendanceRecord {
   id           String   @id @default(uuid()) @db.Uuid
   isPresent    Boolean  @default(false) @map("is_present")
   homeworkDone Boolean  @default(false) @map("homework_done")
+  score        Float?
+  note         String?  @db.VarChar(500)
   recordedAt   DateTime @default(now()) @map("recorded_at") @db.Timestamptz
   updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
   isDeleted    Boolean  @default(false) @map("is_deleted")

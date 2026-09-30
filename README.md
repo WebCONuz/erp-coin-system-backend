@@ -259,6 +259,19 @@ Jadval tizimi ikki qatlamli:
 
 Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin `topic`/`subjectId` kabi metama'lumotlar tahrirlanadi.
 
+### Tekshirish rejimi (`evaluationMode`)
+
+Sessiya qanday tekshirilishini tur nomi emas, `Session.evaluationMode` belgilaydi:
+
+| Rejim        | Endpoint                        | Coin                                                        |
+| ------------ | ------------------------------- | ----------------------------------------------------------- |
+| `attendance` | `POST /sessions/:id/attendance` | Davomat / uy vazifasi qoidalaridan avtomatik                |
+| `scored`     | `POST /sessions/:id/results`    | Har bir o'quvchiga ball + coin qo'lda (`exam`/`competition`) |
+
+Tur → rejim xaritasi: [src/sessions/constants/session-types.ts](src/sessions/constants/session-types.ts) (`lesson` → attendance, `exam`/`competition` → scored, `extra` → ikkalasi, default attendance). **Yangi tur qo'shish**: `SessionType` enumiga qiymat + migration + `SESSION_TYPE_CONFIG` ga bitta qator.
+
+Sessiya o'chirilganda uning tekshiruvi orqali berilgan coinlar qaytariladi (`?keepCoins=true` — qaytarilmaydi).
+
 ---
 
 ## Seed ma'lumotlari

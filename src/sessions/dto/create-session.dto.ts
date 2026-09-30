@@ -6,9 +6,12 @@ import {
   IsUUID,
   IsDateString,
   Matches,
+  IsInt,
+  Min,
+  Max,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SessionType } from 'src/generated/prisma/enums';
+import { EvaluationMode, SessionType } from 'src/generated/prisma/enums';
 
 export class CreateSessionDto {
   @ApiProperty({
@@ -46,6 +49,27 @@ export class CreateSessionDto {
   @IsEnum(SessionType)
   @IsNotEmpty()
   sessionType: SessionType;
+
+  @ApiPropertyOptional({
+    example: 'scored',
+    enum: EvaluationMode,
+    description:
+      "Tekshirish rejimi. Berilmasa tur bo'yicha default (GET /sessions/types). Faqat turning allowedModes ichidan",
+  })
+  @IsOptional()
+  @IsEnum(EvaluationMode)
+  evaluationMode?: EvaluationMode;
+
+  @ApiPropertyOptional({
+    example: 100,
+    description:
+      'Maksimal ball (faqat scored rejimida). Berilmasa ball chegaralanmaydi',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(100000)
+  maxScore?: number;
 
   @ApiPropertyOptional({
     example: 'Prisma ORM va Tranzaksiyalar bilan ishlash',

@@ -1,6 +1,15 @@
-import { IsString, IsOptional, IsEnum, IsUUID, Matches } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsUUID,
+  Matches,
+  IsInt,
+  Min,
+  Max,
+} from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { SessionType } from 'src/generated/prisma/enums';
+import { EvaluationMode, SessionType } from 'src/generated/prisma/enums';
 
 export class UpdateSessionDto {
   @ApiPropertyOptional({
@@ -29,6 +38,26 @@ export class UpdateSessionDto {
   @IsOptional()
   @IsEnum(SessionType)
   sessionType?: SessionType;
+
+  @ApiPropertyOptional({
+    enum: EvaluationMode,
+    description:
+      "Tekshirish rejimi (faqat turning allowedModes ichidan). Tekshirilgan sessiyada o'zgartirib bo'lmaydi",
+  })
+  @IsOptional()
+  @IsEnum(EvaluationMode)
+  evaluationMode?: EvaluationMode;
+
+  @ApiPropertyOptional({
+    example: 100,
+    nullable: true,
+    description: 'Maksimal ball (scored rejim). null — chegarasiz',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(100000)
+  maxScore?: number | null;
 
   @ApiPropertyOptional({ example: 'Mavzu nomi' })
   @IsOptional()

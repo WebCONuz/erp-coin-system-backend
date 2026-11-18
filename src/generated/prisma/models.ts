@@ -19,6 +19,7 @@ export type * from './models/Group';
 export type * from './models/GroupStudent';
 export type * from './models/ScheduleTemplate';
 export type * from './models/ScheduleException';
+export type * from './models/Holiday';
 export type * from './models/CoinRule';
 export type * from './models/Session';
 export type * from './models/AttendanceRecord';

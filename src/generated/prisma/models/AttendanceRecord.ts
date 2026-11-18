@@ -37,6 +37,7 @@ export type AttendanceRecordSumAggregateOutputType = {
 export type AttendanceRecordMinAggregateOutputType = {
   id: string | null;
   isPresent: boolean | null;
+  status: $Enums.AttendanceStatus | null;
   homeworkDone: boolean | null;
   score: number | null;
   note: string | null;
@@ -51,6 +52,7 @@ export type AttendanceRecordMinAggregateOutputType = {
 export type AttendanceRecordMaxAggregateOutputType = {
   id: string | null;
   isPresent: boolean | null;
+  status: $Enums.AttendanceStatus | null;
   homeworkDone: boolean | null;
   score: number | null;
   note: string | null;
@@ -65,6 +67,7 @@ export type AttendanceRecordMaxAggregateOutputType = {
 export type AttendanceRecordCountAggregateOutputType = {
   id: number;
   isPresent: number;
+  status: number;
   homeworkDone: number;
   score: number;
   note: number;
@@ -88,6 +91,7 @@ export type AttendanceRecordSumAggregateInputType = {
 export type AttendanceRecordMinAggregateInputType = {
   id?: true;
   isPresent?: true;
+  status?: true;
   homeworkDone?: true;
   score?: true;
   note?: true;
@@ -102,6 +106,7 @@ export type AttendanceRecordMinAggregateInputType = {
 export type AttendanceRecordMaxAggregateInputType = {
   id?: true;
   isPresent?: true;
+  status?: true;
   homeworkDone?: true;
   score?: true;
   note?: true;
@@ -116,6 +121,7 @@ export type AttendanceRecordMaxAggregateInputType = {
 export type AttendanceRecordCountAggregateInputType = {
   id?: true;
   isPresent?: true;
+  status?: true;
   homeworkDone?: true;
   score?: true;
   note?: true;
@@ -228,6 +234,7 @@ export type AttendanceRecordGroupByArgs<
 export type AttendanceRecordGroupByOutputType = {
   id: string;
   isPresent: boolean;
+  status: $Enums.AttendanceStatus;
   homeworkDone: boolean;
   score: number | null;
   note: string | null;
@@ -264,6 +271,9 @@ export type AttendanceRecordWhereInput = {
   NOT?: Prisma.AttendanceRecordWhereInput | Prisma.AttendanceRecordWhereInput[];
   id?: Prisma.UuidFilter<'AttendanceRecord'> | string;
   isPresent?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFilter<'AttendanceRecord'>
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
   score?: Prisma.FloatNullableFilter<'AttendanceRecord'> | number | null;
   note?: Prisma.StringNullableFilter<'AttendanceRecord'> | string | null;
@@ -287,6 +297,7 @@ export type AttendanceRecordWhereInput = {
 export type AttendanceRecordOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   isPresent?: Prisma.SortOrder;
+  status?: Prisma.SortOrder;
   homeworkDone?: Prisma.SortOrder;
   score?: Prisma.SortOrderInput | Prisma.SortOrder;
   note?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -313,6 +324,9 @@ export type AttendanceRecordWhereUniqueInput = Prisma.AtLeast<
       | Prisma.AttendanceRecordWhereInput
       | Prisma.AttendanceRecordWhereInput[];
     isPresent?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
+    status?:
+      | Prisma.EnumAttendanceStatusFilter<'AttendanceRecord'>
+      | $Enums.AttendanceStatus;
     homeworkDone?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
     score?: Prisma.FloatNullableFilter<'AttendanceRecord'> | number | null;
     note?: Prisma.StringNullableFilter<'AttendanceRecord'> | string | null;
@@ -341,6 +355,7 @@ export type AttendanceRecordWhereUniqueInput = Prisma.AtLeast<
 export type AttendanceRecordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   isPresent?: Prisma.SortOrder;
+  status?: Prisma.SortOrder;
   homeworkDone?: Prisma.SortOrder;
   score?: Prisma.SortOrderInput | Prisma.SortOrder;
   note?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -367,6 +382,9 @@ export type AttendanceRecordScalarWhereWithAggregatesInput = {
     | Prisma.AttendanceRecordScalarWhereWithAggregatesInput[];
   id?: Prisma.UuidWithAggregatesFilter<'AttendanceRecord'> | string;
   isPresent?: Prisma.BoolWithAggregatesFilter<'AttendanceRecord'> | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusWithAggregatesFilter<'AttendanceRecord'>
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolWithAggregatesFilter<'AttendanceRecord'> | boolean;
   score?:
     | Prisma.FloatNullableWithAggregatesFilter<'AttendanceRecord'>
@@ -393,6 +411,7 @@ export type AttendanceRecordScalarWhereWithAggregatesInput = {
 export type AttendanceRecordCreateInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -407,6 +426,7 @@ export type AttendanceRecordCreateInput = {
 export type AttendanceRecordUncheckedCreateInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -421,6 +441,9 @@ export type AttendanceRecordUncheckedCreateInput = {
 export type AttendanceRecordUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -435,6 +458,9 @@ export type AttendanceRecordUpdateInput = {
 export type AttendanceRecordUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -449,6 +475,7 @@ export type AttendanceRecordUncheckedUpdateInput = {
 export type AttendanceRecordCreateManyInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -463,6 +490,9 @@ export type AttendanceRecordCreateManyInput = {
 export type AttendanceRecordUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -474,6 +504,9 @@ export type AttendanceRecordUpdateManyMutationInput = {
 export type AttendanceRecordUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -503,6 +536,7 @@ export type AttendanceRecordSessionIdStudentIdCompoundUniqueInput = {
 export type AttendanceRecordCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   isPresent?: Prisma.SortOrder;
+  status?: Prisma.SortOrder;
   homeworkDone?: Prisma.SortOrder;
   score?: Prisma.SortOrder;
   note?: Prisma.SortOrder;
@@ -521,6 +555,7 @@ export type AttendanceRecordAvgOrderByAggregateInput = {
 export type AttendanceRecordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   isPresent?: Prisma.SortOrder;
+  status?: Prisma.SortOrder;
   homeworkDone?: Prisma.SortOrder;
   score?: Prisma.SortOrder;
   note?: Prisma.SortOrder;
@@ -535,6 +570,7 @@ export type AttendanceRecordMaxOrderByAggregateInput = {
 export type AttendanceRecordMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   isPresent?: Prisma.SortOrder;
+  status?: Prisma.SortOrder;
   homeworkDone?: Prisma.SortOrder;
   score?: Prisma.SortOrder;
   note?: Prisma.SortOrder;
@@ -880,6 +916,10 @@ export type AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput = {
     | Prisma.AttendanceRecordScalarWhereInput[];
 };
 
+export type EnumAttendanceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.AttendanceStatus;
+};
+
 export type NullableFloatFieldUpdateOperationsInput = {
   set?: number | null;
   increment?: number;
@@ -891,6 +931,7 @@ export type NullableFloatFieldUpdateOperationsInput = {
 export type AttendanceRecordCreateWithoutRecordedByInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -904,6 +945,7 @@ export type AttendanceRecordCreateWithoutRecordedByInput = {
 export type AttendanceRecordUncheckedCreateWithoutRecordedByInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -932,6 +974,7 @@ export type AttendanceRecordCreateManyRecordedByInputEnvelope = {
 export type AttendanceRecordCreateWithoutStudentInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -945,6 +988,7 @@ export type AttendanceRecordCreateWithoutStudentInput = {
 export type AttendanceRecordUncheckedCreateWithoutStudentInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -1008,6 +1052,9 @@ export type AttendanceRecordScalarWhereInput = {
     | Prisma.AttendanceRecordScalarWhereInput[];
   id?: Prisma.UuidFilter<'AttendanceRecord'> | string;
   isPresent?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFilter<'AttendanceRecord'>
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
   score?: Prisma.FloatNullableFilter<'AttendanceRecord'> | number | null;
   note?: Prisma.StringNullableFilter<'AttendanceRecord'> | string | null;
@@ -1050,6 +1097,7 @@ export type AttendanceRecordUpdateManyWithWhereWithoutStudentInput = {
 export type AttendanceRecordCreateWithoutSessionInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -1063,6 +1111,7 @@ export type AttendanceRecordCreateWithoutSessionInput = {
 export type AttendanceRecordUncheckedCreateWithoutSessionInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -1119,6 +1168,7 @@ export type AttendanceRecordUpdateManyWithWhereWithoutSessionInput = {
 export type AttendanceRecordCreateManyRecordedByInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -1132,6 +1182,7 @@ export type AttendanceRecordCreateManyRecordedByInput = {
 export type AttendanceRecordCreateManyStudentInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -1145,6 +1196,9 @@ export type AttendanceRecordCreateManyStudentInput = {
 export type AttendanceRecordUpdateWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1158,6 +1212,9 @@ export type AttendanceRecordUpdateWithoutRecordedByInput = {
 export type AttendanceRecordUncheckedUpdateWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1171,6 +1228,9 @@ export type AttendanceRecordUncheckedUpdateWithoutRecordedByInput = {
 export type AttendanceRecordUncheckedUpdateManyWithoutRecordedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1184,6 +1244,9 @@ export type AttendanceRecordUncheckedUpdateManyWithoutRecordedByInput = {
 export type AttendanceRecordUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1197,6 +1260,9 @@ export type AttendanceRecordUpdateWithoutStudentInput = {
 export type AttendanceRecordUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1210,6 +1276,9 @@ export type AttendanceRecordUncheckedUpdateWithoutStudentInput = {
 export type AttendanceRecordUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1223,6 +1292,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutStudentInput = {
 export type AttendanceRecordCreateManySessionInput = {
   id?: string;
   isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
   homeworkDone?: boolean;
   score?: number | null;
   note?: string | null;
@@ -1236,6 +1306,9 @@ export type AttendanceRecordCreateManySessionInput = {
 export type AttendanceRecordUpdateWithoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1249,6 +1322,9 @@ export type AttendanceRecordUpdateWithoutSessionInput = {
 export type AttendanceRecordUncheckedUpdateWithoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1262,6 +1338,9 @@ export type AttendanceRecordUncheckedUpdateWithoutSessionInput = {
 export type AttendanceRecordUncheckedUpdateManyWithoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
   homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1279,6 +1358,7 @@ export type AttendanceRecordSelect<
   {
     id?: boolean;
     isPresent?: boolean;
+    status?: boolean;
     homeworkDone?: boolean;
     score?: boolean;
     note?: boolean;
@@ -1302,6 +1382,7 @@ export type AttendanceRecordSelectCreateManyAndReturn<
   {
     id?: boolean;
     isPresent?: boolean;
+    status?: boolean;
     homeworkDone?: boolean;
     score?: boolean;
     note?: boolean;
@@ -1325,6 +1406,7 @@ export type AttendanceRecordSelectUpdateManyAndReturn<
   {
     id?: boolean;
     isPresent?: boolean;
+    status?: boolean;
     homeworkDone?: boolean;
     score?: boolean;
     note?: boolean;
@@ -1344,6 +1426,7 @@ export type AttendanceRecordSelectUpdateManyAndReturn<
 export type AttendanceRecordSelectScalar = {
   id?: boolean;
   isPresent?: boolean;
+  status?: boolean;
   homeworkDone?: boolean;
   score?: boolean;
   note?: boolean;
@@ -1361,6 +1444,7 @@ export type AttendanceRecordOmit<
 > = runtime.Types.Extensions.GetOmit<
   | 'id'
   | 'isPresent'
+  | 'status'
   | 'homeworkDone'
   | 'score'
   | 'note'
@@ -1411,6 +1495,7 @@ export type $AttendanceRecordPayload<
     {
       id: string;
       isPresent: boolean;
+      status: $Enums.AttendanceStatus;
       homeworkDone: boolean;
       score: number | null;
       note: string | null;
@@ -2078,6 +2163,7 @@ export interface Prisma__AttendanceRecordClient<
 export interface AttendanceRecordFieldRefs {
   readonly id: Prisma.FieldRef<'AttendanceRecord', 'String'>;
   readonly isPresent: Prisma.FieldRef<'AttendanceRecord', 'Boolean'>;
+  readonly status: Prisma.FieldRef<'AttendanceRecord', 'AttendanceStatus'>;
   readonly homeworkDone: Prisma.FieldRef<'AttendanceRecord', 'Boolean'>;
   readonly score: Prisma.FieldRef<'AttendanceRecord', 'Float'>;
   readonly note: Prisma.FieldRef<'AttendanceRecord', 'String'>;

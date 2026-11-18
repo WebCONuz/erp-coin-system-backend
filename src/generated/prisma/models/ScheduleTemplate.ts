@@ -29,6 +29,8 @@ export type ScheduleTemplateMinAggregateOutputType = {
   weekday: $Enums.Weekday | null;
   startTime: string | null;
   endTime: string | null;
+  validFrom: Date | null;
+  validTo: Date | null;
   isActive: boolean | null;
   isDeleted: boolean | null;
   createdAt: Date | null;
@@ -47,6 +49,8 @@ export type ScheduleTemplateMaxAggregateOutputType = {
   weekday: $Enums.Weekday | null;
   startTime: string | null;
   endTime: string | null;
+  validFrom: Date | null;
+  validTo: Date | null;
   isActive: boolean | null;
   isDeleted: boolean | null;
   createdAt: Date | null;
@@ -65,6 +69,8 @@ export type ScheduleTemplateCountAggregateOutputType = {
   weekday: number;
   startTime: number;
   endTime: number;
+  validFrom: number;
+  validTo: number;
   isActive: number;
   isDeleted: number;
   createdAt: number;
@@ -84,6 +90,8 @@ export type ScheduleTemplateMinAggregateInputType = {
   weekday?: true;
   startTime?: true;
   endTime?: true;
+  validFrom?: true;
+  validTo?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -102,6 +110,8 @@ export type ScheduleTemplateMaxAggregateInputType = {
   weekday?: true;
   startTime?: true;
   endTime?: true;
+  validFrom?: true;
+  validTo?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -120,6 +130,8 @@ export type ScheduleTemplateCountAggregateInputType = {
   weekday?: true;
   startTime?: true;
   endTime?: true;
+  validFrom?: true;
+  validTo?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -222,6 +234,8 @@ export type ScheduleTemplateGroupByOutputType = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom: Date | null;
+  validTo: Date | null;
   isActive: boolean;
   isDeleted: boolean;
   createdAt: Date;
@@ -260,6 +274,16 @@ export type ScheduleTemplateWhereInput = {
   weekday?: Prisma.EnumWeekdayFilter<'ScheduleTemplate'> | $Enums.Weekday;
   startTime?: Prisma.StringFilter<'ScheduleTemplate'> | string;
   endTime?: Prisma.StringFilter<'ScheduleTemplate'> | string;
+  validFrom?:
+    | Prisma.DateTimeNullableFilter<'ScheduleTemplate'>
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.DateTimeNullableFilter<'ScheduleTemplate'>
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFilter<'ScheduleTemplate'> | boolean;
   isDeleted?: Prisma.BoolFilter<'ScheduleTemplate'> | boolean;
   createdAt?: Prisma.DateTimeFilter<'ScheduleTemplate'> | Date | string;
@@ -302,6 +326,8 @@ export type ScheduleTemplateOrderByWithRelationInput = {
   weekday?: Prisma.SortOrder;
   startTime?: Prisma.SortOrder;
   endTime?: Prisma.SortOrder;
+  validFrom?: Prisma.SortOrderInput | Prisma.SortOrder;
+  validTo?: Prisma.SortOrderInput | Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -336,6 +362,16 @@ export type ScheduleTemplateWhereUniqueInput = Prisma.AtLeast<
     weekday?: Prisma.EnumWeekdayFilter<'ScheduleTemplate'> | $Enums.Weekday;
     startTime?: Prisma.StringFilter<'ScheduleTemplate'> | string;
     endTime?: Prisma.StringFilter<'ScheduleTemplate'> | string;
+    validFrom?:
+      | Prisma.DateTimeNullableFilter<'ScheduleTemplate'>
+      | Date
+      | string
+      | null;
+    validTo?:
+      | Prisma.DateTimeNullableFilter<'ScheduleTemplate'>
+      | Date
+      | string
+      | null;
     isActive?: Prisma.BoolFilter<'ScheduleTemplate'> | boolean;
     isDeleted?: Prisma.BoolFilter<'ScheduleTemplate'> | boolean;
     createdAt?: Prisma.DateTimeFilter<'ScheduleTemplate'> | Date | string;
@@ -383,6 +419,8 @@ export type ScheduleTemplateOrderByWithAggregationInput = {
   weekday?: Prisma.SortOrder;
   startTime?: Prisma.SortOrder;
   endTime?: Prisma.SortOrder;
+  validFrom?: Prisma.SortOrderInput | Prisma.SortOrder;
+  validTo?: Prisma.SortOrderInput | Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -413,6 +451,16 @@ export type ScheduleTemplateScalarWhereWithAggregatesInput = {
     | $Enums.Weekday;
   startTime?: Prisma.StringWithAggregatesFilter<'ScheduleTemplate'> | string;
   endTime?: Prisma.StringWithAggregatesFilter<'ScheduleTemplate'> | string;
+  validFrom?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'ScheduleTemplate'>
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'ScheduleTemplate'>
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolWithAggregatesFilter<'ScheduleTemplate'> | boolean;
   isDeleted?: Prisma.BoolWithAggregatesFilter<'ScheduleTemplate'> | boolean;
   createdAt?:
@@ -447,6 +495,8 @@ export type ScheduleTemplateCreateInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -467,6 +517,8 @@ export type ScheduleTemplateUncheckedCreateInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -487,6 +539,16 @@ export type ScheduleTemplateUpdateInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -511,6 +573,16 @@ export type ScheduleTemplateUncheckedUpdateInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -535,6 +607,8 @@ export type ScheduleTemplateCreateManyInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -553,6 +627,16 @@ export type ScheduleTemplateUpdateManyMutationInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -569,6 +653,16 @@ export type ScheduleTemplateUncheckedUpdateManyInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -601,6 +695,8 @@ export type ScheduleTemplateCountOrderByAggregateInput = {
   weekday?: Prisma.SortOrder;
   startTime?: Prisma.SortOrder;
   endTime?: Prisma.SortOrder;
+  validFrom?: Prisma.SortOrder;
+  validTo?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -619,6 +715,8 @@ export type ScheduleTemplateMaxOrderByAggregateInput = {
   weekday?: Prisma.SortOrder;
   startTime?: Prisma.SortOrder;
   endTime?: Prisma.SortOrder;
+  validFrom?: Prisma.SortOrder;
+  validTo?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -637,6 +735,8 @@ export type ScheduleTemplateMinOrderByAggregateInput = {
   weekday?: Prisma.SortOrder;
   startTime?: Prisma.SortOrder;
   endTime?: Prisma.SortOrder;
+  validFrom?: Prisma.SortOrder;
+  validTo?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -1383,6 +1483,8 @@ export type ScheduleTemplateCreateWithoutTenantInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1402,6 +1504,8 @@ export type ScheduleTemplateUncheckedCreateWithoutTenantInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1471,6 +1575,16 @@ export type ScheduleTemplateScalarWhereInput = {
   weekday?: Prisma.EnumWeekdayFilter<'ScheduleTemplate'> | $Enums.Weekday;
   startTime?: Prisma.StringFilter<'ScheduleTemplate'> | string;
   endTime?: Prisma.StringFilter<'ScheduleTemplate'> | string;
+  validFrom?:
+    | Prisma.DateTimeNullableFilter<'ScheduleTemplate'>
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.DateTimeNullableFilter<'ScheduleTemplate'>
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFilter<'ScheduleTemplate'> | boolean;
   isDeleted?: Prisma.BoolFilter<'ScheduleTemplate'> | boolean;
   createdAt?: Prisma.DateTimeFilter<'ScheduleTemplate'> | Date | string;
@@ -1493,6 +1607,8 @@ export type ScheduleTemplateCreateWithoutCreatedByInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1512,6 +1628,8 @@ export type ScheduleTemplateUncheckedCreateWithoutCreatedByInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1546,6 +1664,8 @@ export type ScheduleTemplateCreateWithoutTeacherInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1565,6 +1685,8 @@ export type ScheduleTemplateUncheckedCreateWithoutTeacherInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1655,6 +1777,8 @@ export type ScheduleTemplateCreateWithoutSubjectInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1674,6 +1798,8 @@ export type ScheduleTemplateUncheckedCreateWithoutSubjectInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1736,6 +1862,8 @@ export type ScheduleTemplateCreateWithoutRoomInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1755,6 +1883,8 @@ export type ScheduleTemplateUncheckedCreateWithoutRoomInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1817,6 +1947,8 @@ export type ScheduleTemplateCreateWithoutGroupInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1836,6 +1968,8 @@ export type ScheduleTemplateUncheckedCreateWithoutGroupInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1898,6 +2032,8 @@ export type ScheduleTemplateCreateWithoutExceptionsInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1917,6 +2053,8 @@ export type ScheduleTemplateUncheckedCreateWithoutExceptionsInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1964,6 +2102,16 @@ export type ScheduleTemplateUpdateWithoutExceptionsInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1987,6 +2135,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutExceptionsInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2010,6 +2168,8 @@ export type ScheduleTemplateCreateWithoutSessionsInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2029,6 +2189,8 @@ export type ScheduleTemplateUncheckedCreateWithoutSessionsInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2076,6 +2238,16 @@ export type ScheduleTemplateUpdateWithoutSessionsInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2099,6 +2271,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutSessionsInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2122,6 +2304,8 @@ export type ScheduleTemplateCreateManyTenantInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2139,6 +2323,16 @@ export type ScheduleTemplateUpdateWithoutTenantInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2162,6 +2356,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutTenantInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2185,6 +2389,16 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutTenantInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2206,6 +2420,8 @@ export type ScheduleTemplateCreateManyCreatedByInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2223,6 +2439,8 @@ export type ScheduleTemplateCreateManyTeacherInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2240,6 +2458,16 @@ export type ScheduleTemplateUpdateWithoutCreatedByInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2263,6 +2491,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutCreatedByInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2286,6 +2524,16 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutCreatedByInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2307,6 +2555,16 @@ export type ScheduleTemplateUpdateWithoutTeacherInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2330,6 +2588,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutTeacherInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2353,6 +2621,16 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutTeacherInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2374,6 +2652,8 @@ export type ScheduleTemplateCreateManySubjectInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2391,6 +2671,16 @@ export type ScheduleTemplateUpdateWithoutSubjectInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2414,6 +2704,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutSubjectInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2437,6 +2737,16 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutSubjectInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2458,6 +2768,8 @@ export type ScheduleTemplateCreateManyRoomInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2475,6 +2787,16 @@ export type ScheduleTemplateUpdateWithoutRoomInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2498,6 +2820,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutRoomInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2521,6 +2853,16 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutRoomInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2542,6 +2884,8 @@ export type ScheduleTemplateCreateManyGroupInput = {
   weekday: $Enums.Weekday;
   startTime: string;
   endTime: string;
+  validFrom?: Date | string | null;
+  validTo?: Date | string | null;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2559,6 +2903,16 @@ export type ScheduleTemplateUpdateWithoutGroupInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2582,6 +2936,16 @@ export type ScheduleTemplateUncheckedUpdateWithoutGroupInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2605,6 +2969,16 @@ export type ScheduleTemplateUncheckedUpdateManyWithoutGroupInput = {
   weekday?: Prisma.EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday;
   startTime?: Prisma.StringFieldUpdateOperationsInput | string;
   endTime?: Prisma.StringFieldUpdateOperationsInput | string;
+  validFrom?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  validTo?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2680,6 +3054,8 @@ export type ScheduleTemplateSelect<
     weekday?: boolean;
     startTime?: boolean;
     endTime?: boolean;
+    validFrom?: boolean;
+    validTo?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -2715,6 +3091,8 @@ export type ScheduleTemplateSelectCreateManyAndReturn<
     weekday?: boolean;
     startTime?: boolean;
     endTime?: boolean;
+    validFrom?: boolean;
+    validTo?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -2745,6 +3123,8 @@ export type ScheduleTemplateSelectUpdateManyAndReturn<
     weekday?: boolean;
     startTime?: boolean;
     endTime?: boolean;
+    validFrom?: boolean;
+    validTo?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -2771,6 +3151,8 @@ export type ScheduleTemplateSelectScalar = {
   weekday?: boolean;
   startTime?: boolean;
   endTime?: boolean;
+  validFrom?: boolean;
+  validTo?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: boolean;
@@ -2792,6 +3174,8 @@ export type ScheduleTemplateOmit<
   | 'weekday'
   | 'startTime'
   | 'endTime'
+  | 'validFrom'
+  | 'validTo'
   | 'isActive'
   | 'isDeleted'
   | 'createdAt'
@@ -2863,6 +3247,8 @@ export type $ScheduleTemplatePayload<
       weekday: $Enums.Weekday;
       startTime: string;
       endTime: string;
+      validFrom: Date | null;
+      validTo: Date | null;
       isActive: boolean;
       isDeleted: boolean;
       createdAt: Date;
@@ -3596,6 +3982,8 @@ export interface ScheduleTemplateFieldRefs {
   readonly weekday: Prisma.FieldRef<'ScheduleTemplate', 'Weekday'>;
   readonly startTime: Prisma.FieldRef<'ScheduleTemplate', 'String'>;
   readonly endTime: Prisma.FieldRef<'ScheduleTemplate', 'String'>;
+  readonly validFrom: Prisma.FieldRef<'ScheduleTemplate', 'DateTime'>;
+  readonly validTo: Prisma.FieldRef<'ScheduleTemplate', 'DateTime'>;
   readonly isActive: Prisma.FieldRef<'ScheduleTemplate', 'Boolean'>;
   readonly isDeleted: Prisma.FieldRef<'ScheduleTemplate', 'Boolean'>;
   readonly createdAt: Prisma.FieldRef<'ScheduleTemplate', 'DateTime'>;

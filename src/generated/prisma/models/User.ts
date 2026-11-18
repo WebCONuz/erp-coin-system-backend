@@ -364,6 +364,8 @@ export type UserWhereInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateListRelationFilter;
   rewardCategories?: Prisma.RewardCategoryListRelationFilter;
   auditLogsCreatedBy?: Prisma.AuditLogListRelationFilter;
+  holidaysCreated?: Prisma.HolidayListRelationFilter;
+  substituteExceptions?: Prisma.ScheduleExceptionListRelationFilter;
 };
 
 export type UserOrderByWithRelationInput = {
@@ -423,6 +425,8 @@ export type UserOrderByWithRelationInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateOrderByRelationAggregateInput;
   rewardCategories?: Prisma.RewardCategoryOrderByRelationAggregateInput;
   auditLogsCreatedBy?: Prisma.AuditLogOrderByRelationAggregateInput;
+  holidaysCreated?: Prisma.HolidayOrderByRelationAggregateInput;
+  substituteExceptions?: Prisma.ScheduleExceptionOrderByRelationAggregateInput;
 };
 
 export type UserWhereUniqueInput = Prisma.AtLeast<
@@ -503,6 +507,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
     emailTemplatesCreated?: Prisma.EmailTemplateListRelationFilter;
     rewardCategories?: Prisma.RewardCategoryListRelationFilter;
     auditLogsCreatedBy?: Prisma.AuditLogListRelationFilter;
+    holidaysCreated?: Prisma.HolidayListRelationFilter;
+    substituteExceptions?: Prisma.ScheduleExceptionListRelationFilter;
   },
   'id' | 'username' | 'tenantId_phone'
 >;
@@ -642,6 +648,8 @@ export type UserCreateInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateInput = {
@@ -697,6 +705,8 @@ export type UserUncheckedCreateInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUpdateInput = {
@@ -770,6 +780,8 @@ export type UserUpdateInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateInput = {
@@ -846,6 +858,8 @@ export type UserUncheckedUpdateInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateManyInput = {
@@ -1699,6 +1713,15 @@ export type UserCreateNestedOneWithoutScheduleExceptionsCreatedInput = {
   connect?: Prisma.UserWhereUniqueInput;
 };
 
+export type UserCreateNestedOneWithoutSubstituteExceptionsInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutSubstituteExceptionsInput,
+    Prisma.UserUncheckedCreateWithoutSubstituteExceptionsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubstituteExceptionsInput;
+  connect?: Prisma.UserWhereUniqueInput;
+};
+
 export type UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput = {
   create?: Prisma.XOR<
     Prisma.UserCreateWithoutScheduleExceptionsCreatedInput,
@@ -1713,6 +1736,51 @@ export type UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput = {
       Prisma.UserUpdateWithoutScheduleExceptionsCreatedInput
     >,
     Prisma.UserUncheckedUpdateWithoutScheduleExceptionsCreatedInput
+  >;
+};
+
+export type UserUpdateOneWithoutSubstituteExceptionsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutSubstituteExceptionsInput,
+    Prisma.UserUncheckedCreateWithoutSubstituteExceptionsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubstituteExceptionsInput;
+  upsert?: Prisma.UserUpsertWithoutSubstituteExceptionsInput;
+  disconnect?: Prisma.UserWhereInput | boolean;
+  delete?: Prisma.UserWhereInput | boolean;
+  connect?: Prisma.UserWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.UserUpdateToOneWithWhereWithoutSubstituteExceptionsInput,
+      Prisma.UserUpdateWithoutSubstituteExceptionsInput
+    >,
+    Prisma.UserUncheckedUpdateWithoutSubstituteExceptionsInput
+  >;
+};
+
+export type UserCreateNestedOneWithoutHolidaysCreatedInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutHolidaysCreatedInput,
+    Prisma.UserUncheckedCreateWithoutHolidaysCreatedInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHolidaysCreatedInput;
+  connect?: Prisma.UserWhereUniqueInput;
+};
+
+export type UserUpdateOneRequiredWithoutHolidaysCreatedNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutHolidaysCreatedInput,
+    Prisma.UserUncheckedCreateWithoutHolidaysCreatedInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHolidaysCreatedInput;
+  upsert?: Prisma.UserUpsertWithoutHolidaysCreatedInput;
+  connect?: Prisma.UserWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.UserUpdateToOneWithWhereWithoutHolidaysCreatedInput,
+      Prisma.UserUpdateWithoutHolidaysCreatedInput
+    >,
+    Prisma.UserUncheckedUpdateWithoutHolidaysCreatedInput
   >;
 };
 
@@ -2268,6 +2336,8 @@ export type UserCreateWithoutTenantInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutTenantInput = {
@@ -2322,6 +2392,8 @@ export type UserUncheckedCreateWithoutTenantInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutTenantInput = {
@@ -2448,6 +2520,8 @@ export type UserCreateWithoutRoleInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutRoleInput = {
@@ -2502,6 +2576,8 @@ export type UserUncheckedCreateWithoutRoleInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutRoleInput = {
@@ -2597,6 +2673,8 @@ export type UserCreateWithoutCreatedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCreatedUsersInput = {
@@ -2651,6 +2729,8 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCreatedUsersInput = {
@@ -2713,6 +2793,8 @@ export type UserCreateWithoutCreatedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCreatedByInput = {
@@ -2767,6 +2849,8 @@ export type UserUncheckedCreateWithoutCreatedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCreatedByInput = {
@@ -2836,6 +2920,8 @@ export type UserCreateWithoutArchivedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutArchivedUsersInput = {
@@ -2890,6 +2976,8 @@ export type UserUncheckedCreateWithoutArchivedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutArchivedUsersInput = {
@@ -2952,6 +3040,8 @@ export type UserCreateWithoutArchivedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutArchivedByInput = {
@@ -3006,6 +3096,8 @@ export type UserUncheckedCreateWithoutArchivedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutArchivedByInput = {
@@ -3113,6 +3205,8 @@ export type UserUpdateWithoutCreatedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCreatedUsersInput = {
@@ -3188,6 +3282,8 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithWhereUniqueWithoutCreatedByInput = {
@@ -3308,6 +3404,8 @@ export type UserUpdateWithoutArchivedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutArchivedUsersInput = {
@@ -3383,6 +3481,8 @@ export type UserUncheckedUpdateWithoutArchivedUsersInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithWhereUniqueWithoutArchivedByInput = {
@@ -3465,6 +3565,8 @@ export type UserCreateWithoutWalletInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutWalletInput = {
@@ -3519,6 +3621,8 @@ export type UserUncheckedCreateWithoutWalletInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutWalletInput = {
@@ -3619,6 +3723,8 @@ export type UserUpdateWithoutWalletInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutWalletInput = {
@@ -3694,6 +3800,8 @@ export type UserUncheckedUpdateWithoutWalletInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutCreatedCoursesInput = {
@@ -3748,6 +3856,8 @@ export type UserCreateWithoutCreatedCoursesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCreatedCoursesInput = {
@@ -3802,6 +3912,8 @@ export type UserUncheckedCreateWithoutCreatedCoursesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCreatedCoursesInput = {
@@ -3902,6 +4014,8 @@ export type UserUpdateWithoutCreatedCoursesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCreatedCoursesInput = {
@@ -3977,6 +4091,8 @@ export type UserUncheckedUpdateWithoutCreatedCoursesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutCreatedSubjectsInput = {
@@ -4031,6 +4147,8 @@ export type UserCreateWithoutCreatedSubjectsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCreatedSubjectsInput = {
@@ -4085,6 +4203,8 @@ export type UserUncheckedCreateWithoutCreatedSubjectsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCreatedSubjectsInput = {
@@ -4185,6 +4305,8 @@ export type UserUpdateWithoutCreatedSubjectsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCreatedSubjectsInput = {
@@ -4260,6 +4382,8 @@ export type UserUncheckedUpdateWithoutCreatedSubjectsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutTaughtGroupsInput = {
@@ -4314,6 +4438,8 @@ export type UserCreateWithoutTaughtGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutTaughtGroupsInput = {
@@ -4368,6 +4494,8 @@ export type UserUncheckedCreateWithoutTaughtGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutTaughtGroupsInput = {
@@ -4430,6 +4558,8 @@ export type UserCreateWithoutCreatedGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCreatedGroupsInput = {
@@ -4484,6 +4614,8 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCreatedGroupsInput = {
@@ -4584,6 +4716,8 @@ export type UserUpdateWithoutTaughtGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutTaughtGroupsInput = {
@@ -4659,6 +4793,8 @@ export type UserUncheckedUpdateWithoutTaughtGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutCreatedGroupsInput = {
@@ -4751,6 +4887,8 @@ export type UserUpdateWithoutCreatedGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
@@ -4826,6 +4964,8 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutGroupMembershipsInput = {
@@ -4880,6 +5020,8 @@ export type UserCreateWithoutGroupMembershipsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutGroupMembershipsInput = {
@@ -4934,6 +5076,8 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutGroupMembershipsInput = {
@@ -4996,6 +5140,8 @@ export type UserCreateWithoutAddedGroupStudentsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutAddedGroupStudentsInput = {
@@ -5050,6 +5196,8 @@ export type UserUncheckedCreateWithoutAddedGroupStudentsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutAddedGroupStudentsInput = {
@@ -5150,6 +5298,8 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
@@ -5225,6 +5375,8 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutAddedGroupStudentsInput = {
@@ -5317,6 +5469,8 @@ export type UserUpdateWithoutAddedGroupStudentsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutAddedGroupStudentsInput = {
@@ -5392,6 +5546,8 @@ export type UserUncheckedUpdateWithoutAddedGroupStudentsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutScheduledTemplatesInput = {
@@ -5446,6 +5602,8 @@ export type UserCreateWithoutScheduledTemplatesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutScheduledTemplatesInput = {
@@ -5500,6 +5658,8 @@ export type UserUncheckedCreateWithoutScheduledTemplatesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutScheduledTemplatesInput = {
@@ -5562,6 +5722,8 @@ export type UserCreateWithoutScheduleTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutScheduleTemplatesCreatedInput = {
@@ -5616,6 +5778,8 @@ export type UserUncheckedCreateWithoutScheduleTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutScheduleTemplatesCreatedInput = {
@@ -5716,6 +5880,8 @@ export type UserUpdateWithoutScheduledTemplatesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutScheduledTemplatesInput = {
@@ -5791,6 +5957,8 @@ export type UserUncheckedUpdateWithoutScheduledTemplatesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutScheduleTemplatesCreatedInput = {
@@ -5883,6 +6051,8 @@ export type UserUpdateWithoutScheduleTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutScheduleTemplatesCreatedInput = {
@@ -5958,6 +6128,8 @@ export type UserUncheckedUpdateWithoutScheduleTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutScheduleExceptionsCreatedInput = {
@@ -6012,6 +6184,8 @@ export type UserCreateWithoutScheduleExceptionsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutScheduleExceptionsCreatedInput = {
@@ -6066,6 +6240,8 @@ export type UserUncheckedCreateWithoutScheduleExceptionsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutScheduleExceptionsCreatedInput = {
@@ -6073,6 +6249,126 @@ export type UserCreateOrConnectWithoutScheduleExceptionsCreatedInput = {
   create: Prisma.XOR<
     Prisma.UserCreateWithoutScheduleExceptionsCreatedInput,
     Prisma.UserUncheckedCreateWithoutScheduleExceptionsCreatedInput
+  >;
+};
+
+export type UserCreateWithoutSubstituteExceptionsInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  refreshTokenHash?: string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
+  role: Prisma.RoleCreateNestedOneWithoutUsersInput;
+  createdBy?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput;
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatedByInput;
+  archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
+  archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
+  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
+  createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+};
+
+export type UserUncheckedCreateWithoutSubstituteExceptionsInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  archivedById?: string | null;
+  createdById?: string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  refreshTokenHash?: string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenantId: string;
+  roleId: string;
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
+  archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
+  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
+  createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+};
+
+export type UserCreateOrConnectWithoutSubstituteExceptionsInput = {
+  where: Prisma.UserWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutSubstituteExceptionsInput,
+    Prisma.UserUncheckedCreateWithoutSubstituteExceptionsInput
   >;
 };
 
@@ -6166,6 +6462,8 @@ export type UserUpdateWithoutScheduleExceptionsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutScheduleExceptionsCreatedInput = {
@@ -6241,6 +6539,470 @@ export type UserUncheckedUpdateWithoutScheduleExceptionsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
+};
+
+export type UserUpsertWithoutSubstituteExceptionsInput = {
+  update: Prisma.XOR<
+    Prisma.UserUpdateWithoutSubstituteExceptionsInput,
+    Prisma.UserUncheckedUpdateWithoutSubstituteExceptionsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutSubstituteExceptionsInput,
+    Prisma.UserUncheckedCreateWithoutSubstituteExceptionsInput
+  >;
+  where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutSubstituteExceptionsInput = {
+  where?: Prisma.UserWhereInput;
+  data: Prisma.XOR<
+    Prisma.UserUpdateWithoutSubstituteExceptionsInput,
+    Prisma.UserUncheckedUpdateWithoutSubstituteExceptionsInput
+  >;
+};
+
+export type UserUpdateWithoutSubstituteExceptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  refreshTokenHash?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput;
+  role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
+  createdBy?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput;
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatedByNestedInput;
+  archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
+  archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
+  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
+  createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutSubstituteExceptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  archivedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  refreshTokenHash?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roleId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
+  archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUncheckedUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
+  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
+  createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+};
+
+export type UserCreateWithoutHolidaysCreatedInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  refreshTokenHash?: string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
+  role: Prisma.RoleCreateNestedOneWithoutUsersInput;
+  createdBy?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput;
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatedByInput;
+  archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
+  archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
+  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
+  createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
+};
+
+export type UserUncheckedCreateWithoutHolidaysCreatedInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  archivedById?: string | null;
+  createdById?: string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  refreshTokenHash?: string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenantId: string;
+  roleId: string;
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
+  archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
+  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
+  createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
+};
+
+export type UserCreateOrConnectWithoutHolidaysCreatedInput = {
+  where: Prisma.UserWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutHolidaysCreatedInput,
+    Prisma.UserUncheckedCreateWithoutHolidaysCreatedInput
+  >;
+};
+
+export type UserUpsertWithoutHolidaysCreatedInput = {
+  update: Prisma.XOR<
+    Prisma.UserUpdateWithoutHolidaysCreatedInput,
+    Prisma.UserUncheckedUpdateWithoutHolidaysCreatedInput
+  >;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutHolidaysCreatedInput,
+    Prisma.UserUncheckedCreateWithoutHolidaysCreatedInput
+  >;
+  where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutHolidaysCreatedInput = {
+  where?: Prisma.UserWhereInput;
+  data: Prisma.XOR<
+    Prisma.UserUpdateWithoutHolidaysCreatedInput,
+    Prisma.UserUncheckedUpdateWithoutHolidaysCreatedInput
+  >;
+};
+
+export type UserUpdateWithoutHolidaysCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  refreshTokenHash?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput;
+  role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
+  createdBy?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput;
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatedByNestedInput;
+  archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
+  archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
+  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
+  createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutHolidaysCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  archivedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  refreshTokenHash?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roleId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
+  archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUncheckedUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
+  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
+  createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutCoinRulesCreatedInput = {
@@ -6295,6 +7057,8 @@ export type UserCreateWithoutCoinRulesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCoinRulesCreatedInput = {
@@ -6349,6 +7113,8 @@ export type UserUncheckedCreateWithoutCoinRulesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCoinRulesCreatedInput = {
@@ -6449,6 +7215,8 @@ export type UserUpdateWithoutCoinRulesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCoinRulesCreatedInput = {
@@ -6524,6 +7292,8 @@ export type UserUncheckedUpdateWithoutCoinRulesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutLedSessionsInput = {
@@ -6578,6 +7348,8 @@ export type UserCreateWithoutLedSessionsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutLedSessionsInput = {
@@ -6632,6 +7404,8 @@ export type UserUncheckedCreateWithoutLedSessionsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutLedSessionsInput = {
@@ -6732,6 +7506,8 @@ export type UserUpdateWithoutLedSessionsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutLedSessionsInput = {
@@ -6807,6 +7583,8 @@ export type UserUncheckedUpdateWithoutLedSessionsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutAttendanceAsStudentInput = {
@@ -6861,6 +7639,8 @@ export type UserCreateWithoutAttendanceAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutAttendanceAsStudentInput = {
@@ -6915,6 +7695,8 @@ export type UserUncheckedCreateWithoutAttendanceAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutAttendanceAsStudentInput = {
@@ -6977,6 +7759,8 @@ export type UserCreateWithoutAttendanceRecordedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutAttendanceRecordedInput = {
@@ -7031,6 +7815,8 @@ export type UserUncheckedCreateWithoutAttendanceRecordedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutAttendanceRecordedInput = {
@@ -7131,6 +7917,8 @@ export type UserUpdateWithoutAttendanceAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutAttendanceAsStudentInput = {
@@ -7206,6 +7994,8 @@ export type UserUncheckedUpdateWithoutAttendanceAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutAttendanceRecordedInput = {
@@ -7298,6 +8088,8 @@ export type UserUpdateWithoutAttendanceRecordedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutAttendanceRecordedInput = {
@@ -7373,6 +8165,8 @@ export type UserUncheckedUpdateWithoutAttendanceRecordedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutCoinTransactionsReceivedInput = {
@@ -7427,6 +8221,8 @@ export type UserCreateWithoutCoinTransactionsReceivedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCoinTransactionsReceivedInput = {
@@ -7481,6 +8277,8 @@ export type UserUncheckedCreateWithoutCoinTransactionsReceivedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCoinTransactionsReceivedInput = {
@@ -7543,6 +8341,8 @@ export type UserCreateWithoutCoinTransactionsGivenInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutCoinTransactionsGivenInput = {
@@ -7597,6 +8397,8 @@ export type UserUncheckedCreateWithoutCoinTransactionsGivenInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutCoinTransactionsGivenInput = {
@@ -7697,6 +8499,8 @@ export type UserUpdateWithoutCoinTransactionsReceivedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCoinTransactionsReceivedInput = {
@@ -7772,6 +8576,8 @@ export type UserUncheckedUpdateWithoutCoinTransactionsReceivedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutCoinTransactionsGivenInput = {
@@ -7864,6 +8670,8 @@ export type UserUpdateWithoutCoinTransactionsGivenInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCoinTransactionsGivenInput = {
@@ -7939,6 +8747,8 @@ export type UserUncheckedUpdateWithoutCoinTransactionsGivenInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutRewardCategoriesInput = {
@@ -7993,6 +8803,8 @@ export type UserCreateWithoutRewardCategoriesInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateCreateNestedManyWithoutCreatedByInput;
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutRewardCategoriesInput = {
@@ -8047,6 +8859,8 @@ export type UserUncheckedCreateWithoutRewardCategoriesInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutRewardCategoriesInput = {
@@ -8147,6 +8961,8 @@ export type UserUpdateWithoutRewardCategoriesInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUpdateManyWithoutCreatedByNestedInput;
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutRewardCategoriesInput = {
@@ -8222,6 +9038,8 @@ export type UserUncheckedUpdateWithoutRewardCategoriesInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutRewardsCreatedInput = {
@@ -8276,6 +9094,8 @@ export type UserCreateWithoutRewardsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutRewardsCreatedInput = {
@@ -8330,6 +9150,8 @@ export type UserUncheckedCreateWithoutRewardsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutRewardsCreatedInput = {
@@ -8430,6 +9252,8 @@ export type UserUpdateWithoutRewardsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutRewardsCreatedInput = {
@@ -8505,6 +9329,8 @@ export type UserUncheckedUpdateWithoutRewardsCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutPurchasesInput = {
@@ -8559,6 +9385,8 @@ export type UserCreateWithoutPurchasesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutPurchasesInput = {
@@ -8613,6 +9441,8 @@ export type UserUncheckedCreateWithoutPurchasesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutPurchasesInput = {
@@ -8675,6 +9505,8 @@ export type UserCreateWithoutPurchasesApprovedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutPurchasesApprovedInput = {
@@ -8729,6 +9561,8 @@ export type UserUncheckedCreateWithoutPurchasesApprovedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutPurchasesApprovedInput = {
@@ -8791,6 +9625,8 @@ export type UserCreateWithoutPurchasesDeliveredInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutPurchasesDeliveredInput = {
@@ -8845,6 +9681,8 @@ export type UserUncheckedCreateWithoutPurchasesDeliveredInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutPurchasesDeliveredInput = {
@@ -8945,6 +9783,8 @@ export type UserUpdateWithoutPurchasesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutPurchasesInput = {
@@ -9020,6 +9860,8 @@ export type UserUncheckedUpdateWithoutPurchasesInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutPurchasesApprovedInput = {
@@ -9112,6 +9954,8 @@ export type UserUpdateWithoutPurchasesApprovedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutPurchasesApprovedInput = {
@@ -9187,6 +10031,8 @@ export type UserUncheckedUpdateWithoutPurchasesApprovedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutPurchasesDeliveredInput = {
@@ -9279,6 +10125,8 @@ export type UserUpdateWithoutPurchasesDeliveredInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutPurchasesDeliveredInput = {
@@ -9354,6 +10202,8 @@ export type UserUncheckedUpdateWithoutPurchasesDeliveredInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutSmsTemplatesCreatedInput = {
@@ -9408,6 +10258,8 @@ export type UserCreateWithoutSmsTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutSmsTemplatesCreatedInput = {
@@ -9462,6 +10314,8 @@ export type UserUncheckedCreateWithoutSmsTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutSmsTemplatesCreatedInput = {
@@ -9562,6 +10416,8 @@ export type UserUpdateWithoutSmsTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutSmsTemplatesCreatedInput = {
@@ -9637,6 +10493,8 @@ export type UserUncheckedUpdateWithoutSmsTemplatesCreatedInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutSmsLogsAsStudentInput = {
@@ -9691,6 +10549,8 @@ export type UserCreateWithoutSmsLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutSmsLogsAsStudentInput = {
@@ -9745,6 +10605,8 @@ export type UserUncheckedCreateWithoutSmsLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutSmsLogsAsStudentInput = {
@@ -9807,6 +10669,8 @@ export type UserCreateWithoutSmsLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutSmsLogsSentByInput = {
@@ -9861,6 +10725,8 @@ export type UserUncheckedCreateWithoutSmsLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutSmsLogsSentByInput = {
@@ -9961,6 +10827,8 @@ export type UserUpdateWithoutSmsLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutSmsLogsAsStudentInput = {
@@ -10036,6 +10904,8 @@ export type UserUncheckedUpdateWithoutSmsLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutSmsLogsSentByInput = {
@@ -10128,6 +10998,8 @@ export type UserUpdateWithoutSmsLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutSmsLogsSentByInput = {
@@ -10203,6 +11075,8 @@ export type UserUncheckedUpdateWithoutSmsLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutEmailTemplatesCreatedInput = {
@@ -10257,6 +11131,8 @@ export type UserCreateWithoutEmailTemplatesCreatedInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutEmailTemplatesCreatedInput = {
@@ -10311,6 +11187,8 @@ export type UserUncheckedCreateWithoutEmailTemplatesCreatedInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutEmailTemplatesCreatedInput = {
@@ -10411,6 +11289,8 @@ export type UserUpdateWithoutEmailTemplatesCreatedInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutEmailTemplatesCreatedInput = {
@@ -10486,6 +11366,8 @@ export type UserUncheckedUpdateWithoutEmailTemplatesCreatedInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutEmailLogsAsStudentInput = {
@@ -10540,6 +11422,8 @@ export type UserCreateWithoutEmailLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutEmailLogsAsStudentInput = {
@@ -10594,6 +11478,8 @@ export type UserUncheckedCreateWithoutEmailLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutEmailLogsAsStudentInput = {
@@ -10656,6 +11542,8 @@ export type UserCreateWithoutEmailLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutEmailLogsSentByInput = {
@@ -10710,6 +11598,8 @@ export type UserUncheckedCreateWithoutEmailLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutEmailLogsSentByInput = {
@@ -10810,6 +11700,8 @@ export type UserUpdateWithoutEmailLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutEmailLogsAsStudentInput = {
@@ -10885,6 +11777,8 @@ export type UserUncheckedUpdateWithoutEmailLogsAsStudentInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUpsertWithoutEmailLogsSentByInput = {
@@ -10977,6 +11871,8 @@ export type UserUpdateWithoutEmailLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutEmailLogsSentByInput = {
@@ -11052,6 +11948,8 @@ export type UserUncheckedUpdateWithoutEmailLogsSentByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutAuditLogsCreatedByInput = {
@@ -11106,6 +12004,8 @@ export type UserCreateWithoutAuditLogsCreatedByInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateCreateNestedManyWithoutCreatedByInput;
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutAuditLogsCreatedByInput = {
@@ -11160,6 +12060,8 @@ export type UserUncheckedCreateWithoutAuditLogsCreatedByInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutAuditLogsCreatedByInput = {
@@ -11260,6 +12162,8 @@ export type UserUpdateWithoutAuditLogsCreatedByInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUpdateManyWithoutCreatedByNestedInput;
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutAuditLogsCreatedByInput = {
@@ -11335,6 +12239,8 @@ export type UserUncheckedUpdateWithoutAuditLogsCreatedByInput = {
   smsTemplatesCreated?: Prisma.SmsTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateWithoutImportLogsInput = {
@@ -11389,6 +12295,8 @@ export type UserCreateWithoutImportLogsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserUncheckedCreateWithoutImportLogsInput = {
@@ -11443,6 +12351,8 @@ export type UserUncheckedCreateWithoutImportLogsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
 export type UserCreateOrConnectWithoutImportLogsInput = {
@@ -11543,6 +12453,8 @@ export type UserUpdateWithoutImportLogsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutImportLogsInput = {
@@ -11618,6 +12530,8 @@ export type UserUncheckedUpdateWithoutImportLogsInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserCreateManyTenantInput = {
@@ -11713,6 +12627,8 @@ export type UserUpdateWithoutTenantInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutTenantInput = {
@@ -11788,6 +12704,8 @@ export type UserUncheckedUpdateWithoutTenantInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateManyWithoutTenantInput = {
@@ -11927,6 +12845,8 @@ export type UserUpdateWithoutRoleInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutRoleInput = {
@@ -12002,6 +12922,8 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateManyWithoutRoleInput = {
@@ -12164,6 +13086,8 @@ export type UserUpdateWithoutCreatedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutCreatedByInput = {
@@ -12239,6 +13163,8 @@ export type UserUncheckedUpdateWithoutCreatedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateManyWithoutCreatedByInput = {
@@ -12355,6 +13281,8 @@ export type UserUpdateWithoutArchivedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutArchivedByInput = {
@@ -12427,6 +13355,8 @@ export type UserUncheckedUpdateWithoutArchivedByInput = {
   emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
   auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
 export type UserUncheckedUpdateManyWithoutArchivedByInput = {
@@ -12505,6 +13435,8 @@ export type UserCountOutputType = {
   emailTemplatesCreated: number;
   rewardCategories: number;
   auditLogsCreatedBy: number;
+  holidaysCreated: number;
+  substituteExceptions: number;
 };
 
 export type UserCountOutputTypeSelect<
@@ -12555,6 +13487,10 @@ export type UserCountOutputTypeSelect<
     | UserCountOutputTypeCountEmailTemplatesCreatedArgs;
   rewardCategories?: boolean | UserCountOutputTypeCountRewardCategoriesArgs;
   auditLogsCreatedBy?: boolean | UserCountOutputTypeCountAuditLogsCreatedByArgs;
+  holidaysCreated?: boolean | UserCountOutputTypeCountHolidaysCreatedArgs;
+  substituteExceptions?:
+    | boolean
+    | UserCountOutputTypeCountSubstituteExceptionsArgs;
 };
 
 /**
@@ -12870,6 +13806,26 @@ export type UserCountOutputTypeCountAuditLogsCreatedByArgs<
   where?: Prisma.AuditLogWhereInput;
 };
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountHolidaysCreatedArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.HolidayWhereInput;
+};
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSubstituteExceptionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.ScheduleExceptionWhereInput;
+};
+
 export type UserSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -12945,6 +13901,10 @@ export type UserSelect<
       | Prisma.User$emailTemplatesCreatedArgs<ExtArgs>;
     rewardCategories?: boolean | Prisma.User$rewardCategoriesArgs<ExtArgs>;
     auditLogsCreatedBy?: boolean | Prisma.User$auditLogsCreatedByArgs<ExtArgs>;
+    holidaysCreated?: boolean | Prisma.User$holidaysCreatedArgs<ExtArgs>;
+    substituteExceptions?:
+      | boolean
+      | Prisma.User$substituteExceptionsArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['user']
@@ -13118,6 +14078,10 @@ export type UserInclude<
     | Prisma.User$emailTemplatesCreatedArgs<ExtArgs>;
   rewardCategories?: boolean | Prisma.User$rewardCategoriesArgs<ExtArgs>;
   auditLogsCreatedBy?: boolean | Prisma.User$auditLogsCreatedByArgs<ExtArgs>;
+  holidaysCreated?: boolean | Prisma.User$holidaysCreatedArgs<ExtArgs>;
+  substituteExceptions?:
+    | boolean
+    | Prisma.User$substituteExceptionsArgs<ExtArgs>;
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<
@@ -13180,6 +14144,8 @@ export type $UserPayload<
     emailTemplatesCreated: Prisma.$EmailTemplatePayload<ExtArgs>[];
     rewardCategories: Prisma.$RewardCategoryPayload<ExtArgs>[];
     auditLogsCreatedBy: Prisma.$AuditLogPayload<ExtArgs>[];
+    holidaysCreated: Prisma.$HolidayPayload<ExtArgs>[];
+    substituteExceptions: Prisma.$ScheduleExceptionPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -14171,6 +15137,30 @@ export interface Prisma__UserClient<
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$AuditLogPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  holidaysCreated<T extends Prisma.User$holidaysCreatedArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.User$holidaysCreatedArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$HolidayPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  substituteExceptions<
+    T extends Prisma.User$substituteExceptionsArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.User$substituteExceptionsArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$ScheduleExceptionPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -15653,6 +16643,66 @@ export type User$auditLogsCreatedByArgs<
   take?: number;
   skip?: number;
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[];
+};
+
+/**
+ * User.holidaysCreated
+ */
+export type User$holidaysCreatedArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the Holiday
+   */
+  select?: Prisma.HolidaySelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the Holiday
+   */
+  omit?: Prisma.HolidayOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HolidayInclude<ExtArgs> | null;
+  where?: Prisma.HolidayWhereInput;
+  orderBy?:
+    | Prisma.HolidayOrderByWithRelationInput
+    | Prisma.HolidayOrderByWithRelationInput[];
+  cursor?: Prisma.HolidayWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: Prisma.HolidayScalarFieldEnum | Prisma.HolidayScalarFieldEnum[];
+};
+
+/**
+ * User.substituteExceptions
+ */
+export type User$substituteExceptionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the ScheduleException
+   */
+  select?: Prisma.ScheduleExceptionSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the ScheduleException
+   */
+  omit?: Prisma.ScheduleExceptionOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScheduleExceptionInclude<ExtArgs> | null;
+  where?: Prisma.ScheduleExceptionWhereInput;
+  orderBy?:
+    | Prisma.ScheduleExceptionOrderByWithRelationInput
+    | Prisma.ScheduleExceptionOrderByWithRelationInput[];
+  cursor?: Prisma.ScheduleExceptionWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.ScheduleExceptionScalarFieldEnum
+    | Prisma.ScheduleExceptionScalarFieldEnum[];
 };
 
 /**

@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
   Matches,
-  ValidateIf,
+  IsUUID,
 } from 'class-validator';
 import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -21,7 +21,8 @@ export class CreateScheduleExceptionDto {
 
   @ApiProperty({
     example: true,
-    description: "true — dars bekor qilingan; false — vaqt o'zgardi",
+    description:
+      "true — dars bekor qilingan; false — vaqt, xona yoki o'qituvchi o'zgardi",
   })
   @IsBoolean()
   @IsNotEmpty()
@@ -29,9 +30,10 @@ export class CreateScheduleExceptionDto {
 
   @ApiPropertyOptional({
     example: '10:00',
-    description: "isCancelled:false bo'lsa yangi boshlanish vaqti",
+    description:
+      "isCancelled:false — yangi boshlanish vaqti (endTime bilan birga; vaqt o'zgarmasa berilmaydi)",
   })
-  @ValidateIf((o: CreateScheduleExceptionDto) => !o.isCancelled)
+  @IsOptional()
   @IsString()
   @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   startTime?: string;
@@ -40,10 +42,27 @@ export class CreateScheduleExceptionDto {
     example: '12:00',
     description: "isCancelled:false bo'lsa yangi tugash vaqti",
   })
-  @ValidateIf((o: CreateScheduleExceptionDto) => !o.isCancelled)
+  @IsOptional()
   @IsString()
   @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   endTime?: string;
+
+  @ApiPropertyOptional({
+    example: 'room-uuid',
+    description: "Shu kun dars boshqa xonada bo'lsa (isCancelled:false)",
+  })
+  @IsOptional()
+  @IsUUID()
+  roomId?: string;
+
+  @ApiPropertyOptional({
+    example: 'teacher-uuid',
+    description:
+      "Shu kun darsni o'rinbosar o'qituvchi o'tsa (isCancelled:false)",
+  })
+  @IsOptional()
+  @IsUUID()
+  teacherId?: string;
 
   @ApiPropertyOptional({ example: "Bayram sababli dars ko'chirildi" })
   @IsOptional()

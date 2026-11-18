@@ -539,6 +539,21 @@ export type EnumEvaluationModeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumEvaluationModeFilter<$PrismaModel>;
 };
 
+export type EnumAttendanceStatusFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.AttendanceStatus
+    | Prisma.EnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  in?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  notIn?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedEnumAttendanceStatusFilter<$PrismaModel>
+    | $Enums.AttendanceStatus;
+};
+
 export type FloatNullableFilter<$PrismaModel = never> = {
   equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null;
   in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null;
@@ -548,6 +563,24 @@ export type FloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>;
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>;
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null;
+};
+
+export type EnumAttendanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.AttendanceStatus
+    | Prisma.EnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  in?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  notIn?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel>
+    | $Enums.AttendanceStatus;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumAttendanceStatusFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumAttendanceStatusFilter<$PrismaModel>;
 };
 
 export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -1508,6 +1541,41 @@ export type NestedEnumEvaluationModeWithAggregatesFilter<$PrismaModel = never> =
     _min?: Prisma.NestedEnumEvaluationModeFilter<$PrismaModel>;
     _max?: Prisma.NestedEnumEvaluationModeFilter<$PrismaModel>;
   };
+
+export type NestedEnumAttendanceStatusFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.AttendanceStatus
+    | Prisma.EnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  in?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  notIn?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedEnumAttendanceStatusFilter<$PrismaModel>
+    | $Enums.AttendanceStatus;
+};
+
+export type NestedEnumAttendanceStatusWithAggregatesFilter<
+  $PrismaModel = never,
+> = {
+  equals?:
+    | $Enums.AttendanceStatus
+    | Prisma.EnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  in?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  notIn?:
+    | $Enums.AttendanceStatus[]
+    | Prisma.ListEnumAttendanceStatusFieldRefInput<$PrismaModel>;
+  not?:
+    | Prisma.NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel>
+    | $Enums.AttendanceStatus;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumAttendanceStatusFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumAttendanceStatusFilter<$PrismaModel>;
+};
 
 export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null;

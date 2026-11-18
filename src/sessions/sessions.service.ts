@@ -13,6 +13,7 @@ import { BulkAttendanceDto } from './dto/record-attendance.dto';
 import { BulkResultsDto } from './dto/record-results.dto';
 import { QueryMyAttendanceDto } from './dto/query-my-attendance.dto';
 import {
+  AttendanceStatus,
   CoinDirection,
   EvaluationMode,
   SourceType,
@@ -669,6 +670,7 @@ export class SessionsService {
         select: {
           id: true,
           isPresent: true,
+          status: true,
           homeworkDone: true,
           score: true,
           note: true,
@@ -785,11 +787,15 @@ export class SessionsService {
     }
   }
 
-  // O'quvchilar takrorlanmasligi va shu guruh a'zosi ekanini tekshirish.
-  // Guruhdan chiqib ketgan, lekin shu sessiyada allaqachon yozuvi bor
-  // o'quvchini qayta saqlashga ruxsat beriladi.
+  // O'quvchilar takrorlanmasligi va **dars sanasida** shu guruh a'zosi bo'lganini tekshirish.
+  // Shu sessiyada allaqachon yozuvi bor o'quvchini qayta saqlashga ruxsat beriladi.
   private async assertStudentsBelongToSession(
-    session: { id: string; groupId: string },
+    session: {
+      id: string;
+      groupId: string;
+      tenantId: string;
+      sessionDate: Date;
+    },
     studentIds: string[],
   ) {
     const unique = new Set(studentIds);
@@ -806,14 +812,7 @@ export class SessionsService {
     }
 
     const [members, existing] = await Promise.all([
-      this.prisma.groupStudent.findMany({
-        where: {
-          groupId: session.groupId,
-          studentId: { in: studentIds },
-          isDeleted: false,
-        },
-        select: { studentId: true },
-      }),
+      this.membersAtSessionDate(session, studentIds),
       this.prisma.attendanceRecord.findMany({
         where: { sessionId: session.id, studentId: { in: studentIds } },
         select: { studentId: true },
@@ -834,6 +833,66 @@ export class SessionsService {
         { studentIds: invalid },
       );
     }
+  }
+
+  /**
+   * Dars sanasida guruh a'zosi bo'lgan o'quvchilar: shu sanaga qadar qo'shilgan (joinedAt) va
+   * hali chiqarilmagan yoki shu sanadan keyin chiqarilgan (leftAt). Sanalar tenant timezone'ida.
+   * Cheklov: guruhga qayta qo'shilgan o'quvchida joinedAt yangilanadi — undan oldingi
+   * a'zolik davri saqlanmaydi.
+   */
+  private async membersAtSessionDate(
+    session: { groupId: string; tenantId: string; sessionDate: Date },
+    studentIds?: string[],
+  ) {
+    const tz = await getTenantTimezone(this.prisma, session.tenantId);
+    const date = toDateString(session.sessionDate);
+    const rows = await this.prisma.groupStudent.findMany({
+      where: {
+        groupId: session.groupId,
+        ...(studentIds ? { studentId: { in: studentIds } } : {}),
+        OR: [{ isDeleted: false }, { leftAt: { not: null } }],
+      },
+      select: {
+        studentId: true,
+        joinedAt: true,
+        leftAt: true,
+        isDeleted: true,
+        student: { select: { id: true, fullName: true, avatarUrl: true } },
+      },
+    });
+    return rows.filter(
+      (m) =>
+        nowInTimeZone(tz, m.joinedAt).date <= date &&
+        (!m.isDeleted ||
+          (m.leftAt !== null && nowInTimeZone(tz, m.leftAt).date >= date)),
+    );
+  }
+
+  // Yo'qlama holatini aniqlash: status ustun; faqat isPresent berilsa — present/absent.
+  // Ikkalasi berilsa mos bo'lishi kerak (isPresent true ↔ present/late).
+  private resolveAttendanceStatus(record: {
+    studentId: string;
+    status?: AttendanceStatus;
+    isPresent?: boolean;
+  }): AttendanceStatus {
+    if (record.status === undefined) {
+      return record.isPresent
+        ? AttendanceStatus.present
+        : AttendanceStatus.absent;
+    }
+    const attended =
+      record.status === AttendanceStatus.present ||
+      record.status === AttendanceStatus.late;
+    if (record.isPresent !== undefined && record.isPresent !== attended) {
+      throw codedError(
+        HttpStatus.BAD_REQUEST,
+        `status (${record.status}) va isPresent (${record.isPresent}) bir-biriga mos emas`,
+        SESSION_ERROR_CODES.ATTENDANCE_STATUS_MISMATCH,
+        { studentId: record.studentId },
+      );
+    }
+    return record.status;
   }
 
   // 6. YO'QLAMANI SAQLASH VA TANGALARNI AVTOMATIK HISOBLASH (attendance rejimi)
@@ -886,6 +945,8 @@ export class SessionsService {
     const attendanceRule = findRule(SourceType.attendance, CoinDirection.earn);
     const homeworkRule = findRule(SourceType.homework, CoinDirection.earn);
     const absenceRule = findRule(SourceType.attendance, CoinDirection.deduct);
+    // Kechikkan uchun alohida qoida (ixtiyoriy). Bo'lmasa — oddiy davomat coini beriladi
+    const lateRule = findRule(SourceType.late, CoinDirection.earn);
 
     const coinRewardForAttendance = attendanceRule
       ? attendanceRule.coinAmount
@@ -901,10 +962,18 @@ export class SessionsService {
     let processed = 0;
     const coinsSkippedFor: CoinSkippedItem[] = [];
 
+    // Holatlar avval tekshiriladi — nomuvofiqlik bo'lsa hech kim saqlanmaydi
+    const statuses = new Map(
+      dto.records.map((r) => [r.studentId, this.resolveAttendanceStatus(r)]),
+    );
+
     for (const record of dto.records) {
       const items: SessionCoinItem[] = [];
+      const status = statuses.get(record.studentId)!;
+      const isPresent =
+        status === AttendanceStatus.present || status === AttendanceStatus.late;
 
-      if (record.isPresent) {
+      if (status === AttendanceStatus.present) {
         items.push({
           ...common,
           amount: coinRewardForAttendance,
@@ -913,6 +982,28 @@ export class SessionsService {
           note: `Darsda qatnashgani uchun avtomatik bonus (${sessionLabel})`,
           ruleId: attendanceRule?.id,
         });
+      }
+
+      if (status === AttendanceStatus.late) {
+        items.push(
+          lateRule
+            ? {
+                ...common,
+                amount: lateRule.coinAmount,
+                direction: CoinDirection.earn,
+                sourceType: SourceType.late,
+                note: `Darsga kechikib kelgani uchun (${sessionLabel})`,
+                ruleId: lateRule.id,
+              }
+            : {
+                ...common,
+                amount: coinRewardForAttendance,
+                direction: CoinDirection.earn,
+                sourceType: SourceType.attendance,
+                note: `Darsda qatnashgani uchun avtomatik bonus — kechikdi (${sessionLabel})`,
+                ruleId: attendanceRule?.id,
+              },
+        );
       }
 
       if (record.homeworkDone) {
@@ -926,8 +1017,9 @@ export class SessionsService {
         });
       }
 
-      // Kelmaganlarga jarima (faqat absenceRule mavjud bolsa)
-      if (!record.isPresent && absenceRule) {
+      // Sababsiz kelmaganlarga jarima (faqat absenceRule mavjud bo'lsa).
+      // Sababli (excused) — coin ham, jarima ham yo'q
+      if (status === AttendanceStatus.absent && absenceRule) {
         items.push({
           ...common,
           amount: absenceRule.coinAmount,
@@ -953,7 +1045,8 @@ export class SessionsService {
             sessionId_studentId: { sessionId, studentId: record.studentId },
           },
           update: {
-            isPresent: record.isPresent,
+            isPresent,
+            status,
             homeworkDone: record.homeworkDone,
             recordedById,
             isDeleted: false,
@@ -961,7 +1054,8 @@ export class SessionsService {
           create: {
             sessionId,
             studentId: record.studentId,
-            isPresent: record.isPresent,
+            isPresent,
+            status,
             homeworkDone: record.homeworkDone,
             recordedById,
           },
@@ -1074,6 +1168,9 @@ export class SessionsService {
           },
           update: {
             isPresent: record.isPresent,
+            status: record.isPresent
+              ? AttendanceStatus.present
+              : AttendanceStatus.absent,
             homeworkDone: false,
             score,
             note: record.note ?? null,
@@ -1084,6 +1181,9 @@ export class SessionsService {
             sessionId,
             studentId: record.studentId,
             isPresent: record.isPresent,
+            status: record.isPresent
+              ? AttendanceStatus.present
+              : AttendanceStatus.absent,
             homeworkDone: false,
             score,
             note: record.note ?? null,
@@ -1179,6 +1279,108 @@ export class SessionsService {
     for (const item of result.skippedItems) {
       target.push({ studentId, ...item });
     }
+  }
+
+  // 7a. YO'QLAMA FORMASI UCHUN O'QUVCHILAR RO'YXATI — dars sanasida guruhda bo'lganlar
+  // (keyin qo'shilganlar kirmaydi, keyin chiqarilganlar kiradi) + allaqachon yozuvi borlar
+  async getRoster(
+    sessionId: string,
+    tenantId: string,
+    requesterRole?: string,
+    requesterId?: string,
+  ) {
+    const session = await this.findOne(
+      sessionId,
+      tenantId,
+      requesterRole,
+      requesterId,
+    );
+    const raw = await this.prisma.session.findUniqueOrThrow({
+      where: { id: sessionId },
+      select: {
+        groupId: true,
+        tenantId: true,
+        sessionDate: true,
+        evaluationMode: true,
+      },
+    });
+
+    const [members, records] = await Promise.all([
+      this.membersAtSessionDate(raw),
+      this.getAttendanceBySession(
+        sessionId,
+        tenantId,
+        requesterRole,
+        requesterId,
+      ),
+    ]);
+    const recordByStudent = new Map(records.map((r) => [r.studentId, r]));
+
+    const students: {
+      student: { id: string; fullName: string; avatarUrl: string | null };
+      joinedAt: Date | null;
+      leftAt: Date | null;
+      record: {
+        status: AttendanceStatus;
+        isPresent: boolean;
+        homeworkDone: boolean;
+        score: number | null;
+        note: string | null;
+      } | null;
+      coinAwarded: number;
+    }[] = members.map((m) => {
+      const r = recordByStudent.get(m.studentId);
+      recordByStudent.delete(m.studentId);
+      return {
+        student: m.student,
+        joinedAt: m.joinedAt,
+        leftAt: m.leftAt,
+        record: r
+          ? {
+              status: r.status,
+              isPresent: r.isPresent,
+              homeworkDone: r.homeworkDone,
+              score: r.score,
+              note: r.note,
+            }
+          : null,
+        coinAwarded: r?.coinAwarded ?? 0,
+      };
+    });
+
+    // Yozuvi bor, lekin a'zolik ma'lumoti topilmagan (masalan qayta qo'shilgan) o'quvchilar
+    for (const r of recordByStudent.values()) {
+      students.push({
+        student: {
+          id: r.studentId,
+          fullName: r.student.fullName,
+          avatarUrl: null,
+        },
+        joinedAt: null,
+        leftAt: null,
+        record: {
+          status: r.status,
+          isPresent: r.isPresent,
+          homeworkDone: r.homeworkDone,
+          score: r.score,
+          note: r.note,
+        },
+        coinAwarded: r.coinAwarded,
+      });
+    }
+
+    students.sort((a, b) =>
+      a.student.fullName.localeCompare(b.student.fullName),
+    );
+
+    return {
+      session: {
+        id: session.id,
+        sessionDate: raw.sessionDate,
+        evaluationMode: raw.evaluationMode,
+      },
+      students,
+    };
   }
 
   // 7. YO'QLAMA / NATIJALAR RO'YXATINI OLISH

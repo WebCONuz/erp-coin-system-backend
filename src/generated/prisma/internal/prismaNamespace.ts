@@ -424,6 +424,7 @@ export const ModelName = {
   GroupStudent: 'GroupStudent',
   ScheduleTemplate: 'ScheduleTemplate',
   ScheduleException: 'ScheduleException',
+  Holiday: 'Holiday',
   CoinRule: 'CoinRule',
   Session: 'Session',
   AttendanceRecord: 'AttendanceRecord',
@@ -471,6 +472,7 @@ export type TypeMap<
       | 'groupStudent'
       | 'scheduleTemplate'
       | 'scheduleException'
+      | 'holiday'
       | 'coinRule'
       | 'session'
       | 'attendanceRecord'
@@ -1395,6 +1397,82 @@ export type TypeMap<
           args: Prisma.ScheduleExceptionCountArgs<ExtArgs>;
           result:
             | runtime.Types.Utils.Optional<Prisma.ScheduleExceptionCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    Holiday: {
+      payload: Prisma.$HolidayPayload<ExtArgs>;
+      fields: Prisma.HolidayFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.HolidayFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.HolidayFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>;
+        };
+        findFirst: {
+          args: Prisma.HolidayFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.HolidayFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>;
+        };
+        findMany: {
+          args: Prisma.HolidayFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>[];
+        };
+        create: {
+          args: Prisma.HolidayCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>;
+        };
+        createMany: {
+          args: Prisma.HolidayCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        createManyAndReturn: {
+          args: Prisma.HolidayCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>[];
+        };
+        delete: {
+          args: Prisma.HolidayDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>;
+        };
+        update: {
+          args: Prisma.HolidayUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>;
+        };
+        deleteMany: {
+          args: Prisma.HolidayDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.HolidayUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateManyAndReturn: {
+          args: Prisma.HolidayUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>[];
+        };
+        upsert: {
+          args: Prisma.HolidayUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HolidayPayload>;
+        };
+        aggregate: {
+          args: Prisma.HolidayAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHoliday>;
+        };
+        groupBy: {
+          args: Prisma.HolidayGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.HolidayGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.HolidayCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.HolidayCountAggregateOutputType>
             | number;
         };
       };
@@ -2591,6 +2669,7 @@ export const GroupStudentScalarFieldEnum = {
   isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   joinedAt: 'joinedAt',
+  leftAt: 'leftAt',
   groupId: 'groupId',
   studentId: 'studentId',
   addedById: 'addedById',
@@ -2604,6 +2683,8 @@ export const ScheduleTemplateScalarFieldEnum = {
   weekday: 'weekday',
   startTime: 'startTime',
   endTime: 'endTime',
+  validFrom: 'validFrom',
+  validTo: 'validTo',
   isActive: 'isActive',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
@@ -2632,10 +2713,26 @@ export const ScheduleExceptionScalarFieldEnum = {
   deletedAt: 'deletedAt',
   templateId: 'templateId',
   createdById: 'createdById',
+  roomId: 'roomId',
+  teacherId: 'teacherId',
 } as const;
 
 export type ScheduleExceptionScalarFieldEnum =
   (typeof ScheduleExceptionScalarFieldEnum)[keyof typeof ScheduleExceptionScalarFieldEnum];
+
+export const HolidayScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  name: 'name',
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  tenantId: 'tenantId',
+  createdById: 'createdById',
+} as const;
+
+export type HolidayScalarFieldEnum =
+  (typeof HolidayScalarFieldEnum)[keyof typeof HolidayScalarFieldEnum];
 
 export const CoinRuleScalarFieldEnum = {
   id: 'id',
@@ -2691,6 +2788,7 @@ export type SessionScalarFieldEnum =
 export const AttendanceRecordScalarFieldEnum = {
   id: 'id',
   isPresent: 'isPresent',
+  status: 'status',
   homeworkDone: 'homeworkDone',
   score: 'score',
   note: 'note',
@@ -3121,6 +3219,20 @@ export type ListEnumEvaluationModeFieldRefInput<$PrismaModel> =
   FieldRefInputType<$PrismaModel, 'EvaluationMode[]'>;
 
 /**
+ * Reference to a field of type 'AttendanceStatus'
+ */
+export type EnumAttendanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  'AttendanceStatus'
+>;
+
+/**
+ * Reference to a field of type 'AttendanceStatus[]'
+ */
+export type ListEnumAttendanceStatusFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, 'AttendanceStatus[]'>;
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -3401,6 +3513,7 @@ export type GlobalOmitConfig = {
   groupStudent?: Prisma.GroupStudentOmit;
   scheduleTemplate?: Prisma.ScheduleTemplateOmit;
   scheduleException?: Prisma.ScheduleExceptionOmit;
+  holiday?: Prisma.HolidayOmit;
   coinRule?: Prisma.CoinRuleOmit;
   session?: Prisma.SessionOmit;
   attendanceRecord?: Prisma.AttendanceRecordOmit;

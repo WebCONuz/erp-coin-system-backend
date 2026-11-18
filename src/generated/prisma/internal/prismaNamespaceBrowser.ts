@@ -66,6 +66,7 @@ export const ModelName = {
   GroupStudent: 'GroupStudent',
   ScheduleTemplate: 'ScheduleTemplate',
   ScheduleException: 'ScheduleException',
+  Holiday: 'Holiday',
   CoinRule: 'CoinRule',
   Session: 'Session',
   AttendanceRecord: 'AttendanceRecord',
@@ -262,6 +263,7 @@ export const GroupStudentScalarFieldEnum = {
   isDeleted: 'isDeleted',
   archivedAt: 'archivedAt',
   joinedAt: 'joinedAt',
+  leftAt: 'leftAt',
   groupId: 'groupId',
   studentId: 'studentId',
   addedById: 'addedById',
@@ -275,6 +277,8 @@ export const ScheduleTemplateScalarFieldEnum = {
   weekday: 'weekday',
   startTime: 'startTime',
   endTime: 'endTime',
+  validFrom: 'validFrom',
+  validTo: 'validTo',
   isActive: 'isActive',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
@@ -303,10 +307,26 @@ export const ScheduleExceptionScalarFieldEnum = {
   deletedAt: 'deletedAt',
   templateId: 'templateId',
   createdById: 'createdById',
+  roomId: 'roomId',
+  teacherId: 'teacherId',
 } as const;
 
 export type ScheduleExceptionScalarFieldEnum =
   (typeof ScheduleExceptionScalarFieldEnum)[keyof typeof ScheduleExceptionScalarFieldEnum];
+
+export const HolidayScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  name: 'name',
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt',
+  tenantId: 'tenantId',
+  createdById: 'createdById',
+} as const;
+
+export type HolidayScalarFieldEnum =
+  (typeof HolidayScalarFieldEnum)[keyof typeof HolidayScalarFieldEnum];
 
 export const CoinRuleScalarFieldEnum = {
   id: 'id',
@@ -362,6 +382,7 @@ export type SessionScalarFieldEnum =
 export const AttendanceRecordScalarFieldEnum = {
   id: 'id',
   isPresent: 'isPresent',
+  status: 'status',
   homeworkDone: 'homeworkDone',
   score: 'score',
   note: 'note',

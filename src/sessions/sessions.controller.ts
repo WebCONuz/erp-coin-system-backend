@@ -165,6 +165,27 @@ export class SessionsController {
     );
   }
 
+  @Get(':id/roster')
+  @Roles('admin', 'super_admin', 'teacher')
+  @ApiOperation({
+    summary:
+      "Yo'qlama formasi uchun o'quvchilar: dars sanasida guruhda bo'lganlar (keyin qo'shilganlar kirmaydi, keyin chiqarilganlar kiradi) + mavjud yozuvlari",
+  })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  getRoster(
+    @Param('id', ParseUUIDPipe) sessionId: string,
+    @TenantContext() tenantId: string,
+    @CurrentUser('role') role: string,
+    @CurrentUser('id') requesterId: string,
+  ) {
+    return this.sessionsService.getRoster(
+      sessionId,
+      tenantId,
+      role,
+      requesterId,
+    );
+  }
+
   @Patch(':id')
   @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({

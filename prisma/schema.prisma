@@ -43,6 +43,15 @@ enum EvaluationMode {
   scored
 }
 
+// Yo'qlama holati: present — keldi, late — kechikdi, excused — sababli kelmadi
+// (coin ham, jarima ham yo'q), absent — sababsiz kelmadi (jarima qoidasi bo'lsa)
+enum AttendanceStatus {
+  present
+  late
+  excused
+  absent
+}
+
 enum RewardType {
   digital
   privilege
@@ -58,6 +67,7 @@ enum PurchaseStatus {
 
 enum SourceType {
   attendance
+  late
   homework
   competition
   exam
@@ -175,6 +185,7 @@ model Tenant {
   smsLogs            SmsLog[]
   emailLogs          EmailLog[]
   rewardCategories   RewardCategory[]
+  holidays           Holiday[]
   roles              Role[]
   rolePermissions    RolePermission[]
   auditLogs          AuditLog[]
@@ -295,6 +306,8 @@ model User {
   emailTemplatesCreated     EmailTemplate[]
   rewardCategories          RewardCategory[]
   auditLogsCreatedBy        AuditLog[]          @relation("AuditCreatedBy")
+  holidaysCreated           Holiday[]
+  substituteExceptions      ScheduleException[] @relation("ExceptionSubstituteTeacher")
 
   // Telefon faqat tenant ichida unique — turli tenantlarda bir xil raqamli alohida userlar bo'lishi mumkin
   @@unique([tenantId, phone])
@@ -409,6 +422,7 @@ model Room {
 
   sessions        Session[]
   scheduleTemplates ScheduleTemplate[]
+  scheduleExceptions ScheduleException[]
 
   @@index([tenantId])
   @@index([isActive])
@@ -465,6 +479,8 @@ model GroupStudent {
   isDeleted  Boolean   @default(false) @map("is_deleted")
   archivedAt DateTime? @map("archived_at") @db.Timestamptz
   joinedAt   DateTime  @default(now()) @map("joined_at") @db.Timestamptz
+  // Guruhdan chiqarilgan vaqt — shu vaqtgacha bo'lgan darslarda o'quvchi yo'qlamada qoladi
+  leftAt     DateTime? @map("left_at") @db.Timestamptz
 
   groupId   String  @map("group_id") @db.Uuid
   studentId String  @map("student_id") @db.Uuid
@@ -490,6 +506,9 @@ model ScheduleTemplate {
   weekday   Weekday
   startTime String   @map("start_time") @db.VarChar(5)
   endTime   String   @map("end_time") @db.VarChar(5)
+  // Amal qilish muddati (chorak/semestr). null — cheklovsiz
+  validFrom DateTime? @map("valid_from") @db.Date
+  validTo   DateTime? @map("valid_to") @db.Date
   isActive  Boolean  @default(true) @map("is_active")
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -538,15 +557,43 @@ model ScheduleException {
 
   templateId  String  @map("template_id") @db.Uuid
   createdById String  @map("created_by") @db.Uuid
+  // Shu kun uchun boshqa xona / o'rinbosar o'qituvchi (null — shablondagisi)
+  roomId      String? @map("room_id") @db.Uuid
+  teacherId   String? @map("teacher_id") @db.Uuid
 
   template  ScheduleTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
   createdBy User             @relation(fields: [createdById], references: [id])
+  room      Room?            @relation(fields: [roomId], references: [id])
+  teacher   User?            @relation("ExceptionSubstituteTeacher", fields: [teacherId], references: [id])
 
   @@unique([templateId, exceptionDate])
   @@index([templateId])
   @@index([exceptionDate])
   @@index([isDeleted])
   @@map("schedule_exceptions")
+}
+
+// ─────────────────────────────────────────
+// HOLIDAYS (tenant bo'yicha dam olish kunlari — shu sanada jadval darslari bo'lmaydi)
+// ─────────────────────────────────────────
+
+model Holiday {
+  id        String    @id @default(uuid()) @db.Uuid
+  date      DateTime  @db.Date
+  name      String    @db.VarChar(200)
+  isDeleted Boolean   @default(false) @map("is_deleted")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+
+  tenantId    String @map("tenant_id") @db.Uuid
+  createdById String @map("created_by") @db.Uuid
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdBy User   @relation(fields: [createdById], references: [id])
+
+  // O'chirilgan sana qayta qo'shilsa — yozuv tiklanadi
+  @@unique([tenantId, date])
+  @@map("holidays")
 }
 
 // ─────────────────────────────────────────
@@ -645,7 +692,9 @@ model Session {
 
 model AttendanceRecord {
   id           String   @id @default(uuid()) @db.Uuid
+  // isPresent = status in (present, late) — eski klientlar va statistika uchun sinxron saqlanadi
   isPresent    Boolean  @default(false) @map("is_present")
+  status       AttendanceStatus @default(absent)
   homeworkDone Boolean  @default(false) @map("homework_done")
   score        Float?
   note         String?  @db.VarChar(500)

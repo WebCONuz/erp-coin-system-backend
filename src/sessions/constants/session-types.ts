@@ -45,12 +45,17 @@ export const SESSION_MANAGED_SOURCE_TYPES: Record<
   EvaluationMode,
   SourceType[]
 > = {
-  [EvaluationMode.attendance]: [SourceType.attendance, SourceType.homework],
+  [EvaluationMode.attendance]: [
+    SourceType.attendance,
+    SourceType.late,
+    SourceType.homework,
+  ],
   [EvaluationMode.scored]: [SourceType.exam, SourceType.competition],
 };
 
 export const ALL_SESSION_MANAGED_SOURCE_TYPES: SourceType[] = [
   SourceType.attendance,
+  SourceType.late,
   SourceType.homework,
   SourceType.exam,
   SourceType.competition,
@@ -72,6 +77,7 @@ export const SESSION_ERROR_CODES = {
   SESSION_NOT_STARTED: 'SESSION_NOT_STARTED',
   ATTENDANCE_EDIT_WINDOW_EXPIRED: 'ATTENDANCE_EDIT_WINDOW_EXPIRED',
   INVALID_TIME_RANGE: 'INVALID_TIME_RANGE',
+  ATTENDANCE_STATUS_MISMATCH: 'ATTENDANCE_STATUS_MISMATCH',
 } as const;
 
 // Teacher saqlangan yo'qlama/natijani birinchi saqlashdan keyin shuncha kun tahrirlay oladi

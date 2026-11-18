@@ -265,6 +265,7 @@ export type RoomWhereInput = {
   >;
   sessions?: Prisma.SessionListRelationFilter;
   scheduleTemplates?: Prisma.ScheduleTemplateListRelationFilter;
+  scheduleExceptions?: Prisma.ScheduleExceptionListRelationFilter;
 };
 
 export type RoomOrderByWithRelationInput = {
@@ -281,6 +282,7 @@ export type RoomOrderByWithRelationInput = {
   tenant?: Prisma.TenantOrderByWithRelationInput;
   sessions?: Prisma.SessionOrderByRelationAggregateInput;
   scheduleTemplates?: Prisma.ScheduleTemplateOrderByRelationAggregateInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionOrderByRelationAggregateInput;
 };
 
 export type RoomWhereUniqueInput = Prisma.AtLeast<
@@ -304,6 +306,7 @@ export type RoomWhereUniqueInput = Prisma.AtLeast<
     >;
     sessions?: Prisma.SessionListRelationFilter;
     scheduleTemplates?: Prisma.ScheduleTemplateListRelationFilter;
+    scheduleExceptions?: Prisma.ScheduleExceptionListRelationFilter;
   },
   'id'
 >;
@@ -366,6 +369,7 @@ export type RoomCreateInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutRoomsInput;
   sessions?: Prisma.SessionCreateNestedManyWithoutRoomInput;
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomUncheckedCreateInput = {
@@ -381,6 +385,7 @@ export type RoomUncheckedCreateInput = {
   tenantId: string;
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutRoomInput;
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomUpdateInput = {
@@ -400,6 +405,7 @@ export type RoomUpdateInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRoomsNestedInput;
   sessions?: Prisma.SessionUpdateManyWithoutRoomNestedInput;
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomUncheckedUpdateInput = {
@@ -419,6 +425,7 @@ export type RoomUncheckedUpdateInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutRoomNestedInput;
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomCreateManyInput = {
@@ -527,6 +534,11 @@ export type RoomSumOrderByAggregateInput = {
 export type RoomScalarRelationFilter = {
   is?: Prisma.RoomWhereInput;
   isNot?: Prisma.RoomWhereInput;
+};
+
+export type RoomNullableScalarRelationFilter = {
+  is?: Prisma.RoomWhereInput | null;
+  isNot?: Prisma.RoomWhereInput | null;
 };
 
 export type RoomCreateNestedManyWithoutTenantInput = {
@@ -641,6 +653,34 @@ export type RoomUpdateOneRequiredWithoutScheduleTemplatesNestedInput = {
   >;
 };
 
+export type RoomCreateNestedOneWithoutScheduleExceptionsInput = {
+  create?: Prisma.XOR<
+    Prisma.RoomCreateWithoutScheduleExceptionsInput,
+    Prisma.RoomUncheckedCreateWithoutScheduleExceptionsInput
+  >;
+  connectOrCreate?: Prisma.RoomCreateOrConnectWithoutScheduleExceptionsInput;
+  connect?: Prisma.RoomWhereUniqueInput;
+};
+
+export type RoomUpdateOneWithoutScheduleExceptionsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.RoomCreateWithoutScheduleExceptionsInput,
+    Prisma.RoomUncheckedCreateWithoutScheduleExceptionsInput
+  >;
+  connectOrCreate?: Prisma.RoomCreateOrConnectWithoutScheduleExceptionsInput;
+  upsert?: Prisma.RoomUpsertWithoutScheduleExceptionsInput;
+  disconnect?: Prisma.RoomWhereInput | boolean;
+  delete?: Prisma.RoomWhereInput | boolean;
+  connect?: Prisma.RoomWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.RoomUpdateToOneWithWhereWithoutScheduleExceptionsInput,
+      Prisma.RoomUpdateWithoutScheduleExceptionsInput
+    >,
+    Prisma.RoomUncheckedUpdateWithoutScheduleExceptionsInput
+  >;
+};
+
 export type RoomCreateNestedOneWithoutSessionsInput = {
   create?: Prisma.XOR<
     Prisma.RoomCreateWithoutSessionsInput,
@@ -679,6 +719,7 @@ export type RoomCreateWithoutTenantInput = {
   deletedAt?: Date | string | null;
   sessions?: Prisma.SessionCreateNestedManyWithoutRoomInput;
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomUncheckedCreateWithoutTenantInput = {
@@ -693,6 +734,7 @@ export type RoomUncheckedCreateWithoutTenantInput = {
   deletedAt?: Date | string | null;
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutRoomInput;
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomCreateOrConnectWithoutTenantInput = {
@@ -764,6 +806,7 @@ export type RoomCreateWithoutScheduleTemplatesInput = {
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutRoomsInput;
   sessions?: Prisma.SessionCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomUncheckedCreateWithoutScheduleTemplatesInput = {
@@ -778,6 +821,7 @@ export type RoomUncheckedCreateWithoutScheduleTemplatesInput = {
   deletedAt?: Date | string | null;
   tenantId: string;
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomCreateOrConnectWithoutScheduleTemplatesInput = {
@@ -824,6 +868,7 @@ export type RoomUpdateWithoutScheduleTemplatesInput = {
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRoomsNestedInput;
   sessions?: Prisma.SessionUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomUncheckedUpdateWithoutScheduleTemplatesInput = {
@@ -842,6 +887,103 @@ export type RoomUncheckedUpdateWithoutScheduleTemplatesInput = {
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutRoomNestedInput;
+};
+
+export type RoomCreateWithoutScheduleExceptionsInput = {
+  id?: string;
+  name: string;
+  capacity?: number;
+  description?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutRoomsInput;
+  sessions?: Prisma.SessionCreateNestedManyWithoutRoomInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutRoomInput;
+};
+
+export type RoomUncheckedCreateWithoutScheduleExceptionsInput = {
+  id?: string;
+  name: string;
+  capacity?: number;
+  description?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  tenantId: string;
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutRoomInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutRoomInput;
+};
+
+export type RoomCreateOrConnectWithoutScheduleExceptionsInput = {
+  where: Prisma.RoomWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.RoomCreateWithoutScheduleExceptionsInput,
+    Prisma.RoomUncheckedCreateWithoutScheduleExceptionsInput
+  >;
+};
+
+export type RoomUpsertWithoutScheduleExceptionsInput = {
+  update: Prisma.XOR<
+    Prisma.RoomUpdateWithoutScheduleExceptionsInput,
+    Prisma.RoomUncheckedUpdateWithoutScheduleExceptionsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.RoomCreateWithoutScheduleExceptionsInput,
+    Prisma.RoomUncheckedCreateWithoutScheduleExceptionsInput
+  >;
+  where?: Prisma.RoomWhereInput;
+};
+
+export type RoomUpdateToOneWithWhereWithoutScheduleExceptionsInput = {
+  where?: Prisma.RoomWhereInput;
+  data: Prisma.XOR<
+    Prisma.RoomUpdateWithoutScheduleExceptionsInput,
+    Prisma.RoomUncheckedUpdateWithoutScheduleExceptionsInput
+  >;
+};
+
+export type RoomUpdateWithoutScheduleExceptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number;
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutRoomsNestedInput;
+  sessions?: Prisma.SessionUpdateManyWithoutRoomNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutRoomNestedInput;
+};
+
+export type RoomUncheckedUpdateWithoutScheduleExceptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number;
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutRoomNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomCreateWithoutSessionsInput = {
@@ -856,6 +998,7 @@ export type RoomCreateWithoutSessionsInput = {
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutRoomsInput;
   scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomUncheckedCreateWithoutSessionsInput = {
@@ -870,6 +1013,7 @@ export type RoomUncheckedCreateWithoutSessionsInput = {
   deletedAt?: Date | string | null;
   tenantId: string;
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutRoomInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutRoomInput;
 };
 
 export type RoomCreateOrConnectWithoutSessionsInput = {
@@ -916,6 +1060,7 @@ export type RoomUpdateWithoutSessionsInput = {
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutRoomsNestedInput;
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomUncheckedUpdateWithoutSessionsInput = {
@@ -934,6 +1079,7 @@ export type RoomUncheckedUpdateWithoutSessionsInput = {
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomCreateManyTenantInput = {
@@ -964,6 +1110,7 @@ export type RoomUpdateWithoutTenantInput = {
     | null;
   sessions?: Prisma.SessionUpdateManyWithoutRoomNestedInput;
   scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomUncheckedUpdateWithoutTenantInput = {
@@ -982,6 +1129,7 @@ export type RoomUncheckedUpdateWithoutTenantInput = {
     | null;
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutRoomNestedInput;
   scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutRoomNestedInput;
+  scheduleExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutRoomNestedInput;
 };
 
 export type RoomUncheckedUpdateManyWithoutTenantInput = {
@@ -1007,6 +1155,7 @@ export type RoomUncheckedUpdateManyWithoutTenantInput = {
 export type RoomCountOutputType = {
   sessions: number;
   scheduleTemplates: number;
+  scheduleExceptions: number;
 };
 
 export type RoomCountOutputTypeSelect<
@@ -1015,6 +1164,7 @@ export type RoomCountOutputTypeSelect<
 > = {
   sessions?: boolean | RoomCountOutputTypeCountSessionsArgs;
   scheduleTemplates?: boolean | RoomCountOutputTypeCountScheduleTemplatesArgs;
+  scheduleExceptions?: boolean | RoomCountOutputTypeCountScheduleExceptionsArgs;
 };
 
 /**
@@ -1050,6 +1200,16 @@ export type RoomCountOutputTypeCountScheduleTemplatesArgs<
   where?: Prisma.ScheduleTemplateWhereInput;
 };
 
+/**
+ * RoomCountOutputType without action
+ */
+export type RoomCountOutputTypeCountScheduleExceptionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.ScheduleExceptionWhereInput;
+};
+
 export type RoomSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -1068,6 +1228,7 @@ export type RoomSelect<
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     sessions?: boolean | Prisma.Room$sessionsArgs<ExtArgs>;
     scheduleTemplates?: boolean | Prisma.Room$scheduleTemplatesArgs<ExtArgs>;
+    scheduleExceptions?: boolean | Prisma.Room$scheduleExceptionsArgs<ExtArgs>;
     _count?: boolean | Prisma.RoomCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['room']
@@ -1149,6 +1310,7 @@ export type RoomInclude<
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   sessions?: boolean | Prisma.Room$sessionsArgs<ExtArgs>;
   scheduleTemplates?: boolean | Prisma.Room$scheduleTemplatesArgs<ExtArgs>;
+  scheduleExceptions?: boolean | Prisma.Room$scheduleExceptionsArgs<ExtArgs>;
   _count?: boolean | Prisma.RoomCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type RoomIncludeCreateManyAndReturn<
@@ -1173,6 +1335,7 @@ export type $RoomPayload<
     tenant: Prisma.$TenantPayload<ExtArgs>;
     sessions: Prisma.$SessionPayload<ExtArgs>[];
     scheduleTemplates: Prisma.$ScheduleTemplatePayload<ExtArgs>[];
+    scheduleExceptions: Prisma.$ScheduleExceptionPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1772,6 +1935,19 @@ export interface Prisma__RoomClient<
       >
     | Null
   >;
+  scheduleExceptions<
+    T extends Prisma.Room$scheduleExceptionsArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.Room$scheduleExceptionsArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$ScheduleExceptionPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2335,6 +2511,37 @@ export type Room$scheduleTemplatesArgs<
   distinct?:
     | Prisma.ScheduleTemplateScalarFieldEnum
     | Prisma.ScheduleTemplateScalarFieldEnum[];
+};
+
+/**
+ * Room.scheduleExceptions
+ */
+export type Room$scheduleExceptionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the ScheduleException
+   */
+  select?: Prisma.ScheduleExceptionSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the ScheduleException
+   */
+  omit?: Prisma.ScheduleExceptionOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScheduleExceptionInclude<ExtArgs> | null;
+  where?: Prisma.ScheduleExceptionWhereInput;
+  orderBy?:
+    | Prisma.ScheduleExceptionOrderByWithRelationInput
+    | Prisma.ScheduleExceptionOrderByWithRelationInput[];
+  cursor?: Prisma.ScheduleExceptionWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.ScheduleExceptionScalarFieldEnum
+    | Prisma.ScheduleExceptionScalarFieldEnum[];
 };
 
 /**

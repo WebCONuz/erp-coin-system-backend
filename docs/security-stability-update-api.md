@@ -1,6 +1,6 @@
 # Xavfsizlik va Barqarorlik Yangilanishi — Frontend API Qo'llanmasi
 
-> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** va **3A-bosqich (jadval va sessiyalar)** yozilgan.
+> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** va **3-bosqich (jadval va sessiyalar, 3A + 3B)** yozilgan.
 
 > Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi va jadval/sessiya qoidalari aniqlashtirildi. Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va yangi xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
 
@@ -40,6 +40,12 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
   - [3.6 Istisnolar (bekor qilish / vaqt o'zgarishi)](#36-istisnolar-bekor-qilish--vaqt-ozgarishi)
   - [3.7 Sessiyalarni generatsiya qilish](#37-sessiyalarni-generatsiya-qilish)
   - [3.8 Tenant timezone](#38-tenant-timezone)
+  - [3.9 Davomat holatlari (kechikdi, sababli)](#39-davomat-holatlari-kechikdi-sababli)
+  - [3.10 Yo'qlama ro'yxati — dars sanasidagi a'zolar](#310-yoqlama-royxati--dars-sanasidagi-azolar)
+  - [3.11 Dam olish kunlari](#311-dam-olish-kunlari)
+  - [3.12 Shablonning amal qilish muddati](#312-shablonning-amal-qilish-muddati)
+  - [3.13 Istisno: o'rinbosar o'qituvchi va boshqa xona](#313-istisno-orinbosar-oqituvchi-va-boshqa-xona)
+  - [3.14 Kalendar javobi](#314-kalendar-javobi)
 - [Xato holatlari](#xato-holatlari)
 - [O'zgarishlar jurnali](#ozgarishlar-jurnali)
 
@@ -64,6 +70,10 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
 | 13 | Sessiya yaratish (teacher) | Sana tanlovchida eng erta sana — bugundan 7 kun oldin; `SCHEDULE_CONFLICT` xatosini tushunarli ko'rsatish |
 | 14 | Jadval / istisno / generatsiya | Javobdagi `sessionSync` va `conflicts` ni ko'rsatish (qaysi darslar moslashtirilmagani) |
 | 15 | Admin — sozlamalar | Yangi `timezone` maydoni (`GET/PATCH /tenant-settings`) |
+| 16 | Yo'qlama formasi | Har bir o'quvchi uchun 4 holat: keldi / kechikdi / sababli / sababsiz → `status`. Ro'yxatni `GET /sessions/:id/roster` dan olish |
+| 17 | Admin — coin qoidalari | "Kechikish" uchun qoida: `sourceType: "late"`, `direction: "earn"`, `triggerType: "auto"` |
+| 18 | Admin — jadval | Yangi "Dam olish kunlari" sahifasi (`/holidays`); shablon formasida "amal qilish muddati"; istisno formasida o'rinbosar o'qituvchi va xona |
+| 19 | Kalendar | `holiday`, `exception.teacher/room`, `template.validFrom/validTo` ni ko'rsatish |
 
 ---
 
@@ -766,6 +776,281 @@ Noto'g'ri qiymat — `400` `"timezone noto'g'ri — IANA nomi bo'lishi kerak (ma
 
 ---
 
+### 3.9 Davomat holatlari (kechikdi, sababli)
+
+`POST /sessions/:id/attendance` — har bir yozuvda yangi **`status`** maydoni:
+
+| `status` | Ma'nosi | Coin | `isPresent` |
+| --- | --- | --- | --- |
+| `present` | Keldi | Davomat coini | `true` |
+| `late` | Kechikdi | **"Kechikish" qoidasi** bo'yicha; qoida bo'lmasa — oddiy davomat coini | `true` |
+| `excused` | Sababli kelmadi | Coin ham, jarima ham **yo'q** | `false` |
+| `absent` | Sababsiz kelmadi | Jarima qoidasi bo'lsa — jarima | `false` |
+
+Uy vazifasi (`homeworkDone`) coini holatdan qat'i nazar avvalgidek beriladi.
+
+**Request (yangi format):**
+
+```json
+{
+  "records": [
+    { "studentId": "uuid-1", "status": "present", "homeworkDone": true },
+    { "studentId": "uuid-2", "status": "late", "homeworkDone": false },
+    { "studentId": "uuid-3", "status": "excused", "homeworkDone": false },
+    { "studentId": "uuid-4", "status": "absent", "homeworkDone": false }
+  ]
+}
+```
+
+**Eski format ham ishlaydi** (o'tish davri): `status` yuborilmasa, `isPresent: true` → `present`, `false` → `absent`. Ikkalasi birga yuborilsa mos bo'lishi kerak (`isPresent: true` ↔ `present`/`late`), aks holda butun so'rov `400`:
+
+```json
+{
+  "statusCode": 400,
+  "message": "status (excused) va isPresent (true) bir-biriga mos emas",
+  "code": "ATTENDANCE_STATUS_MISMATCH",
+  "studentId": "uuid-3"
+}
+```
+
+**Javoblarda:** yo'qlama yozuvlarida (`GET /sessions/:id/attendance`, `GET /sessions/:id/roster`, `GET /sessions/me/attendance`, `GET /students/:id` dagi davomat tarixi) yangi `status` maydoni bor. `isPresent` saqlanib qoldi va `status` bilan sinxron (`present`/`late` → `true`).
+
+> Mavjud yozuvlar migratsiyada: `isPresent: true` → `present`, `false` → `absent` (eski ma'lumotda sababi noma'lum).
+
+**"Kechikish" coin qoidasi** — admin `POST /coin-rules` orqali yaratadi (ixtiyoriy):
+
+```json
+{
+  "name": "Kechikib keldi",
+  "coinAmount": 2,
+  "direction": "earn",
+  "triggerType": "auto",
+  "sourceType": "late"
+}
+```
+
+Guruhga xos qoida (`groupId` bilan) umumiy qoidadan ustun, boshqa avtomatik qoidalar kabi. Tranzaksiya tarixida bunday coin `sourceType: "late"` bilan ko'rinadi.
+
+> Statistikadagi "kelmagan" soni (`absentCount`) hozircha `isPresent: false` bo'yicha hisoblanadi — sababli kelmaganlar ham kiradi.
+
+---
+
+### 3.10 Yo'qlama ro'yxati — dars sanasidagi a'zolar
+
+**Avval:** yo'qlamaga guruhning **hozirgi** a'zolari qo'yilardi. Kecha qo'shilgan o'quvchi o'tgan haftadagi darsga ham "kelmadi" deb belgilanib jarima olishi, guruhdan chiqarilgan o'quvchini esa uning o'z darslariga ham belgilab bo'lmasligi mumkin edi.
+
+**Endi:** o'quvchi faqat **dars sanasida** guruh a'zosi bo'lgan bo'lsa yo'qlamaga qo'yiladi:
+- guruhga dars sanasigacha (shu kun ham) qo'shilgan;
+- hali chiqarilmagan yoki dars sanasidan keyin chiqarilgan.
+
+Aks holda `400` `code: "STUDENTS_NOT_IN_GROUP"` (avvalgidek).
+
+#### `GET /sessions/:id/roster` (yangi)
+
+**Kim:** `admin`, `super_admin`, `teacher` (o'z darsi). Yo'qlama/natija formasi uchun **shu endpointdan** foydalaning.
+
+```json
+{
+  "session": {
+    "id": "session-uuid",
+    "sessionDate": "2026-11-18T00:00:00.000Z",
+    "evaluationMode": "attendance"
+  },
+  "students": [
+    {
+      "student": { "id": "uuid-1", "fullName": "Aliyev Vali", "avatarUrl": null },
+      "joinedAt": "2026-09-01T05:00:00.000Z",
+      "leftAt": null,
+      "record": {
+        "status": "late",
+        "isPresent": true,
+        "homeworkDone": true,
+        "score": null,
+        "note": null
+      },
+      "coinAwarded": 12
+    },
+    {
+      "student": { "id": "uuid-2", "fullName": "Karimova Laylo", "avatarUrl": "/uploads/avatars/..." },
+      "joinedAt": "2026-09-01T05:00:00.000Z",
+      "leftAt": "2026-11-20T08:00:00.000Z",
+      "record": null,
+      "coinAwarded": 0
+    }
+  ]
+}
+```
+
+- `record: null` — hali yo'qlama qilinmagan.
+- `leftAt` bo'lsa — o'quvchi keyinroq guruhdan chiqarilgan (formada belgi qo'yish mumkin).
+- Ro'yxat ism bo'yicha tartiblangan.
+
+> Cheklov: guruhga **qayta** qo'shilgan o'quvchida `joinedAt` yangilanadi — undan oldingi a'zolik davridagi darslar ro'yxatda faqat yozuvi bo'lsa ko'rinadi.
+
+---
+
+### 3.11 Dam olish kunlari
+
+Tenant bo'yicha bayram/dam olish kunlari. Shu sanada jadval shablonlaridan dars **yaratilmaydi**, allaqachon yaratilgan kelajakdagi **tekshirilmagan** darslar avtomatik o'chiriladi. Dam olish kuni o'chirilsa — darslar qaytariladi.
+
+#### `GET /holidays?from=2026-01-01&to=2026-12-31`
+
+**Kim:** `admin`, `super_admin`, `teacher`.
+
+```json
+{
+  "data": [
+    { "id": "uuid", "date": "2026-12-31T00:00:00.000Z", "name": "Yangi yil", "createdAt": "..." }
+  ]
+}
+```
+
+#### `POST /holidays`
+
+**Kim:** `admin`, `super_admin`.
+
+```json
+{ "date": "2026-12-31", "name": "Yangi yil" }
+```
+
+**Response `201`:**
+
+```json
+{
+  "id": "uuid",
+  "date": "2026-12-31T00:00:00.000Z",
+  "name": "Yangi yil",
+  "sessionSync": { "updated": 0, "removed": 7, "created": 0, "conflicts": [] },
+  "manualSessionsOnDate": 1
+}
+```
+
+- `sessionSync.removed` — shu sanadan o'chirilgan jadval darslari soni.
+- `manualSessionsOnDate` — shu sanada **qo'lda yaratilgan** darslar soni. Ular avtomatik o'chirilmaydi — admin ko'rib chiqishi kerak (frontend ogohlantirish ko'rsatsin).
+
+Shu sana allaqachon dam olish kuni bo'lsa — `409 "Bu sana allaqachon dam olish kuni"`.
+
+#### `DELETE /holidays/:id`
+
+```json
+{
+  "message": "Dam olish kuni o'chirildi",
+  "sessionSync": { "updated": 0, "removed": 0, "created": 7, "conflicts": [] }
+}
+```
+
+`generate-sessions` javobiga ham yangi `holidays` maydoni qo'shildi — dam olish kuniga to'g'ri kelib yaratilmagan darslar soni.
+
+---
+
+### 3.12 Shablonning amal qilish muddati
+
+`POST /schedule-templates`, `PATCH /schedule-templates/:id` — yangi ixtiyoriy maydonlar:
+
+| Maydon | Tip | Ma'nosi |
+| --- | --- | --- |
+| `validFrom` | `YYYY-MM-DD` | Shablon shu sanadan amal qiladi |
+| `validTo` | `YYYY-MM-DD` | Shablon shu sanagacha (shu kun ham) amal qiladi |
+
+`PATCH` da `null` yuborilsa — cheklov olib tashlanadi. `validFrom > validTo` — `400`.
+
+```json
+{
+  "weekday": "monday",
+  "startTime": "09:00",
+  "endTime": "10:30",
+  "groupId": "group-uuid",
+  "roomId": "room-uuid",
+  "validFrom": "2026-09-01",
+  "validTo": "2026-12-27"
+}
+```
+
+Ta'siri:
+- muddatdan tashqari sanalarga dars generatsiya qilinmaydi va kalendarda ko'rinmaydi;
+- muddat o'zgarsa kelajakdagi darslar sinxronlanadi ([3.5](#35-shablon-ozgarsa--sessiyalar-avtomatik-moslashadi));
+- **to'qnashuv tekshiruvi muddatni hisobga oladi:** muddatlari kesishmaydigan ikki shablon (masalan 1-chorak va 2-chorak jadvali) bir xil xona/vaqtda bo'lishi mumkin.
+
+Shablon javoblarida `validFrom`, `validTo` maydonlari bor.
+
+---
+
+### 3.13 Istisno: o'rinbosar o'qituvchi va boshqa xona
+
+`POST /schedule-templates/:id/exceptions`, `PATCH /schedule-exceptions/:id` — yangi ixtiyoriy maydonlar:
+
+| Maydon | Ma'nosi |
+| --- | --- |
+| `teacherId` | Shu kuni darsni o'tadigan **o'rinbosar** o'qituvchi (`teacher`/`admin` roli) |
+| `roomId` | Shu kuni dars o'tadigan boshqa xona |
+
+`isCancelled: false` bo'lsa endi vaqt **majburiy emas** — istisno quyidagilardan kamida bittasini o'zgartirishi kerak: vaqt (`startTime` + `endTime` birga), `roomId` yoki `teacherId`. Aks holda `400`.
+
+```json
+{
+  "exceptionDate": "2026-11-25",
+  "isCancelled": false,
+  "teacherId": "substitute-teacher-uuid",
+  "note": "Asosiy o'qituvchi kasal"
+}
+```
+
+- Shu sanadagi darsga o'rinbosar o'qituvchi biriktiriladi ([3.5](#35-shablon-ozgarsa--sessiyalar-avtomatik-moslashadi) bo'yicha sinxronlanadi). U shu darsni ko'radi va yo'qlama qila oladi; guruhga kirish huquqini ham shu dars orqali oladi.
+- `PATCH` da `"teacherId": null` / `"roomId": null` — shablondagisiga qaytarish.
+- `isCancelled: true` bo'lsa `teacherId`/`roomId` saqlanmaydi.
+
+| Status | `message` |
+| --- | --- |
+| `400` | `"Vaqt o'zgarsa startTime va endTime birga berilishi kerak"` |
+| `400` | `"Bekor qilinmagan istisnoda yangi vaqt, xona yoki o'qituvchi berilishi kerak"` |
+| `404` | `"Xona topilmadi"` / `"O'qituvchi topilmadi"` |
+
+---
+
+### 3.14 Kalendar javobi
+
+`GET /schedule-templates/calendar` va `GET /schedule-templates/calendar/me` — har bir kun elementiga qo'shimchalar:
+
+```json
+{
+  "2026-11-25": [
+    {
+      "holiday": null,
+      "template": {
+        "id": "template-uuid",
+        "weekday": "wednesday",
+        "startTime": "09:00",
+        "endTime": "10:30",
+        "validFrom": "2026-09-01T00:00:00.000Z",
+        "validTo": null,
+        "room": { "id": "...", "name": "101" },
+        "subject": null,
+        "teacher": { "id": "...", "fullName": "Asosiy O'qituvchi" }
+      },
+      "exception": {
+        "id": "exception-uuid",
+        "isCancelled": false,
+        "startTime": null,
+        "endTime": null,
+        "room": null,
+        "teacher": { "id": "...", "fullName": "O'rinbosar O'qituvchi" },
+        "note": "Asosiy o'qituvchi kasal"
+      },
+      "session": { "id": "session-uuid", "templateId": "template-uuid", "...": "..." }
+    }
+  ]
+}
+```
+
+| Maydon | O'zgarish |
+| --- | --- |
+| `holiday` | **Yangi.** Dam olish kuni bo'lsa `{ id, name }` — bu kunda dars yo'q deb ko'rsating |
+| `template.validFrom/validTo` | **Yangi.** Muddatdan tashqari kunlarda shablon umuman qaytmaydi |
+| `exception.room` / `exception.teacher` | **Yangi.** Shu kunga xona / o'rinbosar (`null` — shablondagisi) |
+| `session.templateId` | **Yangi.** Sessiya endi shablonga `templateId` orqali bog'lanadi (avval vaqt bo'yicha taxmin qilinardi) |
+
+---
+
 ## Xato holatlari
 
 | Status | `code` | Qachon |
@@ -780,6 +1065,8 @@ Noto'g'ri qiymat — `400` `"timezone noto'g'ri — IANA nomi bo'lishi kerak (ma
 | `403` | `SESSION_DATE_TOO_OLD` | Teacher: 7 kundan eski sanaga dars yaratish |
 | `409` | `SESSION_DUPLICATE` | Shu guruh, sana va vaqtda dars allaqachon bor |
 | `409` | `SCHEDULE_CONFLICT` | Guruh, xona yoki o'qituvchi shu vaqtda band (`conflict.kind`) |
+| `400` | `ATTENDANCE_STATUS_MISMATCH` | Yo'qlamada `status` va `isPresent` mos emas |
+| `400` | `STUDENTS_NOT_IN_GROUP` | O'quvchi dars sanasida guruh a'zosi bo'lmagan |
 | `403` | `TENANT_INACTIVE` | Login: tashkilot faoliyati to'xtatilgan |
 | `403` | — | Ruxsat yo'q: rol yetarli emas (kurs/xona), o'zidan yuqori/teng darajadagi user yoki rol, tizim tenanti amallari, eski parol noto'g'ri |
 | `404` | — | User/o'quvchi topilmadi (admin uchun boshqa tenant useri ham "topilmadi" bo'ladi); guruh/dars/qoida topilmadi |
@@ -812,3 +1099,7 @@ Noto'g'ri qiymat — `400` `"timezone noto'g'ri — IANA nomi bo'lishi kerak (ma
 | 2026-11-18 | Jadval shablonlari: havolalar tenant bo'yicha tekshiriladi, o'qituvchi bandligi; shablon/istisno o'zgarganda kelajakdagi sessiyalar sinxronlanadi (`sessionSync`) |
 | 2026-11-18 | Istisnolar: o'chirilgan sanaga qayta qo'yish mumkin, vaqt majburiyligi; `generate-sessions` ≤ 92 kun, `conflicts`, `skipped` ma'nosi o'zgardi |
 | 2026-11-18 | Tenant `timezone` (`GET/PATCH /tenant-settings`), "bugun" tenant vaqti bo'yicha |
+| 2026-11-18 | Davomat holatlari: `status` (`present`/`late`/`excused`/`absent`), `late` coin qoidasi (`sourceType: "late"`); `isPresent` eski format sifatida ishlaydi |
+| 2026-11-18 | Yo'qlama faqat dars sanasidagi guruh a'zolari uchun; yangi `GET /sessions/:id/roster`; `GroupStudent.leftAt` |
+| 2026-11-18 | Dam olish kunlari: `GET/POST/DELETE /holidays`; `generate-sessions` javobida `holidays` |
+| 2026-11-18 | Shablon `validFrom`/`validTo` (to'qnashuv tekshiruvi muddatni hisobga oladi); istisnoda o'rinbosar `teacherId` va `roomId`; kalendar javobiga `holiday`, `exception.teacher/room`, `template.validFrom/validTo`, `session.templateId` |

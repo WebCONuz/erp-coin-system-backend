@@ -30,6 +30,7 @@ export type GroupStudentMinAggregateOutputType = {
   isDeleted: boolean | null;
   archivedAt: Date | null;
   joinedAt: Date | null;
+  leftAt: Date | null;
   groupId: string | null;
   studentId: string | null;
   addedById: string | null;
@@ -41,6 +42,7 @@ export type GroupStudentMaxAggregateOutputType = {
   isDeleted: boolean | null;
   archivedAt: Date | null;
   joinedAt: Date | null;
+  leftAt: Date | null;
   groupId: string | null;
   studentId: string | null;
   addedById: string | null;
@@ -52,6 +54,7 @@ export type GroupStudentCountAggregateOutputType = {
   isDeleted: number;
   archivedAt: number;
   joinedAt: number;
+  leftAt: number;
   groupId: number;
   studentId: number;
   addedById: number;
@@ -64,6 +67,7 @@ export type GroupStudentMinAggregateInputType = {
   isDeleted?: true;
   archivedAt?: true;
   joinedAt?: true;
+  leftAt?: true;
   groupId?: true;
   studentId?: true;
   addedById?: true;
@@ -75,6 +79,7 @@ export type GroupStudentMaxAggregateInputType = {
   isDeleted?: true;
   archivedAt?: true;
   joinedAt?: true;
+  leftAt?: true;
   groupId?: true;
   studentId?: true;
   addedById?: true;
@@ -86,6 +91,7 @@ export type GroupStudentCountAggregateInputType = {
   isDeleted?: true;
   archivedAt?: true;
   joinedAt?: true;
+  leftAt?: true;
   groupId?: true;
   studentId?: true;
   addedById?: true;
@@ -178,6 +184,7 @@ export type GroupStudentGroupByOutputType = {
   isDeleted: boolean;
   archivedAt: Date | null;
   joinedAt: Date;
+  leftAt: Date | null;
   groupId: string;
   studentId: string;
   addedById: string | null;
@@ -212,6 +219,7 @@ export type GroupStudentWhereInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFilter<'GroupStudent'> | Date | string;
+  leftAt?: Prisma.DateTimeNullableFilter<'GroupStudent'> | Date | string | null;
   groupId?: Prisma.UuidFilter<'GroupStudent'> | string;
   studentId?: Prisma.UuidFilter<'GroupStudent'> | string;
   addedById?: Prisma.UuidNullableFilter<'GroupStudent'> | string | null;
@@ -229,6 +237,7 @@ export type GroupStudentOrderByWithRelationInput = {
   isDeleted?: Prisma.SortOrder;
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   joinedAt?: Prisma.SortOrder;
+  leftAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   addedById?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -252,6 +261,11 @@ export type GroupStudentWhereUniqueInput = Prisma.AtLeast<
       | string
       | null;
     joinedAt?: Prisma.DateTimeFilter<'GroupStudent'> | Date | string;
+    leftAt?:
+      | Prisma.DateTimeNullableFilter<'GroupStudent'>
+      | Date
+      | string
+      | null;
     groupId?: Prisma.UuidFilter<'GroupStudent'> | string;
     studentId?: Prisma.UuidFilter<'GroupStudent'> | string;
     addedById?: Prisma.UuidNullableFilter<'GroupStudent'> | string | null;
@@ -277,6 +291,7 @@ export type GroupStudentOrderByWithAggregationInput = {
   isDeleted?: Prisma.SortOrder;
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   joinedAt?: Prisma.SortOrder;
+  leftAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   addedById?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -305,6 +320,11 @@ export type GroupStudentScalarWhereWithAggregatesInput = {
     | Prisma.DateTimeWithAggregatesFilter<'GroupStudent'>
     | Date
     | string;
+  leftAt?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'GroupStudent'>
+    | Date
+    | string
+    | null;
   groupId?: Prisma.UuidWithAggregatesFilter<'GroupStudent'> | string;
   studentId?: Prisma.UuidWithAggregatesFilter<'GroupStudent'> | string;
   addedById?:
@@ -319,6 +339,7 @@ export type GroupStudentCreateInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   group: Prisma.GroupCreateNestedOneWithoutStudentsInput;
   student: Prisma.UserCreateNestedOneWithoutGroupMembershipsInput;
   addedBy?: Prisma.UserCreateNestedOneWithoutAddedGroupStudentsInput;
@@ -330,6 +351,7 @@ export type GroupStudentUncheckedCreateInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   groupId: string;
   studentId: string;
   addedById?: string | null;
@@ -345,6 +367,11 @@ export type GroupStudentUpdateInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   group?: Prisma.GroupUpdateOneRequiredWithoutStudentsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutGroupMembershipsNestedInput;
   addedBy?: Prisma.UserUpdateOneWithoutAddedGroupStudentsNestedInput;
@@ -360,6 +387,11 @@ export type GroupStudentUncheckedUpdateInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -371,6 +403,7 @@ export type GroupStudentCreateManyInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   groupId: string;
   studentId: string;
   addedById?: string | null;
@@ -386,6 +419,11 @@ export type GroupStudentUpdateManyMutationInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
 };
 
 export type GroupStudentUncheckedUpdateManyInput = {
@@ -398,6 +436,11 @@ export type GroupStudentUncheckedUpdateManyInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -424,6 +467,7 @@ export type GroupStudentCountOrderByAggregateInput = {
   isDeleted?: Prisma.SortOrder;
   archivedAt?: Prisma.SortOrder;
   joinedAt?: Prisma.SortOrder;
+  leftAt?: Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   addedById?: Prisma.SortOrder;
@@ -435,6 +479,7 @@ export type GroupStudentMaxOrderByAggregateInput = {
   isDeleted?: Prisma.SortOrder;
   archivedAt?: Prisma.SortOrder;
   joinedAt?: Prisma.SortOrder;
+  leftAt?: Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   addedById?: Prisma.SortOrder;
@@ -446,6 +491,7 @@ export type GroupStudentMinOrderByAggregateInput = {
   isDeleted?: Prisma.SortOrder;
   archivedAt?: Prisma.SortOrder;
   joinedAt?: Prisma.SortOrder;
+  leftAt?: Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   addedById?: Prisma.SortOrder;
@@ -787,6 +833,7 @@ export type GroupStudentCreateWithoutStudentInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   group: Prisma.GroupCreateNestedOneWithoutStudentsInput;
   addedBy?: Prisma.UserCreateNestedOneWithoutAddedGroupStudentsInput;
 };
@@ -797,6 +844,7 @@ export type GroupStudentUncheckedCreateWithoutStudentInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   groupId: string;
   addedById?: string | null;
 };
@@ -822,6 +870,7 @@ export type GroupStudentCreateWithoutAddedByInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   group: Prisma.GroupCreateNestedOneWithoutStudentsInput;
   student: Prisma.UserCreateNestedOneWithoutGroupMembershipsInput;
 };
@@ -832,6 +881,7 @@ export type GroupStudentUncheckedCreateWithoutAddedByInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   groupId: string;
   studentId: string;
 };
@@ -896,6 +946,7 @@ export type GroupStudentScalarWhereInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFilter<'GroupStudent'> | Date | string;
+  leftAt?: Prisma.DateTimeNullableFilter<'GroupStudent'> | Date | string | null;
   groupId?: Prisma.UuidFilter<'GroupStudent'> | string;
   studentId?: Prisma.UuidFilter<'GroupStudent'> | string;
   addedById?: Prisma.UuidNullableFilter<'GroupStudent'> | string | null;
@@ -935,6 +986,7 @@ export type GroupStudentCreateWithoutGroupInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   student: Prisma.UserCreateNestedOneWithoutGroupMembershipsInput;
   addedBy?: Prisma.UserCreateNestedOneWithoutAddedGroupStudentsInput;
 };
@@ -945,6 +997,7 @@ export type GroupStudentUncheckedCreateWithoutGroupInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   studentId: string;
   addedById?: string | null;
 };
@@ -998,6 +1051,7 @@ export type GroupStudentCreateManyStudentInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   groupId: string;
   addedById?: string | null;
 };
@@ -1008,6 +1062,7 @@ export type GroupStudentCreateManyAddedByInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   groupId: string;
   studentId: string;
 };
@@ -1022,6 +1077,11 @@ export type GroupStudentUpdateWithoutStudentInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   group?: Prisma.GroupUpdateOneRequiredWithoutStudentsNestedInput;
   addedBy?: Prisma.UserUpdateOneWithoutAddedGroupStudentsNestedInput;
 };
@@ -1036,6 +1096,11 @@ export type GroupStudentUncheckedUpdateWithoutStudentInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
@@ -1050,6 +1115,11 @@ export type GroupStudentUncheckedUpdateManyWithoutStudentInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
@@ -1064,6 +1134,11 @@ export type GroupStudentUpdateWithoutAddedByInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   group?: Prisma.GroupUpdateOneRequiredWithoutStudentsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutGroupMembershipsNestedInput;
 };
@@ -1078,6 +1153,11 @@ export type GroupStudentUncheckedUpdateWithoutAddedByInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1092,6 +1172,11 @@ export type GroupStudentUncheckedUpdateManyWithoutAddedByInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1102,6 +1187,7 @@ export type GroupStudentCreateManyGroupInput = {
   isDeleted?: boolean;
   archivedAt?: Date | string | null;
   joinedAt?: Date | string;
+  leftAt?: Date | string | null;
   studentId: string;
   addedById?: string | null;
 };
@@ -1116,6 +1202,11 @@ export type GroupStudentUpdateWithoutGroupInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   student?: Prisma.UserUpdateOneRequiredWithoutGroupMembershipsNestedInput;
   addedBy?: Prisma.UserUpdateOneWithoutAddedGroupStudentsNestedInput;
 };
@@ -1130,6 +1221,11 @@ export type GroupStudentUncheckedUpdateWithoutGroupInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
@@ -1144,6 +1240,11 @@ export type GroupStudentUncheckedUpdateManyWithoutGroupInput = {
     | string
     | null;
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  leftAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
@@ -1158,6 +1259,7 @@ export type GroupStudentSelect<
     isDeleted?: boolean;
     archivedAt?: boolean;
     joinedAt?: boolean;
+    leftAt?: boolean;
     groupId?: boolean;
     studentId?: boolean;
     addedById?: boolean;
@@ -1178,6 +1280,7 @@ export type GroupStudentSelectCreateManyAndReturn<
     isDeleted?: boolean;
     archivedAt?: boolean;
     joinedAt?: boolean;
+    leftAt?: boolean;
     groupId?: boolean;
     studentId?: boolean;
     addedById?: boolean;
@@ -1198,6 +1301,7 @@ export type GroupStudentSelectUpdateManyAndReturn<
     isDeleted?: boolean;
     archivedAt?: boolean;
     joinedAt?: boolean;
+    leftAt?: boolean;
     groupId?: boolean;
     studentId?: boolean;
     addedById?: boolean;
@@ -1214,6 +1318,7 @@ export type GroupStudentSelectScalar = {
   isDeleted?: boolean;
   archivedAt?: boolean;
   joinedAt?: boolean;
+  leftAt?: boolean;
   groupId?: boolean;
   studentId?: boolean;
   addedById?: boolean;
@@ -1228,6 +1333,7 @@ export type GroupStudentOmit<
   | 'isDeleted'
   | 'archivedAt'
   | 'joinedAt'
+  | 'leftAt'
   | 'groupId'
   | 'studentId'
   | 'addedById',
@@ -1275,6 +1381,7 @@ export type $GroupStudentPayload<
       isDeleted: boolean;
       archivedAt: Date | null;
       joinedAt: Date;
+      leftAt: Date | null;
       groupId: string;
       studentId: string;
       addedById: string | null;
@@ -1922,6 +2029,7 @@ export interface GroupStudentFieldRefs {
   readonly isDeleted: Prisma.FieldRef<'GroupStudent', 'Boolean'>;
   readonly archivedAt: Prisma.FieldRef<'GroupStudent', 'DateTime'>;
   readonly joinedAt: Prisma.FieldRef<'GroupStudent', 'DateTime'>;
+  readonly leftAt: Prisma.FieldRef<'GroupStudent', 'DateTime'>;
   readonly groupId: Prisma.FieldRef<'GroupStudent', 'String'>;
   readonly studentId: Prisma.FieldRef<'GroupStudent', 'String'>;
   readonly addedById: Prisma.FieldRef<'GroupStudent', 'String'>;

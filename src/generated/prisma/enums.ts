@@ -49,6 +49,16 @@ export const EvaluationMode = {
 export type EvaluationMode =
   (typeof EvaluationMode)[keyof typeof EvaluationMode];
 
+export const AttendanceStatus = {
+  present: 'present',
+  late: 'late',
+  excused: 'excused',
+  absent: 'absent',
+} as const;
+
+export type AttendanceStatus =
+  (typeof AttendanceStatus)[keyof typeof AttendanceStatus];
+
 export const RewardType = {
   digital: 'digital',
   privilege: 'privilege',
@@ -69,6 +79,7 @@ export type PurchaseStatus =
 
 export const SourceType = {
   attendance: 'attendance',
+  late: 'late',
   homework: 'homework',
   competition: 'competition',
   exam: 'exam',

@@ -282,6 +282,7 @@ export class StudentsService {
           select: {
             id: true,
             isPresent: true,
+            status: true,
             homeworkDone: true,
             score: true,
             note: true,

@@ -1,4 +1,12 @@
-import { IsEnum, IsOptional, IsString, IsUUID, Matches } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Matches,
+  ValidateIf,
+} from 'class-validator';
 import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Weekday } from 'src/generated/prisma/enums';
@@ -35,4 +43,24 @@ export class UpdateScheduleTemplateDto {
   @IsOptional()
   @IsUUID()
   subjectId?: string;
+
+  @ApiPropertyOptional({
+    example: '2026-09-01',
+    nullable: true,
+    description: 'Amal qilish boshlanishi. null — cheklovni olib tashlash',
+  })
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsDateString()
+  validFrom?: string | null;
+
+  @ApiPropertyOptional({
+    example: '2026-12-31',
+    nullable: true,
+    description: 'Amal qilish tugashi. null — cheklovni olib tashlash',
+  })
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsDateString()
+  validTo?: string | null;
 }

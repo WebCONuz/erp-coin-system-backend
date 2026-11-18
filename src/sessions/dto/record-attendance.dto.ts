@@ -3,12 +3,16 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsUUID,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AttendanceStatus } from 'src/generated/prisma/enums';
 
 export class AttendanceItemDto {
   @ApiProperty({ example: 'student-uuid-here', description: 'O‘quvchi IDsi' })
@@ -16,12 +20,24 @@ export class AttendanceItemDto {
   @IsNotEmpty()
   studentId: string;
 
-  @ApiProperty({
-    example: true,
-    description: 'Darsda qatnashyaptimi? (Bor/Yo‘q)',
+  @ApiPropertyOptional({
+    example: 'late',
+    enum: AttendanceStatus,
+    description:
+      "Yo'qlama holati: present (keldi), late (kechikdi), excused (sababli), absent (sababsiz). Berilmasa isPresent dan aniqlanadi",
   })
+  @IsOptional()
+  @IsEnum(AttendanceStatus)
+  status?: AttendanceStatus;
+
+  @ApiPropertyOptional({
+    example: true,
+    description:
+      "Eski format: true — present, false — absent. status berilsa ixtiyoriy (berilsa mos bo'lishi kerak)",
+  })
+  @ValidateIf((o: AttendanceItemDto) => o.status === undefined)
   @IsBoolean()
-  isPresent: boolean;
+  isPresent?: boolean;
 
   @ApiProperty({ example: true, description: 'Uy vazifasini bajarganmi?' })
   @IsBoolean()

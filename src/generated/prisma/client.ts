@@ -105,6 +105,11 @@ export type ScheduleTemplate = Prisma.ScheduleTemplateModel;
  */
 export type ScheduleException = Prisma.ScheduleExceptionModel;
 /**
+ * Model Holiday
+ *
+ */
+export type Holiday = Prisma.HolidayModel;
+/**
  * Model CoinRule
  *
  */

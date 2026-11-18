@@ -269,6 +269,10 @@ Jadval tizimi ikki qatlamli:
 
 Shablon yoki istisno o'zgarganda shu shablondan yaratilgan **kelajakdagi tekshirilmagan** sessiyalar avtomatik moslashadi (vaqt, xona, o'qituvchi, hafta kuni, bekor qilish). Xona, guruh va o'qituvchi bandligi shablonlarda ham, sessiyalarda ham tekshiriladi.
 
+Shablonning amal qilish muddati (`validFrom`/`validTo`), tenant dam olish kunlari (`/holidays`) va istisnodagi o'rinbosar o'qituvchi/xona generatsiya va kalendarda hisobga olinadi.
+
+Yo'qlama holatlari: `present` (davomat coini), `late` (`sourceType: late` qoidasi, bo'lmasa davomat coini), `excused` (coin ham, jarima ham yo'q), `absent` (jarima qoidasi bo'lsa). Yo'qlamaga faqat dars sanasida guruhda bo'lgan o'quvchilar qo'yiladi (`GET /sessions/:id/roster`).
+
 "Bugun" va "dars boshlandimi" tenant timezone'i (`Tenant.timezone`, standart `Asia/Tashkent`) bo'yicha hisoblanadi. Yo'qlama faqat dars boshlangandan keyin qo'yiladi; teacher saqlangan yo'qlamani 3 kun tahrirlay oladi (admin — muddatsiz).
 
 Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin `topic`/`subjectId` kabi metama'lumotlar tahrirlanadi.

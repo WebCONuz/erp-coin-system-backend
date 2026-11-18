@@ -36,6 +36,8 @@ export type ScheduleExceptionMinAggregateOutputType = {
   deletedAt: Date | null;
   templateId: string | null;
   createdById: string | null;
+  roomId: string | null;
+  teacherId: string | null;
 };
 
 export type ScheduleExceptionMaxAggregateOutputType = {
@@ -50,6 +52,8 @@ export type ScheduleExceptionMaxAggregateOutputType = {
   deletedAt: Date | null;
   templateId: string | null;
   createdById: string | null;
+  roomId: string | null;
+  teacherId: string | null;
 };
 
 export type ScheduleExceptionCountAggregateOutputType = {
@@ -64,6 +68,8 @@ export type ScheduleExceptionCountAggregateOutputType = {
   deletedAt: number;
   templateId: number;
   createdById: number;
+  roomId: number;
+  teacherId: number;
   _all: number;
 };
 
@@ -79,6 +85,8 @@ export type ScheduleExceptionMinAggregateInputType = {
   deletedAt?: true;
   templateId?: true;
   createdById?: true;
+  roomId?: true;
+  teacherId?: true;
 };
 
 export type ScheduleExceptionMaxAggregateInputType = {
@@ -93,6 +101,8 @@ export type ScheduleExceptionMaxAggregateInputType = {
   deletedAt?: true;
   templateId?: true;
   createdById?: true;
+  roomId?: true;
+  teacherId?: true;
 };
 
 export type ScheduleExceptionCountAggregateInputType = {
@@ -107,6 +117,8 @@ export type ScheduleExceptionCountAggregateInputType = {
   deletedAt?: true;
   templateId?: true;
   createdById?: true;
+  roomId?: true;
+  teacherId?: true;
   _all?: true;
 };
 
@@ -207,6 +219,8 @@ export type ScheduleExceptionGroupByOutputType = {
   deletedAt: Date | null;
   templateId: string;
   createdById: string;
+  roomId: string | null;
+  teacherId: string | null;
   _count: ScheduleExceptionCountAggregateOutputType | null;
   _min: ScheduleExceptionMinAggregateOutputType | null;
   _max: ScheduleExceptionMaxAggregateOutputType | null;
@@ -250,6 +264,8 @@ export type ScheduleExceptionWhereInput = {
     | null;
   templateId?: Prisma.UuidFilter<'ScheduleException'> | string;
   createdById?: Prisma.UuidFilter<'ScheduleException'> | string;
+  roomId?: Prisma.UuidNullableFilter<'ScheduleException'> | string | null;
+  teacherId?: Prisma.UuidNullableFilter<'ScheduleException'> | string | null;
   template?: Prisma.XOR<
     Prisma.ScheduleTemplateScalarRelationFilter,
     Prisma.ScheduleTemplateWhereInput
@@ -258,6 +274,14 @@ export type ScheduleExceptionWhereInput = {
     Prisma.UserScalarRelationFilter,
     Prisma.UserWhereInput
   >;
+  room?: Prisma.XOR<
+    Prisma.RoomNullableScalarRelationFilter,
+    Prisma.RoomWhereInput
+  > | null;
+  teacher?: Prisma.XOR<
+    Prisma.UserNullableScalarRelationFilter,
+    Prisma.UserWhereInput
+  > | null;
 };
 
 export type ScheduleExceptionOrderByWithRelationInput = {
@@ -272,8 +296,12 @@ export type ScheduleExceptionOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   templateId?: Prisma.SortOrder;
   createdById?: Prisma.SortOrder;
+  roomId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  teacherId?: Prisma.SortOrderInput | Prisma.SortOrder;
   template?: Prisma.ScheduleTemplateOrderByWithRelationInput;
   createdBy?: Prisma.UserOrderByWithRelationInput;
+  room?: Prisma.RoomOrderByWithRelationInput;
+  teacher?: Prisma.UserOrderByWithRelationInput;
 };
 
 export type ScheduleExceptionWhereUniqueInput = Prisma.AtLeast<
@@ -304,6 +332,8 @@ export type ScheduleExceptionWhereUniqueInput = Prisma.AtLeast<
       | null;
     templateId?: Prisma.UuidFilter<'ScheduleException'> | string;
     createdById?: Prisma.UuidFilter<'ScheduleException'> | string;
+    roomId?: Prisma.UuidNullableFilter<'ScheduleException'> | string | null;
+    teacherId?: Prisma.UuidNullableFilter<'ScheduleException'> | string | null;
     template?: Prisma.XOR<
       Prisma.ScheduleTemplateScalarRelationFilter,
       Prisma.ScheduleTemplateWhereInput
@@ -312,6 +342,14 @@ export type ScheduleExceptionWhereUniqueInput = Prisma.AtLeast<
       Prisma.UserScalarRelationFilter,
       Prisma.UserWhereInput
     >;
+    room?: Prisma.XOR<
+      Prisma.RoomNullableScalarRelationFilter,
+      Prisma.RoomWhereInput
+    > | null;
+    teacher?: Prisma.XOR<
+      Prisma.UserNullableScalarRelationFilter,
+      Prisma.UserWhereInput
+    > | null;
   },
   'id' | 'templateId_exceptionDate'
 >;
@@ -328,6 +366,8 @@ export type ScheduleExceptionOrderByWithAggregationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   templateId?: Prisma.SortOrder;
   createdById?: Prisma.SortOrder;
+  roomId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  teacherId?: Prisma.SortOrderInput | Prisma.SortOrder;
   _count?: Prisma.ScheduleExceptionCountOrderByAggregateInput;
   _max?: Prisma.ScheduleExceptionMaxOrderByAggregateInput;
   _min?: Prisma.ScheduleExceptionMinOrderByAggregateInput;
@@ -371,6 +411,14 @@ export type ScheduleExceptionScalarWhereWithAggregatesInput = {
     | null;
   templateId?: Prisma.UuidWithAggregatesFilter<'ScheduleException'> | string;
   createdById?: Prisma.UuidWithAggregatesFilter<'ScheduleException'> | string;
+  roomId?:
+    | Prisma.UuidNullableWithAggregatesFilter<'ScheduleException'>
+    | string
+    | null;
+  teacherId?:
+    | Prisma.UuidNullableWithAggregatesFilter<'ScheduleException'>
+    | string
+    | null;
 };
 
 export type ScheduleExceptionCreateInput = {
@@ -385,6 +433,8 @@ export type ScheduleExceptionCreateInput = {
   deletedAt?: Date | string | null;
   template: Prisma.ScheduleTemplateCreateNestedOneWithoutExceptionsInput;
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleExceptionsCreatedInput;
+  room?: Prisma.RoomCreateNestedOneWithoutScheduleExceptionsInput;
+  teacher?: Prisma.UserCreateNestedOneWithoutSubstituteExceptionsInput;
 };
 
 export type ScheduleExceptionUncheckedCreateInput = {
@@ -399,6 +449,8 @@ export type ScheduleExceptionUncheckedCreateInput = {
   deletedAt?: Date | string | null;
   templateId: string;
   createdById: string;
+  roomId?: string | null;
+  teacherId?: string | null;
 };
 
 export type ScheduleExceptionUpdateInput = {
@@ -417,6 +469,8 @@ export type ScheduleExceptionUpdateInput = {
     | null;
   template?: Prisma.ScheduleTemplateUpdateOneRequiredWithoutExceptionsNestedInput;
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput;
+  room?: Prisma.RoomUpdateOneWithoutScheduleExceptionsNestedInput;
+  teacher?: Prisma.UserUpdateOneWithoutSubstituteExceptionsNestedInput;
 };
 
 export type ScheduleExceptionUncheckedUpdateInput = {
@@ -435,6 +489,8 @@ export type ScheduleExceptionUncheckedUpdateInput = {
     | null;
   templateId?: Prisma.StringFieldUpdateOperationsInput | string;
   createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type ScheduleExceptionCreateManyInput = {
@@ -449,6 +505,8 @@ export type ScheduleExceptionCreateManyInput = {
   deletedAt?: Date | string | null;
   templateId: string;
   createdById: string;
+  roomId?: string | null;
+  teacherId?: string | null;
 };
 
 export type ScheduleExceptionUpdateManyMutationInput = {
@@ -483,6 +541,8 @@ export type ScheduleExceptionUncheckedUpdateManyInput = {
     | null;
   templateId?: Prisma.StringFieldUpdateOperationsInput | string;
   createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type ScheduleExceptionListRelationFilter = {
@@ -512,6 +572,8 @@ export type ScheduleExceptionCountOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder;
   templateId?: Prisma.SortOrder;
   createdById?: Prisma.SortOrder;
+  roomId?: Prisma.SortOrder;
+  teacherId?: Prisma.SortOrder;
 };
 
 export type ScheduleExceptionMaxOrderByAggregateInput = {
@@ -526,6 +588,8 @@ export type ScheduleExceptionMaxOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder;
   templateId?: Prisma.SortOrder;
   createdById?: Prisma.SortOrder;
+  roomId?: Prisma.SortOrder;
+  teacherId?: Prisma.SortOrder;
 };
 
 export type ScheduleExceptionMinOrderByAggregateInput = {
@@ -540,6 +604,8 @@ export type ScheduleExceptionMinOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder;
   templateId?: Prisma.SortOrder;
   createdById?: Prisma.SortOrder;
+  roomId?: Prisma.SortOrder;
+  teacherId?: Prisma.SortOrder;
 };
 
 export type ScheduleExceptionCreateNestedManyWithoutCreatedByInput = {
@@ -559,6 +625,23 @@ export type ScheduleExceptionCreateNestedManyWithoutCreatedByInput = {
     | Prisma.ScheduleExceptionWhereUniqueInput[];
 };
 
+export type ScheduleExceptionCreateNestedManyWithoutTeacherInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutTeacherInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutTeacherInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyTeacherInputEnvelope;
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+};
+
 export type ScheduleExceptionUncheckedCreateNestedManyWithoutCreatedByInput = {
   create?:
     | Prisma.XOR<
@@ -571,6 +654,23 @@ export type ScheduleExceptionUncheckedCreateNestedManyWithoutCreatedByInput = {
     | Prisma.ScheduleExceptionCreateOrConnectWithoutCreatedByInput
     | Prisma.ScheduleExceptionCreateOrConnectWithoutCreatedByInput[];
   createMany?: Prisma.ScheduleExceptionCreateManyCreatedByInputEnvelope;
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+};
+
+export type ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutTeacherInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutTeacherInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyTeacherInputEnvelope;
   connect?:
     | Prisma.ScheduleExceptionWhereUniqueInput
     | Prisma.ScheduleExceptionWhereUniqueInput[];
@@ -614,6 +714,44 @@ export type ScheduleExceptionUpdateManyWithoutCreatedByNestedInput = {
     | Prisma.ScheduleExceptionScalarWhereInput[];
 };
 
+export type ScheduleExceptionUpdateManyWithoutTeacherNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutTeacherInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutTeacherInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput[];
+  upsert?:
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutTeacherInput
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutTeacherInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyTeacherInputEnvelope;
+  set?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  delete?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  update?:
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutTeacherInput
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutTeacherInput[];
+  updateMany?:
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutTeacherInput
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutTeacherInput[];
+  deleteMany?:
+    | Prisma.ScheduleExceptionScalarWhereInput
+    | Prisma.ScheduleExceptionScalarWhereInput[];
+};
+
 export type ScheduleExceptionUncheckedUpdateManyWithoutCreatedByNestedInput = {
   create?:
     | Prisma.XOR<
@@ -647,6 +785,154 @@ export type ScheduleExceptionUncheckedUpdateManyWithoutCreatedByNestedInput = {
   updateMany?:
     | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutCreatedByInput
     | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutCreatedByInput[];
+  deleteMany?:
+    | Prisma.ScheduleExceptionScalarWhereInput
+    | Prisma.ScheduleExceptionScalarWhereInput[];
+};
+
+export type ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutTeacherInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutTeacherInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutTeacherInput[];
+  upsert?:
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutTeacherInput
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutTeacherInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyTeacherInputEnvelope;
+  set?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  delete?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  update?:
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutTeacherInput
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutTeacherInput[];
+  updateMany?:
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutTeacherInput
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutTeacherInput[];
+  deleteMany?:
+    | Prisma.ScheduleExceptionScalarWhereInput
+    | Prisma.ScheduleExceptionScalarWhereInput[];
+};
+
+export type ScheduleExceptionCreateNestedManyWithoutRoomInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutRoomInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutRoomInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyRoomInputEnvelope;
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+};
+
+export type ScheduleExceptionUncheckedCreateNestedManyWithoutRoomInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutRoomInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutRoomInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyRoomInputEnvelope;
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+};
+
+export type ScheduleExceptionUpdateManyWithoutRoomNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutRoomInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutRoomInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput[];
+  upsert?:
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutRoomInput
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutRoomInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyRoomInputEnvelope;
+  set?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  delete?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  update?:
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutRoomInput
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutRoomInput[];
+  updateMany?:
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutRoomInput
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutRoomInput[];
+  deleteMany?:
+    | Prisma.ScheduleExceptionScalarWhereInput
+    | Prisma.ScheduleExceptionScalarWhereInput[];
+};
+
+export type ScheduleExceptionUncheckedUpdateManyWithoutRoomNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ScheduleExceptionCreateWithoutRoomInput,
+        Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput
+      >
+    | Prisma.ScheduleExceptionCreateWithoutRoomInput[]
+    | Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput[];
+  connectOrCreate?:
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput
+    | Prisma.ScheduleExceptionCreateOrConnectWithoutRoomInput[];
+  upsert?:
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutRoomInput
+    | Prisma.ScheduleExceptionUpsertWithWhereUniqueWithoutRoomInput[];
+  createMany?: Prisma.ScheduleExceptionCreateManyRoomInputEnvelope;
+  set?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  delete?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  connect?:
+    | Prisma.ScheduleExceptionWhereUniqueInput
+    | Prisma.ScheduleExceptionWhereUniqueInput[];
+  update?:
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutRoomInput
+    | Prisma.ScheduleExceptionUpdateWithWhereUniqueWithoutRoomInput[];
+  updateMany?:
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutRoomInput
+    | Prisma.ScheduleExceptionUpdateManyWithWhereWithoutRoomInput[];
   deleteMany?:
     | Prisma.ScheduleExceptionScalarWhereInput
     | Prisma.ScheduleExceptionScalarWhereInput[];
@@ -773,6 +1059,8 @@ export type ScheduleExceptionCreateWithoutCreatedByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   template: Prisma.ScheduleTemplateCreateNestedOneWithoutExceptionsInput;
+  room?: Prisma.RoomCreateNestedOneWithoutScheduleExceptionsInput;
+  teacher?: Prisma.UserCreateNestedOneWithoutSubstituteExceptionsInput;
 };
 
 export type ScheduleExceptionUncheckedCreateWithoutCreatedByInput = {
@@ -786,6 +1074,8 @@ export type ScheduleExceptionUncheckedCreateWithoutCreatedByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   templateId: string;
+  roomId?: string | null;
+  teacherId?: string | null;
 };
 
 export type ScheduleExceptionCreateOrConnectWithoutCreatedByInput = {
@@ -800,6 +1090,51 @@ export type ScheduleExceptionCreateManyCreatedByInputEnvelope = {
   data:
     | Prisma.ScheduleExceptionCreateManyCreatedByInput
     | Prisma.ScheduleExceptionCreateManyCreatedByInput[];
+  skipDuplicates?: boolean;
+};
+
+export type ScheduleExceptionCreateWithoutTeacherInput = {
+  id?: string;
+  exceptionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  isCancelled?: boolean;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  template: Prisma.ScheduleTemplateCreateNestedOneWithoutExceptionsInput;
+  createdBy: Prisma.UserCreateNestedOneWithoutScheduleExceptionsCreatedInput;
+  room?: Prisma.RoomCreateNestedOneWithoutScheduleExceptionsInput;
+};
+
+export type ScheduleExceptionUncheckedCreateWithoutTeacherInput = {
+  id?: string;
+  exceptionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  isCancelled?: boolean;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  templateId: string;
+  createdById: string;
+  roomId?: string | null;
+};
+
+export type ScheduleExceptionCreateOrConnectWithoutTeacherInput = {
+  where: Prisma.ScheduleExceptionWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.ScheduleExceptionCreateWithoutTeacherInput,
+    Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput
+  >;
+};
+
+export type ScheduleExceptionCreateManyTeacherInputEnvelope = {
+  data:
+    | Prisma.ScheduleExceptionCreateManyTeacherInput
+    | Prisma.ScheduleExceptionCreateManyTeacherInput[];
   skipDuplicates?: boolean;
 };
 
@@ -854,6 +1189,109 @@ export type ScheduleExceptionScalarWhereInput = {
     | null;
   templateId?: Prisma.UuidFilter<'ScheduleException'> | string;
   createdById?: Prisma.UuidFilter<'ScheduleException'> | string;
+  roomId?: Prisma.UuidNullableFilter<'ScheduleException'> | string | null;
+  teacherId?: Prisma.UuidNullableFilter<'ScheduleException'> | string | null;
+};
+
+export type ScheduleExceptionUpsertWithWhereUniqueWithoutTeacherInput = {
+  where: Prisma.ScheduleExceptionWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.ScheduleExceptionUpdateWithoutTeacherInput,
+    Prisma.ScheduleExceptionUncheckedUpdateWithoutTeacherInput
+  >;
+  create: Prisma.XOR<
+    Prisma.ScheduleExceptionCreateWithoutTeacherInput,
+    Prisma.ScheduleExceptionUncheckedCreateWithoutTeacherInput
+  >;
+};
+
+export type ScheduleExceptionUpdateWithWhereUniqueWithoutTeacherInput = {
+  where: Prisma.ScheduleExceptionWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.ScheduleExceptionUpdateWithoutTeacherInput,
+    Prisma.ScheduleExceptionUncheckedUpdateWithoutTeacherInput
+  >;
+};
+
+export type ScheduleExceptionUpdateManyWithWhereWithoutTeacherInput = {
+  where: Prisma.ScheduleExceptionScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.ScheduleExceptionUpdateManyMutationInput,
+    Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherInput
+  >;
+};
+
+export type ScheduleExceptionCreateWithoutRoomInput = {
+  id?: string;
+  exceptionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  isCancelled?: boolean;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  template: Prisma.ScheduleTemplateCreateNestedOneWithoutExceptionsInput;
+  createdBy: Prisma.UserCreateNestedOneWithoutScheduleExceptionsCreatedInput;
+  teacher?: Prisma.UserCreateNestedOneWithoutSubstituteExceptionsInput;
+};
+
+export type ScheduleExceptionUncheckedCreateWithoutRoomInput = {
+  id?: string;
+  exceptionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  isCancelled?: boolean;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  templateId: string;
+  createdById: string;
+  teacherId?: string | null;
+};
+
+export type ScheduleExceptionCreateOrConnectWithoutRoomInput = {
+  where: Prisma.ScheduleExceptionWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.ScheduleExceptionCreateWithoutRoomInput,
+    Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput
+  >;
+};
+
+export type ScheduleExceptionCreateManyRoomInputEnvelope = {
+  data:
+    | Prisma.ScheduleExceptionCreateManyRoomInput
+    | Prisma.ScheduleExceptionCreateManyRoomInput[];
+  skipDuplicates?: boolean;
+};
+
+export type ScheduleExceptionUpsertWithWhereUniqueWithoutRoomInput = {
+  where: Prisma.ScheduleExceptionWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.ScheduleExceptionUpdateWithoutRoomInput,
+    Prisma.ScheduleExceptionUncheckedUpdateWithoutRoomInput
+  >;
+  create: Prisma.XOR<
+    Prisma.ScheduleExceptionCreateWithoutRoomInput,
+    Prisma.ScheduleExceptionUncheckedCreateWithoutRoomInput
+  >;
+};
+
+export type ScheduleExceptionUpdateWithWhereUniqueWithoutRoomInput = {
+  where: Prisma.ScheduleExceptionWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.ScheduleExceptionUpdateWithoutRoomInput,
+    Prisma.ScheduleExceptionUncheckedUpdateWithoutRoomInput
+  >;
+};
+
+export type ScheduleExceptionUpdateManyWithWhereWithoutRoomInput = {
+  where: Prisma.ScheduleExceptionScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.ScheduleExceptionUpdateManyMutationInput,
+    Prisma.ScheduleExceptionUncheckedUpdateManyWithoutRoomInput
+  >;
 };
 
 export type ScheduleExceptionCreateWithoutTemplateInput = {
@@ -867,6 +1305,8 @@ export type ScheduleExceptionCreateWithoutTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   createdBy: Prisma.UserCreateNestedOneWithoutScheduleExceptionsCreatedInput;
+  room?: Prisma.RoomCreateNestedOneWithoutScheduleExceptionsInput;
+  teacher?: Prisma.UserCreateNestedOneWithoutSubstituteExceptionsInput;
 };
 
 export type ScheduleExceptionUncheckedCreateWithoutTemplateInput = {
@@ -880,6 +1320,8 @@ export type ScheduleExceptionUncheckedCreateWithoutTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   createdById: string;
+  roomId?: string | null;
+  teacherId?: string | null;
 };
 
 export type ScheduleExceptionCreateOrConnectWithoutTemplateInput = {
@@ -936,6 +1378,23 @@ export type ScheduleExceptionCreateManyCreatedByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   templateId: string;
+  roomId?: string | null;
+  teacherId?: string | null;
+};
+
+export type ScheduleExceptionCreateManyTeacherInput = {
+  id?: string;
+  exceptionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  isCancelled?: boolean;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  templateId: string;
+  createdById: string;
+  roomId?: string | null;
 };
 
 export type ScheduleExceptionUpdateWithoutCreatedByInput = {
@@ -953,6 +1412,8 @@ export type ScheduleExceptionUpdateWithoutCreatedByInput = {
     | string
     | null;
   template?: Prisma.ScheduleTemplateUpdateOneRequiredWithoutExceptionsNestedInput;
+  room?: Prisma.RoomUpdateOneWithoutScheduleExceptionsNestedInput;
+  teacher?: Prisma.UserUpdateOneWithoutSubstituteExceptionsNestedInput;
 };
 
 export type ScheduleExceptionUncheckedUpdateWithoutCreatedByInput = {
@@ -970,6 +1431,8 @@ export type ScheduleExceptionUncheckedUpdateWithoutCreatedByInput = {
     | string
     | null;
   templateId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type ScheduleExceptionUncheckedUpdateManyWithoutCreatedByInput = {
@@ -987,6 +1450,137 @@ export type ScheduleExceptionUncheckedUpdateManyWithoutCreatedByInput = {
     | string
     | null;
   templateId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
+
+export type ScheduleExceptionUpdateWithoutTeacherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  template?: Prisma.ScheduleTemplateUpdateOneRequiredWithoutExceptionsNestedInput;
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput;
+  room?: Prisma.RoomUpdateOneWithoutScheduleExceptionsNestedInput;
+};
+
+export type ScheduleExceptionUncheckedUpdateWithoutTeacherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  templateId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
+
+export type ScheduleExceptionUncheckedUpdateManyWithoutTeacherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  templateId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
+
+export type ScheduleExceptionCreateManyRoomInput = {
+  id?: string;
+  exceptionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  isCancelled?: boolean;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  templateId: string;
+  createdById: string;
+  teacherId?: string | null;
+};
+
+export type ScheduleExceptionUpdateWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  template?: Prisma.ScheduleTemplateUpdateOneRequiredWithoutExceptionsNestedInput;
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput;
+  teacher?: Prisma.UserUpdateOneWithoutSubstituteExceptionsNestedInput;
+};
+
+export type ScheduleExceptionUncheckedUpdateWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  templateId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
+
+export type ScheduleExceptionUncheckedUpdateManyWithoutRoomInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  exceptionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isCancelled?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  templateId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type ScheduleExceptionCreateManyTemplateInput = {
@@ -1000,6 +1594,8 @@ export type ScheduleExceptionCreateManyTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   createdById: string;
+  roomId?: string | null;
+  teacherId?: string | null;
 };
 
 export type ScheduleExceptionUpdateWithoutTemplateInput = {
@@ -1017,6 +1613,8 @@ export type ScheduleExceptionUpdateWithoutTemplateInput = {
     | string
     | null;
   createdBy?: Prisma.UserUpdateOneRequiredWithoutScheduleExceptionsCreatedNestedInput;
+  room?: Prisma.RoomUpdateOneWithoutScheduleExceptionsNestedInput;
+  teacher?: Prisma.UserUpdateOneWithoutSubstituteExceptionsNestedInput;
 };
 
 export type ScheduleExceptionUncheckedUpdateWithoutTemplateInput = {
@@ -1034,6 +1632,8 @@ export type ScheduleExceptionUncheckedUpdateWithoutTemplateInput = {
     | string
     | null;
   createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type ScheduleExceptionUncheckedUpdateManyWithoutTemplateInput = {
@@ -1051,6 +1651,8 @@ export type ScheduleExceptionUncheckedUpdateManyWithoutTemplateInput = {
     | string
     | null;
   createdById?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type ScheduleExceptionSelect<
@@ -1069,8 +1671,12 @@ export type ScheduleExceptionSelect<
     deletedAt?: boolean;
     templateId?: boolean;
     createdById?: boolean;
+    roomId?: boolean;
+    teacherId?: boolean;
     template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>;
     createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    room?: boolean | Prisma.ScheduleException$roomArgs<ExtArgs>;
+    teacher?: boolean | Prisma.ScheduleException$teacherArgs<ExtArgs>;
   },
   ExtArgs['result']['scheduleException']
 >;
@@ -1091,8 +1697,12 @@ export type ScheduleExceptionSelectCreateManyAndReturn<
     deletedAt?: boolean;
     templateId?: boolean;
     createdById?: boolean;
+    roomId?: boolean;
+    teacherId?: boolean;
     template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>;
     createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    room?: boolean | Prisma.ScheduleException$roomArgs<ExtArgs>;
+    teacher?: boolean | Prisma.ScheduleException$teacherArgs<ExtArgs>;
   },
   ExtArgs['result']['scheduleException']
 >;
@@ -1113,8 +1723,12 @@ export type ScheduleExceptionSelectUpdateManyAndReturn<
     deletedAt?: boolean;
     templateId?: boolean;
     createdById?: boolean;
+    roomId?: boolean;
+    teacherId?: boolean;
     template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>;
     createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    room?: boolean | Prisma.ScheduleException$roomArgs<ExtArgs>;
+    teacher?: boolean | Prisma.ScheduleException$teacherArgs<ExtArgs>;
   },
   ExtArgs['result']['scheduleException']
 >;
@@ -1131,6 +1745,8 @@ export type ScheduleExceptionSelectScalar = {
   deletedAt?: boolean;
   templateId?: boolean;
   createdById?: boolean;
+  roomId?: boolean;
+  teacherId?: boolean;
 };
 
 export type ScheduleExceptionOmit<
@@ -1147,7 +1763,9 @@ export type ScheduleExceptionOmit<
   | 'createdAt'
   | 'deletedAt'
   | 'templateId'
-  | 'createdById',
+  | 'createdById'
+  | 'roomId'
+  | 'teacherId',
   ExtArgs['result']['scheduleException']
 >;
 export type ScheduleExceptionInclude<
@@ -1156,6 +1774,8 @@ export type ScheduleExceptionInclude<
 > = {
   template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>;
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  room?: boolean | Prisma.ScheduleException$roomArgs<ExtArgs>;
+  teacher?: boolean | Prisma.ScheduleException$teacherArgs<ExtArgs>;
 };
 export type ScheduleExceptionIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
@@ -1163,6 +1783,8 @@ export type ScheduleExceptionIncludeCreateManyAndReturn<
 > = {
   template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>;
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  room?: boolean | Prisma.ScheduleException$roomArgs<ExtArgs>;
+  teacher?: boolean | Prisma.ScheduleException$teacherArgs<ExtArgs>;
 };
 export type ScheduleExceptionIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
@@ -1170,6 +1792,8 @@ export type ScheduleExceptionIncludeUpdateManyAndReturn<
 > = {
   template?: boolean | Prisma.ScheduleTemplateDefaultArgs<ExtArgs>;
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  room?: boolean | Prisma.ScheduleException$roomArgs<ExtArgs>;
+  teacher?: boolean | Prisma.ScheduleException$teacherArgs<ExtArgs>;
 };
 
 export type $ScheduleExceptionPayload<
@@ -1180,6 +1804,8 @@ export type $ScheduleExceptionPayload<
   objects: {
     template: Prisma.$ScheduleTemplatePayload<ExtArgs>;
     createdBy: Prisma.$UserPayload<ExtArgs>;
+    room: Prisma.$RoomPayload<ExtArgs> | null;
+    teacher: Prisma.$UserPayload<ExtArgs> | null;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1194,6 +1820,8 @@ export type $ScheduleExceptionPayload<
       deletedAt: Date | null;
       templateId: string;
       createdById: string;
+      roomId: string | null;
+      teacherId: string | null;
     },
     ExtArgs['result']['scheduleException']
   >;
@@ -1794,6 +2422,32 @@ export interface Prisma__ScheduleExceptionClient<
     ExtArgs,
     GlobalOmitOptions
   >;
+  room<T extends Prisma.ScheduleException$roomArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.ScheduleException$roomArgs<ExtArgs>>,
+  ): Prisma.Prisma__RoomClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$RoomPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
+  teacher<T extends Prisma.ScheduleException$teacherArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.ScheduleException$teacherArgs<ExtArgs>>,
+  ): Prisma.Prisma__UserClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$UserPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1847,6 +2501,8 @@ export interface ScheduleExceptionFieldRefs {
   readonly deletedAt: Prisma.FieldRef<'ScheduleException', 'DateTime'>;
   readonly templateId: Prisma.FieldRef<'ScheduleException', 'String'>;
   readonly createdById: Prisma.FieldRef<'ScheduleException', 'String'>;
+  readonly roomId: Prisma.FieldRef<'ScheduleException', 'String'>;
+  readonly teacherId: Prisma.FieldRef<'ScheduleException', 'String'>;
 }
 
 // Custom InputTypes
@@ -2320,6 +2976,50 @@ export type ScheduleExceptionDeleteManyArgs<
    * Limit how many ScheduleExceptions to delete.
    */
   limit?: number;
+};
+
+/**
+ * ScheduleException.room
+ */
+export type ScheduleException$roomArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the Room
+   */
+  select?: Prisma.RoomSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the Room
+   */
+  omit?: Prisma.RoomOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null;
+  where?: Prisma.RoomWhereInput;
+};
+
+/**
+ * ScheduleException.teacher
+ */
+export type ScheduleException$teacherArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  where?: Prisma.UserWhereInput;
 };
 
 /**

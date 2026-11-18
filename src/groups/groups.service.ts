@@ -466,6 +466,8 @@ export class GroupsService {
           isActive: true,
           joinedAt: new Date(),
           addedById,
+          archivedAt: null,
+          leftAt: null,
         },
         select: { id: true },
       });
@@ -489,7 +491,13 @@ export class GroupsService {
 
     await this.prisma.groupStudent.update({
       where: { id: membership.id },
-      data: { isDeleted: true, isActive: false, archivedAt: new Date() },
+      // leftAt — shu vaqtgacha bo'lgan darslarda o'quvchi yo'qlama ro'yxatida qoladi
+      data: {
+        isDeleted: true,
+        isActive: false,
+        archivedAt: new Date(),
+        leftAt: new Date(),
+      },
     });
 
     return { message: 'O‘quvchi guruhdan muvaffaqiyatli chiqarildi' };
@@ -568,6 +576,7 @@ export class GroupsService {
             joinedAt: new Date(), // Qo'shilgan vaqtini yangilaymiz
             addedById,
             archivedAt: null, // Eski o'chirilgan vaqtini tozalaymiz
+            leftAt: null,
           },
         });
       }

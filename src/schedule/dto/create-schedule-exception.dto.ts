@@ -7,6 +7,7 @@ import {
   Matches,
   ValidateIf,
 } from 'class-validator';
+import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateScheduleExceptionDto {
@@ -32,9 +33,7 @@ export class CreateScheduleExceptionDto {
   })
   @ValidateIf((o: CreateScheduleExceptionDto) => !o.isCancelled)
   @IsString()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   startTime?: string;
 
   @ApiPropertyOptional({
@@ -43,9 +42,7 @@ export class CreateScheduleExceptionDto {
   })
   @ValidateIf((o: CreateScheduleExceptionDto) => !o.isCancelled)
   @IsString()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   endTime?: string;
 
   @ApiPropertyOptional({ example: "Bayram sababli dars ko'chirildi" })

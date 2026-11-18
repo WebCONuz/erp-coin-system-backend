@@ -6,6 +6,7 @@ import {
   IsUUID,
   Matches,
 } from 'class-validator';
+import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Weekday } from 'src/generated/prisma/enums';
 
@@ -22,17 +23,13 @@ export class CreateScheduleTemplateDto {
   @ApiProperty({ example: '09:00', description: 'Boshlanish vaqti (HH:MM)' })
   @IsString()
   @IsNotEmpty()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   startTime: string;
 
   @ApiProperty({ example: '11:00', description: 'Tugash vaqti (HH:MM)' })
   @IsString()
   @IsNotEmpty()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   endTime: string;
 
   @ApiProperty({ example: 'group-uuid', description: 'Guruh IDsi' })

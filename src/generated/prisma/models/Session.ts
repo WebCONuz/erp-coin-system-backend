@@ -45,6 +45,7 @@ export type SessionMinAggregateOutputType = {
   topic: string | null;
   isLocked: boolean | null;
   isChecked: boolean | null;
+  checkedAt: Date | null;
   isDeleted: boolean | null;
   lockedAt: Date | null;
   lockedById: string | null;
@@ -55,6 +56,7 @@ export type SessionMinAggregateOutputType = {
   roomId: string | null;
   teacherId: string | null;
   subjectId: string | null;
+  templateId: string | null;
 };
 
 export type SessionMaxAggregateOutputType = {
@@ -68,6 +70,7 @@ export type SessionMaxAggregateOutputType = {
   topic: string | null;
   isLocked: boolean | null;
   isChecked: boolean | null;
+  checkedAt: Date | null;
   isDeleted: boolean | null;
   lockedAt: Date | null;
   lockedById: string | null;
@@ -78,6 +81,7 @@ export type SessionMaxAggregateOutputType = {
   roomId: string | null;
   teacherId: string | null;
   subjectId: string | null;
+  templateId: string | null;
 };
 
 export type SessionCountAggregateOutputType = {
@@ -91,6 +95,7 @@ export type SessionCountAggregateOutputType = {
   topic: number;
   isLocked: number;
   isChecked: number;
+  checkedAt: number;
   isDeleted: number;
   lockedAt: number;
   lockedById: number;
@@ -101,6 +106,7 @@ export type SessionCountAggregateOutputType = {
   roomId: number;
   teacherId: number;
   subjectId: number;
+  templateId: number;
   _all: number;
 };
 
@@ -123,6 +129,7 @@ export type SessionMinAggregateInputType = {
   topic?: true;
   isLocked?: true;
   isChecked?: true;
+  checkedAt?: true;
   isDeleted?: true;
   lockedAt?: true;
   lockedById?: true;
@@ -133,6 +140,7 @@ export type SessionMinAggregateInputType = {
   roomId?: true;
   teacherId?: true;
   subjectId?: true;
+  templateId?: true;
 };
 
 export type SessionMaxAggregateInputType = {
@@ -146,6 +154,7 @@ export type SessionMaxAggregateInputType = {
   topic?: true;
   isLocked?: true;
   isChecked?: true;
+  checkedAt?: true;
   isDeleted?: true;
   lockedAt?: true;
   lockedById?: true;
@@ -156,6 +165,7 @@ export type SessionMaxAggregateInputType = {
   roomId?: true;
   teacherId?: true;
   subjectId?: true;
+  templateId?: true;
 };
 
 export type SessionCountAggregateInputType = {
@@ -169,6 +179,7 @@ export type SessionCountAggregateInputType = {
   topic?: true;
   isLocked?: true;
   isChecked?: true;
+  checkedAt?: true;
   isDeleted?: true;
   lockedAt?: true;
   lockedById?: true;
@@ -179,6 +190,7 @@ export type SessionCountAggregateInputType = {
   roomId?: true;
   teacherId?: true;
   subjectId?: true;
+  templateId?: true;
   _all?: true;
 };
 
@@ -286,6 +298,7 @@ export type SessionGroupByOutputType = {
   topic: string | null;
   isLocked: boolean;
   isChecked: boolean;
+  checkedAt: Date | null;
   isDeleted: boolean;
   lockedAt: Date | null;
   lockedById: string | null;
@@ -296,6 +309,7 @@ export type SessionGroupByOutputType = {
   roomId: string;
   teacherId: string;
   subjectId: string | null;
+  templateId: string | null;
   _count: SessionCountAggregateOutputType | null;
   _avg: SessionAvgAggregateOutputType | null;
   _sum: SessionSumAggregateOutputType | null;
@@ -332,6 +346,7 @@ export type SessionWhereInput = {
   topic?: Prisma.StringNullableFilter<'Session'> | string | null;
   isLocked?: Prisma.BoolFilter<'Session'> | boolean;
   isChecked?: Prisma.BoolFilter<'Session'> | boolean;
+  checkedAt?: Prisma.DateTimeNullableFilter<'Session'> | Date | string | null;
   isDeleted?: Prisma.BoolFilter<'Session'> | boolean;
   lockedAt?: Prisma.DateTimeNullableFilter<'Session'> | Date | string | null;
   lockedById?: Prisma.UuidNullableFilter<'Session'> | string | null;
@@ -342,6 +357,7 @@ export type SessionWhereInput = {
   roomId?: Prisma.UuidFilter<'Session'> | string;
   teacherId?: Prisma.UuidFilter<'Session'> | string;
   subjectId?: Prisma.UuidNullableFilter<'Session'> | string | null;
+  templateId?: Prisma.UuidNullableFilter<'Session'> | string | null;
   tenant?: Prisma.XOR<
     Prisma.TenantScalarRelationFilter,
     Prisma.TenantWhereInput
@@ -352,6 +368,10 @@ export type SessionWhereInput = {
   subject?: Prisma.XOR<
     Prisma.SubjectNullableScalarRelationFilter,
     Prisma.SubjectWhereInput
+  > | null;
+  template?: Prisma.XOR<
+    Prisma.ScheduleTemplateNullableScalarRelationFilter,
+    Prisma.ScheduleTemplateWhereInput
   > | null;
   attendanceRecords?: Prisma.AttendanceRecordListRelationFilter;
   transactions?: Prisma.CoinTransactionListRelationFilter;
@@ -368,6 +388,7 @@ export type SessionOrderByWithRelationInput = {
   topic?: Prisma.SortOrderInput | Prisma.SortOrder;
   isLocked?: Prisma.SortOrder;
   isChecked?: Prisma.SortOrder;
+  checkedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   lockedById?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -378,11 +399,13 @@ export type SessionOrderByWithRelationInput = {
   roomId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   subjectId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenant?: Prisma.TenantOrderByWithRelationInput;
   group?: Prisma.GroupOrderByWithRelationInput;
   room?: Prisma.RoomOrderByWithRelationInput;
   teacher?: Prisma.UserOrderByWithRelationInput;
   subject?: Prisma.SubjectOrderByWithRelationInput;
+  template?: Prisma.ScheduleTemplateOrderByWithRelationInput;
   attendanceRecords?: Prisma.AttendanceRecordOrderByRelationAggregateInput;
   transactions?: Prisma.CoinTransactionOrderByRelationAggregateInput;
 };
@@ -404,6 +427,7 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<
     topic?: Prisma.StringNullableFilter<'Session'> | string | null;
     isLocked?: Prisma.BoolFilter<'Session'> | boolean;
     isChecked?: Prisma.BoolFilter<'Session'> | boolean;
+    checkedAt?: Prisma.DateTimeNullableFilter<'Session'> | Date | string | null;
     isDeleted?: Prisma.BoolFilter<'Session'> | boolean;
     lockedAt?: Prisma.DateTimeNullableFilter<'Session'> | Date | string | null;
     lockedById?: Prisma.UuidNullableFilter<'Session'> | string | null;
@@ -414,6 +438,7 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<
     roomId?: Prisma.UuidFilter<'Session'> | string;
     teacherId?: Prisma.UuidFilter<'Session'> | string;
     subjectId?: Prisma.UuidNullableFilter<'Session'> | string | null;
+    templateId?: Prisma.UuidNullableFilter<'Session'> | string | null;
     tenant?: Prisma.XOR<
       Prisma.TenantScalarRelationFilter,
       Prisma.TenantWhereInput
@@ -430,6 +455,10 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<
     subject?: Prisma.XOR<
       Prisma.SubjectNullableScalarRelationFilter,
       Prisma.SubjectWhereInput
+    > | null;
+    template?: Prisma.XOR<
+      Prisma.ScheduleTemplateNullableScalarRelationFilter,
+      Prisma.ScheduleTemplateWhereInput
     > | null;
     attendanceRecords?: Prisma.AttendanceRecordListRelationFilter;
     transactions?: Prisma.CoinTransactionListRelationFilter;
@@ -448,6 +477,7 @@ export type SessionOrderByWithAggregationInput = {
   topic?: Prisma.SortOrderInput | Prisma.SortOrder;
   isLocked?: Prisma.SortOrder;
   isChecked?: Prisma.SortOrder;
+  checkedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   lockedById?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -458,6 +488,7 @@ export type SessionOrderByWithAggregationInput = {
   roomId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   subjectId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder;
   _count?: Prisma.SessionCountOrderByAggregateInput;
   _avg?: Prisma.SessionAvgOrderByAggregateInput;
   _max?: Prisma.SessionMaxOrderByAggregateInput;
@@ -493,6 +524,11 @@ export type SessionScalarWhereWithAggregatesInput = {
   topic?: Prisma.StringNullableWithAggregatesFilter<'Session'> | string | null;
   isLocked?: Prisma.BoolWithAggregatesFilter<'Session'> | boolean;
   isChecked?: Prisma.BoolWithAggregatesFilter<'Session'> | boolean;
+  checkedAt?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'Session'>
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolWithAggregatesFilter<'Session'> | boolean;
   lockedAt?:
     | Prisma.DateTimeNullableWithAggregatesFilter<'Session'>
@@ -517,6 +553,10 @@ export type SessionScalarWhereWithAggregatesInput = {
     | Prisma.UuidNullableWithAggregatesFilter<'Session'>
     | string
     | null;
+  templateId?:
+    | Prisma.UuidNullableWithAggregatesFilter<'Session'>
+    | string
+    | null;
 };
 
 export type SessionCreateInput = {
@@ -530,6 +570,7 @@ export type SessionCreateInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -540,6 +581,7 @@ export type SessionCreateInput = {
   room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
   subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
 };
@@ -555,6 +597,7 @@ export type SessionUncheckedCreateInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -565,6 +608,7 @@ export type SessionUncheckedCreateInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
 };
@@ -584,6 +628,11 @@ export type SessionUpdateInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -602,6 +651,7 @@ export type SessionUpdateInput = {
   room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
   subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
 };
@@ -621,6 +671,11 @@ export type SessionUncheckedUpdateInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -639,6 +694,7 @@ export type SessionUncheckedUpdateInput = {
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
 };
@@ -654,6 +710,7 @@ export type SessionCreateManyInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -664,6 +721,7 @@ export type SessionCreateManyInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
 };
 
 export type SessionUpdateManyMutationInput = {
@@ -681,6 +739,11 @@ export type SessionUpdateManyMutationInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -711,6 +774,11 @@ export type SessionUncheckedUpdateManyInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -729,6 +797,7 @@ export type SessionUncheckedUpdateManyInput = {
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type SessionListRelationFilter = {
@@ -752,6 +821,7 @@ export type SessionCountOrderByAggregateInput = {
   topic?: Prisma.SortOrder;
   isLocked?: Prisma.SortOrder;
   isChecked?: Prisma.SortOrder;
+  checkedAt?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   lockedAt?: Prisma.SortOrder;
   lockedById?: Prisma.SortOrder;
@@ -762,6 +832,7 @@ export type SessionCountOrderByAggregateInput = {
   roomId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   subjectId?: Prisma.SortOrder;
+  templateId?: Prisma.SortOrder;
 };
 
 export type SessionAvgOrderByAggregateInput = {
@@ -779,6 +850,7 @@ export type SessionMaxOrderByAggregateInput = {
   topic?: Prisma.SortOrder;
   isLocked?: Prisma.SortOrder;
   isChecked?: Prisma.SortOrder;
+  checkedAt?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   lockedAt?: Prisma.SortOrder;
   lockedById?: Prisma.SortOrder;
@@ -789,6 +861,7 @@ export type SessionMaxOrderByAggregateInput = {
   roomId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   subjectId?: Prisma.SortOrder;
+  templateId?: Prisma.SortOrder;
 };
 
 export type SessionMinOrderByAggregateInput = {
@@ -802,6 +875,7 @@ export type SessionMinOrderByAggregateInput = {
   topic?: Prisma.SortOrder;
   isLocked?: Prisma.SortOrder;
   isChecked?: Prisma.SortOrder;
+  checkedAt?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   lockedAt?: Prisma.SortOrder;
   lockedById?: Prisma.SortOrder;
@@ -812,6 +886,7 @@ export type SessionMinOrderByAggregateInput = {
   roomId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   subjectId?: Prisma.SortOrder;
+  templateId?: Prisma.SortOrder;
 };
 
 export type SessionSumOrderByAggregateInput = {
@@ -1298,6 +1373,100 @@ export type SessionUncheckedUpdateManyWithoutGroupNestedInput = {
     | Prisma.SessionScalarWhereInput[];
 };
 
+export type SessionCreateNestedManyWithoutTemplateInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.SessionCreateWithoutTemplateInput,
+        Prisma.SessionUncheckedCreateWithoutTemplateInput
+      >
+    | Prisma.SessionCreateWithoutTemplateInput[]
+    | Prisma.SessionUncheckedCreateWithoutTemplateInput[];
+  connectOrCreate?:
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput[];
+  createMany?: Prisma.SessionCreateManyTemplateInputEnvelope;
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+};
+
+export type SessionUncheckedCreateNestedManyWithoutTemplateInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.SessionCreateWithoutTemplateInput,
+        Prisma.SessionUncheckedCreateWithoutTemplateInput
+      >
+    | Prisma.SessionCreateWithoutTemplateInput[]
+    | Prisma.SessionUncheckedCreateWithoutTemplateInput[];
+  connectOrCreate?:
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput[];
+  createMany?: Prisma.SessionCreateManyTemplateInputEnvelope;
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+};
+
+export type SessionUpdateManyWithoutTemplateNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.SessionCreateWithoutTemplateInput,
+        Prisma.SessionUncheckedCreateWithoutTemplateInput
+      >
+    | Prisma.SessionCreateWithoutTemplateInput[]
+    | Prisma.SessionUncheckedCreateWithoutTemplateInput[];
+  connectOrCreate?:
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput[];
+  upsert?:
+    | Prisma.SessionUpsertWithWhereUniqueWithoutTemplateInput
+    | Prisma.SessionUpsertWithWhereUniqueWithoutTemplateInput[];
+  createMany?: Prisma.SessionCreateManyTemplateInputEnvelope;
+  set?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.SessionWhereUniqueInput
+    | Prisma.SessionWhereUniqueInput[];
+  delete?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+  update?:
+    | Prisma.SessionUpdateWithWhereUniqueWithoutTemplateInput
+    | Prisma.SessionUpdateWithWhereUniqueWithoutTemplateInput[];
+  updateMany?:
+    | Prisma.SessionUpdateManyWithWhereWithoutTemplateInput
+    | Prisma.SessionUpdateManyWithWhereWithoutTemplateInput[];
+  deleteMany?:
+    | Prisma.SessionScalarWhereInput
+    | Prisma.SessionScalarWhereInput[];
+};
+
+export type SessionUncheckedUpdateManyWithoutTemplateNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.SessionCreateWithoutTemplateInput,
+        Prisma.SessionUncheckedCreateWithoutTemplateInput
+      >
+    | Prisma.SessionCreateWithoutTemplateInput[]
+    | Prisma.SessionUncheckedCreateWithoutTemplateInput[];
+  connectOrCreate?:
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput
+    | Prisma.SessionCreateOrConnectWithoutTemplateInput[];
+  upsert?:
+    | Prisma.SessionUpsertWithWhereUniqueWithoutTemplateInput
+    | Prisma.SessionUpsertWithWhereUniqueWithoutTemplateInput[];
+  createMany?: Prisma.SessionCreateManyTemplateInputEnvelope;
+  set?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.SessionWhereUniqueInput
+    | Prisma.SessionWhereUniqueInput[];
+  delete?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+  connect?: Prisma.SessionWhereUniqueInput | Prisma.SessionWhereUniqueInput[];
+  update?:
+    | Prisma.SessionUpdateWithWhereUniqueWithoutTemplateInput
+    | Prisma.SessionUpdateWithWhereUniqueWithoutTemplateInput[];
+  updateMany?:
+    | Prisma.SessionUpdateManyWithWhereWithoutTemplateInput
+    | Prisma.SessionUpdateManyWithWhereWithoutTemplateInput[];
+  deleteMany?:
+    | Prisma.SessionScalarWhereInput
+    | Prisma.SessionScalarWhereInput[];
+};
+
 export type EnumSessionTypeFieldUpdateOperationsInput = {
   set?: $Enums.SessionType;
 };
@@ -1371,6 +1540,7 @@ export type SessionCreateWithoutTenantInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1380,6 +1550,7 @@ export type SessionCreateWithoutTenantInput = {
   room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
   subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
 };
@@ -1395,6 +1566,7 @@ export type SessionUncheckedCreateWithoutTenantInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1404,6 +1576,7 @@ export type SessionUncheckedCreateWithoutTenantInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
 };
@@ -1467,6 +1640,7 @@ export type SessionScalarWhereInput = {
   topic?: Prisma.StringNullableFilter<'Session'> | string | null;
   isLocked?: Prisma.BoolFilter<'Session'> | boolean;
   isChecked?: Prisma.BoolFilter<'Session'> | boolean;
+  checkedAt?: Prisma.DateTimeNullableFilter<'Session'> | Date | string | null;
   isDeleted?: Prisma.BoolFilter<'Session'> | boolean;
   lockedAt?: Prisma.DateTimeNullableFilter<'Session'> | Date | string | null;
   lockedById?: Prisma.UuidNullableFilter<'Session'> | string | null;
@@ -1477,6 +1651,7 @@ export type SessionScalarWhereInput = {
   roomId?: Prisma.UuidFilter<'Session'> | string;
   teacherId?: Prisma.UuidFilter<'Session'> | string;
   subjectId?: Prisma.UuidNullableFilter<'Session'> | string | null;
+  templateId?: Prisma.UuidNullableFilter<'Session'> | string | null;
 };
 
 export type SessionCreateWithoutTeacherInput = {
@@ -1490,6 +1665,7 @@ export type SessionCreateWithoutTeacherInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1499,6 +1675,7 @@ export type SessionCreateWithoutTeacherInput = {
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput;
   room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
   subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
 };
@@ -1514,6 +1691,7 @@ export type SessionUncheckedCreateWithoutTeacherInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1523,6 +1701,7 @@ export type SessionUncheckedCreateWithoutTeacherInput = {
   groupId: string;
   roomId: string;
   subjectId?: string | null;
+  templateId?: string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
 };
@@ -1581,6 +1760,7 @@ export type SessionCreateWithoutSubjectInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1590,6 +1770,7 @@ export type SessionCreateWithoutSubjectInput = {
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput;
   room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
 };
@@ -1605,6 +1786,7 @@ export type SessionUncheckedCreateWithoutSubjectInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1614,6 +1796,7 @@ export type SessionUncheckedCreateWithoutSubjectInput = {
   groupId: string;
   roomId: string;
   teacherId: string;
+  templateId?: string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
 };
@@ -1672,6 +1855,7 @@ export type SessionCreateWithoutRoomInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1681,6 +1865,7 @@ export type SessionCreateWithoutRoomInput = {
   group: Prisma.GroupCreateNestedOneWithoutSessionsInput;
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
   subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
 };
@@ -1696,6 +1881,7 @@ export type SessionUncheckedCreateWithoutRoomInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1705,6 +1891,7 @@ export type SessionUncheckedCreateWithoutRoomInput = {
   groupId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
 };
@@ -1761,6 +1948,7 @@ export type SessionCreateWithoutGroupInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1770,6 +1958,7 @@ export type SessionCreateWithoutGroupInput = {
   room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
   subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
 };
@@ -1785,6 +1974,7 @@ export type SessionUncheckedCreateWithoutGroupInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1794,6 +1984,7 @@ export type SessionUncheckedCreateWithoutGroupInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
 };
@@ -1841,6 +2032,101 @@ export type SessionUpdateManyWithWhereWithoutGroupInput = {
   >;
 };
 
+export type SessionCreateWithoutTemplateInput = {
+  id?: string;
+  sessionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  sessionType?: $Enums.SessionType;
+  evaluationMode?: $Enums.EvaluationMode;
+  maxScore?: number | null;
+  topic?: string | null;
+  isLocked?: boolean;
+  isChecked?: boolean;
+  checkedAt?: Date | string | null;
+  isDeleted?: boolean;
+  lockedAt?: Date | string | null;
+  lockedById?: string | null;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutSessionsInput;
+  group: Prisma.GroupCreateNestedOneWithoutSessionsInput;
+  room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
+  teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
+  subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
+  transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
+};
+
+export type SessionUncheckedCreateWithoutTemplateInput = {
+  id?: string;
+  sessionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  sessionType?: $Enums.SessionType;
+  evaluationMode?: $Enums.EvaluationMode;
+  maxScore?: number | null;
+  topic?: string | null;
+  isLocked?: boolean;
+  isChecked?: boolean;
+  checkedAt?: Date | string | null;
+  isDeleted?: boolean;
+  lockedAt?: Date | string | null;
+  lockedById?: string | null;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  tenantId: string;
+  groupId: string;
+  roomId: string;
+  teacherId: string;
+  subjectId?: string | null;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
+  transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
+};
+
+export type SessionCreateOrConnectWithoutTemplateInput = {
+  where: Prisma.SessionWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.SessionCreateWithoutTemplateInput,
+    Prisma.SessionUncheckedCreateWithoutTemplateInput
+  >;
+};
+
+export type SessionCreateManyTemplateInputEnvelope = {
+  data:
+    | Prisma.SessionCreateManyTemplateInput
+    | Prisma.SessionCreateManyTemplateInput[];
+  skipDuplicates?: boolean;
+};
+
+export type SessionUpsertWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.SessionWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.SessionUpdateWithoutTemplateInput,
+    Prisma.SessionUncheckedUpdateWithoutTemplateInput
+  >;
+  create: Prisma.XOR<
+    Prisma.SessionCreateWithoutTemplateInput,
+    Prisma.SessionUncheckedCreateWithoutTemplateInput
+  >;
+};
+
+export type SessionUpdateWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.SessionWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.SessionUpdateWithoutTemplateInput,
+    Prisma.SessionUncheckedUpdateWithoutTemplateInput
+  >;
+};
+
+export type SessionUpdateManyWithWhereWithoutTemplateInput = {
+  where: Prisma.SessionScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.SessionUpdateManyMutationInput,
+    Prisma.SessionUncheckedUpdateManyWithoutTemplateInput
+  >;
+};
+
 export type SessionCreateWithoutAttendanceRecordsInput = {
   id?: string;
   sessionDate: Date | string;
@@ -1852,6 +2138,7 @@ export type SessionCreateWithoutAttendanceRecordsInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1862,6 +2149,7 @@ export type SessionCreateWithoutAttendanceRecordsInput = {
   room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
   subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   transactions?: Prisma.CoinTransactionCreateNestedManyWithoutSessionInput;
 };
 
@@ -1876,6 +2164,7 @@ export type SessionUncheckedCreateWithoutAttendanceRecordsInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -1886,6 +2175,7 @@ export type SessionUncheckedCreateWithoutAttendanceRecordsInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutSessionInput;
 };
 
@@ -1932,6 +2222,11 @@ export type SessionUpdateWithoutAttendanceRecordsInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1950,6 +2245,7 @@ export type SessionUpdateWithoutAttendanceRecordsInput = {
   room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
   subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
 };
 
@@ -1968,6 +2264,11 @@ export type SessionUncheckedUpdateWithoutAttendanceRecordsInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -1986,6 +2287,7 @@ export type SessionUncheckedUpdateWithoutAttendanceRecordsInput = {
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
 };
 
@@ -2000,6 +2302,7 @@ export type SessionCreateWithoutTransactionsInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -2010,6 +2313,7 @@ export type SessionCreateWithoutTransactionsInput = {
   room: Prisma.RoomCreateNestedOneWithoutSessionsInput;
   teacher: Prisma.UserCreateNestedOneWithoutLedSessionsInput;
   subject?: Prisma.SubjectCreateNestedOneWithoutSessionsInput;
+  template?: Prisma.ScheduleTemplateCreateNestedOneWithoutSessionsInput;
   attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutSessionInput;
 };
 
@@ -2024,6 +2328,7 @@ export type SessionUncheckedCreateWithoutTransactionsInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -2034,6 +2339,7 @@ export type SessionUncheckedCreateWithoutTransactionsInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutSessionInput;
 };
 
@@ -2080,6 +2386,11 @@ export type SessionUpdateWithoutTransactionsInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2098,6 +2409,7 @@ export type SessionUpdateWithoutTransactionsInput = {
   room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
   subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
 };
 
@@ -2116,6 +2428,11 @@ export type SessionUncheckedUpdateWithoutTransactionsInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2134,6 +2451,7 @@ export type SessionUncheckedUpdateWithoutTransactionsInput = {
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
 };
 
@@ -2148,6 +2466,7 @@ export type SessionCreateManyTenantInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -2157,6 +2476,7 @@ export type SessionCreateManyTenantInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
 };
 
 export type SessionUpdateWithoutTenantInput = {
@@ -2174,6 +2494,11 @@ export type SessionUpdateWithoutTenantInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2191,6 +2516,7 @@ export type SessionUpdateWithoutTenantInput = {
   room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
   subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
 };
@@ -2210,6 +2536,11 @@ export type SessionUncheckedUpdateWithoutTenantInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2227,6 +2558,7 @@ export type SessionUncheckedUpdateWithoutTenantInput = {
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
 };
@@ -2246,6 +2578,11 @@ export type SessionUncheckedUpdateManyWithoutTenantInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2263,6 +2600,7 @@ export type SessionUncheckedUpdateManyWithoutTenantInput = {
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type SessionCreateManyTeacherInput = {
@@ -2276,6 +2614,7 @@ export type SessionCreateManyTeacherInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -2285,6 +2624,7 @@ export type SessionCreateManyTeacherInput = {
   groupId: string;
   roomId: string;
   subjectId?: string | null;
+  templateId?: string | null;
 };
 
 export type SessionUpdateWithoutTeacherInput = {
@@ -2302,6 +2642,11 @@ export type SessionUpdateWithoutTeacherInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2319,6 +2664,7 @@ export type SessionUpdateWithoutTeacherInput = {
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput;
   room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
   subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
 };
@@ -2338,6 +2684,11 @@ export type SessionUncheckedUpdateWithoutTeacherInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2355,6 +2706,7 @@ export type SessionUncheckedUpdateWithoutTeacherInput = {
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
 };
@@ -2374,6 +2726,11 @@ export type SessionUncheckedUpdateManyWithoutTeacherInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2391,6 +2748,7 @@ export type SessionUncheckedUpdateManyWithoutTeacherInput = {
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type SessionCreateManySubjectInput = {
@@ -2404,6 +2762,7 @@ export type SessionCreateManySubjectInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -2413,6 +2772,7 @@ export type SessionCreateManySubjectInput = {
   groupId: string;
   roomId: string;
   teacherId: string;
+  templateId?: string | null;
 };
 
 export type SessionUpdateWithoutSubjectInput = {
@@ -2430,6 +2790,11 @@ export type SessionUpdateWithoutSubjectInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2447,6 +2812,7 @@ export type SessionUpdateWithoutSubjectInput = {
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput;
   room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
 };
@@ -2466,6 +2832,11 @@ export type SessionUncheckedUpdateWithoutSubjectInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2483,6 +2854,7 @@ export type SessionUncheckedUpdateWithoutSubjectInput = {
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
 };
@@ -2502,6 +2874,11 @@ export type SessionUncheckedUpdateManyWithoutSubjectInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2519,6 +2896,7 @@ export type SessionUncheckedUpdateManyWithoutSubjectInput = {
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type SessionCreateManyRoomInput = {
@@ -2532,6 +2910,7 @@ export type SessionCreateManyRoomInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -2541,6 +2920,7 @@ export type SessionCreateManyRoomInput = {
   groupId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
 };
 
 export type SessionUpdateWithoutRoomInput = {
@@ -2558,6 +2938,11 @@ export type SessionUpdateWithoutRoomInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2575,6 +2960,7 @@ export type SessionUpdateWithoutRoomInput = {
   group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput;
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
   subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
 };
@@ -2594,6 +2980,11 @@ export type SessionUncheckedUpdateWithoutRoomInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2611,6 +3002,7 @@ export type SessionUncheckedUpdateWithoutRoomInput = {
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
 };
@@ -2630,6 +3022,11 @@ export type SessionUncheckedUpdateManyWithoutRoomInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2647,6 +3044,7 @@ export type SessionUncheckedUpdateManyWithoutRoomInput = {
   groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
 export type SessionCreateManyGroupInput = {
@@ -2660,6 +3058,7 @@ export type SessionCreateManyGroupInput = {
   topic?: string | null;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: Date | string | null;
   isDeleted?: boolean;
   lockedAt?: Date | string | null;
   lockedById?: string | null;
@@ -2669,6 +3068,7 @@ export type SessionCreateManyGroupInput = {
   roomId: string;
   teacherId: string;
   subjectId?: string | null;
+  templateId?: string | null;
 };
 
 export type SessionUpdateWithoutGroupInput = {
@@ -2686,6 +3086,11 @@ export type SessionUpdateWithoutGroupInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2703,6 +3108,7 @@ export type SessionUpdateWithoutGroupInput = {
   room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
   teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
   subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  template?: Prisma.ScheduleTemplateUpdateOneWithoutSessionsNestedInput;
   attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
 };
@@ -2722,6 +3128,11 @@ export type SessionUncheckedUpdateWithoutGroupInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2739,6 +3150,7 @@ export type SessionUncheckedUpdateWithoutGroupInput = {
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
   transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
 };
@@ -2758,6 +3170,11 @@ export type SessionUncheckedUpdateManyWithoutGroupInput = {
   topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   lockedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
@@ -2772,6 +3189,155 @@ export type SessionUncheckedUpdateManyWithoutGroupInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string;
+  teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
+  subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+};
+
+export type SessionCreateManyTemplateInput = {
+  id?: string;
+  sessionDate: Date | string;
+  startTime?: string | null;
+  endTime?: string | null;
+  sessionType?: $Enums.SessionType;
+  evaluationMode?: $Enums.EvaluationMode;
+  maxScore?: number | null;
+  topic?: string | null;
+  isLocked?: boolean;
+  isChecked?: boolean;
+  checkedAt?: Date | string | null;
+  isDeleted?: boolean;
+  lockedAt?: Date | string | null;
+  lockedById?: string | null;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  tenantId: string;
+  groupId: string;
+  roomId: string;
+  teacherId: string;
+  subjectId?: string | null;
+};
+
+export type SessionUpdateWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  sessionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  sessionType?:
+    | Prisma.EnumSessionTypeFieldUpdateOperationsInput
+    | $Enums.SessionType;
+  evaluationMode?:
+    | Prisma.EnumEvaluationModeFieldUpdateOperationsInput
+    | $Enums.EvaluationMode;
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  lockedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutSessionsNestedInput;
+  group?: Prisma.GroupUpdateOneRequiredWithoutSessionsNestedInput;
+  room?: Prisma.RoomUpdateOneRequiredWithoutSessionsNestedInput;
+  teacher?: Prisma.UserUpdateOneRequiredWithoutLedSessionsNestedInput;
+  subject?: Prisma.SubjectUpdateOneWithoutSessionsNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutSessionNestedInput;
+  transactions?: Prisma.CoinTransactionUpdateManyWithoutSessionNestedInput;
+};
+
+export type SessionUncheckedUpdateWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  sessionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  sessionType?:
+    | Prisma.EnumSessionTypeFieldUpdateOperationsInput
+    | $Enums.SessionType;
+  evaluationMode?:
+    | Prisma.EnumEvaluationModeFieldUpdateOperationsInput
+    | $Enums.EvaluationMode;
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  lockedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roomId?: Prisma.StringFieldUpdateOperationsInput | string;
+  teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
+  subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutSessionNestedInput;
+  transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutSessionNestedInput;
+};
+
+export type SessionUncheckedUpdateManyWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  sessionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  sessionType?:
+    | Prisma.EnumSessionTypeFieldUpdateOperationsInput
+    | $Enums.SessionType;
+  evaluationMode?:
+    | Prisma.EnumEvaluationModeFieldUpdateOperationsInput
+    | $Enums.EvaluationMode;
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isChecked?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  checkedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  lockedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  lockedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string;
   roomId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string;
   subjectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2844,6 +3410,7 @@ export type SessionSelect<
     topic?: boolean;
     isLocked?: boolean;
     isChecked?: boolean;
+    checkedAt?: boolean;
     isDeleted?: boolean;
     lockedAt?: boolean;
     lockedById?: boolean;
@@ -2854,11 +3421,13 @@ export type SessionSelect<
     roomId?: boolean;
     teacherId?: boolean;
     subjectId?: boolean;
+    templateId?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>;
     room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>;
     teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     subject?: boolean | Prisma.Session$subjectArgs<ExtArgs>;
+    template?: boolean | Prisma.Session$templateArgs<ExtArgs>;
     attendanceRecords?: boolean | Prisma.Session$attendanceRecordsArgs<ExtArgs>;
     transactions?: boolean | Prisma.Session$transactionsArgs<ExtArgs>;
     _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>;
@@ -2881,6 +3450,7 @@ export type SessionSelectCreateManyAndReturn<
     topic?: boolean;
     isLocked?: boolean;
     isChecked?: boolean;
+    checkedAt?: boolean;
     isDeleted?: boolean;
     lockedAt?: boolean;
     lockedById?: boolean;
@@ -2891,11 +3461,13 @@ export type SessionSelectCreateManyAndReturn<
     roomId?: boolean;
     teacherId?: boolean;
     subjectId?: boolean;
+    templateId?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>;
     room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>;
     teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     subject?: boolean | Prisma.Session$subjectArgs<ExtArgs>;
+    template?: boolean | Prisma.Session$templateArgs<ExtArgs>;
   },
   ExtArgs['result']['session']
 >;
@@ -2915,6 +3487,7 @@ export type SessionSelectUpdateManyAndReturn<
     topic?: boolean;
     isLocked?: boolean;
     isChecked?: boolean;
+    checkedAt?: boolean;
     isDeleted?: boolean;
     lockedAt?: boolean;
     lockedById?: boolean;
@@ -2925,11 +3498,13 @@ export type SessionSelectUpdateManyAndReturn<
     roomId?: boolean;
     teacherId?: boolean;
     subjectId?: boolean;
+    templateId?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>;
     room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>;
     teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     subject?: boolean | Prisma.Session$subjectArgs<ExtArgs>;
+    template?: boolean | Prisma.Session$templateArgs<ExtArgs>;
   },
   ExtArgs['result']['session']
 >;
@@ -2945,6 +3520,7 @@ export type SessionSelectScalar = {
   topic?: boolean;
   isLocked?: boolean;
   isChecked?: boolean;
+  checkedAt?: boolean;
   isDeleted?: boolean;
   lockedAt?: boolean;
   lockedById?: boolean;
@@ -2955,6 +3531,7 @@ export type SessionSelectScalar = {
   roomId?: boolean;
   teacherId?: boolean;
   subjectId?: boolean;
+  templateId?: boolean;
 };
 
 export type SessionOmit<
@@ -2971,6 +3548,7 @@ export type SessionOmit<
   | 'topic'
   | 'isLocked'
   | 'isChecked'
+  | 'checkedAt'
   | 'isDeleted'
   | 'lockedAt'
   | 'lockedById'
@@ -2980,7 +3558,8 @@ export type SessionOmit<
   | 'groupId'
   | 'roomId'
   | 'teacherId'
-  | 'subjectId',
+  | 'subjectId'
+  | 'templateId',
   ExtArgs['result']['session']
 >;
 export type SessionInclude<
@@ -2992,6 +3571,7 @@ export type SessionInclude<
   room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>;
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   subject?: boolean | Prisma.Session$subjectArgs<ExtArgs>;
+  template?: boolean | Prisma.Session$templateArgs<ExtArgs>;
   attendanceRecords?: boolean | Prisma.Session$attendanceRecordsArgs<ExtArgs>;
   transactions?: boolean | Prisma.Session$transactionsArgs<ExtArgs>;
   _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>;
@@ -3005,6 +3585,7 @@ export type SessionIncludeCreateManyAndReturn<
   room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>;
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   subject?: boolean | Prisma.Session$subjectArgs<ExtArgs>;
+  template?: boolean | Prisma.Session$templateArgs<ExtArgs>;
 };
 export type SessionIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
@@ -3015,6 +3596,7 @@ export type SessionIncludeUpdateManyAndReturn<
   room?: boolean | Prisma.RoomDefaultArgs<ExtArgs>;
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   subject?: boolean | Prisma.Session$subjectArgs<ExtArgs>;
+  template?: boolean | Prisma.Session$templateArgs<ExtArgs>;
 };
 
 export type $SessionPayload<
@@ -3028,6 +3610,7 @@ export type $SessionPayload<
     room: Prisma.$RoomPayload<ExtArgs>;
     teacher: Prisma.$UserPayload<ExtArgs>;
     subject: Prisma.$SubjectPayload<ExtArgs> | null;
+    template: Prisma.$ScheduleTemplatePayload<ExtArgs> | null;
     attendanceRecords: Prisma.$AttendanceRecordPayload<ExtArgs>[];
     transactions: Prisma.$CoinTransactionPayload<ExtArgs>[];
   };
@@ -3043,6 +3626,7 @@ export type $SessionPayload<
       topic: string | null;
       isLocked: boolean;
       isChecked: boolean;
+      checkedAt: Date | null;
       isDeleted: boolean;
       lockedAt: Date | null;
       lockedById: string | null;
@@ -3053,6 +3637,7 @@ export type $SessionPayload<
       roomId: string;
       teacherId: string;
       subjectId: string | null;
+      templateId: string | null;
     },
     ExtArgs['result']['session']
   >;
@@ -3672,6 +4257,19 @@ export interface Prisma__SessionClient<
     ExtArgs,
     GlobalOmitOptions
   >;
+  template<T extends Prisma.Session$templateArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Session$templateArgs<ExtArgs>>,
+  ): Prisma.Prisma__ScheduleTemplateClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$ScheduleTemplatePayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   attendanceRecords<
     T extends Prisma.Session$attendanceRecordsArgs<ExtArgs> = {},
   >(
@@ -3748,6 +4346,7 @@ export interface SessionFieldRefs {
   readonly topic: Prisma.FieldRef<'Session', 'String'>;
   readonly isLocked: Prisma.FieldRef<'Session', 'Boolean'>;
   readonly isChecked: Prisma.FieldRef<'Session', 'Boolean'>;
+  readonly checkedAt: Prisma.FieldRef<'Session', 'DateTime'>;
   readonly isDeleted: Prisma.FieldRef<'Session', 'Boolean'>;
   readonly lockedAt: Prisma.FieldRef<'Session', 'DateTime'>;
   readonly lockedById: Prisma.FieldRef<'Session', 'String'>;
@@ -3758,6 +4357,7 @@ export interface SessionFieldRefs {
   readonly roomId: Prisma.FieldRef<'Session', 'String'>;
   readonly teacherId: Prisma.FieldRef<'Session', 'String'>;
   readonly subjectId: Prisma.FieldRef<'Session', 'String'>;
+  readonly templateId: Prisma.FieldRef<'Session', 'String'>;
 }
 
 // Custom InputTypes
@@ -4243,6 +4843,28 @@ export type Session$subjectArgs<
    */
   include?: Prisma.SubjectInclude<ExtArgs> | null;
   where?: Prisma.SubjectWhereInput;
+};
+
+/**
+ * Session.template
+ */
+export type Session$templateArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the ScheduleTemplate
+   */
+  select?: Prisma.ScheduleTemplateSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the ScheduleTemplate
+   */
+  omit?: Prisma.ScheduleTemplateOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScheduleTemplateInclude<ExtArgs> | null;
+  where?: Prisma.ScheduleTemplateWhereInput;
 };
 
 /**

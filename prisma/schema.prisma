@@ -153,6 +153,8 @@ model Tenant {
   // Teacher bitta tranzaksiyada (har bir o'quvchiga) bera oladigan maksimal coin.
   // null — cheklov yo'q. Tenant admini sozlaydi (PATCH /tenant-settings).
   teacherCoinLimit Int? @map("teacher_coin_limit")
+  // IANA timezone — "bugun", "dars boshlandimi", tahrirlash muddati shu bo'yicha hisoblanadi
+  timezone  String   @default("Asia/Tashkent") @db.VarChar(64)
   isActive  Boolean  @default(true) @map("is_active")
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -509,6 +511,7 @@ model ScheduleTemplate {
   createdBy User     @relation("ScheduleTemplateCreatedBy", fields: [createdById], references: [id])
 
   exceptions ScheduleException[]
+  sessions   Session[]
 
   @@index([tenantId])
   @@index([groupId])
@@ -598,6 +601,8 @@ model Session {
   topic       String?     @db.VarChar(300)
   isLocked    Boolean     @default(false) @map("is_locked")
   isChecked   Boolean     @default(false) @map("is_checked")
+  // Yo'qlama/natija birinchi marta saqlangan vaqt — teacher shundan keyin 3 kun tahrirlay oladi
+  checkedAt   DateTime?   @map("checked_at") @db.Timestamptz
   isDeleted   Boolean     @default(false) @map("is_deleted")
   lockedAt    DateTime?   @map("locked_at") @db.Timestamptz
   lockedById  String?     @map("locked_by") @db.Uuid
@@ -609,17 +614,23 @@ model Session {
   roomId    String  @map("room_id") @db.Uuid
   teacherId String  @map("teacher_id") @db.Uuid
   subjectId String? @map("subject_id") @db.Uuid
+  // Jadval shablonidan yaratilgan bo'lsa — qaysi shablondan (shablon o'zgarsa kelajakdagi
+  // tekshirilmagan sessiyalar sinxronlanadi). Qo'lda yaratilgan sessiyada null
+  templateId String? @map("template_id") @db.Uuid
 
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  group   Group    @relation(fields: [groupId], references: [id])
-  room    Room     @relation(fields: [roomId], references: [id])
-  teacher User     @relation(fields: [teacherId], references: [id])
-  subject Subject? @relation(fields: [subjectId], references: [id])
+  tenant   Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  group    Group             @relation(fields: [groupId], references: [id])
+  room     Room              @relation(fields: [roomId], references: [id])
+  teacher  User              @relation(fields: [teacherId], references: [id])
+  subject  Subject?          @relation(fields: [subjectId], references: [id])
+  template ScheduleTemplate? @relation(fields: [templateId], references: [id])
 
   attendanceRecords AttendanceRecord[]
   transactions      CoinTransaction[]
 
   @@index([tenantId])
+  @@index([templateId, sessionDate])
+  @@index([tenantId, sessionDate])
   @@index([groupId, sessionDate(sort: Desc)])
   @@index([roomId])
   @@index([teacherId])

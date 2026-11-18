@@ -10,6 +10,7 @@ import {
   Min,
   Max,
 } from 'class-validator';
+import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EvaluationMode, SessionType } from 'src/generated/prisma/enums';
 
@@ -28,17 +29,13 @@ export class CreateSessionDto {
   })
   @IsString()
   @IsNotEmpty()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM bo‘lishi kerak',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   startTime: string;
 
   @ApiProperty({ example: '15:30', description: 'Dars tugash vaqti (HH:MM)' })
   @IsString()
   @IsNotEmpty()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM bo‘lishi kerak',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   endTime: string;
 
   @ApiProperty({

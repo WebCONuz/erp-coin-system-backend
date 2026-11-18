@@ -263,8 +263,13 @@ Jadval tizimi ikki qatlamli:
 
 - Bekor qilingan istisnolar o'tkazib yuboriladi
 - Vaqt o'zgargan istisnolar yangi vaqt bilan yaratiladi
-- Allaqachon mavjud sessiyalar qaytadan yaratilmaydi
-- Guruhning teacherId'si va shablonning `subjectId`'si sessiyaga nusxalanadi
+- Allaqachon mavjud sessiyalar qaytadan yaratilmaydi; xona/o'qituvchi boshqa dars bilan band bo'lsa — yaratilmaydi (`conflicts`)
+- Guruhning teacherId'si va shablonning `subjectId`'si sessiyaga nusxalanadi, sessiya shablonga `templateId` orqali bog'lanadi
+- Bir so'rovda ko'pi bilan 92 kun
+
+Shablon yoki istisno o'zgarganda shu shablondan yaratilgan **kelajakdagi tekshirilmagan** sessiyalar avtomatik moslashadi (vaqt, xona, o'qituvchi, hafta kuni, bekor qilish). Xona, guruh va o'qituvchi bandligi shablonlarda ham, sessiyalarda ham tekshiriladi.
+
+"Bugun" va "dars boshlandimi" tenant timezone'i (`Tenant.timezone`, standart `Asia/Tashkent`) bo'yicha hisoblanadi. Yo'qlama faqat dars boshlangandan keyin qo'yiladi; teacher saqlangan yo'qlamani 3 kun tahrirlay oladi (admin — muddatsiz).
 
 Qulflangan (`isLocked: true`) sessiyada yo'qlamani o'zgartirib bo'lmaydi, lekin `topic`/`subjectId` kabi metama'lumotlar tahrirlanadi.
 

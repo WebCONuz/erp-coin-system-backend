@@ -104,6 +104,7 @@ export class TenantService {
   private static readonly SETTINGS_SELECT = {
     id: true,
     teacherCoinLimit: true,
+    timezone: true,
   } as const;
 
   async getSettings(tenantId: string) {
@@ -123,6 +124,7 @@ export class TenantService {
         ...(dto.teacherCoinLimit !== undefined
           ? { teacherCoinLimit: dto.teacherCoinLimit }
           : {}),
+        ...(dto.timezone !== undefined ? { timezone: dto.timezone } : {}),
       },
       select: TenantService.SETTINGS_SELECT,
     });

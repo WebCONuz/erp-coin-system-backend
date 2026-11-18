@@ -8,6 +8,7 @@ import {
   Min,
   Max,
 } from 'class-validator';
+import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { EvaluationMode, SessionType } from 'src/generated/prisma/enums';
 
@@ -18,9 +19,7 @@ export class UpdateSessionDto {
   })
   @IsOptional()
   @IsString()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   startTime?: string;
 
   @ApiPropertyOptional({
@@ -29,9 +28,7 @@ export class UpdateSessionDto {
   })
   @IsOptional()
   @IsString()
-  @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: 'Vaqt formati HH:MM',
-  })
+  @Matches(HHMM_REGEX, { message: HHMM_MESSAGE })
   endTime?: string;
 
   @ApiPropertyOptional({ enum: SessionType, description: 'Dars turi' })

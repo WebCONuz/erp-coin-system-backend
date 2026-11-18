@@ -67,7 +67,20 @@ export const SESSION_ERROR_CODES = {
   SCORE_EXCEEDS_MAX: 'SCORE_EXCEEDS_MAX',
   MAX_SCORE_BELOW_EXISTING: 'MAX_SCORE_BELOW_EXISTING',
   SESSION_COINS_SPENT: 'SESSION_COINS_SPENT',
+  SESSION_DUPLICATE: 'SESSION_DUPLICATE',
+  SESSION_DATE_TOO_OLD: 'SESSION_DATE_TOO_OLD',
+  SESSION_NOT_STARTED: 'SESSION_NOT_STARTED',
+  ATTENDANCE_EDIT_WINDOW_EXPIRED: 'ATTENDANCE_EDIT_WINDOW_EXPIRED',
+  INVALID_TIME_RANGE: 'INVALID_TIME_RANGE',
 } as const;
+
+// Teacher saqlangan yo'qlama/natijani birinchi saqlashdan keyin shuncha kun tahrirlay oladi
+// (admin va undan yuqori — cheklovsiz)
+export const ATTENDANCE_EDIT_WINDOW_DAYS = 3;
+
+// Teacher o'tgan sanaga sessiyani ko'pi bilan shuncha kun oldinga yarata oladi
+// (unutilgan darsni qo'shish uchun); undan eskisini faqat admin yaratadi
+export const TEACHER_BACKDATE_DAYS = 7;
 
 export const COIN_SKIP_CODES = {
   COINS_ALREADY_SPENT: 'COINS_ALREADY_SPENT',

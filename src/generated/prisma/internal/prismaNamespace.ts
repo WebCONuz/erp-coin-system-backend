@@ -2433,6 +2433,7 @@ export const TenantScalarFieldEnum = {
   plan: 'plan',
   type: 'type',
   teacherCoinLimit: 'teacherCoinLimit',
+  timezone: 'timezone',
   isActive: 'isActive',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
@@ -2670,6 +2671,7 @@ export const SessionScalarFieldEnum = {
   topic: 'topic',
   isLocked: 'isLocked',
   isChecked: 'isChecked',
+  checkedAt: 'checkedAt',
   isDeleted: 'isDeleted',
   lockedAt: 'lockedAt',
   lockedById: 'lockedById',
@@ -2680,6 +2682,7 @@ export const SessionScalarFieldEnum = {
   roomId: 'roomId',
   teacherId: 'teacherId',
   subjectId: 'subjectId',
+  templateId: 'templateId',
 } as const;
 
 export type SessionScalarFieldEnum =

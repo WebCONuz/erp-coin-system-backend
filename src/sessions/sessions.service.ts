@@ -2,7 +2,6 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
-  ConflictException,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -25,7 +24,19 @@ import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effectiv
 import { Prisma } from 'src/generated/prisma/client';
 import { SessionCoinItem } from 'src/common/types';
 import {
+  addDays,
+  getTenantTimezone,
+  nowInTimeZone,
+  toDateString,
+} from 'src/common/utils/tenant-time';
+import {
+  assertNoSessionConflict,
+  lockTenantSchedule,
+} from './utils/session-conflicts';
+import {
   ALL_SESSION_MANAGED_SOURCE_TYPES,
+  ATTENDANCE_EDIT_WINDOW_DAYS,
+  TEACHER_BACKDATE_DAYS,
   SESSION_ERROR_CODES,
   SESSION_MANAGED_SOURCE_TYPES,
   SESSION_TYPE_CONFIG,
@@ -72,6 +83,8 @@ const SESSION_SELECT = {
   topic: true,
   isLocked: true,
   isChecked: true,
+  checkedAt: true,
+  templateId: true,
   isDeleted: true,
   lockedAt: true,
   deletedAt: true,
@@ -124,7 +137,14 @@ export class SessionsService {
         : true,
       refs.teacherId
         ? this.prisma.user.findFirst({
-            where: { id: refs.teacherId, tenantId, isDeleted: false },
+            // Darsni faqat o'qituvchi (yoki dars beruvchi admin) o'tadi — student emas
+            where: {
+              id: refs.teacherId,
+              tenantId,
+              isDeleted: false,
+              isActive: true,
+              role: { name: { in: ['teacher', 'admin'] } },
+            },
             select: { id: true },
           })
         : true,
@@ -164,7 +184,22 @@ export class SessionsService {
         );
       }
       teacherId = requesterId; // client yuborgan teacherId e'tiborsiz qoldiriladi
+
+      // Teacher o'tgan sanaga faqat TEACHER_BACKDATE_DAYS kun ichida sessiya qo'sha oladi —
+      // eski sanalarga ko'plab dars yaratib coin "ishlab chiqarish"ning oldini olish
+      const tz = await getTenantTimezone(this.prisma, tenantId);
+      const earliest = addDays(nowInTimeZone(tz).date, -TEACHER_BACKDATE_DAYS);
+      if (dto.sessionDate.slice(0, 10) < earliest) {
+        throw codedError(
+          HttpStatus.FORBIDDEN,
+          `O'qituvchi ${TEACHER_BACKDATE_DAYS} kundan eski sanaga dars qo'sha olmaydi (eng erta: ${earliest}). Administratorga murojaat qiling`,
+          SESSION_ERROR_CODES.SESSION_DATE_TOO_OLD,
+          { earliestDate: earliest },
+        );
+      }
     }
+
+    this.assertTimeRange(dto.startTime, dto.endTime);
 
     await this.assertRefsInTenant(tenantId, {
       groupId: dto.groupId,
@@ -186,45 +221,74 @@ export class SessionsService {
       );
     }
 
-    const existingSession = await this.prisma.session.findFirst({
-      where: {
-        sessionDate: new Date(dto.sessionDate),
-        startTime: dto.startTime,
-        endTime: dto.endTime,
-        sessionType: dto.sessionType,
-        groupId: dto.groupId,
-        teacherId,
+    const sessionDate = new Date(dto.sessionDate.slice(0, 10));
+
+    return this.prisma.$transaction(async (tx) => {
+      // Qulf ostida: parallel so'rovlar bir xil slotga ikkita dars yarata olmaydi
+      await lockTenantSchedule(tx, tenantId);
+
+      const duplicate = await tx.session.findFirst({
+        where: {
+          tenantId,
+          groupId: dto.groupId,
+          sessionDate,
+          startTime: dto.startTime,
+          isDeleted: false,
+        },
+        select: { id: true },
+      });
+      if (duplicate) {
+        throw codedError(
+          HttpStatus.CONFLICT,
+          "Bu guruh uchun ko'rsatilgan sana va vaqtda dars allaqachon mavjud",
+          SESSION_ERROR_CODES.SESSION_DUPLICATE,
+          { sessionId: duplicate.id },
+        );
+      }
+
+      // Guruh, xona yoki o'qituvchi shu vaqtda band bo'lmasligi kerak
+      await assertNoSessionConflict(tx, {
         tenantId,
-        isDeleted: false,
-      },
-    });
-
-    if (existingSession) {
-      throw new ConflictException(
-        "Bu guruh uchun ko'rsatilgan sanada dars sessiyasi allaqachon yaratilgan!",
-      );
-    }
-
-    return this.prisma.session.create({
-      data: {
-        sessionDate: new Date(dto.sessionDate),
+        sessionDate,
         startTime: dto.startTime,
         endTime: dto.endTime,
-        sessionType: dto.sessionType,
-        evaluationMode,
-        // maxScore faqat ball rejimida ma'noga ega
-        maxScore:
-          evaluationMode === EvaluationMode.scored
-            ? (dto.maxScore ?? null)
-            : null,
-        topic: dto.topic || null,
         groupId: dto.groupId,
         roomId: dto.roomId,
         teacherId,
-        subjectId: dto.subjectId ?? null,
-        tenantId,
-      },
+      });
+
+      return tx.session.create({
+        data: {
+          sessionDate: new Date(dto.sessionDate),
+          startTime: dto.startTime,
+          endTime: dto.endTime,
+          sessionType: dto.sessionType,
+          evaluationMode,
+          // maxScore faqat ball rejimida ma'noga ega
+          maxScore:
+            evaluationMode === EvaluationMode.scored
+              ? (dto.maxScore ?? null)
+              : null,
+          topic: dto.topic || null,
+          groupId: dto.groupId,
+          roomId: dto.roomId,
+          teacherId,
+          subjectId: dto.subjectId ?? null,
+          tenantId,
+        },
+      });
     });
+  }
+
+  // startTime < endTime (HH:MM matn sifatida solishtiriladi — format DTO'da qat'iy)
+  private assertTimeRange(startTime: string, endTime: string) {
+    if (!(startTime < endTime)) {
+      throw codedError(
+        HttpStatus.BAD_REQUEST,
+        "Tugash vaqti boshlanish vaqtidan keyin bo'lishi kerak",
+        SESSION_ERROR_CODES.INVALID_TIME_RANGE,
+      );
+    }
   }
 
   // 2. DARSNI TAHRIRLASH
@@ -243,6 +307,17 @@ export class SessionsService {
     if (requesterRole === 'teacher' && session.teacherId !== requesterId) {
       throw new ForbiddenException(
         "Siz faqat o'z darsingizni tahrirlay olasiz",
+      );
+    }
+
+    // Teacher darsni boshqa o'qituvchiga o'tkaza olmaydi (keyin unga kira olmay qolardi)
+    if (
+      requesterRole === 'teacher' &&
+      dto.teacherId &&
+      dto.teacherId !== session.teacherId
+    ) {
+      throw new ForbiddenException(
+        "O'qituvchini faqat administrator almashtira oladi",
       );
     }
 
@@ -327,25 +402,76 @@ export class SessionsService {
       }
     }
 
-    return this.prisma.session.update({
-      where: { id },
-      data: {
-        startTime: dto.startTime,
-        endTime: dto.endTime,
-        sessionType: dto.sessionType,
-        topic: dto.topic,
-        roomId: dto.roomId,
-        teacherId: dto.teacherId,
-        subjectId: dto.subjectId,
-        evaluationMode: nextMode,
-        maxScore: nextMaxScore,
-      },
-      include: {
-        group: { select: { name: true } },
-        room: { select: { name: true } },
-        teacher: { select: { fullName: true } },
-        subject: { select: { id: true, name: true } },
-      },
+    const nextStart = dto.startTime ?? session.startTime;
+    const nextEnd = dto.endTime ?? session.endTime;
+    const nextRoom = dto.roomId ?? session.roomId;
+    const nextTeacher = dto.teacherId ?? session.teacherId;
+    const slotChanged =
+      nextStart !== session.startTime ||
+      nextEnd !== session.endTime ||
+      nextRoom !== session.roomId ||
+      nextTeacher !== session.teacherId;
+
+    if (nextStart && nextEnd) this.assertTimeRange(nextStart, nextEnd);
+
+    return this.prisma.$transaction(async (tx) => {
+      if (slotChanged && nextStart && nextEnd) {
+        await lockTenantSchedule(tx, tenantId);
+
+        if (nextStart !== session.startTime) {
+          const duplicate = await tx.session.findFirst({
+            where: {
+              tenantId,
+              groupId: session.groupId,
+              sessionDate: session.sessionDate,
+              startTime: nextStart,
+              isDeleted: false,
+              id: { not: id },
+            },
+            select: { id: true },
+          });
+          if (duplicate) {
+            throw codedError(
+              HttpStatus.CONFLICT,
+              'Bu guruh uchun shu sana va vaqtda boshqa dars mavjud',
+              SESSION_ERROR_CODES.SESSION_DUPLICATE,
+              { sessionId: duplicate.id },
+            );
+          }
+        }
+
+        await assertNoSessionConflict(tx, {
+          tenantId,
+          sessionDate: session.sessionDate,
+          startTime: nextStart,
+          endTime: nextEnd,
+          groupId: session.groupId,
+          roomId: nextRoom,
+          teacherId: nextTeacher,
+          excludeSessionId: id,
+        });
+      }
+
+      return tx.session.update({
+        where: { id },
+        data: {
+          startTime: dto.startTime,
+          endTime: dto.endTime,
+          sessionType: dto.sessionType,
+          topic: dto.topic,
+          roomId: dto.roomId,
+          teacherId: dto.teacherId,
+          subjectId: dto.subjectId,
+          evaluationMode: nextMode,
+          maxScore: nextMaxScore,
+        },
+        include: {
+          group: { select: { name: true } },
+          room: { select: { name: true } },
+          teacher: { select: { fullName: true } },
+          subject: { select: { id: true, name: true } },
+        },
+      });
     });
   }
 
@@ -436,18 +562,12 @@ export class SessionsService {
       if (!isChecked) {
         // "Tekshirilmagan" faqat vaqti (endTime) allaqachon o'tgan sessiyalarni
         // bildiradi — hali vaqti kelmagan (kelajakdagi) sessiyalar bu yerga kirmaydi.
-        // Sana/vaqt solishtirish server LOKAL vaqti asosida qilinadi (getFullYear/
-        // getMonth/getDate/getHours/getMinutes — getUTC* emas), chunki
-        // sessionDate "lokal kalendar sana, UTC-yarim tun sifatida kodlangan"
-        // konventsiyasida saqlanadi (generate-sessions/schedule bilan bir xil
-        // yondashuv) va startTime/endTime lokal soat sifatida kiritiladi.
-        const now = new Date();
-        const todayAsUtcMidnight = new Date(
-          Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()),
-        );
-        const nowTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(
-          now.getMinutes(),
-        ).padStart(2, '0')}`;
+        // "Hozir" tenant timezone'i bo'yicha olinadi: sessionDate "lokal kalendar sana,
+        // UTC-yarim tun sifatida kodlangan", startTime/endTime — lokal soat.
+        const tz = await getTenantTimezone(this.prisma, tenantId);
+        const now = nowInTimeZone(tz);
+        const todayAsUtcMidnight = new Date(now.date);
+        const nowTimeStr = now.time;
 
         where.OR = [
           { sessionDate: { lt: todayAsUtcMidnight } },
@@ -619,7 +739,50 @@ export class SessionsService {
       );
     }
 
+    await this.assertCheckWindow(session, tenantId, requesterRole);
+
     return session;
+  }
+
+  // Yo'qlama/natija faqat dars boshlangandan keyin qo'yiladi. Avval saqlangan bo'lsa,
+  // teacher birinchi saqlashdan keyin ATTENDANCE_EDIT_WINDOW_DAYS kun ichida tahrirlay oladi.
+  // Hali saqlanmagan yo'qlama uchun muddat yo'q.
+  private async assertCheckWindow(
+    session: {
+      sessionDate: Date;
+      startTime: string | null;
+      checkedAt: Date | null;
+    },
+    tenantId: string,
+    requesterRole?: string,
+  ) {
+    const tz = await getTenantTimezone(this.prisma, tenantId);
+    const now = nowInTimeZone(tz);
+    const date = toDateString(session.sessionDate);
+    const start = session.startTime ?? '00:00';
+
+    if (date > now.date || (date === now.date && start > now.time)) {
+      throw codedError(
+        HttpStatus.BAD_REQUEST,
+        `Dars hali boshlanmagan (${date} ${start}) — yo'qlamani dars boshlangandan keyin qo'ying`,
+        SESSION_ERROR_CODES.SESSION_NOT_STARTED,
+        { startsAt: { date, time: start } },
+      );
+    }
+
+    if (requesterRole === 'teacher' && session.checkedAt) {
+      const editableUntil = new Date(
+        session.checkedAt.getTime() + ATTENDANCE_EDIT_WINDOW_DAYS * 86_400_000,
+      );
+      if (Date.now() > editableUntil.getTime()) {
+        throw codedError(
+          HttpStatus.FORBIDDEN,
+          `Saqlangan yo'qlamani ${ATTENDANCE_EDIT_WINDOW_DAYS} kun ichida tahrirlash mumkin edi. O'zgartirish uchun administratorga murojaat qiling`,
+          SESSION_ERROR_CODES.ATTENDANCE_EDIT_WINDOW_EXPIRED,
+          { checkedAt: session.checkedAt, editableUntil },
+        );
+      }
+    }
   }
 
   // O'quvchilar takrorlanmasligi va shu guruh a'zosi ekanini tekshirish.
@@ -817,10 +980,7 @@ export class SessionsService {
       this.collectSkipped(record.studentId, result, coinsSkippedFor);
     }
 
-    await this.prisma.session.update({
-      where: { id: sessionId },
-      data: { isChecked: true },
-    });
+    await this.markChecked(sessionId);
 
     return {
       success: true,
@@ -944,10 +1104,7 @@ export class SessionsService {
       this.collectSkipped(record.studentId, result, coinsSkippedFor);
     }
 
-    await this.prisma.session.update({
-      where: { id: sessionId },
-      data: { isChecked: true },
-    });
+    await this.markChecked(sessionId);
 
     return {
       success: true,
@@ -989,6 +1146,18 @@ export class SessionsService {
         { evaluationMode: row.evaluation_mode },
       );
     }
+  }
+
+  // isChecked + birinchi saqlash vaqti (checkedAt faqat birinchi marta yoziladi)
+  private async markChecked(sessionId: string) {
+    await this.prisma.session.update({
+      where: { id: sessionId },
+      data: { isChecked: true },
+    });
+    await this.prisma.session.updateMany({
+      where: { id: sessionId, checkedAt: null },
+      data: { checkedAt: new Date() },
+    });
   }
 
   private collectSkipped(

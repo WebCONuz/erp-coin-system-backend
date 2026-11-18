@@ -41,6 +41,7 @@ export type TenantMinAggregateOutputType = {
   plan: string | null;
   type: $Enums.TenantType | null;
   teacherCoinLimit: number | null;
+  timezone: string | null;
   isActive: boolean | null;
   isDeleted: boolean | null;
   createdAt: Date | null;
@@ -55,6 +56,7 @@ export type TenantMaxAggregateOutputType = {
   plan: string | null;
   type: $Enums.TenantType | null;
   teacherCoinLimit: number | null;
+  timezone: string | null;
   isActive: boolean | null;
   isDeleted: boolean | null;
   createdAt: Date | null;
@@ -69,6 +71,7 @@ export type TenantCountAggregateOutputType = {
   plan: number;
   type: number;
   teacherCoinLimit: number;
+  timezone: number;
   isActive: number;
   isDeleted: number;
   createdAt: number;
@@ -92,6 +95,7 @@ export type TenantMinAggregateInputType = {
   plan?: true;
   type?: true;
   teacherCoinLimit?: true;
+  timezone?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -106,6 +110,7 @@ export type TenantMaxAggregateInputType = {
   plan?: true;
   type?: true;
   teacherCoinLimit?: true;
+  timezone?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -120,6 +125,7 @@ export type TenantCountAggregateInputType = {
   plan?: true;
   type?: true;
   teacherCoinLimit?: true;
+  timezone?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -228,6 +234,7 @@ export type TenantGroupByOutputType = {
   plan: string;
   type: $Enums.TenantType | null;
   teacherCoinLimit: number | null;
+  timezone: string;
   isActive: boolean;
   isDeleted: boolean;
   createdAt: Date;
@@ -266,6 +273,7 @@ export type TenantWhereInput = {
     | $Enums.TenantType
     | null;
   teacherCoinLimit?: Prisma.IntNullableFilter<'Tenant'> | number | null;
+  timezone?: Prisma.StringFilter<'Tenant'> | string;
   isActive?: Prisma.BoolFilter<'Tenant'> | boolean;
   isDeleted?: Prisma.BoolFilter<'Tenant'> | boolean;
   createdAt?: Prisma.DateTimeFilter<'Tenant'> | Date | string;
@@ -297,6 +305,7 @@ export type TenantOrderByWithRelationInput = {
   plan?: Prisma.SortOrder;
   type?: Prisma.SortOrderInput | Prisma.SortOrder;
   teacherCoinLimit?: Prisma.SortOrderInput | Prisma.SortOrder;
+  timezone?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -335,6 +344,7 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<
       | $Enums.TenantType
       | null;
     teacherCoinLimit?: Prisma.IntNullableFilter<'Tenant'> | number | null;
+    timezone?: Prisma.StringFilter<'Tenant'> | string;
     isActive?: Prisma.BoolFilter<'Tenant'> | boolean;
     isDeleted?: Prisma.BoolFilter<'Tenant'> | boolean;
     createdAt?: Prisma.DateTimeFilter<'Tenant'> | Date | string;
@@ -368,6 +378,7 @@ export type TenantOrderByWithAggregationInput = {
   plan?: Prisma.SortOrder;
   type?: Prisma.SortOrderInput | Prisma.SortOrder;
   teacherCoinLimit?: Prisma.SortOrderInput | Prisma.SortOrder;
+  timezone?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -400,6 +411,7 @@ export type TenantScalarWhereWithAggregatesInput = {
     | Prisma.IntNullableWithAggregatesFilter<'Tenant'>
     | number
     | null;
+  timezone?: Prisma.StringWithAggregatesFilter<'Tenant'> | string;
   isActive?: Prisma.BoolWithAggregatesFilter<'Tenant'> | boolean;
   isDeleted?: Prisma.BoolWithAggregatesFilter<'Tenant'> | boolean;
   createdAt?: Prisma.DateTimeWithAggregatesFilter<'Tenant'> | Date | string;
@@ -418,6 +430,7 @@ export type TenantCreateInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -449,6 +462,7 @@ export type TenantUncheckedCreateInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -486,6 +500,7 @@ export type TenantUpdateInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -527,6 +542,7 @@ export type TenantUncheckedUpdateInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -562,6 +578,7 @@ export type TenantCreateManyInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -582,6 +599,7 @@ export type TenantUpdateManyMutationInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -606,6 +624,7 @@ export type TenantUncheckedUpdateManyInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -624,6 +643,7 @@ export type TenantCountOrderByAggregateInput = {
   plan?: Prisma.SortOrder;
   type?: Prisma.SortOrder;
   teacherCoinLimit?: Prisma.SortOrder;
+  timezone?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -642,6 +662,7 @@ export type TenantMaxOrderByAggregateInput = {
   plan?: Prisma.SortOrder;
   type?: Prisma.SortOrder;
   teacherCoinLimit?: Prisma.SortOrder;
+  timezone?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -656,6 +677,7 @@ export type TenantMinOrderByAggregateInput = {
   plan?: Prisma.SortOrder;
   type?: Prisma.SortOrder;
   teacherCoinLimit?: Prisma.SortOrder;
+  timezone?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -1156,6 +1178,7 @@ export type TenantCreateWithoutRolesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1186,6 +1209,7 @@ export type TenantUncheckedCreateWithoutRolesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1250,6 +1274,7 @@ export type TenantUpdateWithoutRolesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1290,6 +1315,7 @@ export type TenantUncheckedUpdateWithoutRolesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1324,6 +1350,7 @@ export type TenantCreateWithoutRolePermissionsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1354,6 +1381,7 @@ export type TenantUncheckedCreateWithoutRolePermissionsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1418,6 +1446,7 @@ export type TenantUpdateWithoutRolePermissionsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1458,6 +1487,7 @@ export type TenantUncheckedUpdateWithoutRolePermissionsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1492,6 +1522,7 @@ export type TenantCreateWithoutUsersInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1522,6 +1553,7 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1586,6 +1618,7 @@ export type TenantUpdateWithoutUsersInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1626,6 +1659,7 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1660,6 +1694,7 @@ export type TenantCreateWithoutCoursesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1690,6 +1725,7 @@ export type TenantUncheckedCreateWithoutCoursesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1754,6 +1790,7 @@ export type TenantUpdateWithoutCoursesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1794,6 +1831,7 @@ export type TenantUncheckedUpdateWithoutCoursesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1828,6 +1866,7 @@ export type TenantCreateWithoutSubjectsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1858,6 +1897,7 @@ export type TenantUncheckedCreateWithoutSubjectsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1922,6 +1962,7 @@ export type TenantUpdateWithoutSubjectsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1962,6 +2003,7 @@ export type TenantUncheckedUpdateWithoutSubjectsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1996,6 +2038,7 @@ export type TenantCreateWithoutRoomsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2026,6 +2069,7 @@ export type TenantUncheckedCreateWithoutRoomsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2090,6 +2134,7 @@ export type TenantUpdateWithoutRoomsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2130,6 +2175,7 @@ export type TenantUncheckedUpdateWithoutRoomsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2164,6 +2210,7 @@ export type TenantCreateWithoutGroupsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2194,6 +2241,7 @@ export type TenantUncheckedCreateWithoutGroupsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2258,6 +2306,7 @@ export type TenantUpdateWithoutGroupsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2298,6 +2347,7 @@ export type TenantUncheckedUpdateWithoutGroupsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2332,6 +2382,7 @@ export type TenantCreateWithoutScheduleTemplatesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2362,6 +2413,7 @@ export type TenantUncheckedCreateWithoutScheduleTemplatesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2426,6 +2478,7 @@ export type TenantUpdateWithoutScheduleTemplatesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2466,6 +2519,7 @@ export type TenantUncheckedUpdateWithoutScheduleTemplatesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2500,6 +2554,7 @@ export type TenantCreateWithoutCoinRulesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2530,6 +2585,7 @@ export type TenantUncheckedCreateWithoutCoinRulesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2594,6 +2650,7 @@ export type TenantUpdateWithoutCoinRulesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2634,6 +2691,7 @@ export type TenantUncheckedUpdateWithoutCoinRulesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2668,6 +2726,7 @@ export type TenantCreateWithoutSessionsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2698,6 +2757,7 @@ export type TenantUncheckedCreateWithoutSessionsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2762,6 +2822,7 @@ export type TenantUpdateWithoutSessionsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2802,6 +2863,7 @@ export type TenantUncheckedUpdateWithoutSessionsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2836,6 +2898,7 @@ export type TenantCreateWithoutRewardCategoriesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2866,6 +2929,7 @@ export type TenantUncheckedCreateWithoutRewardCategoriesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -2930,6 +2994,7 @@ export type TenantUpdateWithoutRewardCategoriesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -2970,6 +3035,7 @@ export type TenantUncheckedUpdateWithoutRewardCategoriesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3004,6 +3070,7 @@ export type TenantCreateWithoutRewardsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3034,6 +3101,7 @@ export type TenantUncheckedCreateWithoutRewardsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3098,6 +3166,7 @@ export type TenantUpdateWithoutRewardsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3138,6 +3207,7 @@ export type TenantUncheckedUpdateWithoutRewardsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3172,6 +3242,7 @@ export type TenantCreateWithoutSmsTemplatesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3202,6 +3273,7 @@ export type TenantUncheckedCreateWithoutSmsTemplatesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3266,6 +3338,7 @@ export type TenantUpdateWithoutSmsTemplatesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3306,6 +3379,7 @@ export type TenantUncheckedUpdateWithoutSmsTemplatesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3340,6 +3414,7 @@ export type TenantCreateWithoutSmsLogsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3370,6 +3445,7 @@ export type TenantUncheckedCreateWithoutSmsLogsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3434,6 +3510,7 @@ export type TenantUpdateWithoutSmsLogsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3474,6 +3551,7 @@ export type TenantUncheckedUpdateWithoutSmsLogsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3508,6 +3586,7 @@ export type TenantCreateWithoutEmailTemplatesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3538,6 +3617,7 @@ export type TenantUncheckedCreateWithoutEmailTemplatesInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3602,6 +3682,7 @@ export type TenantUpdateWithoutEmailTemplatesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3642,6 +3723,7 @@ export type TenantUncheckedUpdateWithoutEmailTemplatesInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3676,6 +3758,7 @@ export type TenantCreateWithoutEmailLogsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3706,6 +3789,7 @@ export type TenantUncheckedCreateWithoutEmailLogsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3770,6 +3854,7 @@ export type TenantUpdateWithoutEmailLogsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3810,6 +3895,7 @@ export type TenantUncheckedUpdateWithoutEmailLogsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3844,6 +3930,7 @@ export type TenantCreateWithoutAuditLogsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3874,6 +3961,7 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   plan?: string;
   type?: $Enums.TenantType | null;
   teacherCoinLimit?: number | null;
+  timezone?: string;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -3938,6 +4026,7 @@ export type TenantUpdateWithoutAuditLogsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -3978,6 +4067,7 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
     | Prisma.NullableIntFieldUpdateOperationsInput
     | number
     | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -4246,6 +4336,7 @@ export type TenantSelect<
     plan?: boolean;
     type?: boolean;
     teacherCoinLimit?: boolean;
+    timezone?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -4284,6 +4375,7 @@ export type TenantSelectCreateManyAndReturn<
     plan?: boolean;
     type?: boolean;
     teacherCoinLimit?: boolean;
+    timezone?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -4304,6 +4396,7 @@ export type TenantSelectUpdateManyAndReturn<
     plan?: boolean;
     type?: boolean;
     teacherCoinLimit?: boolean;
+    timezone?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -4320,6 +4413,7 @@ export type TenantSelectScalar = {
   plan?: boolean;
   type?: boolean;
   teacherCoinLimit?: boolean;
+  timezone?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: boolean;
@@ -4337,6 +4431,7 @@ export type TenantOmit<
   | 'plan'
   | 'type'
   | 'teacherCoinLimit'
+  | 'timezone'
   | 'isActive'
   | 'isDeleted'
   | 'createdAt'
@@ -4408,6 +4503,7 @@ export type $TenantPayload<
       plan: string;
       type: $Enums.TenantType | null;
       teacherCoinLimit: number | null;
+      timezone: string;
       isActive: boolean;
       isDeleted: boolean;
       createdAt: Date;
@@ -5200,6 +5296,7 @@ export interface TenantFieldRefs {
   readonly plan: Prisma.FieldRef<'Tenant', 'String'>;
   readonly type: Prisma.FieldRef<'Tenant', 'TenantType'>;
   readonly teacherCoinLimit: Prisma.FieldRef<'Tenant', 'Int'>;
+  readonly timezone: Prisma.FieldRef<'Tenant', 'String'>;
   readonly isActive: Prisma.FieldRef<'Tenant', 'Boolean'>;
   readonly isDeleted: Prisma.FieldRef<'Tenant', 'Boolean'>;
   readonly createdAt: Prisma.FieldRef<'Tenant', 'DateTime'>;

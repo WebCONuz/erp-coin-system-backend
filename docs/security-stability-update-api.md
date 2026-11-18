@@ -1,6 +1,6 @@
 # Xavfsizlik va Barqarorlik Yangilanishi — Frontend API Qo'llanmasi
 
-> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** va **2-bosqich (coin yaxlitligi)** yozilgan.
+> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** va **3A-bosqich (jadval va sessiyalar)** yozilgan.
 
 > Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi va jadval/sessiya qoidalari aniqlashtirildi. Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va yangi xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
 
@@ -31,6 +31,15 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
   - [2.3 Coin qoidalari](#23-coin-qoidalari)
   - [2.4 📢 Bekor qilish endi teskari yozuv bilan (alohida e'lon)](#24--bekor-qilish-endi-teskari-yozuv-bilan-alohida-elon)
   - [2.5 Parallel so'rovlar va qulflash](#25-parallel-sorovlar-va-qulflash)
+- [3. Dars jadvali va sessiyalar](#3-dars-jadvali-va-sessiyalar)
+  - [3.1 Vaqt formati](#31-vaqt-formati)
+  - [3.2 Sessiya yaratish va tahrirlash — dublikat va bandlik](#32-sessiya-yaratish-va-tahrirlash--dublikat-va-bandlik)
+  - [3.3 Yo'qlama muddatlari](#33-yoqlama-muddatlari)
+  - [3.4 Jadval shablonlari — havolalar va o'qituvchi bandligi](#34-jadval-shablonlari--havolalar-va-oqituvchi-bandligi)
+  - [3.5 Shablon o'zgarsa — sessiyalar avtomatik moslashadi](#35-shablon-ozgarsa--sessiyalar-avtomatik-moslashadi)
+  - [3.6 Istisnolar (bekor qilish / vaqt o'zgarishi)](#36-istisnolar-bekor-qilish--vaqt-ozgarishi)
+  - [3.7 Sessiyalarni generatsiya qilish](#37-sessiyalarni-generatsiya-qilish)
+  - [3.8 Tenant timezone](#38-tenant-timezone)
 - [Xato holatlari](#xato-holatlari)
 - [O'zgarishlar jurnali](#ozgarishlar-jurnali)
 
@@ -50,6 +59,11 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
 | 8 | Admin — sozlamalar | Yangi "Teacher coin limiti" maydoni: `GET/PATCH /tenant-settings` |
 | 9 | Coin tarixi | **Teskari yozuvlar** endi tarixda ko'rinadi — [2.4](#24--bekor-qilish-endi-teskari-yozuv-bilan-alohida-elon) bo'yicha UI'ni moslash |
 | 10 | Teacher — coin qoidasi yaratish | `groupId` majburiy (faqat o'z guruhi); `coinAmount` 1 dan kam bo'lmasin |
+| 11 | Barcha vaqt maydonlari | Faqat `HH:MM` (ikki xonali soat): `09:00`, `9:00` emas |
+| 12 | Yo'qlama sahifasi (teacher) | Dars boshlanmagan bo'lsa saqlash tugmasini o'chirish; saqlangandan 3 kun o'tgach "faqat ko'rish" rejimi (`checkedAt` + 3 kun) |
+| 13 | Sessiya yaratish (teacher) | Sana tanlovchida eng erta sana — bugundan 7 kun oldin; `SCHEDULE_CONFLICT` xatosini tushunarli ko'rsatish |
+| 14 | Jadval / istisno / generatsiya | Javobdagi `sessionSync` va `conflicts` ni ko'rsatish (qaysi darslar moslashtirilmagani) |
+| 15 | Admin — sozlamalar | Yangi `timezone` maydoni (`GET/PATCH /tenant-settings`) |
 
 ---
 
@@ -496,6 +510,262 @@ Request va response o'zgarmadi. Ichki tuzatishlar:
 
 ---
 
+## 3. Dars jadvali va sessiyalar
+
+### 3.1 Vaqt formati
+
+Barcha vaqt maydonlari (`startTime`, `endTime`) endi **qat'iy `HH:MM`** formatida, soat doim ikki xonali:
+
+| Qiymat | Avval | Endi |
+| --- | --- | --- |
+| `09:00` | ✅ | ✅ |
+| `9:00` | ✅ (lekin tartib buzilardi: `"9:00" > "14:00"`) | ❌ `400` |
+| `24:00` | ❌ | ❌ |
+
+Qo'llanadigan endpointlar: `POST/PATCH /sessions`, `POST/PATCH /schedule-templates`, `POST/PATCH /schedule-templates/:id/exceptions`, `PATCH /schedule-exceptions/:id`.
+
+Xato: `400` — `"Vaqt formati HH:MM bo'lishi kerak (masalan 09:00)"`. Tugash vaqti boshlanishdan keyin bo'lmasa: `400`, `code: "INVALID_TIME_RANGE"`.
+
+---
+
+### 3.2 Sessiya yaratish va tahrirlash — dublikat va bandlik
+
+`POST /sessions`, `PATCH /sessions/:id`
+
+**Dublikat.** Avval bir xil guruh, sana va vaqtga ikkinchi dars faqat barcha maydonlar (tur, tugash vaqti, o'qituvchi) mos kelsagina rad etilardi. Endi **guruh + sana + boshlanish vaqti** bir xil bo'lsa — `409`:
+
+```json
+{
+  "statusCode": 409,
+  "message": "Bu guruh uchun ko'rsatilgan sana va vaqtda dars allaqachon mavjud",
+  "code": "SESSION_DUPLICATE",
+  "sessionId": "mavjud-sessiya-uuid"
+}
+```
+
+**Bandlik (yangi).** Shu sanada vaqti kesishadigan boshqa dars bo'lsa — `409`:
+- shu **guruhning** boshqa darsi;
+- shu **xonada** boshqa dars;
+- shu **o'qituvchining** boshqa darsi.
+
+```json
+{
+  "statusCode": 409,
+  "message": "Bu xonada 14:00–15:30 da boshqa darsi bor (\"9-B\")",
+  "code": "SCHEDULE_CONFLICT",
+  "conflict": {
+    "kind": "room",
+    "sessionId": "uuid",
+    "groupName": "9-B",
+    "startTime": "14:00",
+    "endTime": "15:30"
+  }
+}
+```
+
+`conflict.kind`: `group` | `room` | `teacher`. Chegaralar tegib tursa to'qnashuv emas (`09:00–10:00` va `10:00–11:00` — mumkin).
+
+`PATCH /sessions/:id` da bandlik faqat vaqt, xona yoki o'qituvchi o'zgarganda tekshiriladi.
+
+**O'qituvchi.** `teacherId` faqat `teacher` (yoki `admin`) rolidagi faol user bo'lishi mumkin — avval student ham o'tardi. Aks holda `404 "O'qituvchi topilmadi"`.
+
+**Teacher uchun qo'shimcha cheklovlar:**
+
+| Holat | Natija |
+| --- | --- |
+| `POST /sessions` — sana bugundan **7 kundan** eski | `403`, `code: "SESSION_DATE_TOO_OLD"`, javobda `earliestDate` |
+| `PATCH /sessions/:id` — `teacherId` ni boshqasiga o'zgartirish | `403` `"O'qituvchini faqat administrator almashtira oladi"` |
+
+```json
+{
+  "statusCode": 403,
+  "message": "O'qituvchi 7 kundan eski sanaga dars qo'sha olmaydi (eng erta: 2026-11-11). Administratorga murojaat qiling",
+  "code": "SESSION_DATE_TOO_OLD",
+  "earliestDate": "2026-11-11"
+}
+```
+
+Admin istalgan sanaga dars yarata oladi.
+
+---
+
+### 3.3 Yo'qlama muddatlari
+
+`POST /sessions/:id/attendance`, `POST /sessions/:id/results`
+
+| Qoida | Kimga | Xato |
+| --- | --- | --- |
+| Yo'qlama/natija faqat **dars boshlangandan keyin** qo'yiladi (sana + `startTime`, tenant timezone bo'yicha) | Hamma | `400`, `code: "SESSION_NOT_STARTED"` |
+| Hali saqlanmagan yo'qlama | Hamma | Muddat **yo'q** — istalgan vaqtda qo'yish mumkin |
+| Saqlangan yo'qlamani tahrirlash — **birinchi saqlashdan keyin 3 kun** ichida | Faqat `teacher` | `403`, `code: "ATTENDANCE_EDIT_WINDOW_EXPIRED"` |
+| Admin / super_admin | — | Muddatsiz tahrirlay oladi |
+
+```json
+{
+  "statusCode": 400,
+  "message": "Dars hali boshlanmagan (2026-11-20 14:00) — yo'qlamani dars boshlangandan keyin qo'ying",
+  "code": "SESSION_NOT_STARTED",
+  "startsAt": { "date": "2026-11-20", "time": "14:00" }
+}
+```
+
+```json
+{
+  "statusCode": 403,
+  "message": "Saqlangan yo'qlamani 3 kun ichida tahrirlash mumkin edi. O'zgartirish uchun administratorga murojaat qiling",
+  "code": "ATTENDANCE_EDIT_WINDOW_EXPIRED",
+  "checkedAt": "2026-11-10T09:12:00.000Z",
+  "editableUntil": "2026-11-13T09:12:00.000Z"
+}
+```
+
+**Yangi maydonlar** — `GET /sessions` va sessiya javoblarida:
+
+| Maydon | Tip | Ma'nosi |
+| --- | --- | --- |
+| `checkedAt` | `string \| null` | Yo'qlama/natija **birinchi** saqlangan vaqt. Qayta saqlash uni o'zgartirmaydi. Teacher uchun tahrirlash muddati: `checkedAt + 3 kun` |
+| `templateId` | `string \| null` | Sessiya jadval shablonidan yaratilgan bo'lsa — shablon ID'si; qo'lda yaratilgan bo'lsa `null` |
+
+> Mavjud tekshirilgan sessiyalar uchun `checkedAt` migratsiyada eng birinchi yo'qlama yozuvi vaqtidan to'ldirildi.
+
+**Frontendda:**
+1. Teacher yo'qlama sahifasida `checkedAt && now > checkedAt + 3 kun` bo'lsa formani faqat ko'rish rejimida oching va "Tahrirlash muddati tugagan" deb yozing.
+2. Kelajakdagi darsda "Saqlash" tugmasini o'chiring (backend baribir `SESSION_NOT_STARTED` qaytaradi).
+
+---
+
+### 3.4 Jadval shablonlari — havolalar va o'qituvchi bandligi
+
+`POST /schedule-templates`, `PATCH /schedule-templates/:id`
+
+| O'zgarish | Avval | Endi |
+| --- | --- | --- |
+| `groupId`, `roomId`, `teacherId`, `subjectId` | Tekshirilmasdi (boshqa tenant ID'si ham o'tardi) | Shu tenantdagi, o'chirilmagan yozuv bo'lishi shart → aks holda `404` (`"Guruh topilmadi"`, `"Xona topilmadi"`, `"O'qituvchi topilmadi"`, `"Fan topilmadi"`) |
+| `teacherId` | Istalgan user | Faqat `teacher`/`admin` rolidagi faol user |
+| O'qituvchi bandligi | Tekshirilmasdi — bitta o'qituvchi bir vaqtda ikki guruhga qo'yilishi mumkin edi | `409`, `code: "SCHEDULE_CONFLICT"`, `conflict.kind: "teacher"` |
+
+O'qituvchi bandligi shablonning **haqiqiy** o'qituvchisi bo'yicha tekshiriladi: shablondagi `teacherId`, bo'lmasa guruhning asosiy o'qituvchisi. Xona va guruh bandligi avvalgidek.
+
+```json
+{
+  "statusCode": 409,
+  "message": "Bu o'qituvchi monday kuni 09:00–10:30 da \"10-A\" guruhida dars beradi",
+  "code": "SCHEDULE_CONFLICT",
+  "conflict": { "kind": "teacher", "groupName": "10-A" }
+}
+```
+
+---
+
+### 3.5 Shablon o'zgarsa — sessiyalar avtomatik moslashadi
+
+**Avval:** shablon (vaqt, xona, o'qituvchi, hafta kuni) o'zgartirilsa yoki o'chirilsa, undan oldin generatsiya qilingan kelajakdagi sessiyalar eski holicha qolardi.
+
+**Endi:** shablon yoki uning istisnosi o'zgarganda shu shablondan yaratilgan **kelajakdagi** sessiyalar (bugundan boshlab) avtomatik moslashtiriladi:
+
+| Holat | Natija |
+| --- | --- |
+| Vaqt / xona / o'qituvchi / fan o'zgardi | Sessiyalar yangilanadi. Mavzu (`topic`) saqlanadi |
+| Hafta kuni o'zgardi | Eski kundagi sessiyalar o'chiriladi, yangi kunga yaratiladi (avval generatsiya qilingan oxirgi sanagacha) |
+| Shablon o'chirildi | Kelajakdagi sessiyalari o'chiriladi |
+| Tekshirilgan (`isChecked`) yoki qulflangan sessiya | **Tegilmaydi** — bu tarix |
+| Qo'lda yaratilgan sessiya (`templateId: null`) | Tegilmaydi |
+| O'zgarish boshqa dars bilan to'qnashadi | O'sha sessiya o'zgartirilmaydi va `conflicts` da qaytariladi |
+
+> Shablondan yaratilgan sessiyaning vaqti/xonasi qo'lda o'zgartirilgan bo'lsa, shablon keyingi safar o'zgarganda u shablon qiymatiga qaytariladi.
+
+**Javobga qo'shilgan maydon** — `PATCH /schedule-templates/:id`, `DELETE /schedule-templates/:id`, istisno yaratish/tahrirlash/o'chirish:
+
+```json
+{
+  "id": "template-uuid",
+  "weekday": "wednesday",
+  "startTime": "10:00",
+  "...": "...",
+  "sessionSync": {
+    "updated": 6,
+    "removed": 0,
+    "created": 0,
+    "conflicts": [
+      {
+        "date": "2026-12-02",
+        "startTime": "10:00",
+        "endTime": "11:30",
+        "kind": "room",
+        "groupName": "8-A"
+      }
+    ]
+  }
+}
+```
+
+**Frontendda:** `sessionSync.conflicts` bo'sh bo'lmasa, adminga "N ta dars yangi jadvalga ko'chirilmadi (to'qnashuv)" degan ogohlantirish va ro'yxatini ko'rsating.
+
+---
+
+### 3.6 Istisnolar (bekor qilish / vaqt o'zgarishi)
+
+`POST /schedule-templates/:id/exceptions`, `PATCH /schedule-exceptions/:id`, `DELETE /schedule-exceptions/:id`
+
+| O'zgarish | Tafsilot |
+| --- | --- |
+| O'chirilgan istisno sanasiga qayta istisno qo'yish | Avval xato berardi (DB cheklovi). Endi o'chirilgan istisno qayta tiklanadi |
+| `isCancelled: false` | `startTime` va `endTime` majburiy, `endTime > startTime` (`400`) |
+| `isCancelled: true` | `startTime`/`endTime` saqlanmaydi (`null`) |
+| Istisno qo'yilganda/o'zgarganda/o'chirilganda | Shu sanadagi generatsiya qilingan sessiya avtomatik moslashadi ([3.5](#35-shablon-ozgarsa--sessiyalar-avtomatik-moslashadi)): bekor qilinsa — o'chiriladi, vaqt o'zgarsa — yangilanadi, istisno o'chirilsa — asl holiga qaytadi |
+
+Javobga `sessionSync` qo'shildi (3.5 dagi format).
+
+---
+
+### 3.7 Sessiyalarni generatsiya qilish
+
+`POST /schedule-templates/generate-sessions`
+
+| O'zgarish | Avval | Endi |
+| --- | --- | --- |
+| Sana oralig'i | Cheklanmagan | Ko'pi bilan **92 kun**. Oshsa `400` |
+| Parallel ikki so'rov | Dublikat sessiyalar yaratilishi mumkin edi | Navbat bilan bajariladi, dublikat yo'q |
+| Boshqa guruh darsi bilan xona/o'qituvchi to'qnashuvi | Tekshirilmasdi | Bunday dars yaratilmaydi va `conflicts` da qaytariladi |
+| `skipped` | Oraliqdagi mavjud sessiyalar soni | Mavjud sessiya tufayli **o'tkazib yuborilgan** darslar soni |
+| Yaratilgan sessiyalar | — | `templateId` bilan bog'lanadi ([3.5](#35-shablon-ozgarsa--sessiyalar-avtomatik-moslashadi)) |
+
+**Response:**
+
+```json
+{
+  "message": "Sessiyalar muvaffaqiyatli yaratildi",
+  "created": 24,
+  "skipped": 2,
+  "cancelled": 1,
+  "conflicts": [
+    {
+      "date": "2026-12-09",
+      "startTime": "14:00",
+      "endTime": "15:30",
+      "kind": "teacher",
+      "groupName": "11-B"
+    }
+  ]
+}
+```
+
+---
+
+### 3.8 Tenant timezone
+
+"Bugun", "dars boshlandimi", "tekshirilmagan darslar" filtri va teacher uchun 7 kunlik oyna endi **tenant timezone'i** bo'yicha hisoblanadi (avval — server vaqti). Standart: `Asia/Tashkent`.
+
+`GET /tenant-settings` javobiga `timezone` qo'shildi. `PATCH /tenant-settings`:
+
+```json
+{ "timezone": "Asia/Tashkent" }
+```
+
+Noto'g'ri qiymat — `400` `"timezone noto'g'ri — IANA nomi bo'lishi kerak (masalan Asia/Tashkent)"`.
+
+---
+
 ## Xato holatlari
 
 | Status | `code` | Qachon |
@@ -504,6 +774,12 @@ Request va response o'zgarmadi. Ichki tuzatishlar:
 | `401` | — | Sessiya yo'q yoki muddati o'tgan; user arxivlangan/o'chirilgan yoki tenant to'xtatilgan (tizimga kirib turganda) |
 | `400` | `TEACHER_COIN_LIMIT_EXCEEDED` | Teacher coin miqdori tenant limitidan oshdi (javobda `limit`) |
 | `400` | `SESSION_LOCKED` | Yo'qlama/natija saqlash paytida sessiya qulflandi |
+| `400` | `SESSION_NOT_STARTED` | Dars hali boshlanmagan — yo'qlama qo'yib bo'lmaydi |
+| `400` | `INVALID_TIME_RANGE` | Tugash vaqti boshlanishdan keyin emas |
+| `403` | `ATTENDANCE_EDIT_WINDOW_EXPIRED` | Teacher: saqlangan yo'qlamani tahrirlash muddati (3 kun) tugagan |
+| `403` | `SESSION_DATE_TOO_OLD` | Teacher: 7 kundan eski sanaga dars yaratish |
+| `409` | `SESSION_DUPLICATE` | Shu guruh, sana va vaqtda dars allaqachon bor |
+| `409` | `SCHEDULE_CONFLICT` | Guruh, xona yoki o'qituvchi shu vaqtda band (`conflict.kind`) |
 | `403` | `TENANT_INACTIVE` | Login: tashkilot faoliyati to'xtatilgan |
 | `403` | — | Ruxsat yo'q: rol yetarli emas (kurs/xona), o'zidan yuqori/teng darajadagi user yoki rol, tizim tenanti amallari, eski parol noto'g'ri |
 | `404` | — | User/o'quvchi topilmadi (admin uchun boshqa tenant useri ham "topilmadi" bo'ladi); guruh/dars/qoida topilmadi |
@@ -530,3 +806,9 @@ Request va response o'zgarmadi. Ichki tuzatishlar:
 | 2026-11-18 | Coin qoidalari: `coinAmount` 1…100 000; teacher faqat o'z guruhi uchun (`groupId` majburiy) |
 | 2026-11-18 | **Bekor qilish teskari yozuv bilan:** asl yozuv tarixda qoladi; `reversalOfId`, `reversal`, `purchaseId` maydonlari; cancel javobida `reversalTransactionId`, `newBalance`; xarid va sessiya coinlarini cancel orqali bekor qilib bo'lmaydi; qayta bekor qilish `409` |
 | 2026-11-18 | Coin amallari va yo'qlama saqlash qulf ostida — dublikat coin va manfiy balans imkonsiz |
+| 2026-11-18 | Vaqt maydonlari qat'iy `HH:MM`; sessiya yaratish/tahrirlashda `SESSION_DUPLICATE` va guruh/xona/o'qituvchi bandligi (`SCHEDULE_CONFLICT`); sessiya o'qituvchisi faqat teacher/admin rolida |
+| 2026-11-18 | Teacher: 7 kundan eski sanaga sessiya yarata olmaydi (`SESSION_DATE_TOO_OLD`), sessiya o'qituvchisini almashtira olmaydi |
+| 2026-11-18 | Yo'qlama faqat dars boshlangandan keyin (`SESSION_NOT_STARTED`); teacher saqlangan yo'qlamani 3 kun tahrirlaydi (`ATTENDANCE_EDIT_WINDOW_EXPIRED`); yangi `checkedAt`, `templateId` maydonlari |
+| 2026-11-18 | Jadval shablonlari: havolalar tenant bo'yicha tekshiriladi, o'qituvchi bandligi; shablon/istisno o'zgarganda kelajakdagi sessiyalar sinxronlanadi (`sessionSync`) |
+| 2026-11-18 | Istisnolar: o'chirilgan sanaga qayta qo'yish mumkin, vaqt majburiyligi; `generate-sessions` ≤ 92 kun, `conflicts`, `skipped` ma'nosi o'zgardi |
+| 2026-11-18 | Tenant `timezone` (`GET/PATCH /tenant-settings`), "bugun" tenant vaqti bo'yicha |

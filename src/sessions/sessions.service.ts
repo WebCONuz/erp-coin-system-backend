@@ -1053,6 +1053,7 @@ export class SessionsService {
           },
           create: {
             sessionId,
+            tenantId,
             studentId: record.studentId,
             isPresent,
             status,
@@ -1062,6 +1063,7 @@ export class SessionsService {
         });
 
         return this.coinTrxService.replaceSessionTransactions(tx, {
+          tenantId,
           sessionId,
           studentId: record.studentId,
           sourceTypes: SESSION_MANAGED_SOURCE_TYPES[EvaluationMode.attendance],
@@ -1179,6 +1181,7 @@ export class SessionsService {
           },
           create: {
             sessionId,
+            tenantId,
             studentId: record.studentId,
             isPresent: record.isPresent,
             status: record.isPresent
@@ -1192,6 +1195,7 @@ export class SessionsService {
         });
 
         return this.coinTrxService.replaceSessionTransactions(tx, {
+          tenantId,
           sessionId,
           studentId: record.studentId,
           sourceTypes: SESSION_MANAGED_SOURCE_TYPES[EvaluationMode.scored],

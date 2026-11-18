@@ -47,6 +47,7 @@ export type CoinTransactionMinAggregateOutputType = {
   studentId: string | null;
   teacherId: string | null;
   ruleId: string | null;
+  tenantId: string | null;
   sessionId: string | null;
   groupId: string | null;
   purchaseId: string | null;
@@ -66,6 +67,7 @@ export type CoinTransactionMaxAggregateOutputType = {
   studentId: string | null;
   teacherId: string | null;
   ruleId: string | null;
+  tenantId: string | null;
   sessionId: string | null;
   groupId: string | null;
   purchaseId: string | null;
@@ -85,6 +87,7 @@ export type CoinTransactionCountAggregateOutputType = {
   studentId: number;
   teacherId: number;
   ruleId: number;
+  tenantId: number;
   sessionId: number;
   groupId: number;
   purchaseId: number;
@@ -113,6 +116,7 @@ export type CoinTransactionMinAggregateInputType = {
   studentId?: true;
   teacherId?: true;
   ruleId?: true;
+  tenantId?: true;
   sessionId?: true;
   groupId?: true;
   purchaseId?: true;
@@ -132,6 +136,7 @@ export type CoinTransactionMaxAggregateInputType = {
   studentId?: true;
   teacherId?: true;
   ruleId?: true;
+  tenantId?: true;
   sessionId?: true;
   groupId?: true;
   purchaseId?: true;
@@ -151,6 +156,7 @@ export type CoinTransactionCountAggregateInputType = {
   studentId?: true;
   teacherId?: true;
   ruleId?: true;
+  tenantId?: true;
   sessionId?: true;
   groupId?: true;
   purchaseId?: true;
@@ -268,6 +274,7 @@ export type CoinTransactionGroupByOutputType = {
   studentId: string;
   teacherId: string | null;
   ruleId: string | null;
+  tenantId: string;
   sessionId: string | null;
   groupId: string | null;
   purchaseId: string | null;
@@ -317,10 +324,15 @@ export type CoinTransactionWhereInput = {
   studentId?: Prisma.UuidFilter<'CoinTransaction'> | string;
   teacherId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
   ruleId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+  tenantId?: Prisma.UuidFilter<'CoinTransaction'> | string;
   sessionId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
   groupId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
   purchaseId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
   reversalOfId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+  tenant?: Prisma.XOR<
+    Prisma.TenantScalarRelationFilter,
+    Prisma.TenantWhereInput
+  >;
   wallet?: Prisma.XOR<
     Prisma.WalletScalarRelationFilter,
     Prisma.WalletWhereInput
@@ -369,10 +381,12 @@ export type CoinTransactionOrderByWithRelationInput = {
   studentId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrderInput | Prisma.SortOrder;
   ruleId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   sessionId?: Prisma.SortOrderInput | Prisma.SortOrder;
   groupId?: Prisma.SortOrderInput | Prisma.SortOrder;
   purchaseId?: Prisma.SortOrderInput | Prisma.SortOrder;
   reversalOfId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  tenant?: Prisma.TenantOrderByWithRelationInput;
   wallet?: Prisma.WalletOrderByWithRelationInput;
   student?: Prisma.UserOrderByWithRelationInput;
   teacher?: Prisma.UserOrderByWithRelationInput;
@@ -410,9 +424,14 @@ export type CoinTransactionWhereUniqueInput = Prisma.AtLeast<
     studentId?: Prisma.UuidFilter<'CoinTransaction'> | string;
     teacherId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
     ruleId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+    tenantId?: Prisma.UuidFilter<'CoinTransaction'> | string;
     sessionId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
     groupId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
     purchaseId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+    tenant?: Prisma.XOR<
+      Prisma.TenantScalarRelationFilter,
+      Prisma.TenantWhereInput
+    >;
     wallet?: Prisma.XOR<
       Prisma.WalletScalarRelationFilter,
       Prisma.WalletWhereInput
@@ -466,6 +485,7 @@ export type CoinTransactionOrderByWithAggregationInput = {
   studentId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrderInput | Prisma.SortOrder;
   ruleId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   sessionId?: Prisma.SortOrderInput | Prisma.SortOrder;
   groupId?: Prisma.SortOrderInput | Prisma.SortOrder;
   purchaseId?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -517,6 +537,7 @@ export type CoinTransactionScalarWhereWithAggregatesInput = {
     | Prisma.UuidNullableWithAggregatesFilter<'CoinTransaction'>
     | string
     | null;
+  tenantId?: Prisma.UuidWithAggregatesFilter<'CoinTransaction'> | string;
   sessionId?:
     | Prisma.UuidNullableWithAggregatesFilter<'CoinTransaction'>
     | string
@@ -544,6 +565,7 @@ export type CoinTransactionCreateInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
@@ -568,6 +590,7 @@ export type CoinTransactionUncheckedCreateInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -592,6 +615,7 @@ export type CoinTransactionUpdateInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
@@ -624,6 +648,7 @@ export type CoinTransactionUncheckedUpdateInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -647,6 +672,7 @@ export type CoinTransactionCreateManyInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -693,6 +719,7 @@ export type CoinTransactionUncheckedUpdateManyInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -730,6 +757,7 @@ export type CoinTransactionCountOrderByAggregateInput = {
   studentId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   ruleId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   sessionId?: Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   purchaseId?: Prisma.SortOrder;
@@ -753,6 +781,7 @@ export type CoinTransactionMaxOrderByAggregateInput = {
   studentId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   ruleId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   sessionId?: Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   purchaseId?: Prisma.SortOrder;
@@ -772,6 +801,7 @@ export type CoinTransactionMinOrderByAggregateInput = {
   studentId?: Prisma.SortOrder;
   teacherId?: Prisma.SortOrder;
   ruleId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   sessionId?: Prisma.SortOrder;
   groupId?: Prisma.SortOrder;
   purchaseId?: Prisma.SortOrder;
@@ -780,6 +810,116 @@ export type CoinTransactionMinOrderByAggregateInput = {
 
 export type CoinTransactionSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder;
+};
+
+export type CoinTransactionCreateNestedManyWithoutTenantInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutTenantInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.CoinTransactionCreateWithoutTenantInput[]
+    | Prisma.CoinTransactionUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput[];
+  createMany?: Prisma.CoinTransactionCreateManyTenantInputEnvelope;
+  connect?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+};
+
+export type CoinTransactionUncheckedCreateNestedManyWithoutTenantInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutTenantInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.CoinTransactionCreateWithoutTenantInput[]
+    | Prisma.CoinTransactionUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput[];
+  createMany?: Prisma.CoinTransactionCreateManyTenantInputEnvelope;
+  connect?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+};
+
+export type CoinTransactionUpdateManyWithoutTenantNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutTenantInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.CoinTransactionCreateWithoutTenantInput[]
+    | Prisma.CoinTransactionUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput[];
+  upsert?:
+    | Prisma.CoinTransactionUpsertWithWhereUniqueWithoutTenantInput
+    | Prisma.CoinTransactionUpsertWithWhereUniqueWithoutTenantInput[];
+  createMany?: Prisma.CoinTransactionCreateManyTenantInputEnvelope;
+  set?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  delete?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  connect?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  update?:
+    | Prisma.CoinTransactionUpdateWithWhereUniqueWithoutTenantInput
+    | Prisma.CoinTransactionUpdateWithWhereUniqueWithoutTenantInput[];
+  updateMany?:
+    | Prisma.CoinTransactionUpdateManyWithWhereWithoutTenantInput
+    | Prisma.CoinTransactionUpdateManyWithWhereWithoutTenantInput[];
+  deleteMany?:
+    | Prisma.CoinTransactionScalarWhereInput
+    | Prisma.CoinTransactionScalarWhereInput[];
+};
+
+export type CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutTenantInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.CoinTransactionCreateWithoutTenantInput[]
+    | Prisma.CoinTransactionUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput
+    | Prisma.CoinTransactionCreateOrConnectWithoutTenantInput[];
+  upsert?:
+    | Prisma.CoinTransactionUpsertWithWhereUniqueWithoutTenantInput
+    | Prisma.CoinTransactionUpsertWithWhereUniqueWithoutTenantInput[];
+  createMany?: Prisma.CoinTransactionCreateManyTenantInputEnvelope;
+  set?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  disconnect?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  delete?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  connect?:
+    | Prisma.CoinTransactionWhereUniqueInput
+    | Prisma.CoinTransactionWhereUniqueInput[];
+  update?:
+    | Prisma.CoinTransactionUpdateWithWhereUniqueWithoutTenantInput
+    | Prisma.CoinTransactionUpdateWithWhereUniqueWithoutTenantInput[];
+  updateMany?:
+    | Prisma.CoinTransactionUpdateManyWithWhereWithoutTenantInput
+    | Prisma.CoinTransactionUpdateManyWithWhereWithoutTenantInput[];
+  deleteMany?:
+    | Prisma.CoinTransactionScalarWhereInput
+    | Prisma.CoinTransactionScalarWhereInput[];
 };
 
 export type CoinTransactionCreateNestedManyWithoutStudentInput = {
@@ -1640,6 +1780,124 @@ export type CoinTransactionUncheckedUpdateManyWithoutPurchaseNestedInput = {
     | Prisma.CoinTransactionScalarWhereInput[];
 };
 
+export type CoinTransactionCreateWithoutTenantInput = {
+  id?: string;
+  amount: number;
+  direction: $Enums.CoinDirection;
+  sourceType: $Enums.SourceType;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
+  student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
+  teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
+  rule?: Prisma.CoinRuleCreateNestedOneWithoutTransactionsInput;
+  session?: Prisma.SessionCreateNestedOneWithoutTransactionsInput;
+  group?: Prisma.GroupCreateNestedOneWithoutTransactionsInput;
+  purchase?: Prisma.PurchaseCreateNestedOneWithoutTransactionsInput;
+  reversalOf?: Prisma.CoinTransactionCreateNestedOneWithoutReversalInput;
+  reversal?: Prisma.CoinTransactionCreateNestedOneWithoutReversalOfInput;
+};
+
+export type CoinTransactionUncheckedCreateWithoutTenantInput = {
+  id?: string;
+  amount: number;
+  direction: $Enums.CoinDirection;
+  sourceType: $Enums.SourceType;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  walletId: string;
+  studentId: string;
+  teacherId?: string | null;
+  ruleId?: string | null;
+  sessionId?: string | null;
+  groupId?: string | null;
+  purchaseId?: string | null;
+  reversalOfId?: string | null;
+  reversal?: Prisma.CoinTransactionUncheckedCreateNestedOneWithoutReversalOfInput;
+};
+
+export type CoinTransactionCreateOrConnectWithoutTenantInput = {
+  where: Prisma.CoinTransactionWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.CoinTransactionCreateWithoutTenantInput,
+    Prisma.CoinTransactionUncheckedCreateWithoutTenantInput
+  >;
+};
+
+export type CoinTransactionCreateManyTenantInputEnvelope = {
+  data:
+    | Prisma.CoinTransactionCreateManyTenantInput
+    | Prisma.CoinTransactionCreateManyTenantInput[];
+  skipDuplicates?: boolean;
+};
+
+export type CoinTransactionUpsertWithWhereUniqueWithoutTenantInput = {
+  where: Prisma.CoinTransactionWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.CoinTransactionUpdateWithoutTenantInput,
+    Prisma.CoinTransactionUncheckedUpdateWithoutTenantInput
+  >;
+  create: Prisma.XOR<
+    Prisma.CoinTransactionCreateWithoutTenantInput,
+    Prisma.CoinTransactionUncheckedCreateWithoutTenantInput
+  >;
+};
+
+export type CoinTransactionUpdateWithWhereUniqueWithoutTenantInput = {
+  where: Prisma.CoinTransactionWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.CoinTransactionUpdateWithoutTenantInput,
+    Prisma.CoinTransactionUncheckedUpdateWithoutTenantInput
+  >;
+};
+
+export type CoinTransactionUpdateManyWithWhereWithoutTenantInput = {
+  where: Prisma.CoinTransactionScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.CoinTransactionUpdateManyMutationInput,
+    Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantInput
+  >;
+};
+
+export type CoinTransactionScalarWhereInput = {
+  AND?:
+    | Prisma.CoinTransactionScalarWhereInput
+    | Prisma.CoinTransactionScalarWhereInput[];
+  OR?: Prisma.CoinTransactionScalarWhereInput[];
+  NOT?:
+    | Prisma.CoinTransactionScalarWhereInput
+    | Prisma.CoinTransactionScalarWhereInput[];
+  id?: Prisma.UuidFilter<'CoinTransaction'> | string;
+  amount?: Prisma.IntFilter<'CoinTransaction'> | number;
+  direction?:
+    | Prisma.EnumCoinDirectionFilter<'CoinTransaction'>
+    | $Enums.CoinDirection;
+  sourceType?:
+    | Prisma.EnumSourceTypeFilter<'CoinTransaction'>
+    | $Enums.SourceType;
+  note?: Prisma.StringNullableFilter<'CoinTransaction'> | string | null;
+  isDeleted?: Prisma.BoolFilter<'CoinTransaction'> | boolean;
+  createdAt?: Prisma.DateTimeFilter<'CoinTransaction'> | Date | string;
+  deletedAt?:
+    | Prisma.DateTimeNullableFilter<'CoinTransaction'>
+    | Date
+    | string
+    | null;
+  walletId?: Prisma.UuidFilter<'CoinTransaction'> | string;
+  studentId?: Prisma.UuidFilter<'CoinTransaction'> | string;
+  teacherId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+  ruleId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+  tenantId?: Prisma.UuidFilter<'CoinTransaction'> | string;
+  sessionId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+  groupId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+  purchaseId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+  reversalOfId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
+};
+
 export type CoinTransactionCreateWithoutStudentInput = {
   id?: string;
   amount: number;
@@ -1649,6 +1907,7 @@ export type CoinTransactionCreateWithoutStudentInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
   rule?: Prisma.CoinRuleCreateNestedOneWithoutTransactionsInput;
@@ -1671,6 +1930,7 @@ export type CoinTransactionUncheckedCreateWithoutStudentInput = {
   walletId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -1702,6 +1962,7 @@ export type CoinTransactionCreateWithoutTeacherInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   rule?: Prisma.CoinRuleCreateNestedOneWithoutTransactionsInput;
@@ -1724,6 +1985,7 @@ export type CoinTransactionUncheckedCreateWithoutTeacherInput = {
   walletId: string;
   studentId: string;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -1774,40 +2036,6 @@ export type CoinTransactionUpdateManyWithWhereWithoutStudentInput = {
   >;
 };
 
-export type CoinTransactionScalarWhereInput = {
-  AND?:
-    | Prisma.CoinTransactionScalarWhereInput
-    | Prisma.CoinTransactionScalarWhereInput[];
-  OR?: Prisma.CoinTransactionScalarWhereInput[];
-  NOT?:
-    | Prisma.CoinTransactionScalarWhereInput
-    | Prisma.CoinTransactionScalarWhereInput[];
-  id?: Prisma.UuidFilter<'CoinTransaction'> | string;
-  amount?: Prisma.IntFilter<'CoinTransaction'> | number;
-  direction?:
-    | Prisma.EnumCoinDirectionFilter<'CoinTransaction'>
-    | $Enums.CoinDirection;
-  sourceType?:
-    | Prisma.EnumSourceTypeFilter<'CoinTransaction'>
-    | $Enums.SourceType;
-  note?: Prisma.StringNullableFilter<'CoinTransaction'> | string | null;
-  isDeleted?: Prisma.BoolFilter<'CoinTransaction'> | boolean;
-  createdAt?: Prisma.DateTimeFilter<'CoinTransaction'> | Date | string;
-  deletedAt?:
-    | Prisma.DateTimeNullableFilter<'CoinTransaction'>
-    | Date
-    | string
-    | null;
-  walletId?: Prisma.UuidFilter<'CoinTransaction'> | string;
-  studentId?: Prisma.UuidFilter<'CoinTransaction'> | string;
-  teacherId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
-  ruleId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
-  sessionId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
-  groupId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
-  purchaseId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
-  reversalOfId?: Prisma.UuidNullableFilter<'CoinTransaction'> | string | null;
-};
-
 export type CoinTransactionUpsertWithWhereUniqueWithoutTeacherInput = {
   where: Prisma.CoinTransactionWhereUniqueInput;
   update: Prisma.XOR<
@@ -1845,6 +2073,7 @@ export type CoinTransactionCreateWithoutWalletInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
   rule?: Prisma.CoinRuleCreateNestedOneWithoutTransactionsInput;
@@ -1867,6 +2096,7 @@ export type CoinTransactionUncheckedCreateWithoutWalletInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -1926,6 +2156,7 @@ export type CoinTransactionCreateWithoutGroupInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
@@ -1949,6 +2180,7 @@ export type CoinTransactionUncheckedCreateWithoutGroupInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   purchaseId?: string | null;
   reversalOfId?: string | null;
@@ -2007,6 +2239,7 @@ export type CoinTransactionCreateWithoutRuleInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
@@ -2029,6 +2262,7 @@ export type CoinTransactionUncheckedCreateWithoutRuleInput = {
   walletId: string;
   studentId: string;
   teacherId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -2088,6 +2322,7 @@ export type CoinTransactionCreateWithoutSessionInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
@@ -2111,6 +2346,7 @@ export type CoinTransactionUncheckedCreateWithoutSessionInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   groupId?: string | null;
   purchaseId?: string | null;
   reversalOfId?: string | null;
@@ -2169,6 +2405,7 @@ export type CoinTransactionCreateWithoutReversalInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
@@ -2192,6 +2429,7 @@ export type CoinTransactionUncheckedCreateWithoutReversalInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -2215,6 +2453,7 @@ export type CoinTransactionCreateWithoutReversalOfInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
@@ -2238,6 +2477,7 @@ export type CoinTransactionUncheckedCreateWithoutReversalOfInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -2289,6 +2529,7 @@ export type CoinTransactionUpdateWithoutReversalInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
@@ -2320,6 +2561,7 @@ export type CoinTransactionUncheckedUpdateWithoutReversalInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2366,6 +2608,7 @@ export type CoinTransactionUpdateWithoutReversalOfInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
@@ -2397,6 +2640,7 @@ export type CoinTransactionUncheckedUpdateWithoutReversalOfInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2412,6 +2656,7 @@ export type CoinTransactionCreateWithoutPurchaseInput = {
   isDeleted?: boolean;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutCoinTransactionsInput;
   wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput;
   student: Prisma.UserCreateNestedOneWithoutCoinTransactionsReceivedInput;
   teacher?: Prisma.UserCreateNestedOneWithoutCoinTransactionsGivenInput;
@@ -2435,6 +2680,7 @@ export type CoinTransactionUncheckedCreateWithoutPurchaseInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   reversalOfId?: string | null;
@@ -2484,6 +2730,114 @@ export type CoinTransactionUpdateManyWithWhereWithoutPurchaseInput = {
   >;
 };
 
+export type CoinTransactionCreateManyTenantInput = {
+  id?: string;
+  amount: number;
+  direction: $Enums.CoinDirection;
+  sourceType: $Enums.SourceType;
+  note?: string | null;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  deletedAt?: Date | string | null;
+  walletId: string;
+  studentId: string;
+  teacherId?: string | null;
+  ruleId?: string | null;
+  sessionId?: string | null;
+  groupId?: string | null;
+  purchaseId?: string | null;
+  reversalOfId?: string | null;
+};
+
+export type CoinTransactionUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  amount?: Prisma.IntFieldUpdateOperationsInput | number;
+  direction?:
+    | Prisma.EnumCoinDirectionFieldUpdateOperationsInput
+    | $Enums.CoinDirection;
+  sourceType?:
+    | Prisma.EnumSourceTypeFieldUpdateOperationsInput
+    | $Enums.SourceType;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
+  student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
+  teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
+  rule?: Prisma.CoinRuleUpdateOneWithoutTransactionsNestedInput;
+  session?: Prisma.SessionUpdateOneWithoutTransactionsNestedInput;
+  group?: Prisma.GroupUpdateOneWithoutTransactionsNestedInput;
+  purchase?: Prisma.PurchaseUpdateOneWithoutTransactionsNestedInput;
+  reversalOf?: Prisma.CoinTransactionUpdateOneWithoutReversalNestedInput;
+  reversal?: Prisma.CoinTransactionUpdateOneWithoutReversalOfNestedInput;
+};
+
+export type CoinTransactionUncheckedUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  amount?: Prisma.IntFieldUpdateOperationsInput | number;
+  direction?:
+    | Prisma.EnumCoinDirectionFieldUpdateOperationsInput
+    | $Enums.CoinDirection;
+  sourceType?:
+    | Prisma.EnumSourceTypeFieldUpdateOperationsInput
+    | $Enums.SourceType;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  walletId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  reversalOfId?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  reversal?: Prisma.CoinTransactionUncheckedUpdateOneWithoutReversalOfNestedInput;
+};
+
+export type CoinTransactionUncheckedUpdateManyWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  amount?: Prisma.IntFieldUpdateOperationsInput | number;
+  direction?:
+    | Prisma.EnumCoinDirectionFieldUpdateOperationsInput
+    | $Enums.CoinDirection;
+  sourceType?:
+    | Prisma.EnumSourceTypeFieldUpdateOperationsInput
+    | $Enums.SourceType;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  walletId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  reversalOfId?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+};
+
 export type CoinTransactionCreateManyStudentInput = {
   id?: string;
   amount: number;
@@ -2496,6 +2850,7 @@ export type CoinTransactionCreateManyStudentInput = {
   walletId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -2514,6 +2869,7 @@ export type CoinTransactionCreateManyTeacherInput = {
   walletId: string;
   studentId: string;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -2537,6 +2893,7 @@ export type CoinTransactionUpdateWithoutStudentInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
   rule?: Prisma.CoinRuleUpdateOneWithoutTransactionsNestedInput;
@@ -2567,6 +2924,7 @@ export type CoinTransactionUncheckedUpdateWithoutStudentInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2597,6 +2955,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutStudentInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2623,6 +2982,7 @@ export type CoinTransactionUpdateWithoutTeacherInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   rule?: Prisma.CoinRuleUpdateOneWithoutTransactionsNestedInput;
@@ -2653,6 +3013,7 @@ export type CoinTransactionUncheckedUpdateWithoutTeacherInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2683,6 +3044,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutTeacherInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2704,6 +3066,7 @@ export type CoinTransactionCreateManyWalletInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -2727,6 +3090,7 @@ export type CoinTransactionUpdateWithoutWalletInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
   rule?: Prisma.CoinRuleUpdateOneWithoutTransactionsNestedInput;
@@ -2757,6 +3121,7 @@ export type CoinTransactionUncheckedUpdateWithoutWalletInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2787,6 +3152,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutWalletInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2809,6 +3175,7 @@ export type CoinTransactionCreateManyGroupInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   purchaseId?: string | null;
   reversalOfId?: string | null;
@@ -2831,6 +3198,7 @@ export type CoinTransactionUpdateWithoutGroupInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
@@ -2862,6 +3230,7 @@ export type CoinTransactionUncheckedUpdateWithoutGroupInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   reversalOfId?:
@@ -2892,6 +3261,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutGroupInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   reversalOfId?:
@@ -2912,6 +3282,7 @@ export type CoinTransactionCreateManyRuleInput = {
   walletId: string;
   studentId: string;
   teacherId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   purchaseId?: string | null;
@@ -2935,6 +3306,7 @@ export type CoinTransactionUpdateWithoutRuleInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
@@ -2965,6 +3337,7 @@ export type CoinTransactionUncheckedUpdateWithoutRuleInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2995,6 +3368,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutRuleInput = {
   walletId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3017,6 +3391,7 @@ export type CoinTransactionCreateManySessionInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   groupId?: string | null;
   purchaseId?: string | null;
   reversalOfId?: string | null;
@@ -3039,6 +3414,7 @@ export type CoinTransactionUpdateWithoutSessionInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
@@ -3070,6 +3446,7 @@ export type CoinTransactionUncheckedUpdateWithoutSessionInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   reversalOfId?:
@@ -3100,6 +3477,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutSessionInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   purchaseId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   reversalOfId?:
@@ -3121,6 +3499,7 @@ export type CoinTransactionCreateManyPurchaseInput = {
   studentId: string;
   teacherId?: string | null;
   ruleId?: string | null;
+  tenantId: string;
   sessionId?: string | null;
   groupId?: string | null;
   reversalOfId?: string | null;
@@ -3143,6 +3522,7 @@ export type CoinTransactionUpdateWithoutPurchaseInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput;
   wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsReceivedNestedInput;
   teacher?: Prisma.UserUpdateOneWithoutCoinTransactionsGivenNestedInput;
@@ -3174,6 +3554,7 @@ export type CoinTransactionUncheckedUpdateWithoutPurchaseInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   reversalOfId?:
@@ -3204,6 +3585,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutPurchaseInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   groupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   reversalOfId?:
@@ -3229,10 +3611,12 @@ export type CoinTransactionSelect<
     studentId?: boolean;
     teacherId?: boolean;
     ruleId?: boolean;
+    tenantId?: boolean;
     sessionId?: boolean;
     groupId?: boolean;
     purchaseId?: boolean;
     reversalOfId?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     teacher?: boolean | Prisma.CoinTransaction$teacherArgs<ExtArgs>;
@@ -3263,10 +3647,12 @@ export type CoinTransactionSelectCreateManyAndReturn<
     studentId?: boolean;
     teacherId?: boolean;
     ruleId?: boolean;
+    tenantId?: boolean;
     sessionId?: boolean;
     groupId?: boolean;
     purchaseId?: boolean;
     reversalOfId?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     teacher?: boolean | Prisma.CoinTransaction$teacherArgs<ExtArgs>;
@@ -3296,10 +3682,12 @@ export type CoinTransactionSelectUpdateManyAndReturn<
     studentId?: boolean;
     teacherId?: boolean;
     ruleId?: boolean;
+    tenantId?: boolean;
     sessionId?: boolean;
     groupId?: boolean;
     purchaseId?: boolean;
     reversalOfId?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     teacher?: boolean | Prisma.CoinTransaction$teacherArgs<ExtArgs>;
@@ -3325,6 +3713,7 @@ export type CoinTransactionSelectScalar = {
   studentId?: boolean;
   teacherId?: boolean;
   ruleId?: boolean;
+  tenantId?: boolean;
   sessionId?: boolean;
   groupId?: boolean;
   purchaseId?: boolean;
@@ -3347,6 +3736,7 @@ export type CoinTransactionOmit<
   | 'studentId'
   | 'teacherId'
   | 'ruleId'
+  | 'tenantId'
   | 'sessionId'
   | 'groupId'
   | 'purchaseId'
@@ -3357,6 +3747,7 @@ export type CoinTransactionInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   teacher?: boolean | Prisma.CoinTransaction$teacherArgs<ExtArgs>;
@@ -3371,6 +3762,7 @@ export type CoinTransactionIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   teacher?: boolean | Prisma.CoinTransaction$teacherArgs<ExtArgs>;
@@ -3384,6 +3776,7 @@ export type CoinTransactionIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   teacher?: boolean | Prisma.CoinTransaction$teacherArgs<ExtArgs>;
@@ -3400,6 +3793,7 @@ export type $CoinTransactionPayload<
 > = {
   name: 'CoinTransaction';
   objects: {
+    tenant: Prisma.$TenantPayload<ExtArgs>;
     wallet: Prisma.$WalletPayload<ExtArgs>;
     student: Prisma.$UserPayload<ExtArgs>;
     teacher: Prisma.$UserPayload<ExtArgs> | null;
@@ -3424,6 +3818,7 @@ export type $CoinTransactionPayload<
       studentId: string;
       teacherId: string | null;
       ruleId: string | null;
+      tenantId: string;
       sessionId: string | null;
       groupId: string | null;
       purchaseId: string | null;
@@ -3990,6 +4385,20 @@ export interface Prisma__CoinTransactionClient<
   GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: 'PrismaPromise';
+  tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>,
+  ): Prisma.Prisma__TenantClient<
+    | runtime.Types.Result.GetResult<
+        Prisma.$TenantPayload<ExtArgs>,
+        T,
+        'findUniqueOrThrow',
+        GlobalOmitOptions
+      >
+    | Null,
+    Null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   wallet<T extends Prisma.WalletDefaultArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.WalletDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__WalletClient<
@@ -4163,6 +4572,7 @@ export interface CoinTransactionFieldRefs {
   readonly studentId: Prisma.FieldRef<'CoinTransaction', 'String'>;
   readonly teacherId: Prisma.FieldRef<'CoinTransaction', 'String'>;
   readonly ruleId: Prisma.FieldRef<'CoinTransaction', 'String'>;
+  readonly tenantId: Prisma.FieldRef<'CoinTransaction', 'String'>;
   readonly sessionId: Prisma.FieldRef<'CoinTransaction', 'String'>;
   readonly groupId: Prisma.FieldRef<'CoinTransaction', 'String'>;
   readonly purchaseId: Prisma.FieldRef<'CoinTransaction', 'String'>;

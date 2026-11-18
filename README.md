@@ -94,7 +94,7 @@ npm run start:dev
 ```bash
 npm run start:dev        # Dev server (watch mode)
 npm run build            # Production build
-npm run start:prod       # Production start
+npm run start:prod       # Production start (dist/main.js)
 npm run lint             # ESLint + autofix
 npm run format           # Prettier
 

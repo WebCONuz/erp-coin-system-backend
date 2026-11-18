@@ -79,7 +79,7 @@ export class DashboardService {
       }),
       this.prisma.coinTransaction.aggregate({
         where: {
-          student: { tenantId },
+          tenantId,
           direction: CoinDirection.earn,
           ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfMonth },
@@ -88,7 +88,7 @@ export class DashboardService {
       }),
       this.prisma.coinTransaction.aggregate({
         where: {
-          student: { tenantId },
+          tenantId,
           direction: CoinDirection.deduct,
           ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfMonth },
@@ -96,11 +96,11 @@ export class DashboardService {
         _sum: { amount: true },
       }),
       this.prisma.purchase.count({
-        where: { status: 'pending', isDeleted: false, student: { tenantId } },
+        where: { status: 'pending', isDeleted: false, tenantId },
       }),
       // Tasdiqlangan, lekin hali talabaga topshirilmagan xaridlar
       this.prisma.purchase.count({
-        where: { status: 'approved', isDeleted: false, student: { tenantId } },
+        where: { status: 'approved', isDeleted: false, tenantId },
       }),
       this.prisma.session.count({
         where: {
@@ -119,7 +119,7 @@ export class DashboardService {
         },
       }),
       this.prisma.coinTransaction.findMany({
-        where: { student: { tenantId }, isDeleted: false },
+        where: { tenantId, isDeleted: false },
         orderBy: { createdAt: 'desc' },
         take: 8,
         select: {
@@ -144,7 +144,7 @@ export class DashboardService {
       }),
       this.prisma.coinTransaction.findMany({
         where: {
-          student: { tenantId },
+          tenantId,
           ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: sevenDaysAgo },
         },

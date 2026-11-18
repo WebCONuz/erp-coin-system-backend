@@ -186,6 +186,9 @@ model Tenant {
   emailLogs          EmailLog[]
   rewardCategories   RewardCategory[]
   holidays           Holiday[]
+  coinTransactions   CoinTransaction[]
+  purchases          Purchase[]
+  attendanceRecords  AttendanceRecord[]
   roles              Role[]
   rolePermissions    RolePermission[]
   auditLogs          AuditLog[]
@@ -221,7 +224,6 @@ model Role {
 
   @@unique([tenantId, name])
   @@index([tenantId])
-  @@index([isSystem])
   @@map("roles")
 }
 
@@ -315,8 +317,6 @@ model User {
   @@index([phone])
   @@index([email])
   @@index([roleId])
-  @@index([isActive])
-  @@index([isDeleted])
   @@map("users")
 }
 
@@ -363,8 +363,6 @@ model Course {
   groups Group[]
 
   @@index([tenantId])
-  @@index([isActive])
-  @@index([isDeleted])
   @@map("courses")
 }
 
@@ -397,8 +395,6 @@ model Subject {
 
   @@unique([tenantId, name])
   @@index([tenantId])
-  @@index([isActive])
-  @@index([isDeleted])
   @@map("subjects")
 }
 
@@ -425,7 +421,6 @@ model Room {
   scheduleExceptions ScheduleException[]
 
   @@index([tenantId])
-  @@index([isActive])
   @@map("rooms")
 }
 
@@ -464,8 +459,6 @@ model Group {
   @@index([tenantId])
   @@index([courseId])
   @@index([teacherId])
-  @@index([isActive])
-  @@index([isDeleted])
   @@map("groups")
 }
 
@@ -493,7 +486,6 @@ model GroupStudent {
   @@unique([groupId, studentId])
   @@index([groupId])
   @@index([studentId])
-  @@index([isDeleted])
   @@map("group_students")
 }
 
@@ -536,7 +528,6 @@ model ScheduleTemplate {
   @@index([groupId])
   @@index([roomId])
   @@index([subjectId])
-  @@index([isDeleted])
   @@map("schedule_templates")
 }
 
@@ -569,7 +560,6 @@ model ScheduleException {
   @@unique([templateId, exceptionDate])
   @@index([templateId])
   @@index([exceptionDate])
-  @@index([isDeleted])
   @@map("schedule_exceptions")
 }
 
@@ -628,8 +618,6 @@ model CoinRule {
 
   @@index([tenantId])
   @@index([groupId])
-  @@index([isActive])
-  @@index([isDeleted])
   @@map("coin_rules")
 }
 
@@ -682,7 +670,6 @@ model Session {
   @@index([roomId])
   @@index([teacherId])
   @@index([subjectId])
-  @@index([isDeleted])
   @@map("sessions")
 }
 
@@ -705,15 +692,18 @@ model AttendanceRecord {
   sessionId    String @map("session_id") @db.Uuid
   studentId    String @map("student_id") @db.Uuid
   recordedById String @map("recorded_by") @db.Uuid
+  // Tenant izolyatsiyasi DB darajasida (sessiya orqali join qilmasdan filtrlash uchun)
+  tenantId     String @map("tenant_id") @db.Uuid
 
+  tenant     Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   session    Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   student    User    @relation("StudentAttendance", fields: [studentId], references: [id])
   recordedBy User    @relation("RecordedByUser", fields: [recordedById], references: [id])
 
+  // (sessionId, studentId) unique index sessionId bo'yicha qidiruvni ham qoplaydi
   @@unique([sessionId, studentId])
-  @@index([sessionId, studentId])
   @@index([studentId])
-  @@index([isDeleted])
+  @@index([tenantId])
   @@map("attendance_records")
 }
 
@@ -735,6 +725,8 @@ model CoinTransaction {
   studentId String  @map("student_id") @db.Uuid
   teacherId String? @map("teacher_id") @db.Uuid
   ruleId    String? @map("rule_id") @db.Uuid
+  // Tenant izolyatsiyasi DB darajasida (student orqali join qilmasdan filtrlash uchun)
+  tenantId  String  @map("tenant_id") @db.Uuid
   sessionId String? @map("session_id") @db.Uuid
   groupId   String? @map("group_id") @db.Uuid
   // Xarid yoki xaridni bekor qilish tranzaksiyasi qaysi xaridga tegishli
@@ -743,6 +735,7 @@ model CoinTransaction {
   // Bitta yozuv faqat bir marta bekor qilinadi (unique).
   reversalOfId String? @unique @map("reversal_of_id") @db.Uuid
 
+  tenant     Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   wallet     Wallet           @relation(fields: [walletId], references: [id], onDelete: Cascade)
   student    User             @relation("StudentTransactions", fields: [studentId], references: [id])
   teacher    User?            @relation("TeacherTransactions", fields: [teacherId], references: [id])
@@ -758,7 +751,7 @@ model CoinTransaction {
   @@index([teacherId])
   @@index([sessionId, studentId, sourceType])
   @@index([purchaseId])
-  @@index([isDeleted])
+  @@index([tenantId, createdAt(sort: Desc)])
   @@map("coin_transactions")
 }
 
@@ -782,7 +775,6 @@ model RewardCategory {
 
   @@unique([tenantId, name])
   @@index([tenantId])
-  @@index([isDeleted])
   @@map("reward_categories")
 }
 
@@ -817,7 +809,6 @@ model Reward {
   purchases Purchase[]
 
   @@index([tenantId, isActive])
-  @@index([isDeleted])
   @@map("rewards")
 }
 
@@ -841,9 +832,12 @@ model Purchase {
 
   studentId     String  @map("student_id") @db.Uuid
   rewardId      String  @map("reward_id") @db.Uuid
+  // Tenant izolyatsiyasi DB darajasida
+  tenantId      String  @map("tenant_id") @db.Uuid
   approvedById  String? @map("approved_by") @db.Uuid
   deliveredById String? @map("delivered_by") @db.Uuid
 
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   student     User    @relation("StudentPurchases", fields: [studentId], references: [id])
   reward      Reward  @relation(fields: [rewardId], references: [id])
   approvedBy  User?   @relation("ApprovedByUser", fields: [approvedById], references: [id])
@@ -853,8 +847,7 @@ model Purchase {
 
   @@index([studentId])
   @@index([rewardId])
-  @@index([status])
-  @@index([isDeleted])
+  @@index([tenantId, status])
   @@map("purchases")
 }
 
@@ -882,7 +875,6 @@ model SmsTemplate {
   smsLogs SmsLog[]
 
   @@index([tenantId])
-  @@index([isDeleted])
   @@map("sms_templates")
 }
 
@@ -918,7 +910,6 @@ model SmsLog {
   @@index([studentId])
   @@index([status])
   @@index([createdAt(sort: Desc)])
-  @@index([isDeleted])
   @@map("sms_logs")
 }
 
@@ -947,7 +938,6 @@ model EmailTemplate {
   emailLogs EmailLog[]
 
   @@index([tenantId])
-  @@index([isDeleted])
   @@map("email_templates")
 }
 
@@ -982,7 +972,6 @@ model EmailLog {
   @@index([studentId])
   @@index([status])
   @@index([createdAt(sort: Desc)])
-  @@index([isDeleted])
   @@map("email_logs")
 }
 
@@ -1036,6 +1025,5 @@ model ImportLog {
   importedById String @map("imported_by") @db.Uuid
   importedBy   User   @relation(fields: [importedById], references: [id])
 
-  @@index([isDeleted])
   @@map("import_logs")
 }

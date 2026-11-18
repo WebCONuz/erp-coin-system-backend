@@ -210,7 +210,7 @@ export class CoinTransactionsService {
         );
       }
 
-      const result = await this.applyCoinInTx(tx, wallet.id, {
+      const result = await this.applyCoinInTx(tx, wallet.id, tenantId, {
         studentId,
         amount,
         direction,
@@ -262,6 +262,7 @@ export class CoinTransactionsService {
   private async applyCoinInTx(
     tx: Prisma.TransactionClient,
     walletId: string,
+    tenantId: string,
     data: ExecuteCoinProcessData,
   ) {
     const updatedWallet = await tx.wallet.update({
@@ -282,6 +283,7 @@ export class CoinTransactionsService {
         note: data.note || null,
         ruleId: data.ruleId || null,
         walletId,
+        tenantId,
         studentId: data.studentId,
         teacherId: data.teacherId || null,
         sessionId: data.sessionId || null,
@@ -307,7 +309,7 @@ export class CoinTransactionsService {
     actorId: string | null,
     note: string,
   ) {
-    return this.applyCoinInTx(tx, walletId, {
+    return this.applyCoinInTx(tx, walletId, trx.tenantId, {
       studentId: trx.studentId,
       amount: trx.amount,
       direction:
@@ -346,6 +348,7 @@ export class CoinTransactionsService {
   async replaceSessionTransactions(
     tx: Prisma.TransactionClient,
     params: {
+      tenantId: string;
       sessionId: string;
       studentId: string;
       sourceTypes: SourceType[];
@@ -354,7 +357,8 @@ export class CoinTransactionsService {
       actorId?: string;
     },
   ): Promise<ReplaceSessionCoinsResult> {
-    const { sessionId, studentId, sourceTypes, items, actorId } = params;
+    const { tenantId, sessionId, studentId, sourceTypes, items, actorId } =
+      params;
 
     // Avval hamyon qulflanadi, keyin avvalgi tranzaksiyalar o'qiladi: parallel saqlashda
     // ikkinchi tx qulfni kutadi va birinchisi yozgan tranzaksiyalarni ko'radi (dublikat bo'lmaydi)
@@ -415,7 +419,7 @@ export class CoinTransactionsService {
         continue;
       }
 
-      const result = await this.applyCoinInTx(tx, wallet.id, {
+      const result = await this.applyCoinInTx(tx, wallet.id, tenantId, {
         ...item,
         studentId,
       });
@@ -724,7 +728,7 @@ export class CoinTransactionsService {
     // Tarixda teskari yozuvlar ham ko'rinadi (reversalOfId / reversal orqali bog'langan)
     const where: Prisma.CoinTransactionWhereInput = {
       ...VISIBLE_COIN_TX_WHERE,
-      student: { tenantId },
+      tenantId,
     };
 
     if (studentId) where.studentId = studentId;
@@ -765,7 +769,7 @@ export class CoinTransactionsService {
   // 5. TRANZAKSIYANI BEKOR QILISH — teskari yozuv yaratiladi, asl yozuv tarixda qoladi
   async cancelTransaction(id: string, tenantId: string, actorId: string) {
     const trx = await this.prisma.coinTransaction.findFirst({
-      where: { id, ...VISIBLE_COIN_TX_WHERE, student: { tenantId } },
+      where: { id, ...VISIBLE_COIN_TX_WHERE, tenantId },
       include: { reversal: { select: { id: true } } },
     });
 
@@ -855,7 +859,7 @@ export class CoinTransactionsService {
     const where: Prisma.CoinTransactionWhereInput = {
       studentId,
       ...VISIBLE_COIN_TX_WHERE,
-      student: { tenantId },
+      tenantId,
     };
 
     if (direction) where.direction = direction;
@@ -913,7 +917,7 @@ export class CoinTransactionsService {
       where: {
         studentId,
         ...EFFECTIVE_COIN_TX_WHERE,
-        student: { tenantId },
+        tenantId,
         createdAt: { gte: start },
       },
       select: { amount: true, direction: true, createdAt: true },

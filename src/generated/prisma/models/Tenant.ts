@@ -294,6 +294,9 @@ export type TenantWhereInput = {
   emailLogs?: Prisma.EmailLogListRelationFilter;
   rewardCategories?: Prisma.RewardCategoryListRelationFilter;
   holidays?: Prisma.HolidayListRelationFilter;
+  coinTransactions?: Prisma.CoinTransactionListRelationFilter;
+  purchases?: Prisma.PurchaseListRelationFilter;
+  attendanceRecords?: Prisma.AttendanceRecordListRelationFilter;
   roles?: Prisma.RoleListRelationFilter;
   rolePermissions?: Prisma.RolePermissionListRelationFilter;
   auditLogs?: Prisma.AuditLogListRelationFilter;
@@ -327,6 +330,9 @@ export type TenantOrderByWithRelationInput = {
   emailLogs?: Prisma.EmailLogOrderByRelationAggregateInput;
   rewardCategories?: Prisma.RewardCategoryOrderByRelationAggregateInput;
   holidays?: Prisma.HolidayOrderByRelationAggregateInput;
+  coinTransactions?: Prisma.CoinTransactionOrderByRelationAggregateInput;
+  purchases?: Prisma.PurchaseOrderByRelationAggregateInput;
+  attendanceRecords?: Prisma.AttendanceRecordOrderByRelationAggregateInput;
   roles?: Prisma.RoleOrderByRelationAggregateInput;
   rolePermissions?: Prisma.RolePermissionOrderByRelationAggregateInput;
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput;
@@ -367,6 +373,9 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<
     emailLogs?: Prisma.EmailLogListRelationFilter;
     rewardCategories?: Prisma.RewardCategoryListRelationFilter;
     holidays?: Prisma.HolidayListRelationFilter;
+    coinTransactions?: Prisma.CoinTransactionListRelationFilter;
+    purchases?: Prisma.PurchaseListRelationFilter;
+    attendanceRecords?: Prisma.AttendanceRecordListRelationFilter;
     roles?: Prisma.RoleListRelationFilter;
     rolePermissions?: Prisma.RolePermissionListRelationFilter;
     auditLogs?: Prisma.AuditLogListRelationFilter;
@@ -454,6 +463,9 @@ export type TenantCreateInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -487,6 +499,9 @@ export type TenantUncheckedCreateInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -530,6 +545,9 @@ export type TenantUpdateInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -573,6 +591,9 @@ export type TenantUncheckedUpdateInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -1022,6 +1043,58 @@ export type TenantUpdateOneRequiredWithoutSessionsNestedInput = {
   >;
 };
 
+export type TenantCreateNestedOneWithoutAttendanceRecordsInput = {
+  create?: Prisma.XOR<
+    Prisma.TenantCreateWithoutAttendanceRecordsInput,
+    Prisma.TenantUncheckedCreateWithoutAttendanceRecordsInput
+  >;
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutAttendanceRecordsInput;
+  connect?: Prisma.TenantWhereUniqueInput;
+};
+
+export type TenantUpdateOneRequiredWithoutAttendanceRecordsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.TenantCreateWithoutAttendanceRecordsInput,
+    Prisma.TenantUncheckedCreateWithoutAttendanceRecordsInput
+  >;
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutAttendanceRecordsInput;
+  upsert?: Prisma.TenantUpsertWithoutAttendanceRecordsInput;
+  connect?: Prisma.TenantWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.TenantUpdateToOneWithWhereWithoutAttendanceRecordsInput,
+      Prisma.TenantUpdateWithoutAttendanceRecordsInput
+    >,
+    Prisma.TenantUncheckedUpdateWithoutAttendanceRecordsInput
+  >;
+};
+
+export type TenantCreateNestedOneWithoutCoinTransactionsInput = {
+  create?: Prisma.XOR<
+    Prisma.TenantCreateWithoutCoinTransactionsInput,
+    Prisma.TenantUncheckedCreateWithoutCoinTransactionsInput
+  >;
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutCoinTransactionsInput;
+  connect?: Prisma.TenantWhereUniqueInput;
+};
+
+export type TenantUpdateOneRequiredWithoutCoinTransactionsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.TenantCreateWithoutCoinTransactionsInput,
+    Prisma.TenantUncheckedCreateWithoutCoinTransactionsInput
+  >;
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutCoinTransactionsInput;
+  upsert?: Prisma.TenantUpsertWithoutCoinTransactionsInput;
+  connect?: Prisma.TenantWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.TenantUpdateToOneWithWhereWithoutCoinTransactionsInput,
+      Prisma.TenantUpdateWithoutCoinTransactionsInput
+    >,
+    Prisma.TenantUncheckedUpdateWithoutCoinTransactionsInput
+  >;
+};
+
 export type TenantCreateNestedOneWithoutRewardCategoriesInput = {
   create?: Prisma.XOR<
     Prisma.TenantCreateWithoutRewardCategoriesInput,
@@ -1071,6 +1144,32 @@ export type TenantUpdateOneRequiredWithoutRewardsNestedInput = {
       Prisma.TenantUpdateWithoutRewardsInput
     >,
     Prisma.TenantUncheckedUpdateWithoutRewardsInput
+  >;
+};
+
+export type TenantCreateNestedOneWithoutPurchasesInput = {
+  create?: Prisma.XOR<
+    Prisma.TenantCreateWithoutPurchasesInput,
+    Prisma.TenantUncheckedCreateWithoutPurchasesInput
+  >;
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPurchasesInput;
+  connect?: Prisma.TenantWhereUniqueInput;
+};
+
+export type TenantUpdateOneRequiredWithoutPurchasesNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.TenantCreateWithoutPurchasesInput,
+    Prisma.TenantUncheckedCreateWithoutPurchasesInput
+  >;
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPurchasesInput;
+  upsert?: Prisma.TenantUpsertWithoutPurchasesInput;
+  connect?: Prisma.TenantWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.TenantUpdateToOneWithWhereWithoutPurchasesInput,
+      Prisma.TenantUpdateWithoutPurchasesInput
+    >,
+    Prisma.TenantUncheckedUpdateWithoutPurchasesInput
   >;
 };
 
@@ -1232,6 +1331,9 @@ export type TenantCreateWithoutRolesInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
 };
@@ -1264,6 +1366,9 @@ export type TenantUncheckedCreateWithoutRolesInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
 };
@@ -1334,6 +1439,9 @@ export type TenantUpdateWithoutRolesInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
 };
@@ -1376,6 +1484,9 @@ export type TenantUncheckedUpdateWithoutRolesInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
 };
@@ -1408,6 +1519,9 @@ export type TenantCreateWithoutRolePermissionsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
 };
@@ -1440,6 +1554,9 @@ export type TenantUncheckedCreateWithoutRolePermissionsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
 };
@@ -1510,6 +1627,9 @@ export type TenantUpdateWithoutRolePermissionsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
 };
@@ -1552,6 +1672,9 @@ export type TenantUncheckedUpdateWithoutRolePermissionsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
 };
@@ -1583,6 +1706,9 @@ export type TenantCreateWithoutUsersInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -1615,6 +1741,9 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -1685,6 +1814,9 @@ export type TenantUpdateWithoutUsersInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -1727,6 +1859,9 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -1759,6 +1894,9 @@ export type TenantCreateWithoutCoursesInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -1791,6 +1929,9 @@ export type TenantUncheckedCreateWithoutCoursesInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -1861,6 +2002,9 @@ export type TenantUpdateWithoutCoursesInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -1903,6 +2047,9 @@ export type TenantUncheckedUpdateWithoutCoursesInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -1935,6 +2082,9 @@ export type TenantCreateWithoutSubjectsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -1967,6 +2117,9 @@ export type TenantUncheckedCreateWithoutSubjectsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -2037,6 +2190,9 @@ export type TenantUpdateWithoutSubjectsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -2079,6 +2235,9 @@ export type TenantUncheckedUpdateWithoutSubjectsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -2111,6 +2270,9 @@ export type TenantCreateWithoutRoomsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -2143,6 +2305,9 @@ export type TenantUncheckedCreateWithoutRoomsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -2213,6 +2378,9 @@ export type TenantUpdateWithoutRoomsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -2255,6 +2423,9 @@ export type TenantUncheckedUpdateWithoutRoomsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -2287,6 +2458,9 @@ export type TenantCreateWithoutGroupsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -2319,6 +2493,9 @@ export type TenantUncheckedCreateWithoutGroupsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -2389,6 +2566,9 @@ export type TenantUpdateWithoutGroupsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -2431,6 +2611,9 @@ export type TenantUncheckedUpdateWithoutGroupsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -2463,6 +2646,9 @@ export type TenantCreateWithoutScheduleTemplatesInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -2495,6 +2681,9 @@ export type TenantUncheckedCreateWithoutScheduleTemplatesInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -2565,6 +2754,9 @@ export type TenantUpdateWithoutScheduleTemplatesInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -2607,6 +2799,9 @@ export type TenantUncheckedUpdateWithoutScheduleTemplatesInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -2639,6 +2834,9 @@ export type TenantCreateWithoutHolidaysInput = {
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput;
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -2671,6 +2869,9 @@ export type TenantUncheckedCreateWithoutHolidaysInput = {
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput;
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -2741,6 +2942,9 @@ export type TenantUpdateWithoutHolidaysInput = {
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput;
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -2783,6 +2987,9 @@ export type TenantUncheckedUpdateWithoutHolidaysInput = {
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput;
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -2815,6 +3022,9 @@ export type TenantCreateWithoutCoinRulesInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -2847,6 +3057,9 @@ export type TenantUncheckedCreateWithoutCoinRulesInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -2917,6 +3130,9 @@ export type TenantUpdateWithoutCoinRulesInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -2959,6 +3175,9 @@ export type TenantUncheckedUpdateWithoutCoinRulesInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -2991,6 +3210,9 @@ export type TenantCreateWithoutSessionsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -3023,6 +3245,9 @@ export type TenantUncheckedCreateWithoutSessionsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -3093,6 +3318,9 @@ export type TenantUpdateWithoutSessionsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -3135,6 +3363,385 @@ export type TenantUncheckedUpdateWithoutSessionsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
+};
+
+export type TenantCreateWithoutAttendanceRecordsInput = {
+  id?: string;
+  name: string;
+  slug: string;
+  plan?: string;
+  type?: $Enums.TenantType | null;
+  teacherCoinLimit?: number | null;
+  timezone?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput;
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput;
+  subjects?: Prisma.SubjectCreateNestedManyWithoutTenantInput;
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput;
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput;
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput;
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput;
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput;
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput;
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput;
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput;
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
+  holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
+};
+
+export type TenantUncheckedCreateWithoutAttendanceRecordsInput = {
+  id?: string;
+  name: string;
+  slug: string;
+  plan?: string;
+  type?: $Enums.TenantType | null;
+  teacherCoinLimit?: number | null;
+  timezone?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput;
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput;
+  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutTenantInput;
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput;
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput;
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput;
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput;
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput;
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
+  holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
+};
+
+export type TenantCreateOrConnectWithoutAttendanceRecordsInput = {
+  where: Prisma.TenantWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.TenantCreateWithoutAttendanceRecordsInput,
+    Prisma.TenantUncheckedCreateWithoutAttendanceRecordsInput
+  >;
+};
+
+export type TenantUpsertWithoutAttendanceRecordsInput = {
+  update: Prisma.XOR<
+    Prisma.TenantUpdateWithoutAttendanceRecordsInput,
+    Prisma.TenantUncheckedUpdateWithoutAttendanceRecordsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.TenantCreateWithoutAttendanceRecordsInput,
+    Prisma.TenantUncheckedCreateWithoutAttendanceRecordsInput
+  >;
+  where?: Prisma.TenantWhereInput;
+};
+
+export type TenantUpdateToOneWithWhereWithoutAttendanceRecordsInput = {
+  where?: Prisma.TenantWhereInput;
+  data: Prisma.XOR<
+    Prisma.TenantUpdateWithoutAttendanceRecordsInput,
+    Prisma.TenantUncheckedUpdateWithoutAttendanceRecordsInput
+  >;
+};
+
+export type TenantUpdateWithoutAttendanceRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  slug?: Prisma.StringFieldUpdateOperationsInput | string;
+  plan?: Prisma.StringFieldUpdateOperationsInput | string;
+  type?:
+    | Prisma.NullableEnumTenantTypeFieldUpdateOperationsInput
+    | $Enums.TenantType
+    | null;
+  teacherCoinLimit?:
+    | Prisma.NullableIntFieldUpdateOperationsInput
+    | number
+    | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput;
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput;
+  subjects?: Prisma.SubjectUpdateManyWithoutTenantNestedInput;
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput;
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput;
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput;
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput;
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput;
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput;
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput;
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput;
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
+  holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
+};
+
+export type TenantUncheckedUpdateWithoutAttendanceRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  slug?: Prisma.StringFieldUpdateOperationsInput | string;
+  plan?: Prisma.StringFieldUpdateOperationsInput | string;
+  type?:
+    | Prisma.NullableEnumTenantTypeFieldUpdateOperationsInput
+    | $Enums.TenantType
+    | null;
+  teacherCoinLimit?:
+    | Prisma.NullableIntFieldUpdateOperationsInput
+    | number
+    | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput;
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput;
+  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutTenantNestedInput;
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput;
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput;
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput;
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput;
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput;
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
+  holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
+};
+
+export type TenantCreateWithoutCoinTransactionsInput = {
+  id?: string;
+  name: string;
+  slug: string;
+  plan?: string;
+  type?: $Enums.TenantType | null;
+  teacherCoinLimit?: number | null;
+  timezone?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput;
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput;
+  subjects?: Prisma.SubjectCreateNestedManyWithoutTenantInput;
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput;
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput;
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput;
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput;
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput;
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput;
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput;
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput;
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
+  holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
+};
+
+export type TenantUncheckedCreateWithoutCoinTransactionsInput = {
+  id?: string;
+  name: string;
+  slug: string;
+  plan?: string;
+  type?: $Enums.TenantType | null;
+  teacherCoinLimit?: number | null;
+  timezone?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput;
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput;
+  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutTenantInput;
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput;
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput;
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput;
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput;
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput;
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
+  holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
+};
+
+export type TenantCreateOrConnectWithoutCoinTransactionsInput = {
+  where: Prisma.TenantWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.TenantCreateWithoutCoinTransactionsInput,
+    Prisma.TenantUncheckedCreateWithoutCoinTransactionsInput
+  >;
+};
+
+export type TenantUpsertWithoutCoinTransactionsInput = {
+  update: Prisma.XOR<
+    Prisma.TenantUpdateWithoutCoinTransactionsInput,
+    Prisma.TenantUncheckedUpdateWithoutCoinTransactionsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.TenantCreateWithoutCoinTransactionsInput,
+    Prisma.TenantUncheckedCreateWithoutCoinTransactionsInput
+  >;
+  where?: Prisma.TenantWhereInput;
+};
+
+export type TenantUpdateToOneWithWhereWithoutCoinTransactionsInput = {
+  where?: Prisma.TenantWhereInput;
+  data: Prisma.XOR<
+    Prisma.TenantUpdateWithoutCoinTransactionsInput,
+    Prisma.TenantUncheckedUpdateWithoutCoinTransactionsInput
+  >;
+};
+
+export type TenantUpdateWithoutCoinTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  slug?: Prisma.StringFieldUpdateOperationsInput | string;
+  plan?: Prisma.StringFieldUpdateOperationsInput | string;
+  type?:
+    | Prisma.NullableEnumTenantTypeFieldUpdateOperationsInput
+    | $Enums.TenantType
+    | null;
+  teacherCoinLimit?:
+    | Prisma.NullableIntFieldUpdateOperationsInput
+    | number
+    | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput;
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput;
+  subjects?: Prisma.SubjectUpdateManyWithoutTenantNestedInput;
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput;
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput;
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput;
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput;
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput;
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput;
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput;
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput;
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
+  holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
+};
+
+export type TenantUncheckedUpdateWithoutCoinTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  slug?: Prisma.StringFieldUpdateOperationsInput | string;
+  plan?: Prisma.StringFieldUpdateOperationsInput | string;
+  type?:
+    | Prisma.NullableEnumTenantTypeFieldUpdateOperationsInput
+    | $Enums.TenantType
+    | null;
+  teacherCoinLimit?:
+    | Prisma.NullableIntFieldUpdateOperationsInput
+    | number
+    | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput;
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput;
+  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutTenantNestedInput;
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput;
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput;
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput;
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput;
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput;
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
+  holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -3167,6 +3774,9 @@ export type TenantCreateWithoutRewardCategoriesInput = {
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput;
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -3199,6 +3809,9 @@ export type TenantUncheckedCreateWithoutRewardCategoriesInput = {
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput;
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -3269,6 +3882,9 @@ export type TenantUpdateWithoutRewardCategoriesInput = {
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput;
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -3311,6 +3927,9 @@ export type TenantUncheckedUpdateWithoutRewardCategoriesInput = {
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput;
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -3343,6 +3962,9 @@ export type TenantCreateWithoutRewardsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -3375,6 +3997,9 @@ export type TenantUncheckedCreateWithoutRewardsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -3445,6 +4070,9 @@ export type TenantUpdateWithoutRewardsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -3487,6 +4115,197 @@ export type TenantUncheckedUpdateWithoutRewardsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
+  rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
+};
+
+export type TenantCreateWithoutPurchasesInput = {
+  id?: string;
+  name: string;
+  slug: string;
+  plan?: string;
+  type?: $Enums.TenantType | null;
+  teacherCoinLimit?: number | null;
+  timezone?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput;
+  courses?: Prisma.CourseCreateNestedManyWithoutTenantInput;
+  subjects?: Prisma.SubjectCreateNestedManyWithoutTenantInput;
+  groups?: Prisma.GroupCreateNestedManyWithoutTenantInput;
+  rooms?: Prisma.RoomCreateNestedManyWithoutTenantInput;
+  coinRules?: Prisma.CoinRuleCreateNestedManyWithoutTenantInput;
+  rewards?: Prisma.RewardCreateNestedManyWithoutTenantInput;
+  sessions?: Prisma.SessionCreateNestedManyWithoutTenantInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTenantInput;
+  smsTemplates?: Prisma.SmsTemplateCreateNestedManyWithoutTenantInput;
+  emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutTenantInput;
+  smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput;
+  emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
+  holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
+  roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
+  rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
+};
+
+export type TenantUncheckedCreateWithoutPurchasesInput = {
+  id?: string;
+  name: string;
+  slug: string;
+  plan?: string;
+  type?: $Enums.TenantType | null;
+  teacherCoinLimit?: number | null;
+  timezone?: string;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput;
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutTenantInput;
+  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutTenantInput;
+  groups?: Prisma.GroupUncheckedCreateNestedManyWithoutTenantInput;
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutTenantInput;
+  coinRules?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutTenantInput;
+  rewards?: Prisma.RewardUncheckedCreateNestedManyWithoutTenantInput;
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTenantInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  smsTemplates?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutTenantInput;
+  smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput;
+  emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
+  holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
+  rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
+};
+
+export type TenantCreateOrConnectWithoutPurchasesInput = {
+  where: Prisma.TenantWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.TenantCreateWithoutPurchasesInput,
+    Prisma.TenantUncheckedCreateWithoutPurchasesInput
+  >;
+};
+
+export type TenantUpsertWithoutPurchasesInput = {
+  update: Prisma.XOR<
+    Prisma.TenantUpdateWithoutPurchasesInput,
+    Prisma.TenantUncheckedUpdateWithoutPurchasesInput
+  >;
+  create: Prisma.XOR<
+    Prisma.TenantCreateWithoutPurchasesInput,
+    Prisma.TenantUncheckedCreateWithoutPurchasesInput
+  >;
+  where?: Prisma.TenantWhereInput;
+};
+
+export type TenantUpdateToOneWithWhereWithoutPurchasesInput = {
+  where?: Prisma.TenantWhereInput;
+  data: Prisma.XOR<
+    Prisma.TenantUpdateWithoutPurchasesInput,
+    Prisma.TenantUncheckedUpdateWithoutPurchasesInput
+  >;
+};
+
+export type TenantUpdateWithoutPurchasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  slug?: Prisma.StringFieldUpdateOperationsInput | string;
+  plan?: Prisma.StringFieldUpdateOperationsInput | string;
+  type?:
+    | Prisma.NullableEnumTenantTypeFieldUpdateOperationsInput
+    | $Enums.TenantType
+    | null;
+  teacherCoinLimit?:
+    | Prisma.NullableIntFieldUpdateOperationsInput
+    | number
+    | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput;
+  courses?: Prisma.CourseUpdateManyWithoutTenantNestedInput;
+  subjects?: Prisma.SubjectUpdateManyWithoutTenantNestedInput;
+  groups?: Prisma.GroupUpdateManyWithoutTenantNestedInput;
+  rooms?: Prisma.RoomUpdateManyWithoutTenantNestedInput;
+  coinRules?: Prisma.CoinRuleUpdateManyWithoutTenantNestedInput;
+  rewards?: Prisma.RewardUpdateManyWithoutTenantNestedInput;
+  sessions?: Prisma.SessionUpdateManyWithoutTenantNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTenantNestedInput;
+  smsTemplates?: Prisma.SmsTemplateUpdateManyWithoutTenantNestedInput;
+  emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutTenantNestedInput;
+  smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput;
+  emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
+  holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
+  roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
+  rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
+};
+
+export type TenantUncheckedUpdateWithoutPurchasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  slug?: Prisma.StringFieldUpdateOperationsInput | string;
+  plan?: Prisma.StringFieldUpdateOperationsInput | string;
+  type?:
+    | Prisma.NullableEnumTenantTypeFieldUpdateOperationsInput
+    | $Enums.TenantType
+    | null;
+  teacherCoinLimit?:
+    | Prisma.NullableIntFieldUpdateOperationsInput
+    | number
+    | null;
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput;
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutTenantNestedInput;
+  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutTenantNestedInput;
+  groups?: Prisma.GroupUncheckedUpdateManyWithoutTenantNestedInput;
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutTenantNestedInput;
+  coinRules?: Prisma.CoinRuleUncheckedUpdateManyWithoutTenantNestedInput;
+  rewards?: Prisma.RewardUncheckedUpdateManyWithoutTenantNestedInput;
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutTenantNestedInput;
+  scheduleTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  smsTemplates?: Prisma.SmsTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutTenantNestedInput;
+  smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput;
+  emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
+  holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -3519,6 +4338,9 @@ export type TenantCreateWithoutSmsTemplatesInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -3551,6 +4373,9 @@ export type TenantUncheckedCreateWithoutSmsTemplatesInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -3621,6 +4446,9 @@ export type TenantUpdateWithoutSmsTemplatesInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -3663,6 +4491,9 @@ export type TenantUncheckedUpdateWithoutSmsTemplatesInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -3695,6 +4526,9 @@ export type TenantCreateWithoutSmsLogsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -3727,6 +4561,9 @@ export type TenantUncheckedCreateWithoutSmsLogsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -3797,6 +4634,9 @@ export type TenantUpdateWithoutSmsLogsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -3839,6 +4679,9 @@ export type TenantUncheckedUpdateWithoutSmsLogsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -3871,6 +4714,9 @@ export type TenantCreateWithoutEmailTemplatesInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -3903,6 +4749,9 @@ export type TenantUncheckedCreateWithoutEmailTemplatesInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -3973,6 +4822,9 @@ export type TenantUpdateWithoutEmailTemplatesInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -4015,6 +4867,9 @@ export type TenantUncheckedUpdateWithoutEmailTemplatesInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -4047,6 +4902,9 @@ export type TenantCreateWithoutEmailLogsInput = {
   smsLogs?: Prisma.SmsLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput;
@@ -4079,6 +4937,9 @@ export type TenantUncheckedCreateWithoutEmailLogsInput = {
   smsLogs?: Prisma.SmsLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput;
@@ -4149,6 +5010,9 @@ export type TenantUpdateWithoutEmailLogsInput = {
   smsLogs?: Prisma.SmsLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput;
@@ -4191,6 +5055,9 @@ export type TenantUncheckedUpdateWithoutEmailLogsInput = {
   smsLogs?: Prisma.SmsLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput;
@@ -4224,6 +5091,9 @@ export type TenantCreateWithoutAuditLogsInput = {
   emailLogs?: Prisma.EmailLogCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionCreateNestedManyWithoutTenantInput;
 };
@@ -4256,6 +5126,9 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   emailLogs?: Prisma.EmailLogUncheckedCreateNestedManyWithoutTenantInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutTenantInput;
   holidays?: Prisma.HolidayUncheckedCreateNestedManyWithoutTenantInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTenantInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTenantInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput;
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutTenantInput;
   rolePermissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutTenantInput;
 };
@@ -4326,6 +5199,9 @@ export type TenantUpdateWithoutAuditLogsInput = {
   emailLogs?: Prisma.EmailLogUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUpdateManyWithoutTenantNestedInput;
 };
@@ -4368,6 +5244,9 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   emailLogs?: Prisma.EmailLogUncheckedUpdateManyWithoutTenantNestedInput;
   rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutTenantNestedInput;
   holidays?: Prisma.HolidayUncheckedUpdateManyWithoutTenantNestedInput;
+  coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTenantNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTenantNestedInput;
+  attendanceRecords?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput;
   roles?: Prisma.RoleUncheckedUpdateManyWithoutTenantNestedInput;
   rolePermissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutTenantNestedInput;
 };
@@ -4392,6 +5271,9 @@ export type TenantCountOutputType = {
   emailLogs: number;
   rewardCategories: number;
   holidays: number;
+  coinTransactions: number;
+  purchases: number;
+  attendanceRecords: number;
   roles: number;
   rolePermissions: number;
   auditLogs: number;
@@ -4416,6 +5298,9 @@ export type TenantCountOutputTypeSelect<
   emailLogs?: boolean | TenantCountOutputTypeCountEmailLogsArgs;
   rewardCategories?: boolean | TenantCountOutputTypeCountRewardCategoriesArgs;
   holidays?: boolean | TenantCountOutputTypeCountHolidaysArgs;
+  coinTransactions?: boolean | TenantCountOutputTypeCountCoinTransactionsArgs;
+  purchases?: boolean | TenantCountOutputTypeCountPurchasesArgs;
+  attendanceRecords?: boolean | TenantCountOutputTypeCountAttendanceRecordsArgs;
   roles?: boolean | TenantCountOutputTypeCountRolesArgs;
   rolePermissions?: boolean | TenantCountOutputTypeCountRolePermissionsArgs;
   auditLogs?: boolean | TenantCountOutputTypeCountAuditLogsArgs;
@@ -4587,6 +5472,36 @@ export type TenantCountOutputTypeCountHolidaysArgs<
 /**
  * TenantCountOutputType without action
  */
+export type TenantCountOutputTypeCountCoinTransactionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.CoinTransactionWhereInput;
+};
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountPurchasesArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.PurchaseWhereInput;
+};
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountAttendanceRecordsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.AttendanceRecordWhereInput;
+};
+
+/**
+ * TenantCountOutputType without action
+ */
 export type TenantCountOutputTypeCountRolesArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -4646,6 +5561,9 @@ export type TenantSelect<
     emailLogs?: boolean | Prisma.Tenant$emailLogsArgs<ExtArgs>;
     rewardCategories?: boolean | Prisma.Tenant$rewardCategoriesArgs<ExtArgs>;
     holidays?: boolean | Prisma.Tenant$holidaysArgs<ExtArgs>;
+    coinTransactions?: boolean | Prisma.Tenant$coinTransactionsArgs<ExtArgs>;
+    purchases?: boolean | Prisma.Tenant$purchasesArgs<ExtArgs>;
+    attendanceRecords?: boolean | Prisma.Tenant$attendanceRecordsArgs<ExtArgs>;
     roles?: boolean | Prisma.Tenant$rolesArgs<ExtArgs>;
     rolePermissions?: boolean | Prisma.Tenant$rolePermissionsArgs<ExtArgs>;
     auditLogs?: boolean | Prisma.Tenant$auditLogsArgs<ExtArgs>;
@@ -4748,6 +5666,9 @@ export type TenantInclude<
   emailLogs?: boolean | Prisma.Tenant$emailLogsArgs<ExtArgs>;
   rewardCategories?: boolean | Prisma.Tenant$rewardCategoriesArgs<ExtArgs>;
   holidays?: boolean | Prisma.Tenant$holidaysArgs<ExtArgs>;
+  coinTransactions?: boolean | Prisma.Tenant$coinTransactionsArgs<ExtArgs>;
+  purchases?: boolean | Prisma.Tenant$purchasesArgs<ExtArgs>;
+  attendanceRecords?: boolean | Prisma.Tenant$attendanceRecordsArgs<ExtArgs>;
   roles?: boolean | Prisma.Tenant$rolesArgs<ExtArgs>;
   rolePermissions?: boolean | Prisma.Tenant$rolePermissionsArgs<ExtArgs>;
   auditLogs?: boolean | Prisma.Tenant$auditLogsArgs<ExtArgs>;
@@ -4783,6 +5704,9 @@ export type $TenantPayload<
     emailLogs: Prisma.$EmailLogPayload<ExtArgs>[];
     rewardCategories: Prisma.$RewardCategoryPayload<ExtArgs>[];
     holidays: Prisma.$HolidayPayload<ExtArgs>[];
+    coinTransactions: Prisma.$CoinTransactionPayload<ExtArgs>[];
+    purchases: Prisma.$PurchasePayload<ExtArgs>[];
+    attendanceRecords: Prisma.$AttendanceRecordPayload<ExtArgs>[];
     roles: Prisma.$RolePayload<ExtArgs>[];
     rolePermissions: Prisma.$RolePermissionPayload<ExtArgs>[];
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[];
@@ -5512,6 +6436,41 @@ export interface Prisma__TenantClient<
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$HolidayPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  coinTransactions<T extends Prisma.Tenant$coinTransactionsArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Tenant$coinTransactionsArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$CoinTransactionPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  purchases<T extends Prisma.Tenant$purchasesArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Tenant$purchasesArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$PurchasePayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  attendanceRecords<
+    T extends Prisma.Tenant$attendanceRecordsArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.Tenant$attendanceRecordsArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$AttendanceRecordPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -6497,6 +7456,97 @@ export type Tenant$holidaysArgs<
   take?: number;
   skip?: number;
   distinct?: Prisma.HolidayScalarFieldEnum | Prisma.HolidayScalarFieldEnum[];
+};
+
+/**
+ * Tenant.coinTransactions
+ */
+export type Tenant$coinTransactionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the CoinTransaction
+   */
+  select?: Prisma.CoinTransactionSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the CoinTransaction
+   */
+  omit?: Prisma.CoinTransactionOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CoinTransactionInclude<ExtArgs> | null;
+  where?: Prisma.CoinTransactionWhereInput;
+  orderBy?:
+    | Prisma.CoinTransactionOrderByWithRelationInput
+    | Prisma.CoinTransactionOrderByWithRelationInput[];
+  cursor?: Prisma.CoinTransactionWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.CoinTransactionScalarFieldEnum
+    | Prisma.CoinTransactionScalarFieldEnum[];
+};
+
+/**
+ * Tenant.purchases
+ */
+export type Tenant$purchasesArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the Purchase
+   */
+  select?: Prisma.PurchaseSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the Purchase
+   */
+  omit?: Prisma.PurchaseOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseInclude<ExtArgs> | null;
+  where?: Prisma.PurchaseWhereInput;
+  orderBy?:
+    | Prisma.PurchaseOrderByWithRelationInput
+    | Prisma.PurchaseOrderByWithRelationInput[];
+  cursor?: Prisma.PurchaseWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?: Prisma.PurchaseScalarFieldEnum | Prisma.PurchaseScalarFieldEnum[];
+};
+
+/**
+ * Tenant.attendanceRecords
+ */
+export type Tenant$attendanceRecordsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the AttendanceRecord
+   */
+  select?: Prisma.AttendanceRecordSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the AttendanceRecord
+   */
+  omit?: Prisma.AttendanceRecordOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceRecordInclude<ExtArgs> | null;
+  where?: Prisma.AttendanceRecordWhereInput;
+  orderBy?:
+    | Prisma.AttendanceRecordOrderByWithRelationInput
+    | Prisma.AttendanceRecordOrderByWithRelationInput[];
+  cursor?: Prisma.AttendanceRecordWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.AttendanceRecordScalarFieldEnum
+    | Prisma.AttendanceRecordScalarFieldEnum[];
 };
 
 /**

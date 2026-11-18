@@ -18,7 +18,17 @@ import { Prisma } from 'src/generated/prisma/client';
 export class RewardsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  // Kategoriya shu tenantdagi, o'chirilmagan bo'lishi shart (boshqa tenant kategoriyasini biriktirib bo'lmaydi)
+  private async assertCategoryInTenant(categoryId: string, tenantId: string) {
+    const category = await this.prisma.rewardCategory.findFirst({
+      where: { id: categoryId, tenantId, isDeleted: false },
+      select: { id: true },
+    });
+    if (!category) throw new NotFoundException('Kategoriya topilmadi');
+  }
+
   async create(tenantId: string, createdById: string, dto: CreateRewardDto) {
+    await this.assertCategoryInTenant(dto.categoryId, tenantId);
     return this.prisma.reward.create({
       data: {
         title: dto.title,
@@ -92,6 +102,10 @@ export class RewardsService {
   async update(id: string, dto: UpdateRewardDto, tenantId: string) {
     const reward = await this.findOneOrFail(id, tenantId);
     const { stockDelta, ...data } = dto;
+
+    if (data.categoryId) {
+      await this.assertCategoryInTenant(data.categoryId, tenantId);
+    }
 
     if (stockDelta !== undefined && data.stock !== undefined) {
       throw new BadRequestException(
@@ -269,6 +283,7 @@ export class RewardsService {
         data: {
           studentId,
           rewardId,
+          tenantId,
           coinSpent: reward.coinPrice,
           status: PurchaseStatus.pending, // Dastlab tasdiqlash kutish rejimida bo'ladi
           stockReserved,
@@ -282,6 +297,7 @@ export class RewardsService {
       await tx.coinTransaction.create({
         data: {
           walletId: wallet.id,
+          tenantId,
           studentId,
           amount: reward.coinPrice,
           direction: CoinDirection.deduct, // Chiqim (ayirish)

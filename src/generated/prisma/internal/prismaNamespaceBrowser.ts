@@ -392,6 +392,7 @@ export const AttendanceRecordScalarFieldEnum = {
   sessionId: 'sessionId',
   studentId: 'studentId',
   recordedById: 'recordedById',
+  tenantId: 'tenantId',
 } as const;
 
 export type AttendanceRecordScalarFieldEnum =
@@ -410,6 +411,7 @@ export const CoinTransactionScalarFieldEnum = {
   studentId: 'studentId',
   teacherId: 'teacherId',
   ruleId: 'ruleId',
+  tenantId: 'tenantId',
   sessionId: 'sessionId',
   groupId: 'groupId',
   purchaseId: 'purchaseId',
@@ -469,6 +471,7 @@ export const PurchaseScalarFieldEnum = {
   deletedAt: 'deletedAt',
   studentId: 'studentId',
   rewardId: 'rewardId',
+  tenantId: 'tenantId',
   approvedById: 'approvedById',
   deliveredById: 'deliveredById',
 } as const;

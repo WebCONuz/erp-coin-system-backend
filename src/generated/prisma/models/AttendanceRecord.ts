@@ -47,6 +47,7 @@ export type AttendanceRecordMinAggregateOutputType = {
   sessionId: string | null;
   studentId: string | null;
   recordedById: string | null;
+  tenantId: string | null;
 };
 
 export type AttendanceRecordMaxAggregateOutputType = {
@@ -62,6 +63,7 @@ export type AttendanceRecordMaxAggregateOutputType = {
   sessionId: string | null;
   studentId: string | null;
   recordedById: string | null;
+  tenantId: string | null;
 };
 
 export type AttendanceRecordCountAggregateOutputType = {
@@ -77,6 +79,7 @@ export type AttendanceRecordCountAggregateOutputType = {
   sessionId: number;
   studentId: number;
   recordedById: number;
+  tenantId: number;
   _all: number;
 };
 
@@ -101,6 +104,7 @@ export type AttendanceRecordMinAggregateInputType = {
   sessionId?: true;
   studentId?: true;
   recordedById?: true;
+  tenantId?: true;
 };
 
 export type AttendanceRecordMaxAggregateInputType = {
@@ -116,6 +120,7 @@ export type AttendanceRecordMaxAggregateInputType = {
   sessionId?: true;
   studentId?: true;
   recordedById?: true;
+  tenantId?: true;
 };
 
 export type AttendanceRecordCountAggregateInputType = {
@@ -131,6 +136,7 @@ export type AttendanceRecordCountAggregateInputType = {
   sessionId?: true;
   studentId?: true;
   recordedById?: true;
+  tenantId?: true;
   _all?: true;
 };
 
@@ -244,6 +250,7 @@ export type AttendanceRecordGroupByOutputType = {
   sessionId: string;
   studentId: string;
   recordedById: string;
+  tenantId: string;
   _count: AttendanceRecordCountAggregateOutputType | null;
   _avg: AttendanceRecordAvgAggregateOutputType | null;
   _sum: AttendanceRecordSumAggregateOutputType | null;
@@ -283,6 +290,11 @@ export type AttendanceRecordWhereInput = {
   sessionId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
   studentId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
   recordedById?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+  tenantId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+  tenant?: Prisma.XOR<
+    Prisma.TenantScalarRelationFilter,
+    Prisma.TenantWhereInput
+  >;
   session?: Prisma.XOR<
     Prisma.SessionScalarRelationFilter,
     Prisma.SessionWhereInput
@@ -307,6 +319,8 @@ export type AttendanceRecordOrderByWithRelationInput = {
   sessionId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   recordedById?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
+  tenant?: Prisma.TenantOrderByWithRelationInput;
   session?: Prisma.SessionOrderByWithRelationInput;
   student?: Prisma.UserOrderByWithRelationInput;
   recordedBy?: Prisma.UserOrderByWithRelationInput;
@@ -336,6 +350,11 @@ export type AttendanceRecordWhereUniqueInput = Prisma.AtLeast<
     sessionId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
     studentId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
     recordedById?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+    tenantId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+    tenant?: Prisma.XOR<
+      Prisma.TenantScalarRelationFilter,
+      Prisma.TenantWhereInput
+    >;
     session?: Prisma.XOR<
       Prisma.SessionScalarRelationFilter,
       Prisma.SessionWhereInput
@@ -365,6 +384,7 @@ export type AttendanceRecordOrderByWithAggregationInput = {
   sessionId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   recordedById?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   _count?: Prisma.AttendanceRecordCountOrderByAggregateInput;
   _avg?: Prisma.AttendanceRecordAvgOrderByAggregateInput;
   _max?: Prisma.AttendanceRecordMaxOrderByAggregateInput;
@@ -406,6 +426,7 @@ export type AttendanceRecordScalarWhereWithAggregatesInput = {
   sessionId?: Prisma.UuidWithAggregatesFilter<'AttendanceRecord'> | string;
   studentId?: Prisma.UuidWithAggregatesFilter<'AttendanceRecord'> | string;
   recordedById?: Prisma.UuidWithAggregatesFilter<'AttendanceRecord'> | string;
+  tenantId?: Prisma.UuidWithAggregatesFilter<'AttendanceRecord'> | string;
 };
 
 export type AttendanceRecordCreateInput = {
@@ -418,6 +439,7 @@ export type AttendanceRecordCreateInput = {
   recordedAt?: Date | string;
   updatedAt?: Date | string;
   isDeleted?: boolean;
+  tenant: Prisma.TenantCreateNestedOneWithoutAttendanceRecordsInput;
   session: Prisma.SessionCreateNestedOneWithoutAttendanceRecordsInput;
   student: Prisma.UserCreateNestedOneWithoutAttendanceAsStudentInput;
   recordedBy: Prisma.UserCreateNestedOneWithoutAttendanceRecordedInput;
@@ -436,6 +458,7 @@ export type AttendanceRecordUncheckedCreateInput = {
   sessionId: string;
   studentId: string;
   recordedById: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordUpdateInput = {
@@ -450,6 +473,7 @@ export type AttendanceRecordUpdateInput = {
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
   session?: Prisma.SessionUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutAttendanceAsStudentNestedInput;
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutAttendanceRecordedNestedInput;
@@ -470,6 +494,7 @@ export type AttendanceRecordUncheckedUpdateInput = {
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordCreateManyInput = {
@@ -485,6 +510,7 @@ export type AttendanceRecordCreateManyInput = {
   sessionId: string;
   studentId: string;
   recordedById: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordUpdateManyMutationInput = {
@@ -516,6 +542,7 @@ export type AttendanceRecordUncheckedUpdateManyInput = {
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordListRelationFilter = {
@@ -546,6 +573,7 @@ export type AttendanceRecordCountOrderByAggregateInput = {
   sessionId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   recordedById?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
 };
 
 export type AttendanceRecordAvgOrderByAggregateInput = {
@@ -565,6 +593,7 @@ export type AttendanceRecordMaxOrderByAggregateInput = {
   sessionId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   recordedById?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
 };
 
 export type AttendanceRecordMinOrderByAggregateInput = {
@@ -580,10 +609,121 @@ export type AttendanceRecordMinOrderByAggregateInput = {
   sessionId?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   recordedById?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
 };
 
 export type AttendanceRecordSumOrderByAggregateInput = {
   score?: Prisma.SortOrder;
+};
+
+export type AttendanceRecordCreateNestedManyWithoutTenantInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.AttendanceRecordCreateWithoutTenantInput,
+        Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.AttendanceRecordCreateWithoutTenantInput[]
+    | Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput[];
+  createMany?: Prisma.AttendanceRecordCreateManyTenantInputEnvelope;
+  connect?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+};
+
+export type AttendanceRecordUncheckedCreateNestedManyWithoutTenantInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.AttendanceRecordCreateWithoutTenantInput,
+        Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.AttendanceRecordCreateWithoutTenantInput[]
+    | Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput[];
+  createMany?: Prisma.AttendanceRecordCreateManyTenantInputEnvelope;
+  connect?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+};
+
+export type AttendanceRecordUpdateManyWithoutTenantNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.AttendanceRecordCreateWithoutTenantInput,
+        Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.AttendanceRecordCreateWithoutTenantInput[]
+    | Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput[];
+  upsert?:
+    | Prisma.AttendanceRecordUpsertWithWhereUniqueWithoutTenantInput
+    | Prisma.AttendanceRecordUpsertWithWhereUniqueWithoutTenantInput[];
+  createMany?: Prisma.AttendanceRecordCreateManyTenantInputEnvelope;
+  set?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  disconnect?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  delete?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  connect?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  update?:
+    | Prisma.AttendanceRecordUpdateWithWhereUniqueWithoutTenantInput
+    | Prisma.AttendanceRecordUpdateWithWhereUniqueWithoutTenantInput[];
+  updateMany?:
+    | Prisma.AttendanceRecordUpdateManyWithWhereWithoutTenantInput
+    | Prisma.AttendanceRecordUpdateManyWithWhereWithoutTenantInput[];
+  deleteMany?:
+    | Prisma.AttendanceRecordScalarWhereInput
+    | Prisma.AttendanceRecordScalarWhereInput[];
+};
+
+export type AttendanceRecordUncheckedUpdateManyWithoutTenantNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.AttendanceRecordCreateWithoutTenantInput,
+        Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.AttendanceRecordCreateWithoutTenantInput[]
+    | Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput
+    | Prisma.AttendanceRecordCreateOrConnectWithoutTenantInput[];
+  upsert?:
+    | Prisma.AttendanceRecordUpsertWithWhereUniqueWithoutTenantInput
+    | Prisma.AttendanceRecordUpsertWithWhereUniqueWithoutTenantInput[];
+  createMany?: Prisma.AttendanceRecordCreateManyTenantInputEnvelope;
+  set?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  disconnect?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  delete?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  connect?:
+    | Prisma.AttendanceRecordWhereUniqueInput
+    | Prisma.AttendanceRecordWhereUniqueInput[];
+  update?:
+    | Prisma.AttendanceRecordUpdateWithWhereUniqueWithoutTenantInput
+    | Prisma.AttendanceRecordUpdateWithWhereUniqueWithoutTenantInput[];
+  updateMany?:
+    | Prisma.AttendanceRecordUpdateManyWithWhereWithoutTenantInput
+    | Prisma.AttendanceRecordUpdateManyWithWhereWithoutTenantInput[];
+  deleteMany?:
+    | Prisma.AttendanceRecordScalarWhereInput
+    | Prisma.AttendanceRecordScalarWhereInput[];
 };
 
 export type AttendanceRecordCreateNestedManyWithoutRecordedByInput = {
@@ -928,6 +1068,104 @@ export type NullableFloatFieldUpdateOperationsInput = {
   divide?: number;
 };
 
+export type AttendanceRecordCreateWithoutTenantInput = {
+  id?: string;
+  isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
+  homeworkDone?: boolean;
+  score?: number | null;
+  note?: string | null;
+  recordedAt?: Date | string;
+  updatedAt?: Date | string;
+  isDeleted?: boolean;
+  session: Prisma.SessionCreateNestedOneWithoutAttendanceRecordsInput;
+  student: Prisma.UserCreateNestedOneWithoutAttendanceAsStudentInput;
+  recordedBy: Prisma.UserCreateNestedOneWithoutAttendanceRecordedInput;
+};
+
+export type AttendanceRecordUncheckedCreateWithoutTenantInput = {
+  id?: string;
+  isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
+  homeworkDone?: boolean;
+  score?: number | null;
+  note?: string | null;
+  recordedAt?: Date | string;
+  updatedAt?: Date | string;
+  isDeleted?: boolean;
+  sessionId: string;
+  studentId: string;
+  recordedById: string;
+};
+
+export type AttendanceRecordCreateOrConnectWithoutTenantInput = {
+  where: Prisma.AttendanceRecordWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.AttendanceRecordCreateWithoutTenantInput,
+    Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput
+  >;
+};
+
+export type AttendanceRecordCreateManyTenantInputEnvelope = {
+  data:
+    | Prisma.AttendanceRecordCreateManyTenantInput
+    | Prisma.AttendanceRecordCreateManyTenantInput[];
+  skipDuplicates?: boolean;
+};
+
+export type AttendanceRecordUpsertWithWhereUniqueWithoutTenantInput = {
+  where: Prisma.AttendanceRecordWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.AttendanceRecordUpdateWithoutTenantInput,
+    Prisma.AttendanceRecordUncheckedUpdateWithoutTenantInput
+  >;
+  create: Prisma.XOR<
+    Prisma.AttendanceRecordCreateWithoutTenantInput,
+    Prisma.AttendanceRecordUncheckedCreateWithoutTenantInput
+  >;
+};
+
+export type AttendanceRecordUpdateWithWhereUniqueWithoutTenantInput = {
+  where: Prisma.AttendanceRecordWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.AttendanceRecordUpdateWithoutTenantInput,
+    Prisma.AttendanceRecordUncheckedUpdateWithoutTenantInput
+  >;
+};
+
+export type AttendanceRecordUpdateManyWithWhereWithoutTenantInput = {
+  where: Prisma.AttendanceRecordScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.AttendanceRecordUpdateManyMutationInput,
+    Prisma.AttendanceRecordUncheckedUpdateManyWithoutTenantInput
+  >;
+};
+
+export type AttendanceRecordScalarWhereInput = {
+  AND?:
+    | Prisma.AttendanceRecordScalarWhereInput
+    | Prisma.AttendanceRecordScalarWhereInput[];
+  OR?: Prisma.AttendanceRecordScalarWhereInput[];
+  NOT?:
+    | Prisma.AttendanceRecordScalarWhereInput
+    | Prisma.AttendanceRecordScalarWhereInput[];
+  id?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+  isPresent?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFilter<'AttendanceRecord'>
+    | $Enums.AttendanceStatus;
+  homeworkDone?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
+  score?: Prisma.FloatNullableFilter<'AttendanceRecord'> | number | null;
+  note?: Prisma.StringNullableFilter<'AttendanceRecord'> | string | null;
+  recordedAt?: Prisma.DateTimeFilter<'AttendanceRecord'> | Date | string;
+  updatedAt?: Prisma.DateTimeFilter<'AttendanceRecord'> | Date | string;
+  isDeleted?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
+  sessionId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+  studentId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+  recordedById?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+  tenantId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
+};
+
 export type AttendanceRecordCreateWithoutRecordedByInput = {
   id?: string;
   isPresent?: boolean;
@@ -938,6 +1176,7 @@ export type AttendanceRecordCreateWithoutRecordedByInput = {
   recordedAt?: Date | string;
   updatedAt?: Date | string;
   isDeleted?: boolean;
+  tenant: Prisma.TenantCreateNestedOneWithoutAttendanceRecordsInput;
   session: Prisma.SessionCreateNestedOneWithoutAttendanceRecordsInput;
   student: Prisma.UserCreateNestedOneWithoutAttendanceAsStudentInput;
 };
@@ -954,6 +1193,7 @@ export type AttendanceRecordUncheckedCreateWithoutRecordedByInput = {
   isDeleted?: boolean;
   sessionId: string;
   studentId: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordCreateOrConnectWithoutRecordedByInput = {
@@ -981,6 +1221,7 @@ export type AttendanceRecordCreateWithoutStudentInput = {
   recordedAt?: Date | string;
   updatedAt?: Date | string;
   isDeleted?: boolean;
+  tenant: Prisma.TenantCreateNestedOneWithoutAttendanceRecordsInput;
   session: Prisma.SessionCreateNestedOneWithoutAttendanceRecordsInput;
   recordedBy: Prisma.UserCreateNestedOneWithoutAttendanceRecordedInput;
 };
@@ -997,6 +1238,7 @@ export type AttendanceRecordUncheckedCreateWithoutStudentInput = {
   isDeleted?: boolean;
   sessionId: string;
   recordedById: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordCreateOrConnectWithoutStudentInput = {
@@ -1042,30 +1284,6 @@ export type AttendanceRecordUpdateManyWithWhereWithoutRecordedByInput = {
   >;
 };
 
-export type AttendanceRecordScalarWhereInput = {
-  AND?:
-    | Prisma.AttendanceRecordScalarWhereInput
-    | Prisma.AttendanceRecordScalarWhereInput[];
-  OR?: Prisma.AttendanceRecordScalarWhereInput[];
-  NOT?:
-    | Prisma.AttendanceRecordScalarWhereInput
-    | Prisma.AttendanceRecordScalarWhereInput[];
-  id?: Prisma.UuidFilter<'AttendanceRecord'> | string;
-  isPresent?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
-  status?:
-    | Prisma.EnumAttendanceStatusFilter<'AttendanceRecord'>
-    | $Enums.AttendanceStatus;
-  homeworkDone?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
-  score?: Prisma.FloatNullableFilter<'AttendanceRecord'> | number | null;
-  note?: Prisma.StringNullableFilter<'AttendanceRecord'> | string | null;
-  recordedAt?: Prisma.DateTimeFilter<'AttendanceRecord'> | Date | string;
-  updatedAt?: Prisma.DateTimeFilter<'AttendanceRecord'> | Date | string;
-  isDeleted?: Prisma.BoolFilter<'AttendanceRecord'> | boolean;
-  sessionId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
-  studentId?: Prisma.UuidFilter<'AttendanceRecord'> | string;
-  recordedById?: Prisma.UuidFilter<'AttendanceRecord'> | string;
-};
-
 export type AttendanceRecordUpsertWithWhereUniqueWithoutStudentInput = {
   where: Prisma.AttendanceRecordWhereUniqueInput;
   update: Prisma.XOR<
@@ -1104,6 +1322,7 @@ export type AttendanceRecordCreateWithoutSessionInput = {
   recordedAt?: Date | string;
   updatedAt?: Date | string;
   isDeleted?: boolean;
+  tenant: Prisma.TenantCreateNestedOneWithoutAttendanceRecordsInput;
   student: Prisma.UserCreateNestedOneWithoutAttendanceAsStudentInput;
   recordedBy: Prisma.UserCreateNestedOneWithoutAttendanceRecordedInput;
 };
@@ -1120,6 +1339,7 @@ export type AttendanceRecordUncheckedCreateWithoutSessionInput = {
   isDeleted?: boolean;
   studentId: string;
   recordedById: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordCreateOrConnectWithoutSessionInput = {
@@ -1165,6 +1385,72 @@ export type AttendanceRecordUpdateManyWithWhereWithoutSessionInput = {
   >;
 };
 
+export type AttendanceRecordCreateManyTenantInput = {
+  id?: string;
+  isPresent?: boolean;
+  status?: $Enums.AttendanceStatus;
+  homeworkDone?: boolean;
+  score?: number | null;
+  note?: string | null;
+  recordedAt?: Date | string;
+  updatedAt?: Date | string;
+  isDeleted?: boolean;
+  sessionId: string;
+  studentId: string;
+  recordedById: string;
+};
+
+export type AttendanceRecordUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
+  homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  session?: Prisma.SessionUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
+  student?: Prisma.UserUpdateOneRequiredWithoutAttendanceAsStudentNestedInput;
+  recordedBy?: Prisma.UserUpdateOneRequiredWithoutAttendanceRecordedNestedInput;
+};
+
+export type AttendanceRecordUncheckedUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
+  homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+};
+
+export type AttendanceRecordUncheckedUpdateManyWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  isPresent?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  status?:
+    | Prisma.EnumAttendanceStatusFieldUpdateOperationsInput
+    | $Enums.AttendanceStatus;
+  homeworkDone?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  score?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null;
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+};
+
 export type AttendanceRecordCreateManyRecordedByInput = {
   id?: string;
   isPresent?: boolean;
@@ -1177,6 +1463,7 @@ export type AttendanceRecordCreateManyRecordedByInput = {
   isDeleted?: boolean;
   sessionId: string;
   studentId: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordCreateManyStudentInput = {
@@ -1191,6 +1478,7 @@ export type AttendanceRecordCreateManyStudentInput = {
   isDeleted?: boolean;
   sessionId: string;
   recordedById: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordUpdateWithoutRecordedByInput = {
@@ -1205,6 +1493,7 @@ export type AttendanceRecordUpdateWithoutRecordedByInput = {
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
   session?: Prisma.SessionUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutAttendanceAsStudentNestedInput;
 };
@@ -1223,6 +1512,7 @@ export type AttendanceRecordUncheckedUpdateWithoutRecordedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordUncheckedUpdateManyWithoutRecordedByInput = {
@@ -1239,6 +1529,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutRecordedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordUpdateWithoutStudentInput = {
@@ -1253,6 +1544,7 @@ export type AttendanceRecordUpdateWithoutStudentInput = {
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
   session?: Prisma.SessionUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutAttendanceRecordedNestedInput;
 };
@@ -1271,6 +1563,7 @@ export type AttendanceRecordUncheckedUpdateWithoutStudentInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordUncheckedUpdateManyWithoutStudentInput = {
@@ -1287,6 +1580,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutStudentInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string;
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordCreateManySessionInput = {
@@ -1301,6 +1595,7 @@ export type AttendanceRecordCreateManySessionInput = {
   isDeleted?: boolean;
   studentId: string;
   recordedById: string;
+  tenantId: string;
 };
 
 export type AttendanceRecordUpdateWithoutSessionInput = {
@@ -1315,6 +1610,7 @@ export type AttendanceRecordUpdateWithoutSessionInput = {
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutAttendanceRecordsNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutAttendanceAsStudentNestedInput;
   recordedBy?: Prisma.UserUpdateOneRequiredWithoutAttendanceRecordedNestedInput;
 };
@@ -1333,6 +1629,7 @@ export type AttendanceRecordUncheckedUpdateWithoutSessionInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordUncheckedUpdateManyWithoutSessionInput = {
@@ -1349,6 +1646,7 @@ export type AttendanceRecordUncheckedUpdateManyWithoutSessionInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   recordedById?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
 export type AttendanceRecordSelect<
@@ -1368,6 +1666,8 @@ export type AttendanceRecordSelect<
     sessionId?: boolean;
     studentId?: boolean;
     recordedById?: boolean;
+    tenantId?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1392,6 +1692,8 @@ export type AttendanceRecordSelectCreateManyAndReturn<
     sessionId?: boolean;
     studentId?: boolean;
     recordedById?: boolean;
+    tenantId?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1416,6 +1718,8 @@ export type AttendanceRecordSelectUpdateManyAndReturn<
     sessionId?: boolean;
     studentId?: boolean;
     recordedById?: boolean;
+    tenantId?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1436,6 +1740,7 @@ export type AttendanceRecordSelectScalar = {
   sessionId?: boolean;
   studentId?: boolean;
   recordedById?: boolean;
+  tenantId?: boolean;
 };
 
 export type AttendanceRecordOmit<
@@ -1453,13 +1758,15 @@ export type AttendanceRecordOmit<
   | 'isDeleted'
   | 'sessionId'
   | 'studentId'
-  | 'recordedById',
+  | 'recordedById'
+  | 'tenantId',
   ExtArgs['result']['attendanceRecord']
 >;
 export type AttendanceRecordInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1468,6 +1775,7 @@ export type AttendanceRecordIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1476,6 +1784,7 @@ export type AttendanceRecordIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   recordedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1487,6 +1796,7 @@ export type $AttendanceRecordPayload<
 > = {
   name: 'AttendanceRecord';
   objects: {
+    tenant: Prisma.$TenantPayload<ExtArgs>;
     session: Prisma.$SessionPayload<ExtArgs>;
     student: Prisma.$UserPayload<ExtArgs>;
     recordedBy: Prisma.$UserPayload<ExtArgs>;
@@ -1505,6 +1815,7 @@ export type $AttendanceRecordPayload<
       sessionId: string;
       studentId: string;
       recordedById: string;
+      tenantId: string;
     },
     ExtArgs['result']['attendanceRecord']
   >;
@@ -2077,6 +2388,20 @@ export interface Prisma__AttendanceRecordClient<
   GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: 'PrismaPromise';
+  tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>,
+  ): Prisma.Prisma__TenantClient<
+    | runtime.Types.Result.GetResult<
+        Prisma.$TenantPayload<ExtArgs>,
+        T,
+        'findUniqueOrThrow',
+        GlobalOmitOptions
+      >
+    | Null,
+    Null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   session<T extends Prisma.SessionDefaultArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.SessionDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__SessionClient<
@@ -2173,6 +2498,7 @@ export interface AttendanceRecordFieldRefs {
   readonly sessionId: Prisma.FieldRef<'AttendanceRecord', 'String'>;
   readonly studentId: Prisma.FieldRef<'AttendanceRecord', 'String'>;
   readonly recordedById: Prisma.FieldRef<'AttendanceRecord', 'String'>;
+  readonly tenantId: Prisma.FieldRef<'AttendanceRecord', 'String'>;
 }
 
 // Custom InputTypes

@@ -55,26 +55,43 @@ export class CoinRulesService {
 
     if (dto.groupId) await this.assertGroupInTenant(dto.groupId, tenantId);
 
-    await this.assertNoDuplicateTenantWideAutoRule(tenantId, {
-      triggerType: dto.triggerType,
-      sourceType: dto.sourceType ?? null,
-      direction: dto.direction,
-      groupId: dto.groupId || null,
-    });
+    // Tekshiruv va yaratish tenant qulfi ostida — parallel ikki so'rov ikkita "umumiy" qoida yaratmaydi
+    return this.prisma.$transaction(async (tx) => {
+      await this.lockTenantRules(tx, tenantId);
 
-    return this.prisma.coinRule.create({
-      data: {
-        name: dto.name,
-        description: dto.description || null,
-        coinAmount: dto.coinAmount,
-        direction: dto.direction,
-        triggerType: dto.triggerType,
-        sourceType: dto.sourceType || null,
-        groupId: dto.groupId || null,
+      await this.assertNoDuplicateTenantWideAutoRule(
         tenantId,
-        createdById: requester.id,
-      },
+        {
+          triggerType: dto.triggerType,
+          sourceType: dto.sourceType ?? null,
+          direction: dto.direction,
+          groupId: dto.groupId || null,
+        },
+        tx,
+      );
+
+      return tx.coinRule.create({
+        data: {
+          name: dto.name,
+          description: dto.description || null,
+          coinAmount: dto.coinAmount,
+          direction: dto.direction,
+          triggerType: dto.triggerType,
+          sourceType: dto.sourceType || null,
+          groupId: dto.groupId || null,
+          tenantId,
+          createdById: requester.id,
+        },
+      });
     });
+  }
+
+  // Tenant bo'yicha coin qoidalarini o'zgartirishni navbatga qo'yadi (tx oxirigacha)
+  private async lockTenantRules(
+    tx: Prisma.TransactionClient,
+    tenantId: string,
+  ) {
+    await tx.$queryRaw`SELECT 1 AS locked FROM (SELECT pg_advisory_xact_lock(hashtext(${`coin-rules:${tenantId}`}))) AS l`;
   }
 
   // Qoidaga biriktiriladigan guruh shu tenantga tegishli bo'lishi shart
@@ -209,38 +226,44 @@ export class CoinRulesService {
 
     if (dto.groupId) await this.assertGroupInTenant(dto.groupId, tenantId);
 
-    await this.assertNoDuplicateTenantWideAutoRule(
-      tenantId,
-      {
-        triggerType: dto.triggerType ?? rule.triggerType,
-        sourceType:
-          dto.sourceType !== undefined
-            ? dto.sourceType || null
-            : rule.sourceType,
-        direction: dto.direction ?? rule.direction,
-        groupId: dto.groupId !== undefined ? dto.groupId || null : rule.groupId,
-      },
-      id,
-    );
+    return this.prisma.$transaction(async (tx) => {
+      await this.lockTenantRules(tx, tenantId);
 
-    return this.prisma.coinRule.update({
-      where: { id },
-      data: dto,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        coinAmount: true,
-        direction: true,
-        triggerType: true,
-        sourceType: true,
-        isBuiltIn: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-        group: { select: { name: true } },
-        createdBy: { select: { fullName: true } },
-      },
+      await this.assertNoDuplicateTenantWideAutoRule(
+        tenantId,
+        {
+          triggerType: dto.triggerType ?? rule.triggerType,
+          sourceType:
+            dto.sourceType !== undefined
+              ? dto.sourceType || null
+              : rule.sourceType,
+          direction: dto.direction ?? rule.direction,
+          groupId:
+            dto.groupId !== undefined ? dto.groupId || null : rule.groupId,
+        },
+        tx,
+        id,
+      );
+
+      return tx.coinRule.update({
+        where: { id },
+        data: dto,
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          coinAmount: true,
+          direction: true,
+          triggerType: true,
+          sourceType: true,
+          isBuiltIn: true,
+          isActive: true,
+          createdAt: true,
+          updatedAt: true,
+          group: { select: { name: true } },
+          createdBy: { select: { fullName: true } },
+        },
+      });
     });
   }
 
@@ -279,6 +302,7 @@ export class CoinRulesService {
       direction: CoinDirection;
       groupId: string | null;
     },
+    db: Prisma.TransactionClient,
     excludeId?: string,
   ) {
     if (
@@ -289,7 +313,7 @@ export class CoinRulesService {
       return;
     }
 
-    const duplicate = await this.prisma.coinRule.findFirst({
+    const duplicate = await db.coinRule.findFirst({
       where: {
         tenantId,
         isDeleted: false,

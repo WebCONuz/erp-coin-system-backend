@@ -112,7 +112,7 @@ export class TeachersService {
         orderBy: { sessionDate: 'desc' },
       }),
       this.prisma.coinTransaction.findMany({
-        where: { teacherId, isDeleted: false, student: { tenantId } },
+        where: { teacherId, isDeleted: false, tenantId },
         orderBy: { createdAt: 'desc' },
         take: 5,
         select: {

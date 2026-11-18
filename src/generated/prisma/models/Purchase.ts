@@ -47,6 +47,7 @@ export type PurchaseMinAggregateOutputType = {
   deletedAt: Date | null;
   studentId: string | null;
   rewardId: string | null;
+  tenantId: string | null;
   approvedById: string | null;
   deliveredById: string | null;
 };
@@ -64,6 +65,7 @@ export type PurchaseMaxAggregateOutputType = {
   deletedAt: Date | null;
   studentId: string | null;
   rewardId: string | null;
+  tenantId: string | null;
   approvedById: string | null;
   deliveredById: string | null;
 };
@@ -81,6 +83,7 @@ export type PurchaseCountAggregateOutputType = {
   deletedAt: number;
   studentId: number;
   rewardId: number;
+  tenantId: number;
   approvedById: number;
   deliveredById: number;
   _all: number;
@@ -107,6 +110,7 @@ export type PurchaseMinAggregateInputType = {
   deletedAt?: true;
   studentId?: true;
   rewardId?: true;
+  tenantId?: true;
   approvedById?: true;
   deliveredById?: true;
 };
@@ -124,6 +128,7 @@ export type PurchaseMaxAggregateInputType = {
   deletedAt?: true;
   studentId?: true;
   rewardId?: true;
+  tenantId?: true;
   approvedById?: true;
   deliveredById?: true;
 };
@@ -141,6 +146,7 @@ export type PurchaseCountAggregateInputType = {
   deletedAt?: true;
   studentId?: true;
   rewardId?: true;
+  tenantId?: true;
   approvedById?: true;
   deliveredById?: true;
   _all?: true;
@@ -252,6 +258,7 @@ export type PurchaseGroupByOutputType = {
   deletedAt: Date | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   approvedById: string | null;
   deliveredById: string | null;
   _count: PurchaseCountAggregateOutputType | null;
@@ -294,8 +301,13 @@ export type PurchaseWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<'Purchase'> | Date | string | null;
   studentId?: Prisma.UuidFilter<'Purchase'> | string;
   rewardId?: Prisma.UuidFilter<'Purchase'> | string;
+  tenantId?: Prisma.UuidFilter<'Purchase'> | string;
   approvedById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
   deliveredById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
+  tenant?: Prisma.XOR<
+    Prisma.TenantScalarRelationFilter,
+    Prisma.TenantWhereInput
+  >;
   student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
   reward?: Prisma.XOR<
     Prisma.RewardScalarRelationFilter,
@@ -325,8 +337,10 @@ export type PurchaseOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder;
   deliveredById?: Prisma.SortOrderInput | Prisma.SortOrder;
+  tenant?: Prisma.TenantOrderByWithRelationInput;
   student?: Prisma.UserOrderByWithRelationInput;
   reward?: Prisma.RewardOrderByWithRelationInput;
   approvedBy?: Prisma.UserOrderByWithRelationInput;
@@ -361,8 +375,13 @@ export type PurchaseWhereUniqueInput = Prisma.AtLeast<
       | null;
     studentId?: Prisma.UuidFilter<'Purchase'> | string;
     rewardId?: Prisma.UuidFilter<'Purchase'> | string;
+    tenantId?: Prisma.UuidFilter<'Purchase'> | string;
     approvedById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
     deliveredById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
+    tenant?: Prisma.XOR<
+      Prisma.TenantScalarRelationFilter,
+      Prisma.TenantWhereInput
+    >;
     student?: Prisma.XOR<
       Prisma.UserScalarRelationFilter,
       Prisma.UserWhereInput
@@ -397,6 +416,7 @@ export type PurchaseOrderByWithAggregationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder;
   deliveredById?: Prisma.SortOrderInput | Prisma.SortOrder;
   _count?: Prisma.PurchaseCountOrderByAggregateInput;
@@ -439,6 +459,7 @@ export type PurchaseScalarWhereWithAggregatesInput = {
     | null;
   studentId?: Prisma.UuidWithAggregatesFilter<'Purchase'> | string;
   rewardId?: Prisma.UuidWithAggregatesFilter<'Purchase'> | string;
+  tenantId?: Prisma.UuidWithAggregatesFilter<'Purchase'> | string;
   approvedById?:
     | Prisma.UuidNullableWithAggregatesFilter<'Purchase'>
     | string
@@ -460,6 +481,7 @@ export type PurchaseCreateInput = {
   deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchasesInput;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
@@ -480,6 +502,7 @@ export type PurchaseUncheckedCreateInput = {
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   approvedById?: string | null;
   deliveredById?: string | null;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutPurchaseInput;
@@ -509,6 +532,7 @@ export type PurchaseUpdateInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchasesNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
@@ -542,6 +566,7 @@ export type PurchaseUncheckedUpdateInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -566,6 +591,7 @@ export type PurchaseCreateManyInput = {
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   approvedById?: string | null;
   deliveredById?: string | null;
 };
@@ -622,6 +648,7 @@ export type PurchaseUncheckedUpdateManyInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -660,6 +687,7 @@ export type PurchaseCountOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrder;
   deliveredById?: Prisma.SortOrder;
 };
@@ -681,6 +709,7 @@ export type PurchaseMaxOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrder;
   deliveredById?: Prisma.SortOrder;
 };
@@ -698,12 +727,107 @@ export type PurchaseMinOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder;
   studentId?: Prisma.SortOrder;
   rewardId?: Prisma.SortOrder;
+  tenantId?: Prisma.SortOrder;
   approvedById?: Prisma.SortOrder;
   deliveredById?: Prisma.SortOrder;
 };
 
 export type PurchaseSumOrderByAggregateInput = {
   coinSpent?: Prisma.SortOrder;
+};
+
+export type PurchaseCreateNestedManyWithoutTenantInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutTenantInput,
+        Prisma.PurchaseUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.PurchaseCreateWithoutTenantInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput[];
+  createMany?: Prisma.PurchaseCreateManyTenantInputEnvelope;
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+};
+
+export type PurchaseUncheckedCreateNestedManyWithoutTenantInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutTenantInput,
+        Prisma.PurchaseUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.PurchaseCreateWithoutTenantInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput[];
+  createMany?: Prisma.PurchaseCreateManyTenantInputEnvelope;
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+};
+
+export type PurchaseUpdateManyWithoutTenantNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutTenantInput,
+        Prisma.PurchaseUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.PurchaseCreateWithoutTenantInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput[];
+  upsert?:
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutTenantInput
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutTenantInput[];
+  createMany?: Prisma.PurchaseCreateManyTenantInputEnvelope;
+  set?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  disconnect?:
+    | Prisma.PurchaseWhereUniqueInput
+    | Prisma.PurchaseWhereUniqueInput[];
+  delete?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  update?:
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutTenantInput
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutTenantInput[];
+  updateMany?:
+    | Prisma.PurchaseUpdateManyWithWhereWithoutTenantInput
+    | Prisma.PurchaseUpdateManyWithWhereWithoutTenantInput[];
+  deleteMany?:
+    | Prisma.PurchaseScalarWhereInput
+    | Prisma.PurchaseScalarWhereInput[];
+};
+
+export type PurchaseUncheckedUpdateManyWithoutTenantNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.PurchaseCreateWithoutTenantInput,
+        Prisma.PurchaseUncheckedCreateWithoutTenantInput
+      >
+    | Prisma.PurchaseCreateWithoutTenantInput[]
+    | Prisma.PurchaseUncheckedCreateWithoutTenantInput[];
+  connectOrCreate?:
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput
+    | Prisma.PurchaseCreateOrConnectWithoutTenantInput[];
+  upsert?:
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutTenantInput
+    | Prisma.PurchaseUpsertWithWhereUniqueWithoutTenantInput[];
+  createMany?: Prisma.PurchaseCreateManyTenantInputEnvelope;
+  set?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  disconnect?:
+    | Prisma.PurchaseWhereUniqueInput
+    | Prisma.PurchaseWhereUniqueInput[];
+  delete?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  connect?: Prisma.PurchaseWhereUniqueInput | Prisma.PurchaseWhereUniqueInput[];
+  update?:
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutTenantInput
+    | Prisma.PurchaseUpdateWithWhereUniqueWithoutTenantInput[];
+  updateMany?:
+    | Prisma.PurchaseUpdateManyWithWhereWithoutTenantInput
+    | Prisma.PurchaseUpdateManyWithWhereWithoutTenantInput[];
+  deleteMany?:
+    | Prisma.PurchaseScalarWhereInput
+    | Prisma.PurchaseScalarWhereInput[];
 };
 
 export type PurchaseCreateNestedManyWithoutStudentInput = {
@@ -1114,6 +1238,110 @@ export type EnumPurchaseStatusFieldUpdateOperationsInput = {
   set?: $Enums.PurchaseStatus;
 };
 
+export type PurchaseCreateWithoutTenantInput = {
+  id?: string;
+  coinSpent: number;
+  status?: $Enums.PurchaseStatus;
+  deliveryNote?: string | null;
+  stockReserved?: boolean;
+  isDeleted?: boolean;
+  purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
+  reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
+  approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
+  deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
+  transactions?: Prisma.CoinTransactionCreateNestedManyWithoutPurchaseInput;
+};
+
+export type PurchaseUncheckedCreateWithoutTenantInput = {
+  id?: string;
+  coinSpent: number;
+  status?: $Enums.PurchaseStatus;
+  deliveryNote?: string | null;
+  stockReserved?: boolean;
+  isDeleted?: boolean;
+  purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  studentId: string;
+  rewardId: string;
+  approvedById?: string | null;
+  deliveredById?: string | null;
+  transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutPurchaseInput;
+};
+
+export type PurchaseCreateOrConnectWithoutTenantInput = {
+  where: Prisma.PurchaseWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.PurchaseCreateWithoutTenantInput,
+    Prisma.PurchaseUncheckedCreateWithoutTenantInput
+  >;
+};
+
+export type PurchaseCreateManyTenantInputEnvelope = {
+  data:
+    | Prisma.PurchaseCreateManyTenantInput
+    | Prisma.PurchaseCreateManyTenantInput[];
+  skipDuplicates?: boolean;
+};
+
+export type PurchaseUpsertWithWhereUniqueWithoutTenantInput = {
+  where: Prisma.PurchaseWhereUniqueInput;
+  update: Prisma.XOR<
+    Prisma.PurchaseUpdateWithoutTenantInput,
+    Prisma.PurchaseUncheckedUpdateWithoutTenantInput
+  >;
+  create: Prisma.XOR<
+    Prisma.PurchaseCreateWithoutTenantInput,
+    Prisma.PurchaseUncheckedCreateWithoutTenantInput
+  >;
+};
+
+export type PurchaseUpdateWithWhereUniqueWithoutTenantInput = {
+  where: Prisma.PurchaseWhereUniqueInput;
+  data: Prisma.XOR<
+    Prisma.PurchaseUpdateWithoutTenantInput,
+    Prisma.PurchaseUncheckedUpdateWithoutTenantInput
+  >;
+};
+
+export type PurchaseUpdateManyWithWhereWithoutTenantInput = {
+  where: Prisma.PurchaseScalarWhereInput;
+  data: Prisma.XOR<
+    Prisma.PurchaseUpdateManyMutationInput,
+    Prisma.PurchaseUncheckedUpdateManyWithoutTenantInput
+  >;
+};
+
+export type PurchaseScalarWhereInput = {
+  AND?: Prisma.PurchaseScalarWhereInput | Prisma.PurchaseScalarWhereInput[];
+  OR?: Prisma.PurchaseScalarWhereInput[];
+  NOT?: Prisma.PurchaseScalarWhereInput | Prisma.PurchaseScalarWhereInput[];
+  id?: Prisma.UuidFilter<'Purchase'> | string;
+  coinSpent?: Prisma.IntFilter<'Purchase'> | number;
+  status?: Prisma.EnumPurchaseStatusFilter<'Purchase'> | $Enums.PurchaseStatus;
+  deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
+  stockReserved?: Prisma.BoolFilter<'Purchase'> | boolean;
+  isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
+  purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
+  deliveredAt?:
+    | Prisma.DateTimeNullableFilter<'Purchase'>
+    | Date
+    | string
+    | null;
+  updatedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
+  deletedAt?: Prisma.DateTimeNullableFilter<'Purchase'> | Date | string | null;
+  studentId?: Prisma.UuidFilter<'Purchase'> | string;
+  rewardId?: Prisma.UuidFilter<'Purchase'> | string;
+  tenantId?: Prisma.UuidFilter<'Purchase'> | string;
+  approvedById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
+  deliveredById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
+};
+
 export type PurchaseCreateWithoutStudentInput = {
   id?: string;
   coinSpent: number;
@@ -1125,6 +1353,7 @@ export type PurchaseCreateWithoutStudentInput = {
   deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchasesInput;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
   deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
@@ -1143,6 +1372,7 @@ export type PurchaseUncheckedCreateWithoutStudentInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   rewardId: string;
+  tenantId: string;
   approvedById?: string | null;
   deliveredById?: string | null;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutPurchaseInput;
@@ -1174,6 +1404,7 @@ export type PurchaseCreateWithoutApprovedByInput = {
   deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchasesInput;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
   deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
@@ -1193,6 +1424,7 @@ export type PurchaseUncheckedCreateWithoutApprovedByInput = {
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   deliveredById?: string | null;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutPurchaseInput;
 };
@@ -1223,6 +1455,7 @@ export type PurchaseCreateWithoutDeliveredByInput = {
   deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchasesInput;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
@@ -1242,6 +1475,7 @@ export type PurchaseUncheckedCreateWithoutDeliveredByInput = {
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   approvedById?: string | null;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutPurchaseInput;
 };
@@ -1287,30 +1521,6 @@ export type PurchaseUpdateManyWithWhereWithoutStudentInput = {
     Prisma.PurchaseUpdateManyMutationInput,
     Prisma.PurchaseUncheckedUpdateManyWithoutStudentInput
   >;
-};
-
-export type PurchaseScalarWhereInput = {
-  AND?: Prisma.PurchaseScalarWhereInput | Prisma.PurchaseScalarWhereInput[];
-  OR?: Prisma.PurchaseScalarWhereInput[];
-  NOT?: Prisma.PurchaseScalarWhereInput | Prisma.PurchaseScalarWhereInput[];
-  id?: Prisma.UuidFilter<'Purchase'> | string;
-  coinSpent?: Prisma.IntFilter<'Purchase'> | number;
-  status?: Prisma.EnumPurchaseStatusFilter<'Purchase'> | $Enums.PurchaseStatus;
-  deliveryNote?: Prisma.StringNullableFilter<'Purchase'> | string | null;
-  stockReserved?: Prisma.BoolFilter<'Purchase'> | boolean;
-  isDeleted?: Prisma.BoolFilter<'Purchase'> | boolean;
-  purchasedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
-  deliveredAt?:
-    | Prisma.DateTimeNullableFilter<'Purchase'>
-    | Date
-    | string
-    | null;
-  updatedAt?: Prisma.DateTimeFilter<'Purchase'> | Date | string;
-  deletedAt?: Prisma.DateTimeNullableFilter<'Purchase'> | Date | string | null;
-  studentId?: Prisma.UuidFilter<'Purchase'> | string;
-  rewardId?: Prisma.UuidFilter<'Purchase'> | string;
-  approvedById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
-  deliveredById?: Prisma.UuidNullableFilter<'Purchase'> | string | null;
 };
 
 export type PurchaseUpsertWithWhereUniqueWithoutApprovedByInput = {
@@ -1380,6 +1590,7 @@ export type PurchaseCreateWithoutTransactionsInput = {
   deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchasesInput;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   reward: Prisma.RewardCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
@@ -1399,6 +1610,7 @@ export type PurchaseUncheckedCreateWithoutTransactionsInput = {
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   approvedById?: string | null;
   deliveredById?: string | null;
 };
@@ -1455,6 +1667,7 @@ export type PurchaseUpdateWithoutTransactionsInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchasesNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
@@ -1487,6 +1700,7 @@ export type PurchaseUncheckedUpdateWithoutTransactionsInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -1508,6 +1722,7 @@ export type PurchaseCreateWithoutRewardInput = {
   deliveredAt?: Date | string | null;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchasesInput;
   student: Prisma.UserCreateNestedOneWithoutPurchasesInput;
   approvedBy?: Prisma.UserCreateNestedOneWithoutPurchasesApprovedInput;
   deliveredBy?: Prisma.UserCreateNestedOneWithoutPurchasesDeliveredInput;
@@ -1526,6 +1741,7 @@ export type PurchaseUncheckedCreateWithoutRewardInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
+  tenantId: string;
   approvedById?: string | null;
   deliveredById?: string | null;
   transactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutPurchaseInput;
@@ -1574,6 +1790,127 @@ export type PurchaseUpdateManyWithWhereWithoutRewardInput = {
   >;
 };
 
+export type PurchaseCreateManyTenantInput = {
+  id?: string;
+  coinSpent: number;
+  status?: $Enums.PurchaseStatus;
+  deliveryNote?: string | null;
+  stockReserved?: boolean;
+  isDeleted?: boolean;
+  purchasedAt?: Date | string;
+  deliveredAt?: Date | string | null;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  studentId: string;
+  rewardId: string;
+  approvedById?: string | null;
+  deliveredById?: string | null;
+};
+
+export type PurchaseUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  coinSpent?: Prisma.IntFieldUpdateOperationsInput | number;
+  status?:
+    | Prisma.EnumPurchaseStatusFieldUpdateOperationsInput
+    | $Enums.PurchaseStatus;
+  deliveryNote?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
+  reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
+  approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
+  deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
+  transactions?: Prisma.CoinTransactionUpdateManyWithoutPurchaseNestedInput;
+};
+
+export type PurchaseUncheckedUpdateWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  coinSpent?: Prisma.IntFieldUpdateOperationsInput | number;
+  status?:
+    | Prisma.EnumPurchaseStatusFieldUpdateOperationsInput
+    | $Enums.PurchaseStatus;
+  deliveryNote?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  deliveredById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  transactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutPurchaseNestedInput;
+};
+
+export type PurchaseUncheckedUpdateManyWithoutTenantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  coinSpent?: Prisma.IntFieldUpdateOperationsInput | number;
+  status?:
+    | Prisma.EnumPurchaseStatusFieldUpdateOperationsInput
+    | $Enums.PurchaseStatus;
+  deliveryNote?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  stockReserved?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deliveredAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  approvedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  deliveredById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+};
+
 export type PurchaseCreateManyStudentInput = {
   id?: string;
   coinSpent: number;
@@ -1586,6 +1923,7 @@ export type PurchaseCreateManyStudentInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   rewardId: string;
+  tenantId: string;
   approvedById?: string | null;
   deliveredById?: string | null;
 };
@@ -1603,6 +1941,7 @@ export type PurchaseCreateManyApprovedByInput = {
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   deliveredById?: string | null;
 };
 
@@ -1619,6 +1958,7 @@ export type PurchaseCreateManyDeliveredByInput = {
   deletedAt?: Date | string | null;
   studentId: string;
   rewardId: string;
+  tenantId: string;
   approvedById?: string | null;
 };
 
@@ -1646,6 +1986,7 @@ export type PurchaseUpdateWithoutStudentInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchasesNestedInput;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
   deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
@@ -1677,6 +2018,7 @@ export type PurchaseUncheckedUpdateWithoutStudentInput = {
     | string
     | null;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -1713,6 +2055,7 @@ export type PurchaseUncheckedUpdateManyWithoutStudentInput = {
     | string
     | null;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -1747,6 +2090,7 @@ export type PurchaseUpdateWithoutApprovedByInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchasesNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
   deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
@@ -1779,6 +2123,7 @@ export type PurchaseUncheckedUpdateWithoutApprovedByInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   deliveredById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -1812,6 +2157,7 @@ export type PurchaseUncheckedUpdateManyWithoutApprovedByInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   deliveredById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -1842,6 +2188,7 @@ export type PurchaseUpdateWithoutDeliveredByInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchasesNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   reward?: Prisma.RewardUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
@@ -1874,6 +2221,7 @@ export type PurchaseUncheckedUpdateWithoutDeliveredByInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -1907,6 +2255,7 @@ export type PurchaseUncheckedUpdateManyWithoutDeliveredByInput = {
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
   rewardId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -1925,6 +2274,7 @@ export type PurchaseCreateManyRewardInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   studentId: string;
+  tenantId: string;
   approvedById?: string | null;
   deliveredById?: string | null;
 };
@@ -1953,6 +2303,7 @@ export type PurchaseUpdateWithoutRewardInput = {
     | Date
     | string
     | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchasesNestedInput;
   student?: Prisma.UserUpdateOneRequiredWithoutPurchasesNestedInput;
   approvedBy?: Prisma.UserUpdateOneWithoutPurchasesApprovedNestedInput;
   deliveredBy?: Prisma.UserUpdateOneWithoutPurchasesDeliveredNestedInput;
@@ -1984,6 +2335,7 @@ export type PurchaseUncheckedUpdateWithoutRewardInput = {
     | string
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -2020,6 +2372,7 @@ export type PurchaseUncheckedUpdateManyWithoutRewardInput = {
     | string
     | null;
   studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
   approvedById?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -2085,8 +2438,10 @@ export type PurchaseSelect<
     deletedAt?: boolean;
     studentId?: boolean;
     rewardId?: boolean;
+    tenantId?: boolean;
     approvedById?: boolean;
     deliveredById?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
     approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
@@ -2114,8 +2469,10 @@ export type PurchaseSelectCreateManyAndReturn<
     deletedAt?: boolean;
     studentId?: boolean;
     rewardId?: boolean;
+    tenantId?: boolean;
     approvedById?: boolean;
     deliveredById?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
     approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
@@ -2141,8 +2498,10 @@ export type PurchaseSelectUpdateManyAndReturn<
     deletedAt?: boolean;
     studentId?: boolean;
     rewardId?: boolean;
+    tenantId?: boolean;
     approvedById?: boolean;
     deliveredById?: boolean;
+    tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
     student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
     approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
@@ -2164,6 +2523,7 @@ export type PurchaseSelectScalar = {
   deletedAt?: boolean;
   studentId?: boolean;
   rewardId?: boolean;
+  tenantId?: boolean;
   approvedById?: boolean;
   deliveredById?: boolean;
 };
@@ -2184,6 +2544,7 @@ export type PurchaseOmit<
   | 'deletedAt'
   | 'studentId'
   | 'rewardId'
+  | 'tenantId'
   | 'approvedById'
   | 'deliveredById',
   ExtArgs['result']['purchase']
@@ -2192,6 +2553,7 @@ export type PurchaseInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
   approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
@@ -2203,6 +2565,7 @@ export type PurchaseIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
   approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
@@ -2212,6 +2575,7 @@ export type PurchaseIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
+  tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
   student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   reward?: boolean | Prisma.RewardDefaultArgs<ExtArgs>;
   approvedBy?: boolean | Prisma.Purchase$approvedByArgs<ExtArgs>;
@@ -2224,6 +2588,7 @@ export type $PurchasePayload<
 > = {
   name: 'Purchase';
   objects: {
+    tenant: Prisma.$TenantPayload<ExtArgs>;
     student: Prisma.$UserPayload<ExtArgs>;
     reward: Prisma.$RewardPayload<ExtArgs>;
     approvedBy: Prisma.$UserPayload<ExtArgs> | null;
@@ -2244,6 +2609,7 @@ export type $PurchasePayload<
       deletedAt: Date | null;
       studentId: string;
       rewardId: string;
+      tenantId: string;
       approvedById: string | null;
       deliveredById: string | null;
     },
@@ -2796,6 +3162,20 @@ export interface Prisma__PurchaseClient<
   GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: 'PrismaPromise';
+  tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>,
+  ): Prisma.Prisma__TenantClient<
+    | runtime.Types.Result.GetResult<
+        Prisma.$TenantPayload<ExtArgs>,
+        T,
+        'findUniqueOrThrow',
+        GlobalOmitOptions
+      >
+    | Null,
+    Null,
+    ExtArgs,
+    GlobalOmitOptions
+  >;
   student<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>,
   ): Prisma.Prisma__UserClient<
@@ -2915,6 +3295,7 @@ export interface PurchaseFieldRefs {
   readonly deletedAt: Prisma.FieldRef<'Purchase', 'DateTime'>;
   readonly studentId: Prisma.FieldRef<'Purchase', 'String'>;
   readonly rewardId: Prisma.FieldRef<'Purchase', 'String'>;
+  readonly tenantId: Prisma.FieldRef<'Purchase', 'String'>;
   readonly approvedById: Prisma.FieldRef<'Purchase', 'String'>;
   readonly deliveredById: Prisma.FieldRef<'Purchase', 'String'>;
 }

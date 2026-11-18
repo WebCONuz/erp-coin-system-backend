@@ -2,7 +2,11 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
+import { archivedName } from 'src/common/utils/soft-delete-unique';
+
+const SUBJECT_NAME_MAX = 150;
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
@@ -13,7 +17,28 @@ import { Prisma } from 'src/generated/prisma/client';
 export class SubjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  // Faol fan shu nomni band qilsa — 409; o'chirilgan fan bo'lsa — nomi bo'shatiladi
+  private async assertNameFree(
+    tenantId: string,
+    name: string,
+    excludeId?: string,
+  ) {
+    const existing = await this.prisma.subject.findUnique({
+      where: { tenantId_name: { tenantId, name } },
+      select: { id: true, isDeleted: true },
+    });
+    if (!existing || existing.id === excludeId) return;
+    if (!existing.isDeleted) {
+      throw new ConflictException('Bu nomli fan allaqachon mavjud');
+    }
+    await this.prisma.subject.update({
+      where: { id: existing.id },
+      data: { name: archivedName(name, existing.id, SUBJECT_NAME_MAX) },
+    });
+  }
+
   async create(tenantId: string, createdById: string, dto: CreateSubjectDto) {
+    await this.assertNameFree(tenantId, dto.name);
     return this.prisma.subject.create({
       data: {
         name: dto.name,
@@ -96,6 +121,7 @@ export class SubjectsService {
     }
 
     await this.findOne(id, tenantId);
+    if (dto.name) await this.assertNameFree(tenantId, dto.name, id);
 
     return await this.prisma.subject.update({
       where: { id },
@@ -104,11 +130,13 @@ export class SubjectsService {
   }
 
   async remove(id: string, tenantId: string, archiverId: string) {
-    await this.findOne(id, tenantId);
+    const subject = await this.findOne(id, tenantId);
 
     const deleted = await this.prisma.subject.update({
       where: { id },
       data: {
+        // Nom yangi fan uchun bo'shatiladi (unique [tenantId, name])
+        name: archivedName(subject.name, id, SUBJECT_NAME_MAX),
         isDeleted: true,
         isActive: false,
         deletedAt: new Date(),

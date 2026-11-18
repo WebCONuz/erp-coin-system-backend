@@ -1,6 +1,6 @@
 # Xavfsizlik va Barqarorlik Yangilanishi — Frontend API Qo'llanmasi
 
-> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** va **3-bosqich (jadval va sessiyalar, 3A + 3B)** yozilgan.
+> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** **3-bosqich (jadval va sessiyalar)** va **4-bosqich (DB tozalash)** yozilgan.
 
 > Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi va jadval/sessiya qoidalari aniqlashtirildi. Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va yangi xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
 
@@ -46,6 +46,7 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
   - [3.12 Shablonning amal qilish muddati](#312-shablonning-amal-qilish-muddati)
   - [3.13 Istisno: o'rinbosar o'qituvchi va boshqa xona](#313-istisno-orinbosar-oqituvchi-va-boshqa-xona)
   - [3.14 Kalendar javobi](#314-kalendar-javobi)
+- [4. Ma'lumotlar bazasi tozalash](#4-malumotlar-bazasi-tozalash)
 - [Xato holatlari](#xato-holatlari)
 - [O'zgarishlar jurnali](#ozgarishlar-jurnali)
 
@@ -1051,6 +1052,23 @@ Shablon javoblarida `validFrom`, `validTo` maydonlari bor.
 
 ---
 
+## 4. Ma'lumotlar bazasi tozalash
+
+Bu bosqich asosan ichki o'zgarishlar (indexlar, tenant izolyatsiyasi). Frontendga ta'siri kichik:
+
+| Endpoint | O'zgarish |
+| --- | --- |
+| `POST /subjects`, `PATCH /subjects/:id` | Shu nomli **faol** fan bo'lsa — `409 "Bu nomli fan allaqachon mavjud"` (avval tushunarsiz `"Bu tenantId, name allaqachon mavjud"`). **O'chirilgan** fan nomini qayta ishlatish mumkin (avval bloklanardi) |
+| `DELETE /reward-category/:id` | Endi **soft delete** (avval bazadan butunlay o'chirilardi). Javob — o'chirilgan kategoriya obyekti, uning `name` i `"... [o'chirilgan xxxxxxxx]"` ko'rinishiga o'zgaradi. Faol sovg'asi bor kategoriyani o'chirib bo'lmaydi — `409` (avvalgidek) |
+| `GET /reward-category`, `GET /reward-category/:id` | O'chirilgan kategoriyalar endi qaytmaydi. `_count.rewards` — faqat o'chirilmagan sovg'alar soni |
+| `POST /reward-category`, `PATCH /reward-category/:id` | O'chirilgan kategoriya nomini qayta ishlatish mumkin. Faol nom band bo'lsa — `409 "Bu nomli kategoriya allaqachon mavjud"` |
+| `POST /rewards`, `PATCH /rewards/:id` | `categoryId` shu tenantdagi o'chirilmagan kategoriya bo'lishi shart — aks holda `404 "Kategoriya topilmadi"` (avval boshqa tenant kategoriyasi ham o'tardi) |
+| Coin tranzaksiyalari, xaridlar, yo'qlama yozuvlari | Javoblarda yangi `tenantId` maydoni (qo'shimcha, hech narsa o'zgarmaydi) |
+
+> O'chirilgan fan/kategoriya nomi `"Matematika [o'chirilgan 3f2c1a9e]"` ko'rinishida saqlanadi. Ular ro'yxatlarda ko'rinmaydi, lekin eski sessiya yoki sovg'a ma'lumotida (masalan, tarixdagi darsning fani) shu nom chiqishi mumkin.
+
+---
+
 ## Xato holatlari
 
 | Status | `code` | Qachon |
@@ -1103,3 +1121,4 @@ Shablon javoblarida `validFrom`, `validTo` maydonlari bor.
 | 2026-11-18 | Yo'qlama faqat dars sanasidagi guruh a'zolari uchun; yangi `GET /sessions/:id/roster`; `GroupStudent.leftAt` |
 | 2026-11-18 | Dam olish kunlari: `GET/POST/DELETE /holidays`; `generate-sessions` javobida `holidays` |
 | 2026-11-18 | Shablon `validFrom`/`validTo` (to'qnashuv tekshiruvi muddatni hisobga oladi); istisnoda o'rinbosar `teacherId` va `roomId`; kalendar javobiga `holiday`, `exception.teacher/room`, `template.validFrom/validTo`, `session.templateId` |
+| 2026-11-18 | Fan va sovg'a kategoriyasi: o'chirilgan nomni qayta ishlatish mumkin, aniq `409` xabarlari; kategoriya soft delete; sovg'ada `categoryId` tenant bo'yicha tekshiriladi; tranzaksiya/xarid/yo'qlama javoblarida `tenantId` |

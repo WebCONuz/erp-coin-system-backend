@@ -71,7 +71,7 @@ export class PurchasesService {
 
     const where: Prisma.PurchaseWhereInput = {
       isDeleted: false,
-      student: { tenantId },
+      tenantId,
     };
 
     if (studentId) where.studentId = studentId;
@@ -108,7 +108,7 @@ export class PurchasesService {
     this.assertCanView(requesterRole);
 
     const purchase = await this.prisma.purchase.findFirst({
-      where: { id, isDeleted: false, student: { tenantId } },
+      where: { id, isDeleted: false, tenantId },
       include: PURCHASE_INCLUDE,
     });
 
@@ -129,7 +129,7 @@ export class PurchasesService {
     dto: UpdatePurchaseStatusDto,
   ) {
     const purchase = await this.prisma.purchase.findFirst({
-      where: { id, isDeleted: false, student: { tenantId } },
+      where: { id, isDeleted: false, tenantId },
       include: { reward: true, student: { include: { wallet: true } } },
     });
 
@@ -220,6 +220,7 @@ export class PurchasesService {
       await tx.coinTransaction.create({
         data: {
           walletId: wallet.id,
+          tenantId: purchase.tenantId,
           studentId: purchase.studentId,
           teacherId: adminId,
           amount: purchase.coinSpent,

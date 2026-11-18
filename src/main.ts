@@ -75,6 +75,9 @@ async function start() {
   // app
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // SIGTERM/SIGINT (deploy, restart) — onModuleDestroy hook'lari ishlaydi, DB ulanishlari yopiladi
+  app.enableShutdownHooks();
+
   // Reverse proxy (nginx) ortida haqiqiy klient IP'si X-Forwarded-For dan olinadi.
   // Aks holda throttler barcha so'rovlarni bitta (proxy) IP deb hisoblaydi.
   // Masalan: TRUST_PROXY=1 (bitta proxy). Proxy bo'lmasa — bermang.

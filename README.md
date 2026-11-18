@@ -64,6 +64,10 @@ SWAGGER_USER="docs_admin"                # Swagger basic auth (dev'da berilmasa 
 SWAGGER_PASSWORD="strong_password"
 SWAGGER_ENABLED="false"                  # production'da Swagger faqat "true" bo'lsa ochiladi
 TRUST_PROXY="1"                          # nginx ortida bo'lsa: proxy soni (throttler haqiqiy IP'ni ko'rishi uchun)
+
+DB_POOL_MAX=10                           # bitta instance'dagi DB ulanishlari (Postgres max_connections / PgBouncer ga qarab)
+DB_POOL_IDLE_MS=30000                    # bo'sh ulanish yopilish vaqti
+DB_CONNECT_TIMEOUT_MS=10000              # ulanish kutish limiti
 ```
 
 ### 3. Database va seed
@@ -85,6 +89,7 @@ npm run start:dev
 ```
 
 - API: `http://localhost:3031/api`
+- Health: `http://localhost:3031/api/health` (auth'siz; DB ishlamasa `503`)
 - Swagger: `http://localhost:3031/api/docs` (login: `SWAGGER_USER` / `SWAGGER_PASSWORD`; dev'da berilmasa `kottaAdmin` / `12345`)
 
 ---

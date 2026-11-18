@@ -2,7 +2,7 @@ import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
-import { DEFAULT_TENANT_ROLES } from '../roles/constants';
+import { DEFAULT_TENANT_ROLES, ROLE_LEVELS } from '../roles/constants';
 import { DEFAULT_TENANT_COIN_RULES } from '../coin-rules/constants';
 import { normalizeUsername, USERNAME_REGEX } from '../users/constants/username';
 import { SYSTEM_TENANT_SLUG } from '../tenant/constants/system-tenant';
@@ -32,11 +32,11 @@ async function seedSystemTenant() {
 async function seedRoles(systemTenantId: string) {
   const creatorRole = await prisma.role.upsert({
     where: { tenantId_name: { tenantId: systemTenantId, name: 'creator' } },
-    update: {},
+    update: { level: ROLE_LEVELS.creator },
     create: {
       name: 'creator',
       displayName: 'Creator (System)',
-      level: 100,
+      level: ROLE_LEVELS.creator,
       scope: 'system',
       canDelete: true,
       canManageAdmins: true,
@@ -48,11 +48,11 @@ async function seedRoles(systemTenantId: string) {
 
   const superAdminRole = await prisma.role.upsert({
     where: { tenantId_name: { tenantId: systemTenantId, name: 'super_admin' } },
-    update: {},
+    update: { level: ROLE_LEVELS.super_admin },
     create: {
       name: 'super_admin',
       displayName: 'Super Admin',
-      level: 90,
+      level: ROLE_LEVELS.super_admin,
       scope: 'system',
       canDelete: true,
       canManageAdmins: true,

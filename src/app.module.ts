@@ -25,6 +25,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AUTH_THROTTLER } from './auth/throttle/auth-throttle';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { AUTH_THROTTLER } from './auth/throttle/auth-throttle';
     ScheduleModule,
     AuditLogModule,
     DashboardModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [

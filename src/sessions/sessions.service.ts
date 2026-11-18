@@ -66,6 +66,23 @@ export interface CoinSkippedItem {
   amount?: number;
 }
 
+// Bitta o'quvchi bo'yicha saqlanadigan tekshiruv: yozuv maydonlari va beriladigan coinlar
+interface CheckPlanItem {
+  studentId: string;
+  fields: {
+    isPresent: boolean;
+    status: AttendanceStatus;
+    homeworkDone: boolean;
+    score?: number | null;
+    note?: string | null;
+  };
+  items: SessionCoinItem[];
+}
+
+// Butun guruh tekshiruvi bitta tranzaksiyada — Prisma standart 5 soniyalik limiti katta
+// guruhlar (300 tagacha o'quvchi) uchun yetmasligi mumkin
+const CHECK_TX_OPTIONS = { maxWait: 10_000, timeout: 60_000 } as const;
+
 type CheckableSession = Prisma.SessionGetPayload<{
   include: {
     subject: { select: { name: true } };
@@ -959,8 +976,7 @@ export class SessionsService {
       sessionId: session.id,
     };
 
-    let processed = 0;
-    const coinsSkippedFor: CoinSkippedItem[] = [];
+    const plan: CheckPlanItem[] = [];
 
     // Holatlar avval tekshiriladi — nomuvofiqlik bo'lsa hech kim saqlanmaydi
     const statuses = new Map(
@@ -1030,58 +1046,29 @@ export class SessionsService {
         });
       }
 
-      // Yozuv va coinlar bitta tranzaksiyada — biri muvaffaqiyatsiz bo'lsa ikkinchisi ham qaytadi.
-      // Yo'qlama qayta saqlanganda avvalgi avtomatik tranzaksiyalar bekor qilinib,
-      // joriy holatga mos yangisi yaratiladi — coin dublikat bo'lmaydi.
-      const result = await this.prisma.$transaction(async (tx) => {
-        await this.lockCheckableSession(
-          tx,
-          sessionId,
-          EvaluationMode.attendance,
-        );
-
-        await tx.attendanceRecord.upsert({
-          where: {
-            sessionId_studentId: { sessionId, studentId: record.studentId },
-          },
-          update: {
-            isPresent,
-            status,
-            homeworkDone: record.homeworkDone,
-            recordedById,
-            isDeleted: false,
-          },
-          create: {
-            sessionId,
-            tenantId,
-            studentId: record.studentId,
-            isPresent,
-            status,
-            homeworkDone: record.homeworkDone,
-            recordedById,
-          },
-        });
-
-        return this.coinTrxService.replaceSessionTransactions(tx, {
-          tenantId,
-          sessionId,
-          studentId: record.studentId,
-          sourceTypes: SESSION_MANAGED_SOURCE_TYPES[EvaluationMode.attendance],
-          items,
-          actorId: recordedById,
-        });
+      plan.push({
+        studentId: record.studentId,
+        fields: {
+          isPresent,
+          status,
+          homeworkDone: record.homeworkDone,
+        },
+        items,
       });
-
-      processed++;
-      this.collectSkipped(record.studentId, result, coinsSkippedFor);
     }
 
-    await this.markChecked(sessionId);
+    const coinsSkippedFor = await this.persistCheck(
+      sessionId,
+      tenantId,
+      recordedById,
+      EvaluationMode.attendance,
+      plan,
+    );
 
     return {
       success: true,
       message: 'Yoqlama muvaffaqiyatli saqlandi va tangalar hisoblandi.',
-      processedRecordsCount: processed,
+      processedRecordsCount: plan.length,
       coinsSkippedFor,
     };
   }
@@ -1135,8 +1122,7 @@ export class SessionsService {
     const sourceType =
       SESSION_TYPE_CONFIG[session.sessionType].scoredSourceType;
 
-    let processed = 0;
-    const coinsSkippedFor: CoinSkippedItem[] = [];
+    const plan: CheckPlanItem[] = [];
 
     for (const record of dto.records) {
       // Qatnashmagan o'quvchiga ball va coin yozilmaydi
@@ -1161,59 +1147,33 @@ export class SessionsService {
             ]
           : [];
 
-      const result = await this.prisma.$transaction(async (tx) => {
-        await this.lockCheckableSession(tx, sessionId, EvaluationMode.scored);
-
-        await tx.attendanceRecord.upsert({
-          where: {
-            sessionId_studentId: { sessionId, studentId: record.studentId },
-          },
-          update: {
-            isPresent: record.isPresent,
-            status: record.isPresent
-              ? AttendanceStatus.present
-              : AttendanceStatus.absent,
-            homeworkDone: false,
-            score,
-            note: record.note ?? null,
-            recordedById,
-            isDeleted: false,
-          },
-          create: {
-            sessionId,
-            tenantId,
-            studentId: record.studentId,
-            isPresent: record.isPresent,
-            status: record.isPresent
-              ? AttendanceStatus.present
-              : AttendanceStatus.absent,
-            homeworkDone: false,
-            score,
-            note: record.note ?? null,
-            recordedById,
-          },
-        });
-
-        return this.coinTrxService.replaceSessionTransactions(tx, {
-          tenantId,
-          sessionId,
-          studentId: record.studentId,
-          sourceTypes: SESSION_MANAGED_SOURCE_TYPES[EvaluationMode.scored],
-          items,
-          actorId: recordedById,
-        });
+      plan.push({
+        studentId: record.studentId,
+        fields: {
+          isPresent: record.isPresent,
+          status: record.isPresent
+            ? AttendanceStatus.present
+            : AttendanceStatus.absent,
+          homeworkDone: false,
+          score,
+          note: record.note ?? null,
+        },
+        items,
       });
-
-      processed++;
-      this.collectSkipped(record.studentId, result, coinsSkippedFor);
     }
 
-    await this.markChecked(sessionId);
+    const coinsSkippedFor = await this.persistCheck(
+      sessionId,
+      tenantId,
+      recordedById,
+      EvaluationMode.scored,
+      plan,
+    );
 
     return {
       success: true,
       message: 'Natijalar muvaffaqiyatli saqlandi va tangalar hisoblandi.',
-      processedRecordsCount: processed,
+      processedRecordsCount: plan.length,
       coinsSkippedFor,
     };
   }
@@ -1252,13 +1212,70 @@ export class SessionsService {
     }
   }
 
+  /**
+   * Tekshiruvni (yo'qlama yoki natija) **bitta tranzaksiyada** saqlaydi: sessiya bir marta
+   * qulflanadi, har bir o'quvchi uchun yozuv upsert qilinadi va coinlari almashtiriladi,
+   * oxirida sessiya tekshirilgan deb belgilanadi. Hammasi yoki hech narsa — yarmi saqlanib
+   * qolmaydi. Coin o'tkazib yuborilishi (balans yetmasligi) xato emas, `coinsSkippedFor` da qaytadi.
+   * O'quvchilar studentId tartibida — parallel tranzaksiyalar hamyonlarni bir xil tartibda
+   * qulflaydi (deadlock bo'lmaydi).
+   */
+  private async persistCheck(
+    sessionId: string,
+    tenantId: string,
+    recordedById: string,
+    mode: EvaluationMode,
+    plan: CheckPlanItem[],
+  ): Promise<CoinSkippedItem[]> {
+    const ordered = [...plan].sort((a, b) =>
+      a.studentId < b.studentId ? -1 : a.studentId > b.studentId ? 1 : 0,
+    );
+
+    return this.prisma.$transaction(async (tx) => {
+      await this.lockCheckableSession(tx, sessionId, mode);
+
+      const coinsSkippedFor: CoinSkippedItem[] = [];
+      for (const item of ordered) {
+        await tx.attendanceRecord.upsert({
+          where: {
+            sessionId_studentId: { sessionId, studentId: item.studentId },
+          },
+          update: { ...item.fields, recordedById, isDeleted: false },
+          create: {
+            ...item.fields,
+            sessionId,
+            tenantId,
+            studentId: item.studentId,
+            recordedById,
+          },
+        });
+
+        const result = await this.coinTrxService.replaceSessionTransactions(
+          tx,
+          {
+            tenantId,
+            sessionId,
+            studentId: item.studentId,
+            sourceTypes: SESSION_MANAGED_SOURCE_TYPES[mode],
+            items: item.items,
+            actorId: recordedById,
+          },
+        );
+        this.collectSkipped(item.studentId, result, coinsSkippedFor);
+      }
+
+      await this.markChecked(tx, sessionId);
+      return coinsSkippedFor;
+    }, CHECK_TX_OPTIONS);
+  }
+
   // isChecked + birinchi saqlash vaqti (checkedAt faqat birinchi marta yoziladi)
-  private async markChecked(sessionId: string) {
-    await this.prisma.session.update({
+  private async markChecked(tx: Prisma.TransactionClient, sessionId: string) {
+    await tx.session.update({
       where: { id: sessionId },
       data: { isChecked: true },
     });
-    await this.prisma.session.updateMany({
+    await tx.session.updateMany({
       where: { id: sessionId, checkedAt: null },
       data: { checkedAt: new Date() },
     });

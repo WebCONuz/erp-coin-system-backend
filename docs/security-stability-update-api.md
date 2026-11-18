@@ -1,6 +1,6 @@
 # Xavfsizlik va Barqarorlik Yangilanishi — Frontend API Qo'llanmasi
 
-> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** **3-bosqich (jadval va sessiyalar)** va **4-bosqich (DB tozalash)** yozilgan.
+> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** **3-bosqich (jadval va sessiyalar)** **4-bosqich (DB tozalash)** va **5-bosqich (unumdorlik)** yozilgan.
 
 > Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi va jadval/sessiya qoidalari aniqlashtirildi. Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va yangi xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
 
@@ -47,6 +47,7 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
   - [3.13 Istisno: o'rinbosar o'qituvchi va boshqa xona](#313-istisno-orinbosar-oqituvchi-va-boshqa-xona)
   - [3.14 Kalendar javobi](#314-kalendar-javobi)
 - [4. Ma'lumotlar bazasi tozalash](#4-malumotlar-bazasi-tozalash)
+- [5. Unumdorlik va ishonchlilik](#5-unumdorlik-va-ishonchlilik)
 - [Xato holatlari](#xato-holatlari)
 - [O'zgarishlar jurnali](#ozgarishlar-jurnali)
 
@@ -517,7 +518,7 @@ Request va response o'zgarmadi. Ichki tuzatishlar:
 | Bitta tranzaksiyani parallel ikki marta bekor qilish balansni ikki marta o'zgartirardi | Ikkinchisi `409` oladi |
 | Sessiya o'chirilayotgan paytda yo'qlama saqlansa, o'chirilgan sessiyaga coin yozilishi mumkin edi | Sessiya qulflanadi; kech qolgan so'rov `404 "Dars topilmadi"` oladi |
 
-**Yo'qlama/natija saqlashdagi yangi holat:** saqlash davomida boshqa user sessiyani qulflasa (`POST /sessions/:id/lock`), qolgan o'quvchilar saqlanmaydi va `400` + `code: "SESSION_LOCKED"` qaytadi. Bunda avval saqlanganlar saqlangan bo'lib qoladi, shuning uchun frontend ro'yxatni qayta yuklashi (`GET /sessions/:id/attendance`) kerak.
+**Yo'qlama/natija saqlash — hammasi yoki hech narsa** ([5-bosqich](#5-unumdorlik-va-ishonchlilik)): butun ro'yxat bitta tranzaksiyada saqlanadi. Xato bo'lsa (masalan, shu payt boshqa user sessiyani qulflasa — `400`, `code: "SESSION_LOCKED"`) **hech bir** o'quvchi saqlanmaydi, qisman saqlangan holat bo'lmaydi.
 
 ---
 
@@ -1069,6 +1070,41 @@ Bu bosqich asosan ichki o'zgarishlar (indexlar, tenant izolyatsiyasi). Frontendg
 
 ---
 
+## 5. Unumdorlik va ishonchlilik
+
+Request va response formatlari **o'zgarmadi**. Frontend sezishi mumkin bo'lgan farqlar:
+
+| O'zgarish | Frontendga ta'siri |
+| --- | --- |
+| Har bir so'rovda auth/rol tekshiruvi 3 ta DB so'rovi o'rniga 1 ta | Barcha endpointlar biroz tezroq |
+| `POST /sessions/:id/attendance` va `POST /sessions/:id/results` — butun ro'yxat **bitta tranzaksiyada** | Xato bo'lsa hech kim saqlanmaydi (avval xato chiqqan joygacha saqlanib qolardi). Xatodan keyin formani o'zgarishsiz qayta yuborish xavfsiz. Katta guruhlarda tezroq |
+| Yangi `GET /api/health` | Monitoring uchun (auth talab qilinmaydi) |
+
+### `GET /api/health`
+
+Auth talab qilinmaydi. Load balancer, docker healthcheck yoki status sahifasi uchun.
+
+**Response `200`:**
+
+```json
+{
+  "status": "ok",
+  "db": "up",
+  "dbLatencyMs": 3,
+  "uptimeSeconds": 86400
+}
+```
+
+**Response `503`** — server ishlayapti, lekin DB'ga ulanib bo'lmadi:
+
+```json
+{ "status": "error", "db": "down" }
+```
+
+> Frontend xato sahifasida (masalan, ko'p `5xx` kelganda) shu endpoint orqali "server texnik ishlarda" degan holatni aniqlashi mumkin.
+
+---
+
 ## Xato holatlari
 
 | Status | `code` | Qachon |
@@ -1122,3 +1158,4 @@ Bu bosqich asosan ichki o'zgarishlar (indexlar, tenant izolyatsiyasi). Frontendg
 | 2026-11-18 | Dam olish kunlari: `GET/POST/DELETE /holidays`; `generate-sessions` javobida `holidays` |
 | 2026-11-18 | Shablon `validFrom`/`validTo` (to'qnashuv tekshiruvi muddatni hisobga oladi); istisnoda o'rinbosar `teacherId` va `roomId`; kalendar javobiga `holiday`, `exception.teacher/room`, `template.validFrom/validTo`, `session.templateId` |
 | 2026-11-18 | Fan va sovg'a kategoriyasi: o'chirilgan nomni qayta ishlatish mumkin, aniq `409` xabarlari; kategoriya soft delete; sovg'ada `categoryId` tenant bo'yicha tekshiriladi; tranzaksiya/xarid/yo'qlama javoblarida `tenantId` |
+| 2026-11-18 | Yo'qlama/natija bitta tranzaksiyada (hammasi yoki hech narsa); auth tekshiruvi 1 ta DB so'rovi; yangi `GET /api/health` |

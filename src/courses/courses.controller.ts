@@ -25,6 +25,7 @@ import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags('Kurslar')
 @ApiBearerAuth()
@@ -34,6 +35,7 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Post()
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Kurs yaratish' })
   @ApiResponse({ status: 201, description: 'Kurs muvaffaqiyatli yaratildi' })
   create(
@@ -45,6 +47,7 @@ export class CoursesController {
   }
 
   @Get()
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Barcha kurslarni olish (filtrlar bilan)' })
   @ApiResponse({ status: 200, description: 'Kurslar ro‘yxati' })
   findAll(@TenantContext() tenantId: string, @Query() query: QueryCourseDto) {
@@ -52,6 +55,7 @@ export class CoursesController {
   }
 
   @Get(':id')
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'ID bo‘yicha kursni olish' })
   @ApiParam({
     name: 'id',
@@ -68,6 +72,7 @@ export class CoursesController {
   }
 
   @Patch(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Kursni yangilash' })
   @ApiParam({
     name: 'id',
@@ -84,6 +89,7 @@ export class CoursesController {
   }
 
   @Delete(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Kursni soft-delete qilish' })
   @ApiParam({
     name: 'id',

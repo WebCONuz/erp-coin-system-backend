@@ -2,8 +2,10 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { SYSTEM_TENANT_SLUG } from './constants/system-tenant';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { DEFAULT_TENANT_ROLES } from '../roles/constants';
@@ -97,8 +99,19 @@ export class TenantService {
     };
   }
 
+  // Tizim tenantini o'chirish/nofaol qilish/slug'ini o'zgartirish taqiqlanadi
+  private assertNotSystemTenant(slug: string, action: string) {
+    if (slug === SYSTEM_TENANT_SLUG) {
+      throw new ForbiddenException(`Tizim tenantini ${action} mumkin emas`);
+    }
+  }
+
   async update(id: string, dto: UpdateTenantDto) {
-    await this.findOne(id); // mavjudligini tekshirish
+    const tenant = await this.findOne(id); // mavjudligini tekshirish
+
+    if (dto.slug && dto.slug !== tenant.data.slug) {
+      this.assertNotSystemTenant(tenant.data.slug, "slug'ini o'zgartirish");
+    }
 
     if (dto.slug) {
       const existing = await this.prisma.tenant.findUnique({
@@ -119,6 +132,7 @@ export class TenantService {
 
   async remove(id: string) {
     const tenant = await this.findOne(id);
+    this.assertNotSystemTenant(tenant.data.slug, "o'chirish");
     await this.prisma.tenant.delete({ where: { id } });
 
     return {
@@ -130,6 +144,9 @@ export class TenantService {
 
   async toggleActive(id: string) {
     const tenant = await this.findOne(id);
+    if (tenant.data.isActive) {
+      this.assertNotSystemTenant(tenant.data.slug, 'nofaol qilish');
+    }
     await this.prisma.tenant.update({
       where: { id },
       data: { isActive: !tenant.data.isActive },

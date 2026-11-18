@@ -24,21 +24,27 @@ import { MessagesModule } from './messages/messages.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AUTH_THROTTLER } from './auth/throttle/auth-throttle';
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot([
-      {
-        name: 'short',
-        ttl: 1000,
-        limit: 10,
-      },
-      {
-        name: 'long',
-        ttl: 60000,
-        limit: 100,
-      },
-    ]),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          name: 'short',
+          ttl: 1000,
+          limit: 10,
+        },
+        {
+          name: 'long',
+          ttl: 60000,
+          limit: 100,
+        },
+        // Faqat @AuthThrottle() qo'yilgan endpointlarda, username bo'yicha
+        AUTH_THROTTLER,
+      ],
+      errorMessage: "Juda ko'p urinish. Birozdan keyin qayta urinib ko'ring",
+    }),
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     PrismaModule,
     UsersModule,

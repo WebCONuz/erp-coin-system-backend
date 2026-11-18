@@ -24,6 +24,7 @@ import { QueryRoomDto } from './dto/query-room.dto';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags('Xonalar')
 @ApiBearerAuth()
@@ -33,6 +34,7 @@ export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @Post()
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Yangi xona yaratish' })
   @ApiResponse({ status: 201, description: 'Xona muvaffaqiyatli yaratildi' })
   create(@TenantContext() tenantId: string, @Body() dto: CreateRoomDto) {
@@ -40,6 +42,7 @@ export class RoomsController {
   }
 
   @Get()
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'Barcha xonalarni olish (filtrlar bilan)' })
   @ApiResponse({ status: 200, description: 'Xonalar ro‘yxati' })
   findAll(@TenantContext() tenantId: string, @Query() query: QueryRoomDto) {
@@ -47,6 +50,7 @@ export class RoomsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'super_admin', 'teacher')
   @ApiOperation({ summary: 'ID bo‘yicha xonani olish' })
   @ApiParam({
     name: 'id',
@@ -63,6 +67,7 @@ export class RoomsController {
   }
 
   @Patch(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Xona ma’lumotlarini yangilash' })
   @ApiParam({
     name: 'id',
@@ -79,6 +84,7 @@ export class RoomsController {
   }
 
   @Delete(':id')
+  @Roles('admin', 'super_admin')
   @ApiOperation({ summary: 'Xonani soft-delete (arxiv) qilish' })
   @ApiParam({
     name: 'id',

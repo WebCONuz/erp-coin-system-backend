@@ -3,6 +3,8 @@ import {
   UnauthorizedException,
   BadRequestException,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
@@ -14,6 +16,13 @@ import * as crypto from 'crypto';
 import { Response } from 'express';
 import { TokenService } from './token.service';
 import { AuthPayloadType } from 'src/common/types';
+import {
+  ACTIVE_ACCOUNT_WHERE,
+  AUTH_ERROR_CODES,
+} from './constants/active-account';
+
+// Mavjud bo'lmagan username uchun ham bcrypt.compare ishlashi uchun (timing orqali enumeratsiyaga qarshi)
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('dummy-password-for-timing', 10);
 
 @Injectable()
 export class AuthService {
@@ -28,16 +37,34 @@ export class AuthService {
     // Username butun tizimda unique — telefon esa turli tenantlarda takrorlanishi mumkin
     const user = await this.prisma.user.findUnique({
       where: { username: dto.username },
-      include: { role: true },
+      include: {
+        role: true,
+        tenant: { select: { isActive: true, isDeleted: true } },
+      },
+      omit: { passwordHash: false }, // global omit'dan istisno — parolni tekshirish uchun
     });
 
-    if (!user || !user.isActive) {
+    // User topilmasa ham bcrypt ishlatiladi — javob vaqti orqali username mavjudligini bilib bo'lmasin
+    const passwordMatch = await bcrypt.compare(
+      dto.password,
+      user?.passwordHash ?? DUMMY_PASSWORD_HASH,
+    );
+
+    if (!user || !user.isActive || user.isDeleted || !passwordMatch) {
       throw new BadRequestException("Username yoki parol noto'g'ri");
     }
 
-    const passwordMatch = await bcrypt.compare(dto.password, user.passwordHash);
-    if (!passwordMatch) {
-      throw new BadRequestException("Username yoki parol noto'g'ri");
+    // Tenant holati faqat parol to'g'ri bo'lgandagina oshkor qilinadi
+    if (!user.tenant.isActive || user.tenant.isDeleted) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.FORBIDDEN,
+          message:
+            "Tashkilotingiz faoliyati vaqtincha to'xtatilgan. Administratorga murojaat qiling",
+          code: AUTH_ERROR_CODES.TENANT_INACTIVE,
+        },
+        HttpStatus.FORBIDDEN,
+      );
     }
 
     const payload: AuthPayloadType = {
@@ -92,8 +119,9 @@ export class AuthService {
     }
 
     const user = await this.prisma.user.findFirst({
-      where: { id: payload.sub, isActive: true },
+      where: { id: payload.sub, ...ACTIVE_ACCOUNT_WHERE },
       include: { role: true },
+      omit: { refreshTokenHash: false }, // global omit'dan istisno — tokenni solishtirish uchun
     });
 
     if (!user || !user.refreshTokenHash) {
@@ -160,13 +188,11 @@ export class AuthService {
     });
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
 
-    const { passwordHash, refreshTokenHash, ...safeUser } = user;
-    console.log(passwordHash, refreshTokenHash);
-
+    // Maxfiy maydonlar (parol hash, tokenlar) PrismaService global omit orqali yashirilgan
     return {
       status: 'success',
       message: 'Your full datas',
-      data: safeUser,
+      data: user,
     };
   }
 
@@ -174,12 +200,12 @@ export class AuthService {
   async forgotPassword(dto: ForgotPasswordDto) {
     // Email unique emas (bir odam turli tenantlarda bir xil email ishlatishi mumkin),
     // shuning uchun user username bo'yicha topiladi va xat uning emailiga yuboriladi
-    const user = await this.prisma.user.findUnique({
-      where: { username: dto.username },
+    const user = await this.prisma.user.findFirst({
+      where: { username: dto.username, ...ACTIVE_ACCOUNT_WHERE },
     });
 
     // Xavfsizlik uchun: user topilmasa yoki emaili bo'lmasa ham xato ko'rsatmaymiz
-    if (!user || !user.isActive || !user.email) {
+    if (!user || !user.email) {
       return {
         message: "Agar foydalanuvchining emaili bo'lsa, unga xabar yuborildi",
       };
@@ -215,7 +241,7 @@ export class AuthService {
       where: {
         passwordResetToken: dto.token,
         passwordResetExpiry: { gt: new Date() }, // muddati o'tmagan
-        isActive: true,
+        ...ACTIVE_ACCOUNT_WHERE,
       },
     });
 

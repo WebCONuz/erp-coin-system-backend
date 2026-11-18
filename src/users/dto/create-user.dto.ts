@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsUsername } from './username.decorator';
+import { IsAvatarUrl } from './avatar-url.decorator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -54,8 +55,11 @@ export class CreateUserDto {
   })
   parentPhone?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    example: '/uploads/avatars/3f2c1a9e-....png',
+    description: "Yuklangan fayl yo'li yoki https URL",
+  })
   @IsOptional()
-  @IsString()
+  @IsAvatarUrl()
   avatarUrl?: string;
 }

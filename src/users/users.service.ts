@@ -16,16 +16,17 @@ import {
 import { QueryUserDto } from './dto/query-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from 'src/generated/prisma/client';
+import { assertCanManageUser, UserManager } from './utils/user-hierarchy';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   // ─── Yaratish ───────────────────────────────────────────────
-  async create(dto: CreateUserDto, tenantId: string, createdById: string) {
+  async create(dto: CreateUserDto, tenantId: string, requester: UserManager) {
     await this.assertUsernameFree(dto.username);
     await this.assertPhoneFreeInTenant(dto.phone, tenantId);
-    await this.assertRoleInTenant(dto.roleId, tenantId);
+    await this.assertAssignableRole(dto.roleId, tenantId, requester);
 
     const passwordHash = await bcrypt.hash(dto.password, 12);
 
@@ -40,17 +41,14 @@ export class UsersService {
         parentPhone: dto.parentPhone,
         tenantId,
         roleId: dto.roleId,
-        createdById,
+        createdById: requester.id,
+        // Wallet user bilan bitta atomik yozuvda yaratiladi
+        wallet: { create: {} },
       },
       include: { role: true },
     });
 
-    // Wallet avtomatik yaratish
-    await this.prisma.wallet.create({
-      data: { userId: user.id },
-    });
-
-    return this.exclude(user, ['passwordHash']);
+    return user;
   }
 
   // Username butun tizimda unique (login shu orqali)
@@ -90,14 +88,25 @@ export class UsersService {
 
   // Rol shu tenantga tegishli va faol bo'lishi shart — aks holda boshqa tenantning
   // (masalan system tenantdagi super_admin) roleId sini berib huquqni oshirish mumkin bo'lardi
-  private async assertRoleInTenant(roleId: string, tenantId: string) {
+  // Bundan tashqari rol tayinlovchining o'zidan past darajada bo'lishi shart:
+  // admin faqat teacher/student beradi, admin rolini faqat super_admin (va creator) beradi
+  private async assertAssignableRole(
+    roleId: string,
+    tenantId: string,
+    requester: UserManager,
+  ) {
     const role = await this.prisma.role.findFirst({
       where: { id: roleId, tenantId, isDeleted: false, isActive: true },
-      select: { id: true },
+      select: { id: true, level: true },
     });
     if (!role) {
       throw new BadRequestException(
         'Bu tenantga tegishli bunday rol topilmadi',
+      );
+    }
+    if (role.level >= requester.roleLevel) {
+      throw new ForbiddenException(
+        "Faqat o'zingizdan past darajadagi rolni tayinlay olasiz",
       );
     }
   }
@@ -178,7 +187,7 @@ export class UsersService {
     ]);
 
     return {
-      data: data.map((u) => this.exclude(u, ['passwordHash'])),
+      data,
       meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   }
@@ -495,7 +504,7 @@ export class UsersService {
     ]);
 
     return {
-      data: data.map((u) => this.exclude(u, ['passwordHash'])),
+      data,
       meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   }
@@ -538,7 +547,7 @@ export class UsersService {
       }
     }
 
-    return this.exclude(user, ['passwordHash']);
+    return user;
   }
 
   // ─── Yangilash ───────────────────────────────────────────────
@@ -546,12 +555,11 @@ export class UsersService {
     id: string,
     dto: UpdateUserDto,
     tenantId: string,
-    requesterRole: string,
-    requesterId: string,
+    requester: UserManager,
   ) {
-    console.log(requesterId);
-
-    const target = await this.findOneOrFail(id, tenantId, requesterRole);
+    const target = await this.findOneOrFail(id, tenantId, requester.role);
+    // Admin boshqa adminni (yoki o'zini — buning uchun PATCH /users/me bor) tahrirlay olmaydi
+    assertCanManageUser(requester, target);
 
     if (dto.username) {
       await this.assertUsernameFree(dto.username, id);
@@ -564,7 +572,7 @@ export class UsersService {
     }
 
     if (dto.roleId) {
-      await this.assertRoleInTenant(dto.roleId, target.tenantId);
+      await this.assertAssignableRole(dto.roleId, target.tenantId, requester);
     }
 
     const user = await this.prisma.user.update({
@@ -573,59 +581,64 @@ export class UsersService {
       include: { role: true },
     });
 
-    return this.exclude(user, ['passwordHash']);
+    return user;
   }
 
   // ─── Parol o'zgartirish ──────────────────────────────────────
   async changePassword(
     id: string,
     dto: ChangePasswordDto,
-    requesterId: string,
-    requesterRole: string,
+    requester: UserManager,
   ) {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findFirst({
+      where: { id, isDeleted: false },
+      include: { role: { select: { level: true } } },
+      omit: { passwordHash: false }, // eski parolni tekshirish uchun kerak
+    });
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
 
-    // O'z parolini o'zgartirsa — eski parolni tekshirish
-    const isSelf = id === requesterId;
-    const isAdmin = ['admin', 'super_admin'].includes(requesterRole);
-
-    if (isSelf && dto.oldPassword) {
+    if (id === requester.id) {
+      // O'z paroli — eski parol majburiy (o'g'irlangan sessiya bilan parolni almashtirib bo'lmasin)
+      if (!dto.oldPassword) {
+        throw new BadRequestException('Eski parolni kiriting');
+      }
       const valid = await bcrypt.compare(dto.oldPassword, user.passwordHash);
       if (!valid) throw new ForbiddenException("Eski parol noto'g'ri");
-    } else if (!isAdmin) {
-      throw new ForbiddenException("Ruxsat yo'q");
+    } else {
+      // Boshqa userning paroli — faqat o'z tenantidagi, o'zidan past darajadagi user
+      assertCanManageUser(requester, user);
     }
 
     const passwordHash = await bcrypt.hash(dto.newPassword, 12);
     await this.prisma.user.update({
       where: { id },
-      data: { passwordHash },
+      data: {
+        passwordHash,
+        // Barcha qurilmalardagi sessiyalar bekor qilinadi — qayta login talab qilinadi
+        refreshTokenHash: null,
+        passwordResetToken: null,
+        passwordResetExpiry: null,
+      },
     });
 
-    return { message: "Parol muvaffaqiyatli o'zgartirildi" };
+    return { message: "Parol muvaffaqiyatli o'zgartirildi. Qayta kiring." };
   }
 
   // ─── O'chirish (soft delete) ─────────────────────────────────
-  async remove(
-    id: string,
-    tenantId: string,
-    archiverId: string,
-    requesterRole: string,
-  ) {
-    const user = await this.findOneOrFail(id, tenantId, requesterRole);
+  async remove(id: string, tenantId: string, requester: UserManager) {
+    const user = await this.findOneOrFail(id, tenantId, requester.role);
 
-    // super_admin ni hech kim o'chira olmaydi
-    if (user.role.name === 'super_admin') {
-      throw new ForbiddenException("Super adminni arxivlab bo'lmaydi");
-    }
+    // Faqat o'zidan past darajadagi user (super_admin/creator'ni ham, boshqa adminni ham arxivlab bo'lmaydi)
+    assertCanManageUser(requester, user);
 
     await this.prisma.user.update({
       where: { id },
       data: {
         isActive: false,
         archivedAt: new Date(),
-        archivedById: archiverId,
+        archivedById: requester.id,
+        // Arxivlangan user qayta kira olmasligi uchun sessiyasi ham bekor qilinadi
+        refreshTokenHash: null,
       },
     });
 
@@ -661,12 +674,7 @@ export class UsersService {
       },
     });
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
-    return this.exclude(user, [
-      'passwordHash',
-      'refreshTokenHash',
-      'passwordResetToken',
-      'passwordResetExpiry',
-    ]);
+    return user;
   }
 
   // ─── O'zini o'zi tahrirlash (har qanday rol, faqat xavfsiz maydonlar) ──
@@ -701,21 +709,20 @@ export class UsersService {
       include: { role: true },
     });
 
-    return this.exclude(user, [
-      'passwordHash',
-      'refreshTokenHash',
-      'passwordResetToken',
-      'passwordResetExpiry',
-    ]);
+    return user;
   }
 
   // Arxivdan qaytarish
-  async restore(id: string, tenantId: string, requesterRole: string) {
+  async restore(id: string, tenantId: string, requester: UserManager) {
     const where: Prisma.UserWhereInput = { id };
-    if (requesterRole !== 'super_admin') where.tenantId = tenantId;
+    if (requester.role !== 'super_admin') where.tenantId = tenantId;
 
-    const user = await this.prisma.user.findFirst({ where });
+    const user = await this.prisma.user.findFirst({
+      where,
+      include: { role: { select: { level: true } } },
+    });
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
+    assertCanManageUser(requester, user);
 
     await this.prisma.user.update({
       where: { id },
@@ -744,16 +751,5 @@ export class UsersService {
     });
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
     return user;
-  }
-
-  // passwordHash ni response dan olib tashlash
-  private exclude<T extends Record<string, unknown>, K extends keyof T>(
-    user: T,
-    keys: K[],
-  ): Omit<T, K> {
-    const entries = Object.entries(user).filter(
-      ([key]) => !keys.includes(key as K),
-    );
-    return Object.fromEntries(entries) as Omit<T, K>;
   }
 }

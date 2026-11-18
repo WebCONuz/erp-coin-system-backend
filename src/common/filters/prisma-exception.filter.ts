@@ -58,10 +58,12 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       this.logger.error(
         `PrismaKnownError [${exception.code}]: ${exception.message}`,
       );
+      // Prisma'ning ichki xabari (jadval/ustun nomlari, query tafsilotlari) klientga chiqarilmaydi — faqat logda
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: HttpStatus.BAD_REQUEST,
         error: 'Bad Request',
-        message: exception.message,
+        message: "So'rovni bajarib bo'lmadi",
+        code: exception.code,
       });
     }
 

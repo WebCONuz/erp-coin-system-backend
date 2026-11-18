@@ -14,8 +14,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -32,14 +31,11 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
-
-const avatarStorage = diskStorage({
-  destination: './uploads/avatars',
-  filename: (_req, file, cb) => {
-    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `${unique}${extname(file.originalname)}`);
-  },
-});
+import {
+  imageMimeFilter,
+  MAX_IMAGE_SIZE,
+  saveImage,
+} from 'src/common/utils/image-upload';
 
 @ApiTags('Students')
 @ApiBearerAuth()
@@ -137,20 +133,10 @@ export class StudentsController {
   @Roles('admin', 'super_admin')
   @UseInterceptors(
     FileInterceptor('avatar', {
-      storage: avatarStorage,
-      limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB
-      fileFilter: (_req, file, cb) => {
-        if (!file.mimetype.match(/^image\/(jpeg|png|webp|gif)$/)) {
-          cb(
-            new BadRequestException(
-              'Faqat JPEG, PNG, WebP yoki GIF ruxsat etilgan',
-            ),
-            false,
-          );
-          return;
-        }
-        cb(null, true);
-      },
+      // Fayl avval xotirada tekshiriladi, faqat haqiqiy rasm bo'lsa diskka yoziladi
+      storage: memoryStorage(),
+      limits: { fileSize: MAX_IMAGE_SIZE, files: 1 },
+      fileFilter: imageMimeFilter,
     }),
   )
   @ApiConsumes('multipart/form-data')
@@ -162,13 +148,15 @@ export class StudentsController {
   })
   @ApiOperation({ summary: 'Student avatar rasmini yuklash (max 2 MB)' })
   @ApiParam({ name: 'id', description: 'Student UUID' })
-  uploadAvatar(
+  async uploadAvatar(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('Rasm fayli yuklanmadi');
-    const avatarUrl = `/uploads/avatars/${file.filename}`;
+    // Student shu tenantda borligi avval tekshiriladi — aks holda fayl bekorga diskka yozilardi
+    await this.studentsService.assertStudentExists(id, tenantId);
+    const avatarUrl = await saveImage(file, 'avatars');
     return this.studentsService.updateAvatar(id, tenantId, avatarUrl);
   }
 }

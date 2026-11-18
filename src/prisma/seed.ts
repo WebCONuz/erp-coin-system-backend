@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import { DEFAULT_TENANT_ROLES } from '../roles/constants';
 import { DEFAULT_TENANT_COIN_RULES } from '../coin-rules/constants';
 import { normalizeUsername, USERNAME_REGEX } from '../users/constants/username';
+import { SYSTEM_TENANT_SLUG } from '../tenant/constants/system-tenant';
 
 dotenv.config();
 
@@ -16,11 +17,12 @@ const prisma = new PrismaClient({ adapter });
 
 async function seedSystemTenant() {
   const systemTenant = await prisma.tenant.upsert({
-    where: { slug: 'system' },
-    update: {},
+    where: { slug: SYSTEM_TENANT_SLUG },
+    // Tizim tenanti doim faol bo'lishi shart (aks holda creator/super_admin login qila olmaydi)
+    update: { isActive: true, isDeleted: false },
     create: {
       name: 'System Tenant',
-      slug: 'system',
+      slug: SYSTEM_TENANT_SLUG,
       plan: 'enterprise',
     },
   });

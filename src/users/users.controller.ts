@@ -31,6 +31,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
+import { ReqUserType } from 'src/common/types';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -51,9 +52,9 @@ export class UsersController {
   create(
     @Body() dto: CreateUserDto,
     @TenantContext() tenantId: string,
-    @CurrentUser('id') createdById: string,
+    @CurrentUser() requester: ReqUserType,
   ) {
-    return this.usersService.create(dto, tenantId, createdById);
+    return this.usersService.create(dto, tenantId, requester);
   }
 
   // ─── Ro'yxat ────────────────────────────────────────────────
@@ -162,10 +163,9 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateUserDto,
     @TenantContext() tenantId: string,
-    @CurrentUser('id') requesterId: string,
-    @CurrentUser('role') role: string,
+    @CurrentUser() requester: ReqUserType,
   ) {
-    return this.usersService.update(id, dto, tenantId, role, requesterId);
+    return this.usersService.update(id, dto, tenantId, requester);
   }
 
   // ─── Parol o'zgartirish ──────────────────────────────────────
@@ -173,14 +173,20 @@ export class UsersController {
   @HttpCode(200)
   @ApiOperation({ summary: "Parol o'zgartirish" })
   @ApiParam({ name: 'id', description: 'User UUID' })
-  @ApiResponse({ status: 403, description: "Eski parol noto'g'ri" })
+  @ApiResponse({
+    status: 400,
+    description: "O'z parolida eski parol berilmagan",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "Eski parol noto'g'ri yoki user sizdan past darajada emas",
+  })
   changePassword(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ChangePasswordDto,
-    @CurrentUser('id') requesterId: string,
-    @CurrentUser('role') role: string,
+    @CurrentUser() requester: ReqUserType,
   ) {
-    return this.usersService.changePassword(id, dto, requesterId, role);
+    return this.usersService.changePassword(id, dto, requester);
   }
 
   // ─── Arxivlash (soft delete) ─────────────────────────────────
@@ -189,14 +195,16 @@ export class UsersController {
   @HttpCode(200)
   @ApiOperation({ summary: "Foydalanuvchini arxivlash (o'chirish emas)" })
   @ApiParam({ name: 'id', description: 'User UUID' })
-  @ApiResponse({ status: 403, description: "Super adminni arxivlab bo'lmaydi" })
+  @ApiResponse({
+    status: 403,
+    description: "Faqat o'zingizdan past darajadagi userni arxivlash mumkin",
+  })
   remove(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
-    @CurrentUser('id') archiverId: string,
-    @CurrentUser('role') role: string,
+    @CurrentUser() requester: ReqUserType,
   ) {
-    return this.usersService.remove(id, tenantId, archiverId, role);
+    return this.usersService.remove(id, tenantId, requester);
   }
 
   // ─── Arxivdan qaytarish ──────────────────────────────────────
@@ -208,8 +216,8 @@ export class UsersController {
   restore(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
-    @CurrentUser('role') role: string,
+    @CurrentUser() requester: ReqUserType,
   ) {
-    return this.usersService.restore(id, tenantId, role);
+    return this.usersService.restore(id, tenantId, requester);
   }
 }

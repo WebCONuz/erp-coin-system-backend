@@ -17,6 +17,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthThrottle } from './throttle/auth-throttle';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -24,6 +25,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
+  @AuthThrottle()
   @Post('login')
   @HttpCode(200)
   @ApiOperation({ summary: 'Tizimga kirish' })
@@ -58,6 +60,7 @@ export class AuthController {
   }
 
   @Public()
+  @AuthThrottle()
   @Post('forgot-password')
   @HttpCode(200)
   @ApiOperation({ summary: 'Parolni tiklash uchun email yuborish' })
@@ -66,6 +69,7 @@ export class AuthController {
   }
 
   @Public()
+  @AuthThrottle()
   @Post('reset-password')
   @HttpCode(200)
   @ApiOperation({ summary: "Yangi parol o'rnatish" })

@@ -57,8 +57,13 @@ SUPER_ADMIN_PASSWORD="StrongPass123!"
 SUPER_ADMIN_NAME="Super Admin"
 SUPER_ADMIN_EMAIL="superadmin@email.com"
 
-FRONTEND_DOMEN="http://localhost:3000"   # CORS uchun ruxsat berilgan origin
-NODE_ENV="development"                   # "production" da cookie'lar secure bo'ladi
+FRONTEND_DOMEN="http://localhost:3000"   # CORS uchun ruxsat berilgan origin (production'da yagona ruxsat)
+NODE_ENV="development"                   # "production" da cookie'lar secure, localhost CORS va Swagger o'chiq
+
+SWAGGER_USER="docs_admin"                # Swagger basic auth (dev'da berilmasa — kottaAdmin / 12345)
+SWAGGER_PASSWORD="strong_password"
+SWAGGER_ENABLED="false"                  # production'da Swagger faqat "true" bo'lsa ochiladi
+TRUST_PROXY="1"                          # nginx ortida bo'lsa: proxy soni (throttler haqiqiy IP'ni ko'rishi uchun)
 ```
 
 ### 3. Database va seed
@@ -80,7 +85,7 @@ npm run start:dev
 ```
 
 - API: `http://localhost:3031/api`
-- Swagger: `http://localhost:3031/api/docs` (login: `kottaAdmin` / `12345`)
+- Swagger: `http://localhost:3031/api/docs` (login: `SWAGGER_USER` / `SWAGGER_PASSWORD`; dev'da berilmasa `kottaAdmin` / `12345`)
 
 ---
 
@@ -198,7 +203,7 @@ src/
 ├── audit-log/           # Audit trail (kim, qachon, nima qildi)
 ├── common/
 │   ├── filters/         # Prisma exception filter
-│   ├── middleware/      # Tenant middleware
+│   ├── utils/           # teacher-group-access, image-upload
 │   └── types/           # Umumiy tiplar (auth, coin)
 ├── prisma/              # PrismaService + seed.ts
 └── generated/prisma/    # Prisma client (auto-generated, tahrirlamang)

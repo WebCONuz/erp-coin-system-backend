@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Request } from 'express';
 import { AuthPayloadType, ReqUserType } from 'src/common/types';
+import { ACTIVE_ACCOUNT_WHERE } from '../constants/active-account';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -20,8 +21,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: AuthPayloadType): Promise<ReqUserType> {
+    // Arxivlangan/o'chirilgan user yoki to'xtatilgan tenant — access token hali amal qilsa ham kirita olmaydi
     const user = await this.prisma.user.findFirst({
-      where: { id: payload.sub, isActive: true },
+      where: { id: payload.sub, ...ACTIVE_ACCOUNT_WHERE },
       include: { role: true },
     });
 

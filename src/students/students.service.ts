@@ -383,21 +383,9 @@ export class StudentsService {
       this.prisma.purchase.count({ where: { studentId: id } }),
     ]);
 
-    const {
-      passwordHash: _ph,
-      refreshTokenHash: _rth,
-      passwordResetToken: _prt,
-      passwordResetExpiry: _pre,
-      ...safeStudent
-    } = student as typeof student & {
-      passwordHash?: string;
-      refreshTokenHash?: string;
-      passwordResetToken?: string;
-      passwordResetExpiry?: Date;
-    };
-
+    // Maxfiy maydonlar PrismaService global omit orqali yashirilgan
     return {
-      ...safeStudent,
+      ...student,
       stats: {
         totalSessions,
         presentCount,
@@ -646,11 +634,16 @@ export class StudentsService {
   }
 
   // ─── Avatar URL yangilash ──────────────────────────────────────
-  async updateAvatar(id: string, tenantId: string, avatarUrl: string) {
+  async assertStudentExists(id: string, tenantId: string) {
     const student = await this.prisma.user.findFirst({
       where: { id, tenantId, isDeleted: false },
+      select: { id: true },
     });
     if (!student) throw new NotFoundException("O'quvchi topilmadi");
+  }
+
+  async updateAvatar(id: string, tenantId: string, avatarUrl: string) {
+    await this.assertStudentExists(id, tenantId);
 
     return this.prisma.user.update({
       where: { id },

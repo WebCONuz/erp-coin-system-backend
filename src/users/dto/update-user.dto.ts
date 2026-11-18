@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsUsername } from './username.decorator';
+import { IsAvatarUrl } from './avatar-url.decorator';
 
 export class UpdateUserDto extends PartialType(
   OmitType(CreateUserDto, ['password'] as const),
@@ -52,15 +53,21 @@ export class UpdateOwnProfileDto {
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional({ example: '/uploads/avatars/photo.jpg' })
+  @ApiPropertyOptional({
+    example: '/uploads/avatars/3f2c1a9e-....png',
+    description: "Yuklangan fayl yo'li yoki https URL",
+  })
   @IsOptional()
-  @IsString()
+  @IsAvatarUrl()
   avatarUrl?: string;
 }
 
 export class ChangePasswordDto {
-  @ApiPropertyOptional()
-  @IsOptional() // admin o'zgartirsa old parol shart emas
+  @ApiPropertyOptional({
+    description:
+      "O'z parolini o'zgartirishda majburiy; admin boshqa userning parolini o'zgartirsa — shart emas",
+  })
+  @IsOptional()
   @IsString()
   oldPassword?: string;
 

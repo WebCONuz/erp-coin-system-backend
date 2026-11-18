@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effective-transaction';
 import { teacherGroupAccessWhere } from 'src/common/utils/teacher-group-access';
 import { ArchiveStudentDto } from './dto/archive-student.dto';
 import {
@@ -373,11 +374,15 @@ export class StudentsService {
         where: { studentId: id, homeworkDone: true, isDeleted: false },
       }),
       this.prisma.coinTransaction.aggregate({
-        where: { studentId: id, direction: 'earn', isDeleted: false },
+        where: { studentId: id, direction: 'earn', ...EFFECTIVE_COIN_TX_WHERE },
         _sum: { amount: true },
       }),
       this.prisma.coinTransaction.aggregate({
-        where: { studentId: id, direction: 'deduct', isDeleted: false },
+        where: {
+          studentId: id,
+          direction: 'deduct',
+          ...EFFECTIVE_COIN_TX_WHERE,
+        },
         _sum: { amount: true },
       }),
       this.prisma.purchase.count({ where: { studentId: id } }),
@@ -456,7 +461,7 @@ export class StudentsService {
         where: {
           studentId,
           direction: 'earn',
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfWeek },
         },
         _sum: { amount: true },
@@ -465,7 +470,7 @@ export class StudentsService {
         where: {
           studentId,
           direction: 'deduct',
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfWeek },
         },
         _sum: { amount: true },
@@ -474,7 +479,7 @@ export class StudentsService {
         where: {
           studentId,
           direction: 'earn',
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfMonth },
         },
         _sum: { amount: true },
@@ -483,7 +488,7 @@ export class StudentsService {
         where: {
           studentId,
           direction: 'deduct',
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfMonth },
         },
         _sum: { amount: true },

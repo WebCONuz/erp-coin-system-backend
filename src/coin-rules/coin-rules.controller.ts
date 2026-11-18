@@ -41,9 +41,14 @@ export class CoinRulesController {
   create(
     @TenantContext() tenantId: string,
     @CurrentUser('id') createdById: string,
+    @CurrentUser('role') role: string,
     @Body() dto: CreateCoinRuleDto,
   ) {
-    return this.coinRulesService.create(tenantId, createdById, dto);
+    return this.coinRulesService.create(
+      tenantId,
+      { id: createdById, role },
+      dto,
+    );
   }
 
   @Get()

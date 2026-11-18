@@ -234,11 +234,22 @@ export class GroupsService {
           isDeleted: false,
           createdAt: { gte: thirtyDaysAgoStart },
         },
-        select: { amount: true, direction: true, createdAt: true },
+        select: {
+          amount: true,
+          direction: true,
+          createdAt: true,
+          reversalOfId: true,
+          reversal: { select: { id: true } },
+        },
       }),
     ]);
 
     const currentSum = walletAgg._sum.balance ?? 0;
+
+    // Bekor qilingan juftlik (asl + teskari) faoliyat statistikasiga kirmaydi,
+    // lekin balans tarixini tiklashda ikkalasi ham hisobga olinadi (balansga ta'sir qilgan)
+    const isEffective = (t: (typeof transactions)[number]) =>
+      !t.reversalOfId && !t.reversal;
 
     // Kunlik net o'zgarish (earn - deduct) va earn/deduct alohida yig'indisi
     const dailyNet = new Map<string, number>();
@@ -249,6 +260,7 @@ export class GroupsService {
       const dateStr = t.createdAt.toISOString().split('T')[0];
       const delta = t.direction === CoinDirection.earn ? t.amount : -t.amount;
       dailyNet.set(dateStr, (dailyNet.get(dateStr) ?? 0) + delta);
+      if (!isEffective(t)) continue;
       if (t.direction === CoinDirection.earn) {
         dailyEarn.set(dateStr, (dailyEarn.get(dateStr) ?? 0) + t.amount);
       } else {
@@ -287,7 +299,7 @@ export class GroupsService {
     }
 
     const totalTransactions = transactions.filter(
-      (t) => t.createdAt >= sevenDaysAgoStart,
+      (t) => isEffective(t) && t.createdAt >= sevenDaysAgoStart,
     ).length;
 
     return {

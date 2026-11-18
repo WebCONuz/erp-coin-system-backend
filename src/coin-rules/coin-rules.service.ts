@@ -1,8 +1,12 @@
 import {
+  BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { canTeacherAccessGroup } from 'src/common/utils/teacher-group-access';
+import { assertTeacherCoinLimit } from 'src/common/utils/teacher-coin-limit';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCoinRuleDto } from './dto/create-coin-rule.dto';
 import { QueryCoinRuleDto } from './dto/query-coin-rule.dto';
@@ -19,7 +23,38 @@ import { BUILT_IN_LOCKED_FIELDS } from './constants';
 export class CoinRulesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(tenantId: string, createdById: string, dto: CreateCoinRuleDto) {
+  async create(
+    tenantId: string,
+    requester: { id: string; role: string },
+    dto: CreateCoinRuleDto,
+  ) {
+    if (requester.role === 'teacher') {
+      // Teacher faqat o'z guruhi uchun qoida yarata oladi — tenant bo'yicha umumiy qoida
+      // (masalan barcha o'quvchilarga avtomatik jarima) faqat admin ishi
+      if (!dto.groupId) {
+        throw new ForbiddenException(
+          "O'qituvchi faqat o'z guruhi uchun qoida yarata oladi (groupId majburiy)",
+        );
+      }
+      if (
+        !(await canTeacherAccessGroup(
+          this.prisma,
+          dto.groupId,
+          requester.id,
+          tenantId,
+        ))
+      ) {
+        throw new ForbiddenException(
+          'Siz bu guruh uchun qoida yarata olmaysiz',
+        );
+      }
+      await assertTeacherCoinLimit(this.prisma, tenantId, requester.role, [
+        dto.coinAmount,
+      ]);
+    }
+
+    if (dto.groupId) await this.assertGroupInTenant(dto.groupId, tenantId);
+
     await this.assertNoDuplicateTenantWideAutoRule(tenantId, {
       triggerType: dto.triggerType,
       sourceType: dto.sourceType ?? null,
@@ -37,9 +72,22 @@ export class CoinRulesService {
         sourceType: dto.sourceType || null,
         groupId: dto.groupId || null,
         tenantId,
-        createdById,
+        createdById: requester.id,
       },
     });
+  }
+
+  // Qoidaga biriktiriladigan guruh shu tenantga tegishli bo'lishi shart
+  private async assertGroupInTenant(groupId: string, tenantId: string) {
+    const group = await this.prisma.group.findFirst({
+      where: { id: groupId, tenantId, isDeleted: false },
+      select: { id: true },
+    });
+    if (!group) {
+      throw new BadRequestException(
+        'Bu tenantga tegishli bunday guruh topilmadi',
+      );
+    }
   }
 
   async findAll(query: QueryCoinRuleDto, tenantId: string) {
@@ -158,6 +206,8 @@ export class CoinRulesService {
         );
       }
     }
+
+    if (dto.groupId) await this.assertGroupInTenant(dto.groupId, tenantId);
 
     await this.assertNoDuplicateTenantWideAutoRule(
       tenantId,

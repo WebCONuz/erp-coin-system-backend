@@ -7,10 +7,18 @@ import {
   IsOptional,
   IsEnum,
   IsString,
+  IsIn,
+  Max,
+  MaxLength,
   Min,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CoinDirection, SourceType } from 'src/generated/prisma/enums';
+import {
+  COIN_NOTE_MAX_LENGTH,
+  MANUAL_COIN_HARD_MAX,
+  MANUAL_SOURCE_TYPES,
+} from '../constants/manual-coin';
 
 export class BulkGiveCoinDto {
   @ApiProperty({
@@ -33,6 +41,9 @@ export class BulkGiveCoinDto {
   })
   @IsInt()
   @Min(1, { message: 'Tanga miqdori kamida 1 bo‘lishi kerak' })
+  @Max(MANUAL_COIN_HARD_MAX, {
+    message: `Tanga miqdori ${MANUAL_COIN_HARD_MAX} dan oshmasligi kerak`,
+  })
   amount: number;
 
   @ApiProperty({
@@ -45,10 +56,12 @@ export class BulkGiveCoinDto {
 
   @ApiProperty({
     example: 'bonus',
-    enum: SourceType,
-    description: 'Tranzaksiya manbasi',
+    enum: MANUAL_SOURCE_TYPES,
+    description: "Tranzaksiya manbasi: faqat 'manual' yoki 'bonus'",
   })
-  @IsEnum(SourceType)
+  @IsIn(MANUAL_SOURCE_TYPES, {
+    message: "sourceType faqat 'manual' yoki 'bonus' bo'lishi mumkin",
+  })
   sourceType: SourceType;
 
   @ApiPropertyOptional({
@@ -57,6 +70,7 @@ export class BulkGiveCoinDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(COIN_NOTE_MAX_LENGTH)
   note?: string;
 
   @ApiPropertyOptional({

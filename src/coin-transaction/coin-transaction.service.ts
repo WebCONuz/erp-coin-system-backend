@@ -3,7 +3,9 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
+  ConflictException,
 } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCoinTransactionDto } from './dto/create-coin-transaction.dto';
 import { QueryCoinTransactionDto } from './dto/query-coin-transaction.dto';
@@ -11,16 +13,31 @@ import { QueryMyCoinHistoryDto } from './dto/query-my-coin-history.dto';
 import { QueryCoinStatsDto } from './dto/query-coin-stats.dto';
 import { BulkGiveCoinDto } from './dto/bulk-give-coin.dto';
 import { ApplyCoinRuleDto } from './dto/apply-coin-rule.dto';
-import { CoinDirection, SourceType } from 'src/generated/prisma/enums';
+import {
+  CoinDirection,
+  SourceType,
+  TriggerType,
+} from 'src/generated/prisma/enums';
 import {
   ExecuteCoinProcessData,
   ReplaceSessionCoinsResult,
   SessionCoinItem,
   SkippedSessionCoinItem,
 } from 'src/common/types';
-import { Prisma } from 'src/generated/prisma/client';
-import { COIN_SKIP_CODES } from 'src/sessions/constants/session-types';
-import { teacherGroupAccessWhere } from 'src/common/utils/teacher-group-access';
+import { CoinTransaction, Prisma } from 'src/generated/prisma/client';
+import {
+  EFFECTIVE_COIN_TX_WHERE,
+  VISIBLE_COIN_TX_WHERE,
+} from './constants/effective-transaction';
+import {
+  ALL_SESSION_MANAGED_SOURCE_TYPES,
+  COIN_SKIP_CODES,
+} from 'src/sessions/constants/session-types';
+import {
+  canTeacherAccessGroup,
+  teacherGroupAccessWhere,
+} from 'src/common/utils/teacher-group-access';
+import { assertTeacherCoinLimit } from 'src/common/utils/teacher-coin-limit';
 
 export interface BulkCoinResultItem {
   studentId: string;
@@ -62,6 +79,15 @@ export class CoinTransactionsService {
       }
     }
 
+    await this.assertManualRefs(tenantId, teacherId, requesterRole, {
+      ruleId: dto.ruleId,
+      groupId: dto.groupId,
+      sessionId: dto.sessionId,
+    });
+    await assertTeacherCoinLimit(this.prisma, tenantId, requesterRole, [
+      dto.amount,
+    ]);
+
     return this.executeCoinProcess(tenantId, {
       studentId: dto.studentId,
       amount: dto.amount,
@@ -81,6 +107,70 @@ export class CoinTransactionsService {
     data: ExecuteCoinProcessData,
   ) {
     return this.executeCoinProcess(tenantId, data);
+  }
+
+  // 2a. Qo'lda coin so'rovidagi havolalar (qoida, guruh, sessiya) shu tenantga tegishli
+  // va o'chirilmagan bo'lishi shart; teacher uchun guruh/sessiya unga tegishli bo'lishi kerak.
+  // Aks holda boshqa tenantning yoki begona sessiyaning ID'sini tranzaksiyaga yozish mumkin edi.
+  private async assertManualRefs(
+    tenantId: string,
+    requesterId: string,
+    requesterRole: string | undefined,
+    refs: { ruleId?: string; groupId?: string; sessionId?: string },
+  ) {
+    const isTeacher = requesterRole === 'teacher';
+
+    if (refs.ruleId) {
+      const rule = await this.prisma.coinRule.findFirst({
+        where: { id: refs.ruleId, tenantId, isDeleted: false },
+        select: { id: true },
+      });
+      if (!rule) throw new NotFoundException('Tanga qoidasi topilmadi');
+    }
+
+    if (refs.groupId) {
+      const group = await this.prisma.group.findFirst({
+        where: { id: refs.groupId, tenantId, isDeleted: false },
+        select: { id: true },
+      });
+      if (!group) throw new NotFoundException('Guruh topilmadi');
+      if (
+        isTeacher &&
+        !(await canTeacherAccessGroup(
+          this.prisma,
+          refs.groupId,
+          requesterId,
+          tenantId,
+        ))
+      ) {
+        throw new ForbiddenException('Siz bu guruhga tanga bera olmaysiz');
+      }
+    }
+
+    if (refs.sessionId) {
+      const session = await this.prisma.session.findFirst({
+        where: { id: refs.sessionId, tenantId, isDeleted: false },
+        select: { id: true, groupId: true, teacherId: true },
+      });
+      if (!session) throw new NotFoundException('Dars topilmadi');
+      if (refs.groupId && session.groupId !== refs.groupId) {
+        throw new BadRequestException(
+          'Dars ko‘rsatilgan guruhga tegishli emas',
+        );
+      }
+      if (
+        isTeacher &&
+        session.teacherId !== requesterId &&
+        !(await canTeacherAccessGroup(
+          this.prisma,
+          session.groupId,
+          requesterId,
+          tenantId,
+        ))
+      ) {
+        throw new ForbiddenException('Siz bu darsga tanga bera olmaysiz');
+      }
+    }
   }
 
   // 3. ASOSIY YORDAMCHI TRANZAKSIYA METODI (CORE LOGIC)
@@ -110,7 +200,8 @@ export class CoinTransactionsService {
 
     // Tranzaksiyani xavfsiz ishga tushiramiz
     return this.prisma.$transaction(async (tx) => {
-      const wallet = await this.getOrCreateWallet(tx, studentId);
+      // Hamyon qulflanadi — parallel ayirishlarda balans manfiyga tushmaydi
+      const wallet = await this.lockWallet(tx, studentId);
 
       // Agar tanga ayirilayotgan bo'lsa, balans yetarliligini tekshiramiz
       if (direction === CoinDirection.deduct && wallet.balance < amount) {
@@ -135,14 +226,36 @@ export class CoinTransactionsService {
     });
   }
 
-  // 3a. Hamyon topiladi, yo'q bo'lsa (User yaratilganda ochilmay qolgan bo'lsa) ochiladi
-  private async getOrCreateWallet(
+  // 3a. Hamyonni tx oxirigacha qulflaydi (SELECT ... FOR UPDATE) va joriy balansni qaytaradi.
+  // Yo'q bo'lsa (user yaratilganda ochilmay qolgan bo'lsa) ochiladi — ON CONFLICT parallel
+  // yaratishda unique xatosini oldini oladi. Balansga ta'sir qiladigan har bir tx shu
+  // metod orqali hamyonni oladi: bitta o'quvchi bo'yicha o'zgarishlar navbat bilan bajariladi,
+  // shuning uchun "tekshirib, keyin ayirish" orasida boshqa tx balansni o'zgartira olmaydi.
+  async lockWallet(
     tx: Prisma.TransactionClient,
     studentId: string,
-  ) {
-    const wallet = await tx.wallet.findUnique({ where: { userId: studentId } });
-    if (wallet) return wallet;
-    return tx.wallet.create({ data: { userId: studentId, balance: 0 } });
+  ): Promise<{ id: string; balance: number }> {
+    await tx.$executeRaw`
+      INSERT INTO wallets (id, user_id, balance, updated_at)
+      VALUES (${randomUUID()}::uuid, ${studentId}::uuid, 0, now())
+      ON CONFLICT (user_id) DO NOTHING`;
+    const [wallet] = await tx.$queryRaw<{ id: string; balance: number }[]>`
+      SELECT id, balance FROM wallets WHERE user_id = ${studentId}::uuid FOR UPDATE`;
+    return wallet;
+  }
+
+  // Bir nechta hamyonni qulflash — deadlock bo'lmasligi uchun doim id tartibida
+  private async lockWalletsByIds(
+    tx: Prisma.TransactionClient,
+    walletIds: string[],
+  ): Promise<Map<string, number>> {
+    if (!walletIds.length) return new Map();
+    const rows = await tx.$queryRaw<{ id: string; balance: number }[]>`
+      SELECT id, balance FROM wallets
+      WHERE id = ANY(${walletIds}::uuid[])
+      ORDER BY id
+      FOR UPDATE`;
+    return new Map(rows.map((r) => [r.id, r.balance]));
   }
 
   // 3a1. Balansni o'zgartirish + tranzaksiya logi (faqat tx ichida chaqiriladi)
@@ -173,6 +286,8 @@ export class CoinTransactionsService {
         teacherId: data.teacherId || null,
         sessionId: data.sessionId || null,
         groupId: data.groupId || null,
+        purchaseId: data.purchaseId || null,
+        reversalOfId: data.reversalOfId || null,
       },
     });
 
@@ -180,6 +295,44 @@ export class CoinTransactionsService {
       transactionId: transactionRecord.id,
       newBalance: updatedWallet.balance,
     };
+  }
+
+  // 3a1b. TESKARI YOZUV — tranzaksiyani bekor qilish asl yozuvni o'chirmaydi, unga
+  // qarama-qarshi yo'nalishdagi yangi yozuv qo'shadi (reversalOfId). Hamyon oldindan
+  // qulflangan bo'lishi kerak. Bitta yozuv faqat bir marta bekor qilinadi (DB unique).
+  private reverseInTx(
+    tx: Prisma.TransactionClient,
+    walletId: string,
+    trx: CoinTransaction,
+    actorId: string | null,
+    note: string,
+  ) {
+    return this.applyCoinInTx(tx, walletId, {
+      studentId: trx.studentId,
+      amount: trx.amount,
+      direction:
+        trx.direction === CoinDirection.earn
+          ? CoinDirection.deduct
+          : CoinDirection.earn,
+      sourceType: trx.sourceType,
+      note,
+      teacherId: actorId,
+      ruleId: trx.ruleId,
+      groupId: trx.groupId,
+      sessionId: trx.sessionId,
+      purchaseId: trx.purchaseId,
+      reversalOfId: trx.id,
+    });
+  }
+
+  // Avval ayirishlar (ularning teskarisi — qo'shish), keyin qo'shishlar bekor qilinadi:
+  // oraliq balans manfiyga tushmaydi (DB CHECK balance >= 0 har bir so'rovda tekshiriladi)
+  private sortForReversal<T extends { direction: CoinDirection }>(rows: T[]) {
+    return [...rows].sort(
+      (a, b) =>
+        (a.direction === CoinDirection.deduct ? 0 : 1) -
+        (b.direction === CoinDirection.deduct ? 0 : 1),
+    );
   }
 
   // 3a2. SESSIYA TEKSHIRUVI COINLARINI ALMASHTIRISH — yo'qlama/natija qayta
@@ -197,20 +350,24 @@ export class CoinTransactionsService {
       studentId: string;
       sourceTypes: SourceType[];
       items: SessionCoinItem[];
+      // Kim qayta saqladi — teskari yozuvlarda teacherId sifatida yoziladi
+      actorId?: string;
     },
   ): Promise<ReplaceSessionCoinsResult> {
-    const { sessionId, studentId, sourceTypes, items } = params;
+    const { sessionId, studentId, sourceTypes, items, actorId } = params;
+
+    // Avval hamyon qulflanadi, keyin avvalgi tranzaksiyalar o'qiladi: parallel saqlashda
+    // ikkinchi tx qulfni kutadi va birinchisi yozgan tranzaksiyalarni ko'radi (dublikat bo'lmaydi)
+    const wallet = await this.lockWallet(tx, studentId);
 
     const activeTransactions = await tx.coinTransaction.findMany({
       where: {
+        ...EFFECTIVE_COIN_TX_WHERE,
         sessionId,
         studentId,
-        isDeleted: false,
         sourceType: { in: sourceTypes },
       },
     });
-
-    const wallet = await this.getOrCreateWallet(tx, studentId);
 
     // Bekor qilishdan keyingi balans: berilganlar ayiriladi, ayirilganlar qaytariladi
     const reversalDelta = activeTransactions.reduce(
@@ -231,20 +388,14 @@ export class CoinTransactionsService {
       };
     }
 
-    for (const trx of activeTransactions) {
-      await tx.wallet.update({
-        where: { id: wallet.id },
-        data: {
-          balance:
-            trx.direction === CoinDirection.earn
-              ? { decrement: trx.amount }
-              : { increment: trx.amount },
-        },
-      });
-      await tx.coinTransaction.update({
-        where: { id: trx.id },
-        data: { isDeleted: true, deletedAt: new Date() },
-      });
+    for (const trx of this.sortForReversal(activeTransactions)) {
+      await this.reverseInTx(
+        tx,
+        wallet.id,
+        trx,
+        actorId ?? null,
+        'Tekshiruv qayta saqlandi — avvalgi yozuv bekor qilindi',
+      );
     }
 
     const skippedItems: SkippedSessionCoinItem[] = [];
@@ -287,11 +438,26 @@ export class CoinTransactionsService {
     tx: Prisma.TransactionClient,
     sessionId: string,
     sourceTypes: SourceType[],
+    actorId?: string,
   ): Promise<{ reversed: number; blockedStudentIds: string[] }> {
-    const activeTransactions = await tx.coinTransaction.findMany({
-      where: { sessionId, isDeleted: false, sourceType: { in: sourceTypes } },
-      include: { wallet: { select: { balance: true } } },
+    const where: Prisma.CoinTransactionWhereInput = {
+      ...EFFECTIVE_COIN_TX_WHERE,
+      sessionId,
+      sourceType: { in: sourceTypes },
+    };
+
+    // Tegishli hamyonlar qulflanadi, so'ng tranzaksiyalar qulf ostida qayta o'qiladi
+    const walletRows = await tx.coinTransaction.findMany({
+      where,
+      distinct: ['walletId'],
+      select: { walletId: true },
     });
+    const lockedBalances = await this.lockWalletsByIds(
+      tx,
+      walletRows.map((w) => w.walletId),
+    );
+
+    const activeTransactions = await tx.coinTransaction.findMany({ where });
 
     const perWallet = new Map<
       string,
@@ -300,7 +466,7 @@ export class CoinTransactionsService {
     for (const trx of activeTransactions) {
       const entry = perWallet.get(trx.walletId) ?? {
         studentId: trx.studentId,
-        balance: trx.wallet.balance,
+        balance: lockedBalances.get(trx.walletId) ?? 0,
         delta: 0,
       };
       entry.delta +=
@@ -316,20 +482,15 @@ export class CoinTransactionsService {
       return { reversed: 0, blockedStudentIds };
     }
 
-    for (const [walletId, { delta }] of perWallet) {
-      if (delta === 0) continue;
-      await tx.wallet.update({
-        where: { id: walletId },
-        data: {
-          balance: delta > 0 ? { increment: delta } : { decrement: -delta },
-        },
-      });
+    for (const trx of this.sortForReversal(activeTransactions)) {
+      await this.reverseInTx(
+        tx,
+        trx.walletId,
+        trx,
+        actorId ?? null,
+        "Dars o'chirildi — shu dars uchun berilgan coin bekor qilindi",
+      );
     }
-
-    await tx.coinTransaction.updateMany({
-      where: { id: { in: activeTransactions.map((t) => t.id) } },
-      data: { isDeleted: true, deletedAt: new Date() },
-    });
 
     return { reversed: activeTransactions.length, blockedStudentIds: [] };
   }
@@ -343,6 +504,15 @@ export class CoinTransactionsService {
   ) {
     const uniqueStudentIds = Array.from(new Set(dto.studentIds));
     const results: BulkCoinResultItem[] = [];
+
+    // groupId/sessionId butun so'rov uchun bir marta tekshiriladi
+    await this.assertManualRefs(tenantId, teacherId, requesterRole, {
+      groupId: dto.groupId,
+      sessionId: dto.sessionId,
+    });
+    await assertTeacherCoinLimit(this.prisma, tenantId, requesterRole, [
+      dto.amount,
+    ]);
 
     for (const studentId of uniqueStudentIds) {
       try {
@@ -422,6 +592,36 @@ export class CoinTransactionsService {
       throw new NotFoundException('Tanga qoidasi topilmadi yoki nofaol');
     }
 
+    // Avtomatik qoidalar (davomat, uy vazifasi) faqat yo'qlama orqali qo'llanadi —
+    // qo'lda qo'llansa, sessiya qayta saqlanganda o'chib ketadi yoki dublikat bo'ladi
+    if (rule.triggerType === TriggerType.auto) {
+      throw new BadRequestException(
+        "Avtomatik qoidani qo'lda qo'llab bo'lmaydi — u yo'qlama saqlanganda o'zi qo'llanadi",
+      );
+    }
+
+    // Xarid manbasi faqat xarid moduli uchun
+    const sourceType =
+      rule.sourceType && rule.sourceType !== SourceType.purchase
+        ? rule.sourceType
+        : SourceType.manual;
+
+    if (
+      dto.sessionId &&
+      ALL_SESSION_MANAGED_SOURCE_TYPES.includes(sourceType)
+    ) {
+      throw new BadRequestException(
+        "Bu turdagi coin sessiyaga yo'qlama/natija orqali beriladi — qoidani sessionId'siz qo'llang",
+      );
+    }
+
+    await this.assertManualRefs(tenantId, teacherId, requesterRole, {
+      sessionId: dto.sessionId,
+    });
+    await assertTeacherCoinLimit(this.prisma, tenantId, requesterRole, [
+      rule.coinAmount,
+    ]);
+
     const uniqueStudentIds = Array.from(new Set(dto.studentIds));
     const results: BulkCoinResultItem[] = [];
     const note = dto.note || `"${rule.name}" qoidasi asosida`;
@@ -465,7 +665,7 @@ export class CoinTransactionsService {
           studentId,
           amount: rule.coinAmount,
           direction: rule.direction,
-          sourceType: rule.sourceType ?? SourceType.manual,
+          sourceType,
           note,
           teacherId,
           ruleId: rule.id,
@@ -521,8 +721,9 @@ export class CoinTransactionsService {
     } = query;
     const skip = (page - 1) * limit;
 
+    // Tarixda teskari yozuvlar ham ko'rinadi (reversalOfId / reversal orqali bog'langan)
     const where: Prisma.CoinTransactionWhereInput = {
-      isDeleted: false,
+      ...VISIBLE_COIN_TX_WHERE,
       student: { tenantId },
     };
 
@@ -546,6 +747,7 @@ export class CoinTransactionsService {
           student: { select: { fullName: true, phone: true } },
           teacher: { select: { fullName: true } },
           rule: { select: { name: true } },
+          reversal: { select: { id: true, createdAt: true } },
         },
       }),
       this.prisma.coinTransaction.count({ where }),
@@ -560,46 +762,74 @@ export class CoinTransactionsService {
     };
   }
 
-  // 5. TRANZAKSIYANI BEKOR QILISH (ROLLBACK LOGIC)
-  async cancelTransaction(id: string, tenantId: string) {
+  // 5. TRANZAKSIYANI BEKOR QILISH — teskari yozuv yaratiladi, asl yozuv tarixda qoladi
+  async cancelTransaction(id: string, tenantId: string, actorId: string) {
     const trx = await this.prisma.coinTransaction.findFirst({
-      where: { id, isDeleted: false, student: { tenantId } },
-      include: { wallet: true },
+      where: { id, ...VISIBLE_COIN_TX_WHERE, student: { tenantId } },
+      include: { reversal: { select: { id: true } } },
     });
 
-    if (!trx)
-      throw new NotFoundException(
-        'Tranzaksiya topilmadi yoki allaqachon o‘chirilgan',
+    if (!trx) throw new NotFoundException('Tranzaksiya topilmadi');
+
+    if (trx.reversalOfId) {
+      throw new BadRequestException(
+        'Bu yozuvning o‘zi bekor qilish (teskari) yozuvi — uni bekor qilib bo‘lmaydi',
       );
+    }
+    if (trx.reversal) {
+      throw new ConflictException('Tranzaksiya allaqachon bekor qilingan');
+    }
+
+    // Xarid coinlari faqat xaridni bekor qilish orqali qaytariladi — aks holda
+    // o'quvchi ham sovg'ani, ham coinni olib qolishi mumkin edi
+    if (trx.sourceType === SourceType.purchase) {
+      throw new BadRequestException(
+        'Xarid tranzaksiyasini bu yerdan bekor qilib bo‘lmaydi — xaridning o‘zini bekor qiling (PATCH /purchases/:id/status)',
+      );
+    }
+
+    // Sessiya tekshiruvi (yo'qlama/natija) coinlari yo'qlamani qayta saqlash orqali boshqariladi
+    if (
+      trx.sessionId &&
+      ALL_SESSION_MANAGED_SOURCE_TYPES.includes(trx.sourceType)
+    ) {
+      throw new BadRequestException(
+        'Bu coin sessiya tekshiruvi orqali berilgan — yo‘qlama/natijani o‘zgartiring',
+      );
+    }
 
     return this.prisma.$transaction(async (tx) => {
-      // Agar avval coin berilgan bo'lsa (earn) - endi ayiramiz (deduct). Va aksinchasi.
-      if (trx.direction === CoinDirection.earn) {
-        if (trx.wallet.balance < trx.amount) {
-          throw new BadRequestException(
-            'Tranzaksiyani bekor qilib bo‘lmaydi, talaba coinlarni ishlatib yuborgan.',
-          );
-        }
-        await tx.wallet.update({
-          where: { id: trx.walletId },
-          data: { balance: { decrement: trx.amount } },
-        });
-      } else {
-        await tx.wallet.update({
-          where: { id: trx.walletId },
-          data: { balance: { increment: trx.amount } },
-        });
+      const wallet = await this.lockWallet(tx, trx.studentId);
+
+      // Qulf ostida qayta tekshiruv: parallel ikki so'rovda ikkinchisi shu yerda to'xtaydi
+      const alreadyReversed = await tx.coinTransaction.findUnique({
+        where: { reversalOfId: id },
+        select: { id: true },
+      });
+      if (alreadyReversed) {
+        throw new ConflictException('Tranzaksiya allaqachon bekor qilingan');
       }
 
-      // Soft delete tranzaksiya
-      await tx.coinTransaction.update({
-        where: { id },
-        data: { isDeleted: true, deletedAt: new Date() },
-      });
+      // Berilgan coin (earn) qaytarilayotganda balans yetishi kerak
+      if (trx.direction === CoinDirection.earn && wallet.balance < trx.amount) {
+        throw new BadRequestException(
+          'Tranzaksiyani bekor qilib bo‘lmaydi, talaba coinlarni ishlatib yuborgan.',
+        );
+      }
+
+      const result = await this.reverseInTx(
+        tx,
+        wallet.id,
+        trx,
+        actorId,
+        'Tranzaksiya bekor qilindi',
+      );
 
       return {
         message:
           'Tranzaksiya muvaffaqiyatli bekor qilindi va balans qayta hisoblandi',
+        reversalTransactionId: result.transactionId,
+        newBalance: result.newBalance,
       };
     });
   }
@@ -624,7 +854,7 @@ export class CoinTransactionsService {
 
     const where: Prisma.CoinTransactionWhereInput = {
       studentId,
-      isDeleted: false,
+      ...VISIBLE_COIN_TX_WHERE,
       student: { tenantId },
     };
 
@@ -650,6 +880,8 @@ export class CoinTransactionsService {
           sourceType: true,
           note: true,
           createdAt: true,
+          reversalOfId: true,
+          reversal: { select: { id: true, createdAt: true } },
           teacher: { select: { id: true, fullName: true } },
           group: { select: { id: true, name: true } },
         },
@@ -680,7 +912,7 @@ export class CoinTransactionsService {
     const transactions = await this.prisma.coinTransaction.findMany({
       where: {
         studentId,
-        isDeleted: false,
+        ...EFFECTIVE_COIN_TX_WHERE,
         student: { tenantId },
         createdAt: { gte: start },
       },

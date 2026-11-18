@@ -1,6 +1,6 @@
 # Xavfsizlik va Barqarorlik Yangilanishi — Frontend API Qo'llanmasi
 
-> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** yozilgan.
+> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** va **2-bosqich (coin yaxlitligi)** yozilgan.
 
 > Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi va jadval/sessiya qoidalari aniqlashtirildi. Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va yangi xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
 
@@ -25,6 +25,12 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
   - [1.7 Login urinishlari limiti](#17-login-urinishlari-limiti)
   - [1.8 Tizim tenanti himoyasi (super_admin paneli)](#18-tizim-tenanti-himoyasi-super_admin-paneli)
   - [1.9 Boshqa o'zgarishlar](#19-boshqa-ozgarishlar)
+- [2. Coin (tanga) tizimi](#2-coin-tanga-tizimi)
+  - [2.1 Qo'lda coin berish — qat'iyroq validatsiya](#21-qolda-coin-berish--qatiyroq-validatsiya)
+  - [2.2 Teacher coin limiti (tenant sozlamasi)](#22-teacher-coin-limiti-tenant-sozlamasi)
+  - [2.3 Coin qoidalari](#23-coin-qoidalari)
+  - [2.4 📢 Bekor qilish endi teskari yozuv bilan (alohida e'lon)](#24--bekor-qilish-endi-teskari-yozuv-bilan-alohida-elon)
+  - [2.5 Parallel so'rovlar va qulflash](#25-parallel-sorovlar-va-qulflash)
 - [Xato holatlari](#xato-holatlari)
 - [O'zgarishlar jurnali](#ozgarishlar-jurnali)
 
@@ -40,6 +46,10 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
 | 4 | Admin paneli — userlar | Admin uchun rol tanlash ro'yxatidan `admin` rolini olib tashlash. Boshqa adminlarda tahrirlash/arxivlash/parol tugmalarini yashirish |
 | 5 | Admin — o'zini tahrirlash | `PATCH /users/:id` emas, `PATCH /users/me` ishlatilsin |
 | 6 | Profil — `avatarUrl` | Faqat `/uploads/avatars/...` yoki `https://...` qiymat yuborilsin |
+| 7 | Coin berish formasi | `sourceType` faqat `manual` / `bonus`. Teacher uchun limitni `GET /tenant-settings` dan olib ko'rsatish; `TEACHER_COIN_LIMIT_EXCEEDED` xatosini ko'rsatish |
+| 8 | Admin — sozlamalar | Yangi "Teacher coin limiti" maydoni: `GET/PATCH /tenant-settings` |
+| 9 | Coin tarixi | **Teskari yozuvlar** endi tarixda ko'rinadi — [2.4](#24--bekor-qilish-endi-teskari-yozuv-bilan-alohida-elon) bo'yicha UI'ni moslash |
+| 10 | Teacher — coin qoidasi yaratish | `groupId` majburiy (faqat o'z guruhi); `coinAmount` 1 dan kam bo'lmasin |
 
 ---
 
@@ -269,15 +279,235 @@ creator va super_admin joylashgan **tizim tenanti** (`slug: "system"`) uchun:
 
 ---
 
+## 2. Coin (tanga) tizimi
+
+### 2.1 Qo'lda coin berish — qat'iyroq validatsiya
+
+`POST /coin-transactions/manual`, `POST /coin-transactions/bulk-manual`, `POST /coin-transactions/apply-rule`
+
+| Maydon / holat | Avval | Endi |
+| --- | --- | --- |
+| `sourceType` (manual, bulk-manual) | Istalgan qiymat (`attendance`, `purchase`, `exam` ham) | Faqat **`manual`** yoki **`bonus`**. Davomat/imtihon coinlari faqat sessiya tekshiruvi orqali, xarid — faqat xarid moduli orqali |
+| `amount` | Yuqori chegara yo'q edi | 1 … **100 000**. Teacher uchun qo'shimcha tenant limiti — [2.2](#22-teacher-coin-limiti-tenant-sozlamasi) |
+| `note` | Uzunligi cheklanmagan | Ko'pi bilan **500** belgi |
+| `groupId`, `sessionId`, `ruleId` | Tekshirilmasdi (boshqa tenant ID'si ham o'tardi) | Shu tenantga tegishli va o'chirilmagan bo'lishi shart. Teacher uchun guruh/dars unga tegishli bo'lishi kerak. `groupId` va `sessionId` birga berilsa, dars shu guruhniki bo'lishi kerak |
+| `apply-rule` — avtomatik qoida (`triggerType: auto`) | Qo'llanardi | **`400`** — avtomatik qoidalar yo'qlama orqali o'zi qo'llanadi |
+| `apply-rule` — `sessionId` + sessiyaga oid turdagi qoida (`attendance`/`homework`/`exam`/`competition`) | Qo'llanardi | **`400`** — bunday coin sessiya tekshiruvi orqali beriladi |
+
+> `bulk-manual` va `apply-rule` da `groupId`/`sessionId`/limit xatolari endi **butun so'rovni** rad etadi (`400`/`403`/`404`). Avval har bir o'quvchi uchun alohida `results[].success: false` qaytardi. O'quvchiga oid xatolar (masalan "o'z guruhingizda emas") avvalgidek `results[]` ichida qaytadi.
+
+| Status | `message` |
+| --- | --- |
+| `400` | `"sourceType faqat 'manual' yoki 'bonus' bo'lishi mumkin"` |
+| `400` | `"Tanga miqdori 100000 dan oshmasligi kerak"` |
+| `400` | `"Avtomatik qoidani qo'lda qo'llab bo'lmaydi — u yo'qlama saqlanganda o'zi qo'llanadi"` |
+| `400` | `"Bu turdagi coin sessiyaga yo'qlama/natija orqali beriladi — qoidani sessionId'siz qo'llang"` |
+| `400` | `"Dars ko'rsatilgan guruhga tegishli emas"` |
+| `403` | `"Siz bu guruhga tanga bera olmaysiz"` / `"Siz bu darsga tanga bera olmaysiz"` (teacher) |
+| `404` | `"Guruh topilmadi"` / `"Dars topilmadi"` / `"Tanga qoidasi topilmadi"` |
+
+---
+
+### 2.2 Teacher coin limiti (tenant sozlamasi)
+
+Har bir tenant teacher bir martada **bitta o'quvchiga** bera oladigan maksimal coinni o'zi belgilaydi. Standart holatda limit yo'q (`null`).
+
+#### `GET /tenant-settings`
+
+**Kim:** `admin`, `super_admin` (`?tenantId=` bilan), `teacher` (o'qish uchun — formada limitni ko'rsatish).
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "tenant-uuid",
+    "teacherCoinLimit": 50
+  }
+}
+```
+
+#### `PATCH /tenant-settings`
+
+**Kim:** `admin`, `super_admin`.
+
+```json
+{ "teacherCoinLimit": 50 }
+```
+
+Limitni olib tashlash: `{ "teacherCoinLimit": null }`. Qiymat: `1 … 100000` yoki `null`.
+
+```json
+{
+  "status": "success",
+  "message": "Sozlamalar saqlandi",
+  "data": { "id": "tenant-uuid", "teacherCoinLimit": 50 }
+}
+```
+
+#### Limit qayerda qo'llanadi (faqat `teacher` uchun)
+
+| Endpoint | Nima tekshiriladi |
+| --- | --- |
+| `POST /coin-transactions/manual` | `amount` |
+| `POST /coin-transactions/bulk-manual` | `amount` (har bir o'quvchiga) |
+| `POST /coin-transactions/apply-rule` | Qoidaning `coinAmount` i |
+| `POST /sessions/:id/results` | Har bir qatnashgan o'quvchining `coinAmount` i (bittasi oshsa — butun so'rov rad etiladi) |
+| `POST /coin-rules` | Teacher yaratayotgan qoidaning `coinAmount` i |
+
+Admin va undan yuqori rollar uchun limit qo'llanmaydi. Yo'qlamadagi avtomatik coinlarga (davomat, uy vazifasi) ham qo'llanmaydi.
+
+**Xato `400`:**
+
+```json
+{
+  "statusCode": 400,
+  "message": "Bir o'quvchiga bir martada ko'pi bilan 50 coin bera olasiz (so'ralgan: 80)",
+  "code": "TEACHER_COIN_LIMIT_EXCEEDED",
+  "limit": 50
+}
+```
+
+**Frontendda:** teacher uchun coin kiritish maydonlariga `max={teacherCoinLimit}` qo'ying va limitni yonida ko'rsating. Backend baribir tekshiradi.
+
+---
+
+### 2.3 Coin qoidalari
+
+`POST /coin-rules`, `PATCH /coin-rules/:id`
+
+| O'zgarish | Tafsilot |
+| --- | --- |
+| `coinAmount` | 1 … 100 000 (avval 0 va manfiy qiymat ham o'tardi) |
+| `description` | Ko'pi bilan 1000 belgi |
+| `groupId` | Shu tenantdagi, o'chirilmagan guruh bo'lishi shart |
+| **Teacher** qoida yaratganda | `groupId` **majburiy** va u teacherga tegishli guruh bo'lishi kerak (tenant bo'yicha umumiy qoidani faqat admin yaratadi). `coinAmount` teacher limitidan oshmasligi kerak |
+
+| Status | `message` |
+| --- | --- |
+| `400` | `"coinAmount kamida 1 bo'lishi kerak"` / `"Bu tenantga tegishli bunday guruh topilmadi"` |
+| `400` | `TEACHER_COIN_LIMIT_EXCEEDED` ([2.2](#22-teacher-coin-limiti-tenant-sozlamasi)) |
+| `403` | `"O'qituvchi faqat o'z guruhi uchun qoida yarata oladi (groupId majburiy)"` |
+| `403` | `"Siz bu guruh uchun qoida yarata olmaysiz"` |
+
+---
+
+### 2.4 📢 Bekor qilish endi teskari yozuv bilan (alohida e'lon)
+
+> **Bu o'zgarish coin tarixi UI'siga to'g'ridan-to'g'ri ta'sir qiladi.** Frontend jamoasiga alohida xabar qilinadi.
+
+**Avval:** tranzaksiya bekor qilinganda u tarixdan **o'chib ketardi** (soft delete), balans esa jimgina o'zgarardi. O'quvchi "coinim qayerga ketdi?" deb so'rasa, izi qolmasdi.
+
+**Endi:** asl yozuv tarixda **qoladi**. Uning ustiga **teskari yozuv** qo'shiladi: miqdori bir xil, yo'nalishi qarama-qarshi (`earn` ↔ `deduct`), `sourceType` va bog'lanishlari (`sessionId`, `groupId`, `ruleId`, `purchaseId`) ham bir xil. Bu buxgalteriyadagi "storno" yozuviga o'xshaydi.
+
+#### Qachon teskari yozuv paydo bo'ladi
+
+| Amal | Natija tarixda |
+| --- | --- |
+| `DELETE /coin-transactions/:id/cancel` | Asl yozuv + teskari yozuv (`note: "Tranzaksiya bekor qilindi"`) |
+| Yo'qlama yoki natijani **qayta saqlash** (`POST /sessions/:id/attendance` yoki `results`) | Avvalgi coin yozuvlariga teskari yozuv (`"Tekshiruv qayta saqlandi — avvalgi yozuv bekor qilindi"`) + yangi yozuvlar |
+| Sessiyani o'chirish (`DELETE /sessions/:id`, `keepCoins` siz) | Shu sessiya coinlariga teskari yozuvlar (`"Dars o'chirildi — ..."`) |
+| Xaridni bekor qilish (`PATCH /purchases/:id/status` → `cancelled`) | Xarid tranzaksiyasiga teskari yozuv (avval ham kirim yozilardi, endi u asl yozuvga `reversalOfId` orqali bog'langan) |
+
+> Masalan, teacher yo'qlamani 3 marta saqlasa, o'quvchi tarixida 3 ta "+5 davomat" va 2 ta "−5 (bekor qilindi)" ko'rinadi. Sof natija +5.
+
+#### Yangi maydonlar
+
+`GET /coin-transactions/history` va `GET /coin-transactions/my-history` javobidagi har bir yozuvda:
+
+| Maydon | Tip | Ma'nosi |
+| --- | --- | --- |
+| `reversalOfId` | `string \| null` | Bu yozuv **teskari yozuv** bo'lsa — qaysi tranzaksiyani bekor qilgani. Oddiy yozuvda `null` |
+| `reversal` | `{ id, createdAt } \| null` | Bu yozuv **bekor qilingan** bo'lsa — unga yozilgan teskari yozuv. Bekor qilinmagan bo'lsa `null` |
+| `purchaseId` | `string \| null` | Xarid yoki xaridni bekor qilish tranzaksiyasi bo'lsa — xarid ID'si (`history` da) |
+
+```json
+[
+  {
+    "id": "b2c...",
+    "amount": 5,
+    "direction": "deduct",
+    "sourceType": "attendance",
+    "note": "Tekshiruv qayta saqlandi — avvalgi yozuv bekor qilindi",
+    "createdAt": "2026-11-18T10:05:00.000Z",
+    "reversalOfId": "a1f...",
+    "reversal": null
+  },
+  {
+    "id": "a1f...",
+    "amount": 5,
+    "direction": "earn",
+    "sourceType": "attendance",
+    "note": "Darsda qatnashgani uchun avtomatik bonus (Matematika)",
+    "createdAt": "2026-11-18T09:00:00.000Z",
+    "reversalOfId": null,
+    "reversal": { "id": "b2c...", "createdAt": "2026-11-18T10:05:00.000Z" }
+  }
+]
+```
+
+#### `DELETE /coin-transactions/:id/cancel` — yangi javob va qoidalar
+
+**Response `200`:**
+
+```json
+{
+  "message": "Tranzaksiya muvaffaqiyatli bekor qilindi va balans qayta hisoblandi",
+  "reversalTransactionId": "b2c...",
+  "newBalance": 120
+}
+```
+
+| Status | `message` | Qachon |
+| --- | --- | --- |
+| `400` | `"Bu yozuvning o'zi bekor qilish (teskari) yozuvi — uni bekor qilib bo'lmaydi"` | Teskari yozuvni bekor qilishga urinish |
+| `400` | `"Xarid tranzaksiyasini bu yerdan bekor qilib bo'lmaydi — xaridning o'zini bekor qiling (PATCH /purchases/:id/status)"` | `sourceType: purchase`. **Yangi.** Avval o'quvchi ham sovg'ani, ham coinni olib qolishi mumkin edi |
+| `400` | `"Bu coin sessiya tekshiruvi orqali berilgan — yo'qlama/natijani o'zgartiring"` | Davomat/uy vazifasi/imtihon coini (sessiyaga bog'langan). **Yangi** |
+| `400` | `"Tranzaksiyani bekor qilib bo'lmaydi, talaba coinlarni ishlatib yuborgan."` | Avvalgidek |
+| `409` | `"Tranzaksiya allaqachon bekor qilingan"` | **Yangi.** Avval `404` edi |
+
+#### Statistika o'zgarmaydi
+
+Jami olingan/ayirilgan coin, haftalik/oylik grafiklar, admin dashboard, guruh statistikasi, sessiyadagi `coinAwarded` — bularning hammasi bekor qilingan juftlikni (asl + teskari) **hisobga olmaydi**. Raqamlar avvalgi soft-delete bilan bir xil chiqadi. Balans ham o'zgarmaydi: asl + teskari = 0.
+
+> Bitta istisno — **yaxshilanish:** guruh statistikasidagi "o'rtacha balans tarixi" (`avgBalance.trend`) endi aniqroq. Avval o'chirilgan yozuvlar tarixdan yo'qolgani uchun tarixiy balans biroz noto'g'ri tiklanardi.
+
+#### Frontendda (tavsiya)
+
+1. **Teskari yozuv** (`reversalOfId !== null`): kulrang yoki "↩ Bekor qilish" belgisi bilan ko'rsating. "Bekor qilish" tugmasini ko'rsatmang.
+2. **Bekor qilingan yozuv** (`reversal !== null`): summasini ustidan chizilgan (strikethrough) qilib, "Bekor qilingan · {sana}" yorlig'ini qo'ying. "Bekor qilish" tugmasini yashiring.
+3. Ikkalasini vizual bog'lash mumkin (masalan, bosganda juftligi highlight bo'ladi): `reversal.id` ↔ `reversalOfId`.
+4. "Bekor qilish" tugmasini faqat `reversalOfId === null && reversal === null && sourceType !== 'purchase'` bo'lsa va yozuv sessiyaga oid avtomatik coin bo'lmasa ko'rsating.
+5. Tarixda `direction` filtri (`earn`/`deduct`) teskari yozuvlarni ham qaytaradi: "faqat kirimlar" filtrida bekor qilingan ayirishlarning teskari yozuvlari ham chiqadi.
+
+---
+
+### 2.5 Parallel so'rovlar va qulflash
+
+Request va response o'zgarmadi. Ichki tuzatishlar:
+
+| Muammo (avval) | Endi |
+| --- | --- |
+| "Saqlash" tugmasi ikki marta bosilsa, yo'qlama coinlari ikki marta yozilishi mumkin edi | Bitta o'quvchi bo'yicha barcha coin amallari navbat bilan bajariladi — dublikat bo'lmaydi |
+| Parallel ayirishlarda balans manfiyga tushishi mumkin edi | Balans tekshiruvi qulf ostida; DB ham manfiy balansni qabul qilmaydi |
+| Bitta tranzaksiyani parallel ikki marta bekor qilish balansni ikki marta o'zgartirardi | Ikkinchisi `409` oladi |
+| Sessiya o'chirilayotgan paytda yo'qlama saqlansa, o'chirilgan sessiyaga coin yozilishi mumkin edi | Sessiya qulflanadi; kech qolgan so'rov `404 "Dars topilmadi"` oladi |
+
+**Yo'qlama/natija saqlashdagi yangi holat:** saqlash davomida boshqa user sessiyani qulflasa (`POST /sessions/:id/lock`), qolgan o'quvchilar saqlanmaydi va `400` + `code: "SESSION_LOCKED"` qaytadi. Bunda avval saqlanganlar saqlangan bo'lib qoladi, shuning uchun frontend ro'yxatni qayta yuklashi (`GET /sessions/:id/attendance`) kerak.
+
+---
+
 ## Xato holatlari
 
 | Status | `code` | Qachon |
 | --- | --- | --- |
 | `400` | — | `oldPassword` yo'q; noto'g'ri `avatarUrl`; rasm emas fayl; login ma'lumotlari noto'g'ri |
 | `401` | — | Sessiya yo'q yoki muddati o'tgan; user arxivlangan/o'chirilgan yoki tenant to'xtatilgan (tizimga kirib turganda) |
+| `400` | `TEACHER_COIN_LIMIT_EXCEEDED` | Teacher coin miqdori tenant limitidan oshdi (javobda `limit`) |
+| `400` | `SESSION_LOCKED` | Yo'qlama/natija saqlash paytida sessiya qulflandi |
 | `403` | `TENANT_INACTIVE` | Login: tashkilot faoliyati to'xtatilgan |
 | `403` | — | Ruxsat yo'q: rol yetarli emas (kurs/xona), o'zidan yuqori/teng darajadagi user yoki rol, tizim tenanti amallari, eski parol noto'g'ri |
-| `404` | — | User/o'quvchi topilmadi (admin uchun boshqa tenant useri ham "topilmadi" bo'ladi) |
+| `404` | — | User/o'quvchi topilmadi (admin uchun boshqa tenant useri ham "topilmadi" bo'ladi); guruh/dars/qoida topilmadi |
+| `409` | — | Tranzaksiya allaqachon bekor qilingan |
 | `429` | — | Juda ko'p urinish |
 
 ---
@@ -295,3 +525,8 @@ creator va super_admin joylashgan **tizim tenanti** (`slug: "system"`) uchun:
 | 2026-11-18 | Login, forgot/reset-password: username bo'yicha 15 daqiqada 10 urinish; `429` xabari o'zbekcha |
 | 2026-11-18 | Tizim tenantini o'chirish, nofaol qilish va slug'ini o'zgartirish taqiqlandi |
 | 2026-11-18 | Prisma ichki xato matni klientga chiqmaydi; production'da CORS faqat `FRONTEND_DOMEN`, Swagger o'chiq |
+| 2026-11-18 | Qo'lda coin: `sourceType` faqat `manual`/`bonus`, `amount` ≤ 100 000, `note` ≤ 500; `groupId`/`sessionId`/`ruleId` tenant va teacher bo'yicha tekshiriladi; `apply-rule` avtomatik qoidalarni rad etadi |
+| 2026-11-18 | Yangi `GET/PATCH /tenant-settings` — `teacherCoinLimit`; teacher uchun manual, bulk, apply-rule, results va coin qoidalarida `TEACHER_COIN_LIMIT_EXCEEDED` |
+| 2026-11-18 | Coin qoidalari: `coinAmount` 1…100 000; teacher faqat o'z guruhi uchun (`groupId` majburiy) |
+| 2026-11-18 | **Bekor qilish teskari yozuv bilan:** asl yozuv tarixda qoladi; `reversalOfId`, `reversal`, `purchaseId` maydonlari; cancel javobida `reversalTransactionId`, `newBalance`; xarid va sessiya coinlarini cancel orqali bekor qilib bo'lmaydi; qayta bekor qilish `409` |
+| 2026-11-18 | Coin amallari va yo'qlama saqlash qulf ostida — dublikat coin va manfiy balans imkonsiz |

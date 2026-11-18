@@ -286,6 +286,7 @@ export class RewardsService {
           amount: reward.coinPrice,
           direction: CoinDirection.deduct, // Chiqim (ayirish)
           sourceType: SourceType.purchase, // Xarid sababli
+          purchaseId: purchaseRecord.id,
           note: `"${reward.title}" sovg'asi sotib olindi. Xarid ID: ${purchaseRecord.id}`,
         },
       });

@@ -213,7 +213,11 @@ src/
 
 ## Tanga tizimi (Coin System)
 
-**Asosiy invariant**: Wallet balansi hech qachon to'g'ridan-to'g'ri o'zgartirilmaydi. Faqat `CoinTransaction` orqali `increment`/`decrement` qilinadi (`$transaction` ichida).
+**Asosiy invariant**: Wallet balansi hech qachon to'g'ridan-to'g'ri o'zgartirilmaydi. Faqat `CoinTransaction` orqali `increment`/`decrement` qilinadi (`$transaction` ichida, hamyon `SELECT … FOR UPDATE` bilan qulflangan holda). DB `wallets.balance >= 0` ni kafolatlaydi.
+
+**Bekor qilish — teskari yozuv:** tranzaksiya o'chirilmaydi; unga qarama-qarshi yo'nalishdagi yozuv (`reversalOfId`) qo'shiladi. Tarixda ikkalasi ko'rinadi, statistikada bekor qilingan juftlik hisobga olinmaydi.
+
+**Teacher coin limiti:** tenant admini `PATCH /tenant-settings` orqali teacher bir martada bitta o'quvchiga bera oladigan maksimal coinni belgilaydi (`teacherCoinLimit`, `null` — cheklovsiz).
 
 `CoinTransactionsService` ikki xil interfeys:
 

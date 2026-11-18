@@ -17,6 +17,7 @@ import {
   SourceType,
 } from 'src/generated/prisma/enums';
 import { Prisma } from 'src/generated/prisma/client';
+import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effective-transaction';
 
 // Xarid holatlari oqimi:
 //   pending ──▶ approved ──▶ delivered
@@ -205,7 +206,17 @@ export class PurchasesService {
         stockRestored = count > 0;
       }
 
-      // 3. Tranzaksiyalar tarixiga qaytarilgan coin (kirim) yoziladi
+      // 3. Tranzaksiyalar tarixiga qaytarilgan coin (kirim) yoziladi — xarid
+      // tranzaksiyasining teskari yozuvi sifatida (asl yozuv tarixda qoladi)
+      const original = await tx.coinTransaction.findFirst({
+        where: {
+          purchaseId: purchase.id,
+          direction: CoinDirection.deduct,
+          ...EFFECTIVE_COIN_TX_WHERE,
+        },
+        select: { id: true },
+      });
+
       await tx.coinTransaction.create({
         data: {
           walletId: wallet.id,
@@ -214,6 +225,8 @@ export class PurchasesService {
           amount: purchase.coinSpent,
           direction: CoinDirection.earn,
           sourceType: SourceType.purchase,
+          purchaseId: purchase.id,
+          reversalOfId: original?.id ?? null,
           note: `"${purchase.reward.title}" xaridi bekor qilindi, tangalar qaytarildi. Sabab: ${dto.adminNote || 'Izohsiz'}. Xarid ID: ${purchase.id}`,
         },
       });

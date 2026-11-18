@@ -6,7 +6,9 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
 } from 'class-validator';
+import { COIN_NOTE_MAX_LENGTH } from '../constants/manual-coin';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ApplyCoinRuleDto {
@@ -38,6 +40,7 @@ export class ApplyCoinRuleDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(COIN_NOTE_MAX_LENGTH)
   note?: string;
 
   @ApiPropertyOptional({ description: 'Dars (Session) IDsi (ixtiyoriy)' })

@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { SYSTEM_TENANT_SLUG } from './constants/system-tenant';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { UpdateTenantSettingsDto } from './dto/update-tenant-settings.dto';
 import { DEFAULT_TENANT_ROLES } from '../roles/constants';
 import { DEFAULT_TENANT_COIN_RULES } from '../coin-rules/constants';
 
@@ -97,6 +98,35 @@ export class TenantService {
       status: 'success',
       data: tenant,
     };
+  }
+
+  // ─── Tenant sozlamalari (tenant admini) ──────────────────────
+  private static readonly SETTINGS_SELECT = {
+    id: true,
+    teacherCoinLimit: true,
+  } as const;
+
+  async getSettings(tenantId: string) {
+    const settings = await this.prisma.tenant.findFirst({
+      where: { id: tenantId, isDeleted: false },
+      select: TenantService.SETTINGS_SELECT,
+    });
+    if (!settings) throw new NotFoundException('Tenant topilmadi');
+    return { status: 'success', data: settings };
+  }
+
+  async updateSettings(tenantId: string, dto: UpdateTenantSettingsDto) {
+    await this.getSettings(tenantId);
+    const data = await this.prisma.tenant.update({
+      where: { id: tenantId },
+      data: {
+        ...(dto.teacherCoinLimit !== undefined
+          ? { teacherCoinLimit: dto.teacherCoinLimit }
+          : {}),
+      },
+      select: TenantService.SETTINGS_SELECT,
+    });
+    return { status: 'success', message: 'Sozlamalar saqlandi', data };
   }
 
   // Tizim tenantini o'chirish/nofaol qilish/slug'ini o'zgartirish taqiqlanadi

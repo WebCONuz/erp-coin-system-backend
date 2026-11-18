@@ -20,6 +20,8 @@ import {
   TriggerType,
 } from 'src/generated/prisma/enums';
 import { CoinTransactionsService } from 'src/coin-transaction/coin-transaction.service';
+import { assertTeacherCoinLimit } from 'src/common/utils/teacher-coin-limit';
+import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effective-transaction';
 import { Prisma } from 'src/generated/prisma/client';
 import { SessionCoinItem } from 'src/common/types';
 import {
@@ -777,6 +779,12 @@ export class SessionsService {
       // Yo'qlama qayta saqlanganda avvalgi avtomatik tranzaksiyalar bekor qilinib,
       // joriy holatga mos yangisi yaratiladi — coin dublikat bo'lmaydi.
       const result = await this.prisma.$transaction(async (tx) => {
+        await this.lockCheckableSession(
+          tx,
+          sessionId,
+          EvaluationMode.attendance,
+        );
+
         await tx.attendanceRecord.upsert({
           where: {
             sessionId_studentId: { sessionId, studentId: record.studentId },
@@ -801,6 +809,7 @@ export class SessionsService {
           studentId: record.studentId,
           sourceTypes: SESSION_MANAGED_SOURCE_TYPES[EvaluationMode.attendance],
           items,
+          actorId: recordedById,
         });
       });
 
@@ -858,6 +867,14 @@ export class SessionsService {
       }
     }
 
+    // Natijadagi coin miqdorini teacher o'zi kiritadi — tenant limiti qo'llanadi
+    await assertTeacherCoinLimit(
+      this.prisma,
+      tenantId,
+      requesterRole,
+      dto.records.filter((r) => r.isPresent).map((r) => r.coinAmount),
+    );
+
     const sessionLabel = session.subject?.name ?? session.group.name;
     const sourceType =
       SESSION_TYPE_CONFIG[session.sessionType].scoredSourceType;
@@ -889,6 +906,8 @@ export class SessionsService {
           : [];
 
       const result = await this.prisma.$transaction(async (tx) => {
+        await this.lockCheckableSession(tx, sessionId, EvaluationMode.scored);
+
         await tx.attendanceRecord.upsert({
           where: {
             sessionId_studentId: { sessionId, studentId: record.studentId },
@@ -917,6 +936,7 @@ export class SessionsService {
           studentId: record.studentId,
           sourceTypes: SESSION_MANAGED_SOURCE_TYPES[EvaluationMode.scored],
           items,
+          actorId: recordedById,
         });
       });
 
@@ -935,6 +955,40 @@ export class SessionsService {
       processedRecordsCount: processed,
       coinsSkippedFor,
     };
+  }
+
+  // Sessiya qatorini tx oxirigacha qulflaydi (SELECT ... FOR UPDATE) va qulf ostida
+  // hali tekshirish mumkinligini qayta tekshiradi. Parallel saqlash/o'chirish/qulflash
+  // so'rovlari shu qator bo'yicha navbatga turadi. Qulflash tartibi: avval sessiya, keyin hamyon.
+  private async lockCheckableSession(
+    tx: Prisma.TransactionClient,
+    sessionId: string,
+    expectedMode: EvaluationMode,
+  ) {
+    const [row] = await tx.$queryRaw<
+      { is_deleted: boolean; is_locked: boolean; evaluation_mode: string }[]
+    >`
+      SELECT is_deleted, is_locked, evaluation_mode::text AS evaluation_mode
+      FROM sessions WHERE id = ${sessionId}::uuid FOR UPDATE`;
+
+    if (!row || row.is_deleted) throw new NotFoundException('Dars topilmadi');
+
+    if (row.is_locked) {
+      throw codedError(
+        HttpStatus.BAD_REQUEST,
+        "Ushbu dars faoliyati qulflangan. Natijalarni o'zgartirib bo'lmaydi.",
+        SESSION_ERROR_CODES.SESSION_LOCKED,
+      );
+    }
+
+    if (row.evaluation_mode !== expectedMode) {
+      throw codedError(
+        HttpStatus.BAD_REQUEST,
+        `Bu sessiya "${row.evaluation_mode}" rejimida tekshiriladi`,
+        SESSION_ERROR_CODES.WRONG_EVALUATION_MODE,
+        { evaluationMode: row.evaluation_mode },
+      );
+    }
   }
 
   private collectSkipped(
@@ -982,7 +1036,7 @@ export class SessionsService {
       this.prisma.coinTransaction.findMany({
         where: {
           sessionId,
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           sourceType: {
             in: SESSION_MANAGED_SOURCE_TYPES[session.evaluationMode],
           },
@@ -1009,10 +1063,22 @@ export class SessionsService {
 
   // 8. DARSNI O'CHIRISH — shu sessiya tekshiruvi orqali berilgan coinlar ham
   // qaytariladi (keepCoins=true bo'lsa qaytarilmaydi)
-  async remove(id: string, tenantId: string, keepCoins = false) {
+  async remove(
+    id: string,
+    tenantId: string,
+    keepCoins = false,
+    actorId?: string,
+  ) {
     await this.findOne(id, tenantId);
 
     return this.prisma.$transaction(async (tx) => {
+      // Sessiya qulflanadi — shu payt parallel yo'qlama saqlanib, o'chirilayotgan sessiyaga coin yozilmasin
+      const [locked] = await tx.$queryRaw<{ is_deleted: boolean }[]>`
+        SELECT is_deleted FROM sessions WHERE id = ${id}::uuid FOR UPDATE`;
+      if (!locked || locked.is_deleted) {
+        throw new NotFoundException('Dars topilmadi');
+      }
+
       let reversedTransactions = 0;
 
       if (!keepCoins) {
@@ -1020,6 +1086,7 @@ export class SessionsService {
           tx,
           id,
           ALL_SESSION_MANAGED_SOURCE_TYPES,
+          actorId,
         );
         if (reversal.blockedStudentIds.length) {
           throw codedError(

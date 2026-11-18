@@ -119,14 +119,20 @@ export class CoinTransactionsController {
   @Delete(':id/cancel')
   @Roles('admin', 'super_admin')
   @ApiOperation({
-    summary: 'Tranzaksiyani bekor qilish (Soft-Delete va balansni qaytarish)',
+    summary:
+      'Tranzaksiyani bekor qilish — asl yozuv tarixda qoladi, unga teskari yozuv qo‘shiladi',
   })
   @ApiParam({ name: 'id', format: 'uuid' })
   cancelTransaction(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('id') actorId: string,
   ) {
-    return this.coinTransactionsService.cancelTransaction(id, tenantId);
+    return this.coinTransactionsService.cancelTransaction(
+      id,
+      tenantId,
+      actorId,
+    );
   }
 
   // 💳 WALLET READ ENDPOINTS

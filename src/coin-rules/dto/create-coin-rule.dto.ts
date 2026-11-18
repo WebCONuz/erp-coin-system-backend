@@ -6,7 +6,11 @@ import {
   Length,
   IsEnum,
   IsUUID,
+  Max,
+  MaxLength,
+  Min,
 } from 'class-validator';
+import { MANUAL_COIN_HARD_MAX } from 'src/coin-transaction/constants/manual-coin';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   CoinDirection,
@@ -29,6 +33,7 @@ export class CreateCoinRuleDto {
     description: 'Qoida haqida batafsil izoh',
   })
   @IsString()
+  @MaxLength(1000)
   @IsOptional()
   description?: string;
 
@@ -37,6 +42,10 @@ export class CreateCoinRuleDto {
     description: 'Beriladigan yoki chegirib tashlanadigan tangalar miqdori',
   })
   @IsInt()
+  @Min(1, { message: "coinAmount kamida 1 bo'lishi kerak" })
+  @Max(MANUAL_COIN_HARD_MAX, {
+    message: `coinAmount ${MANUAL_COIN_HARD_MAX} dan oshmasligi kerak`,
+  })
   @IsNotEmpty()
   coinAmount: number;
 
@@ -74,7 +83,8 @@ export class CreateCoinRuleDto {
 
   @ApiPropertyOptional({
     example: 'group-uuid-here',
-    description: 'Qoida faqat bitta guruhga tegishli bolsa, guruh IDsi',
+    description:
+      "Qoida faqat bitta guruhga tegishli bo'lsa, guruh IDsi (teacher uchun majburiy — faqat o'z guruhi)",
   })
   @IsOptional()
   @IsUUID()

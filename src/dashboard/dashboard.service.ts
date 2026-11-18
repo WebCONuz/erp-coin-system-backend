@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effective-transaction';
 import { CoinDirection } from 'src/generated/prisma/enums';
 
 @Injectable()
@@ -80,7 +81,7 @@ export class DashboardService {
         where: {
           student: { tenantId },
           direction: CoinDirection.earn,
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfMonth },
         },
         _sum: { amount: true },
@@ -89,7 +90,7 @@ export class DashboardService {
         where: {
           student: { tenantId },
           direction: CoinDirection.deduct,
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: startOfMonth },
         },
         _sum: { amount: true },
@@ -144,7 +145,7 @@ export class DashboardService {
       this.prisma.coinTransaction.findMany({
         where: {
           student: { tenantId },
-          isDeleted: false,
+          ...EFFECTIVE_COIN_TX_WHERE,
           createdAt: { gte: sevenDaysAgo },
         },
         select: { amount: true, direction: true, createdAt: true },

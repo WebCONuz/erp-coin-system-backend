@@ -225,9 +225,15 @@ export class SessionsController {
   remove(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('id') actorId: string,
     @Query('keepCoins', new ParseBoolPipe({ optional: true }))
     keepCoins?: boolean,
   ) {
-    return this.sessionsService.remove(id, tenantId, keepCoins ?? false);
+    return this.sessionsService.remove(
+      id,
+      tenantId,
+      keepCoins ?? false,
+      actorId,
+    );
   }
 }

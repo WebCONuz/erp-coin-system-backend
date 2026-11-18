@@ -150,6 +150,9 @@ model Tenant {
   slug      String   @unique @db.VarChar(100)
   plan      String   @default("basic") @db.VarChar(50)
   type      TenantType? @map("tenant_type")
+  // Teacher bitta tranzaksiyada (har bir o'quvchiga) bera oladigan maksimal coin.
+  // null — cheklov yo'q. Tenant admini sozlaydi (PATCH /tenant-settings).
+  teacherCoinLimit Int? @map("teacher_coin_limit")
   isActive  Boolean  @default(true) @map("is_active")
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -674,18 +677,27 @@ model CoinTransaction {
   ruleId    String? @map("rule_id") @db.Uuid
   sessionId String? @map("session_id") @db.Uuid
   groupId   String? @map("group_id") @db.Uuid
+  // Xarid yoki xaridni bekor qilish tranzaksiyasi qaysi xaridga tegishli
+  purchaseId String? @map("purchase_id") @db.Uuid
+  // Teskari yozuv: bekor qilish asl yozuvni o'chirmaydi, unga qarama-qarshi yozuv qo'shadi.
+  // Bitta yozuv faqat bir marta bekor qilinadi (unique).
+  reversalOfId String? @unique @map("reversal_of_id") @db.Uuid
 
-  wallet  Wallet    @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  student User      @relation("StudentTransactions", fields: [studentId], references: [id])
-  teacher User?     @relation("TeacherTransactions", fields: [teacherId], references: [id])
-  rule    CoinRule? @relation(fields: [ruleId], references: [id])
-  session Session?  @relation(fields: [sessionId], references: [id])
-  group   Group?    @relation(fields: [groupId], references: [id])
+  wallet     Wallet           @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  student    User             @relation("StudentTransactions", fields: [studentId], references: [id])
+  teacher    User?            @relation("TeacherTransactions", fields: [teacherId], references: [id])
+  rule       CoinRule?        @relation(fields: [ruleId], references: [id])
+  session    Session?         @relation(fields: [sessionId], references: [id])
+  group      Group?           @relation(fields: [groupId], references: [id])
+  purchase   Purchase?        @relation(fields: [purchaseId], references: [id])
+  reversalOf CoinTransaction? @relation("CoinReversal", fields: [reversalOfId], references: [id])
+  reversal   CoinTransaction? @relation("CoinReversal")
 
   @@index([walletId])
   @@index([studentId, createdAt(sort: Desc)])
   @@index([teacherId])
-  @@index([sessionId])
+  @@index([sessionId, studentId, sourceType])
+  @@index([purchaseId])
   @@index([isDeleted])
   @@map("coin_transactions")
 }
@@ -777,7 +789,10 @@ model Purchase {
   approvedBy  User?   @relation("ApprovedByUser", fields: [approvedById], references: [id])
   deliveredBy User?   @relation("DeliveredByUser", fields: [deliveredById], references: [id])
 
+  transactions CoinTransaction[]
+
   @@index([studentId])
+  @@index([rewardId])
   @@index([status])
   @@index([isDeleted])
   @@map("purchases")

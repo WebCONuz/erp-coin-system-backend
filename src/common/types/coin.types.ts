@@ -10,10 +10,16 @@ export interface ExecuteCoinProcessData {
   ruleId?: string | null;
   groupId?: string | null;
   sessionId?: string | null;
+  purchaseId?: string | null;
+  // Teskari yozuv bo'lsa — qaysi tranzaksiyani bekor qiladi
+  reversalOfId?: string | null;
 }
 
 // Sessiya tekshiruvida bitta o'quvchi uchun berilishi kerak bo'lgan tranzaksiya
-export type SessionCoinItem = Omit<ExecuteCoinProcessData, 'studentId'>;
+export type SessionCoinItem = Omit<
+  ExecuteCoinProcessData,
+  'studentId' | 'purchaseId' | 'reversalOfId'
+>;
 
 export interface SkippedSessionCoinItem {
   sourceType: SourceType;

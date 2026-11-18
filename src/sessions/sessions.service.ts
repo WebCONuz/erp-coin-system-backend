@@ -31,6 +31,13 @@ import {
   toDateString,
 } from 'src/common/utils/tenant-time';
 import {
+  AttendanceRules,
+  buildAttendanceCoinItems,
+  isAttendedStatus,
+  pickAutoRule,
+  resolveAttendanceStatus,
+} from './utils/attendance-coins';
+import {
   assertNoSessionConflict,
   lockTenantSchedule,
 } from './utils/session-conflicts';
@@ -886,32 +893,6 @@ export class SessionsService {
     );
   }
 
-  // Yo'qlama holatini aniqlash: status ustun; faqat isPresent berilsa — present/absent.
-  // Ikkalasi berilsa mos bo'lishi kerak (isPresent true ↔ present/late).
-  private resolveAttendanceStatus(record: {
-    studentId: string;
-    status?: AttendanceStatus;
-    isPresent?: boolean;
-  }): AttendanceStatus {
-    if (record.status === undefined) {
-      return record.isPresent
-        ? AttendanceStatus.present
-        : AttendanceStatus.absent;
-    }
-    const attended =
-      record.status === AttendanceStatus.present ||
-      record.status === AttendanceStatus.late;
-    if (record.isPresent !== undefined && record.isPresent !== attended) {
-      throw codedError(
-        HttpStatus.BAD_REQUEST,
-        `status (${record.status}) va isPresent (${record.isPresent}) bir-biriga mos emas`,
-        SESSION_ERROR_CODES.ATTENDANCE_STATUS_MISMATCH,
-        { studentId: record.studentId },
-      );
-    }
-    return record.status;
-  }
-
   // 6. YO'QLAMANI SAQLASH VA TANGALARNI AVTOMATIK HISOBLASH (attendance rejimi)
   async saveAttendanceAndProcessCoins(
     sessionId: string,
@@ -946,29 +927,15 @@ export class SessionsService {
       },
     });
 
-    // sourceType + direction bo'yicha qoida topish. Guruhga xos qoida
-    // (groupId shu sessiondagi guruhga teng) tenant darajasidagi umumiy
-    // qoidadan (groupId: null) ustun turadi — eng aniq mos qoida tanlanadi.
-    const findRule = (sourceType: SourceType, direction: CoinDirection) => {
-      const candidates = coinRules.filter(
-        (r) => r.sourceType === sourceType && r.direction === direction,
-      );
-      return (
-        candidates.find((r) => r.groupId === session.groupId) ??
-        candidates.find((r) => r.groupId === null)
-      );
+    const pick = (sourceType: SourceType, direction: CoinDirection) =>
+      pickAutoRule(coinRules, session.groupId, sourceType, direction);
+    const rules: AttendanceRules = {
+      attendance: pick(SourceType.attendance, CoinDirection.earn),
+      homework: pick(SourceType.homework, CoinDirection.earn),
+      absence: pick(SourceType.attendance, CoinDirection.deduct),
+      // Kechikkan uchun alohida qoida (ixtiyoriy). Bo'lmasa — oddiy davomat coini beriladi
+      late: pick(SourceType.late, CoinDirection.earn),
     };
-
-    const attendanceRule = findRule(SourceType.attendance, CoinDirection.earn);
-    const homeworkRule = findRule(SourceType.homework, CoinDirection.earn);
-    const absenceRule = findRule(SourceType.attendance, CoinDirection.deduct);
-    // Kechikkan uchun alohida qoida (ixtiyoriy). Bo'lmasa — oddiy davomat coini beriladi
-    const lateRule = findRule(SourceType.late, CoinDirection.earn);
-
-    const coinRewardForAttendance = attendanceRule
-      ? attendanceRule.coinAmount
-      : 5;
-    const coinRewardForHomework = homeworkRule ? homeworkRule.coinAmount : 10;
 
     const common = {
       teacherId: recordedById,
@@ -980,71 +947,19 @@ export class SessionsService {
 
     // Holatlar avval tekshiriladi — nomuvofiqlik bo'lsa hech kim saqlanmaydi
     const statuses = new Map(
-      dto.records.map((r) => [r.studentId, this.resolveAttendanceStatus(r)]),
+      dto.records.map((r) => [r.studentId, resolveAttendanceStatus(r)]),
     );
 
     for (const record of dto.records) {
-      const items: SessionCoinItem[] = [];
       const status = statuses.get(record.studentId)!;
-      const isPresent =
-        status === AttendanceStatus.present || status === AttendanceStatus.late;
-
-      if (status === AttendanceStatus.present) {
-        items.push({
-          ...common,
-          amount: coinRewardForAttendance,
-          direction: CoinDirection.earn,
-          sourceType: SourceType.attendance,
-          note: `Darsda qatnashgani uchun avtomatik bonus (${sessionLabel})`,
-          ruleId: attendanceRule?.id,
-        });
-      }
-
-      if (status === AttendanceStatus.late) {
-        items.push(
-          lateRule
-            ? {
-                ...common,
-                amount: lateRule.coinAmount,
-                direction: CoinDirection.earn,
-                sourceType: SourceType.late,
-                note: `Darsga kechikib kelgani uchun (${sessionLabel})`,
-                ruleId: lateRule.id,
-              }
-            : {
-                ...common,
-                amount: coinRewardForAttendance,
-                direction: CoinDirection.earn,
-                sourceType: SourceType.attendance,
-                note: `Darsda qatnashgani uchun avtomatik bonus — kechikdi (${sessionLabel})`,
-                ruleId: attendanceRule?.id,
-              },
-        );
-      }
-
-      if (record.homeworkDone) {
-        items.push({
-          ...common,
-          amount: coinRewardForHomework,
-          direction: CoinDirection.earn,
-          sourceType: SourceType.homework,
-          note: `Uy vazifasini bajargani uchun bonus (${sessionLabel})`,
-          ruleId: homeworkRule?.id,
-        });
-      }
-
-      // Sababsiz kelmaganlarga jarima (faqat absenceRule mavjud bo'lsa).
-      // Sababli (excused) — coin ham, jarima ham yo'q
-      if (status === AttendanceStatus.absent && absenceRule) {
-        items.push({
-          ...common,
-          amount: absenceRule.coinAmount,
-          direction: CoinDirection.deduct,
-          sourceType: SourceType.attendance,
-          note: `Darsga sababsiz kelmagani uchun jarima (${sessionLabel})`,
-          ruleId: absenceRule.id,
-        });
-      }
+      const isPresent = isAttendedStatus(status);
+      const items = buildAttendanceCoinItems({
+        status,
+        homeworkDone: record.homeworkDone,
+        rules,
+        common,
+        sessionLabel,
+      });
 
       plan.push({
         studentId: record.studentId,

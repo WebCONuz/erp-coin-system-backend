@@ -110,10 +110,9 @@ npx prisma db seed
 npx prisma studio        # DB GUI — localhost:5555
 
 # Testing
-npm run test
+npm run test             # Unit testlar (DB kerak emas)
 npm run test:watch
 npm run test:cov
-npm run test:e2e
 ```
 
 ---

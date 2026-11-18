@@ -13,7 +13,7 @@ const ALLOWED_MIME = /^image\/(jpeg|png|webp|gif)$/;
 // Faylning haqiqiy turi birinchi baytlari (magic bytes) bo'yicha aniqlanadi —
 // klient yuborgan mimetype va fayl nomiga ishonilmaydi (aks holda .html/.svg
 // faylni rasm deb yuklab, API domenida XSS qilish mumkin edi)
-function detectImageExtension(buf: Buffer): string | null {
+export function detectImageExtension(buf: Buffer): string | null {
   if (buf.length >= 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff)
     return 'jpg';
   if (

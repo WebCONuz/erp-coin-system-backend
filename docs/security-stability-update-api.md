@@ -1,8 +1,13 @@
 # Xavfsizlik va Barqarorlik Yangilanishi — Frontend API Qo'llanmasi
 
-> ⚠️ **QORALAMA** — hujjat bosqichma-bosqich to'ldirilmoqda. Yakuniy versiya barcha bosqichlar tugagach beriladi. Hozir: **1-bosqich (xavfsizlik)** **2-bosqich (coin yaxlitligi)** **3-bosqich (jadval va sessiyalar)** **4-bosqich (DB tozalash)** va **5-bosqich (unumdorlik)** yozilgan.
+> **Holati:** yakuniy · 2026-11-18 · backend branch `fix/security-stability`
 
-> Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi va jadval/sessiya qoidalari aniqlashtirildi. Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va yangi xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
+> Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi, jadval va sessiya qoidalari aniqlashtirildi, yangi imkoniyatlar qo'shildi (davomat holatlari, dam olish kunlari, o'rinbosar o'qituvchi). Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
+
+**Qanday o'qish kerak:**
+1. Avval [Mavjud frontendni buzadigan o'zgarishlar](#mavjud-frontendni-buzadigan-ozgarishlar) — backend yangilanishi bilan **bir vaqtda** tuzatilishi kerak bo'lgan joylar.
+2. Keyin [Qisqacha: frontendda nima qilish kerak](#qisqacha-frontendda-nima-qilish-kerak) — barcha vazifalar ro'yxati.
+3. Tafsilot (request/response, xatolar) — har bir bo'limda.
 
 **Base URL:** `http://localhost:3031/api`
 **Auth:** HttpOnly Cookie (`access_token`, `refresh_token`) — `withCredentials: true` shart
@@ -14,6 +19,7 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
 
 ## Mundarija
 
+- [Mavjud frontendni buzadigan o'zgarishlar](#mavjud-frontendni-buzadigan-ozgarishlar)
 - [Qisqacha: frontendda nima qilish kerak](#qisqacha-frontendda-nima-qilish-kerak)
 - [1. Autentifikatsiya va foydalanuvchilar](#1-autentifikatsiya-va-foydalanuvchilar)
   - [1.1 Parolni o'zgartirish](#11-parolni-ozgartirish)
@@ -50,6 +56,31 @@ Rol darajalari (`role.level`, `/auth/me` javobida bor): `creator` 100 › `super
 - [5. Unumdorlik va ishonchlilik](#5-unumdorlik-va-ishonchlilik)
 - [Xato holatlari](#xato-holatlari)
 - [O'zgarishlar jurnali](#ozgarishlar-jurnali)
+
+---
+
+## Mavjud frontendni buzadigan o'zgarishlar
+
+Bular avval ishlagan so'rovlar endi xato qaytaradigan yoki javob ma'nosi o'zgargan joylar. Backend deploy qilingan kuni frontend ham yangilangan bo'lishi kerak.
+
+| # | O'zgarish | Avval ishlardi | Endi | Bo'lim |
+| --- | --- | --- | --- | --- |
+| 1 | O'z parolini o'zgartirish | `oldPassword` siz | `400` — `oldPassword` majburiy | [1.1](#11-parolni-ozgartirish) |
+| 2 | Student `GET /courses`, `GET /rooms` | `200` | `403` | [1.2](#12-kurslar-va-xonalar--ruxsatlar) |
+| 3 | Admin `admin` rolini berishi, boshqa adminni tahrirlashi/arxivlashi, `PATCH /users/:id` bilan o'zini tahrirlashi | `200` | `403` | [1.6](#16-admin-ierarxiyasi) |
+| 4 | `avatarUrl` — `http://`, nisbiy yoki boshqa yo'l | qabul qilinardi | `400` | [1.3](#13-avatar-yuklash-va-avatarurl) |
+| 5 | Qo'lda coin — `sourceType` `attendance`/`exam`/`purchase` va h.k. | qabul qilinardi | `400` — faqat `manual`/`bonus` | [2.1](#21-qolda-coin-berish--qatiyroq-validatsiya) |
+| 6 | `apply-rule` — avtomatik qoida | qo'llanardi | `400` | [2.1](#21-qolda-coin-berish--qatiyroq-validatsiya) |
+| 7 | Teacher coin qoidasi — `groupId` siz | yaratilardi | `403` | [2.3](#23-coin-qoidalari) |
+| 8 | Coin tarixi | bekor qilingan yozuv yo'qolardi | asl + **teskari yozuv** ko'rinadi (`reversalOfId`, `reversal`) | [2.4](#24--bekor-qilish-endi-teskari-yozuv-bilan-alohida-elon) |
+| 9 | `DELETE /coin-transactions/:id/cancel` — xarid yoki davomat coini; qayta bekor qilish | bekor qilinardi; `404` | `400`; `409` | [2.4](#24--bekor-qilish-endi-teskari-yozuv-bilan-alohida-elon) |
+| 10 | Vaqt `9:00` (bir xonali soat) | qabul qilinardi | `400` — faqat `09:00` | [3.1](#31-vaqt-formati) |
+| 11 | Kelajakdagi darsga yo'qlama | saqlanardi | `400 SESSION_NOT_STARTED` | [3.3](#33-yoqlama-muddatlari) |
+| 12 | Teacher — 3 kundan eski saqlangan yo'qlamani tahrirlash; 7 kundan eski sanaga dars | saqlanardi | `403` | [3.2](#32-sessiya-yaratish-va-tahrirlash--dublikat-va-bandlik), [3.3](#33-yoqlama-muddatlari) |
+| 13 | Bir vaqtga to'g'ri keladigan darslar (xona/o'qituvchi/guruh) | yaratilardi | `409 SCHEDULE_CONFLICT` | [3.2](#32-sessiya-yaratish-va-tahrirlash--dublikat-va-bandlik), [3.4](#34-jadval-shablonlari--havolalar-va-oqituvchi-bandligi) |
+| 14 | Yo'qlamaga dars sanasidan keyin qo'shilgan o'quvchi | saqlanardi | `400 STUDENTS_NOT_IN_GROUP` — ro'yxatni `GET /sessions/:id/roster` dan oling | [3.10](#310-yoqlama-royxati--dars-sanasidagi-azolar) |
+| 15 | `generate-sessions` — 92 kundan katta oraliq; `skipped` ma'nosi | ishlardi | `400`; `skipped` — o'tkazib yuborilgan darslar soni | [3.7](#37-sessiyalarni-generatsiya-qilish) |
+| 16 | `DELETE /reward-category/:id` | bazadan o'chirardi | soft delete, nomi o'zgaradi | [4](#4-malumotlar-bazasi-tozalash) |
 
 ---
 
@@ -1125,6 +1156,7 @@ Auth talab qilinmaydi. Load balancer, docker healthcheck yoki status sahifasi uc
 | `403` | — | Ruxsat yo'q: rol yetarli emas (kurs/xona), o'zidan yuqori/teng darajadagi user yoki rol, tizim tenanti amallari, eski parol noto'g'ri |
 | `404` | — | User/o'quvchi topilmadi (admin uchun boshqa tenant useri ham "topilmadi" bo'ladi); guruh/dars/qoida topilmadi |
 | `409` | — | Tranzaksiya allaqachon bekor qilingan |
+| `503` | — | `GET /api/health`: DB ishlamayapti |
 | `429` | — | Juda ko'p urinish |
 
 ---
@@ -1159,3 +1191,4 @@ Auth talab qilinmaydi. Load balancer, docker healthcheck yoki status sahifasi uc
 | 2026-11-18 | Shablon `validFrom`/`validTo` (to'qnashuv tekshiruvi muddatni hisobga oladi); istisnoda o'rinbosar `teacherId` va `roomId`; kalendar javobiga `holiday`, `exception.teacher/room`, `template.validFrom/validTo`, `session.templateId` |
 | 2026-11-18 | Fan va sovg'a kategoriyasi: o'chirilgan nomni qayta ishlatish mumkin, aniq `409` xabarlari; kategoriya soft delete; sovg'ada `categoryId` tenant bo'yicha tekshiriladi; tranzaksiya/xarid/yo'qlama javoblarida `tenantId` |
 | 2026-11-18 | Yo'qlama/natija bitta tranzaksiyada (hammasi yoki hech narsa); auth tekshiruvi 1 ta DB so'rovi; yangi `GET /api/health` |
+| 2026-11-18 | Hujjat yakunlandi: "Mavjud frontendni buzadigan o'zgarishlar" jadvali qo'shildi |

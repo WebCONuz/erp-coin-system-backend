@@ -1,3 +1,4 @@
+import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuditActionType, Prisma } from 'src/generated/prisma/client';
@@ -13,7 +14,7 @@ import {
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class QueryAuditLogDto {
+export class QueryAuditLogDto extends TenantQueryDto {
   @ApiPropertyOptional({ enum: AuditActionType })
   @IsOptional()
   @IsEnum(AuditActionType)

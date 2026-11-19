@@ -1,8 +1,9 @@
+import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
 import { IsOptional, IsIn, IsNumber, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class QueryCoinStatsDto {
+export class QueryCoinStatsDto extends TenantQueryDto {
   @ApiPropertyOptional({
     enum: ['week', 'month'],
     default: 'week',

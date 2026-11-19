@@ -1,3 +1,4 @@
+import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDateString,
@@ -20,7 +21,7 @@ export class CreateHolidayDto {
   name: string;
 }
 
-export class QueryHolidayDto {
+export class QueryHolidayDto extends TenantQueryDto {
   @ApiPropertyOptional({ example: '2026-01-01' })
   @IsOptional()
   @IsDateString()

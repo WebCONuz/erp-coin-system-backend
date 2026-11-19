@@ -17,6 +17,7 @@
 - [4. `generate-sessions` — 92 kun](#4-generate-sessions--92-kun)
 - [5. Kalendarda dam olish kuni](#5-kalendarda-dam-olish-kuni)
 - [6. Parol modallarida `oldPassword`](#6-parol-modallarida-oldpassword)
+- [7. `?tenantId=` bilan `GET /holidays` va boshqa ro'yxatlar (super_admin)](#7-tenantid-bilan-get-holidays-va-boshqa-royxatlar-super_admin)
 - [Backend tuzatishlari (shu tekshiruvda)](#backend-tuzatishlari-shu-tekshiruvda)
 - [O'zgarishlar jurnali](#ozgarishlar-jurnali)
 
@@ -189,6 +190,22 @@ Kun sarlavhasida `holiday.name` ni ko'rsating (masalan "🎉 Yangi yil").
 
 ---
 
+## 7. `?tenantId=` bilan `GET /holidays` va boshqa ro'yxatlar (super_admin)
+
+**Tuzatildi.** super_admin/creator tenantga oid endpointlarga `?tenantId=` yuborishi **majburiy**, lekin quyidagi ro'yxat endpointlarining query DTO'sida `tenantId` yo'q edi — backend (`forbidNonWhitelisted`) har doim `400 "property tenantId should not exist"` qaytarardi:
+
+| Endpoint | Kim chaqiradi | Holat |
+| --- | --- | --- |
+| `GET /holidays` | admin, super_admin, teacher | super_admin uchun **har doim 400** edi → tuzatildi |
+| `GET /audit-logs` | admin, super_admin | super_admin uchun **har doim 400** edi (avvaldan) → tuzatildi |
+| `GET /coin-transactions/my-history`, `my-stats`, `GET /sessions/me/attendance` | o'quvchi (o'z ma'lumoti) | Izchillik uchun tuzatildi (super_admin uchun amaliy ahamiyati yo'q) |
+
+Endi barcha ro'yxat endpointlari `?tenantId=<uuid>` ni qabul qiladi — tenantga oid **barcha** `GET` so'rovlarda super_admin uchun `tenantId` ni bir xil qo'shishingiz mumkin. Admin, teacher, student uchun `tenantId` yuborish shart emas (tokendan olinadi; yuborilsa e'tiborsiz qoldiriladi).
+
+> Backend'ga test qo'shildi: barcha controllerlardagi har bir `@Query()` DTO'si `?tenantId=` bilan tekshiriladi — yangi endpoint qo'shilganda ham bu xato qaytmaydi.
+
+---
+
 ## Backend tuzatishlari (shu tekshiruvda)
 
 | # | Muammo | Ta'siri | Tuzatish |
@@ -197,6 +214,7 @@ Kun sarlavhasida `holiday.name` ni ko'rsating (masalan "🎉 Yangi yil").
 | 2 | `PATCH /schedule-exceptions/:id`: `null` vaqtni tozalamasdi; `exceptionDate`/`isCancelled` majburiy edi; yuborilmagan xona/o'rinbosar o'chib ketardi | Istisnoni to'g'ri tahrirlab bo'lmasdi | Qisman yangilash ([3](#3-istisno-vaqtini-tozalash-patch-schedule-exceptionsid)) |
 | 3 | `PATCH /schedule-templates/:id`: yuborilmagan `teacherId`/`subjectId` tozalanib ketardi | Faqat vaqtni o'zgartirish shablon o'qituvchisi va fanini o'chirardi | Endi faqat yuborilgan maydon o'zgaradi; `null` — tozalash |
 | 4 | `PATCH /sessions/:id` qulflangan darsda **faqat** `topic`/`subjectId` yuborilganda ham `403 SESSION_LOCKED` | Qulflangan dars mavzusini tahrirlab bo'lmasdi | Endi faqat vaqt/xona/o'qituvchi/tur/rejim/maxScore yuborilsa bloklanadi |
+| 5 | `GET /holidays`, `GET /audit-logs` (va o'quvchining `my-*` endpointlari) `?tenantId=` ni rad etardi | super_admin bu sahifalarni ocha olmasdi (`400`) | Query DTO'larga `tenantId` qo'shildi ([7](#7-tenantid-bilan-get-holidays-va-boshqa-royxatlar-super_admin)) |
 
 > 3 va 4 avvaldan (bugungi o'zgarishlardan oldin ham) bor edi. Sababi bitta: ES2022+ da DTO obyektida yuborilmagan maydonlar ham `undefined` bo'lib turadi, `'x' in dto` esa har doim `true` qaytaradi.
 
@@ -213,3 +231,4 @@ Kun sarlavhasida `holiday.name` ni ko'rsating (masalan "🎉 Yangi yil").
 | 2026-11-19 | `PATCH /schedule-exceptions/:id` — qisman yangilash, `null` bilan tozalash, `exceptionDate` e'tiborsiz |
 | 2026-11-19 | `PATCH /schedule-templates/:id` — yuborilmagan `teacherId`/`subjectId` endi tozalanmaydi |
 | 2026-11-19 | `PATCH /sessions/:id` — qulflangan darsda `topic`/`subjectId` tahriri ishlaydi |
+| 2026-11-19 | `GET /holidays`, `GET /audit-logs`, `my-history`, `my-stats`, `GET /sessions/me/attendance` — `?tenantId=` qabul qilinadi (super_admin) |

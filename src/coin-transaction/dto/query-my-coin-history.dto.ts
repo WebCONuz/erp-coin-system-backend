@@ -1,3 +1,4 @@
+import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
 import {
   IsOptional,
   IsNumber,
@@ -9,7 +10,7 @@ import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CoinDirection, SourceType } from 'src/generated/prisma/enums';
 
-export class QueryMyCoinHistoryDto {
+export class QueryMyCoinHistoryDto extends TenantQueryDto {
   @ApiPropertyOptional({ example: 1, default: 1 })
   @IsOptional()
   @Type(() => Number)

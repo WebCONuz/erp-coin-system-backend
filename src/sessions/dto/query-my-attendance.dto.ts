@@ -1,3 +1,4 @@
+import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
 import {
   IsOptional,
   IsNumber,
@@ -8,7 +9,7 @@ import {
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class QueryMyAttendanceDto {
+export class QueryMyAttendanceDto extends TenantQueryDto {
   @ApiPropertyOptional({ example: 1, default: 1 })
   @IsOptional()
   @Type(() => Number)

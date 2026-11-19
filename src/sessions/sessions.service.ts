@@ -359,7 +359,11 @@ export class SessionsService {
         'evaluationMode',
         'maxScore',
       ];
-      const hasStructuralChange = structuralFields.some((f) => f in dto);
+      // DTO obyektida yuborilmagan maydonlar ham `undefined` bo'lib mavjud (ES2022+ class fields),
+      // shuning uchun `in` emas — qiymat bo'yicha tekshiriladi
+      const hasStructuralChange = structuralFields.some(
+        (f) => dto[f] !== undefined,
+      );
       if (hasStructuralChange) {
         throw codedError(
           HttpStatus.FORBIDDEN,

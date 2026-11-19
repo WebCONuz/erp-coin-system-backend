@@ -1,6 +1,6 @@
 # Xavfsizlik va Barqarorlik Yangilanishi — Frontend API Qo'llanmasi
 
-> **Holati:** yakuniy · 2026-11-18 · backend branch `fix/security-stability`
+> **Holati:** yakuniy · 2026-11-18 (2026-11-19 da aniqliklar bilan yangilandi) · frontend savollariga javoblar va qo'shimcha tuzatishlar: [frontend-clarifications-api.md](frontend-clarifications-api.md)
 
 > Backend'da xavfsizlik teshiklari yopildi, coin hisob-kitobi mustahkamlandi, jadval va sessiya qoidalari aniqlashtirildi, yangi imkoniyatlar qo'shildi (davomat holatlari, dam olish kunlari, o'rinbosar o'qituvchi). Ayrim endpointlarda ruxsatlar qattiqlashdi, yangi majburiy maydonlar va xato holatlari paydo bo'ldi. Quyida frontendga ta'sir qiladigan har bir o'zgarish keltirilgan.
 
@@ -469,7 +469,7 @@ Admin va undan yuqori rollar uchun limit qo'llanmaydi. Yo'qlamadagi avtomatik co
 
 #### Yangi maydonlar
 
-`GET /coin-transactions/history` va `GET /coin-transactions/my-history` javobidagi har bir yozuvda:
+`GET /coin-transactions/history`, `GET /coin-transactions/my-history`, `GET /students/:id` (`coinTransactionsReceived`) va o'quvchi/teacher/admin dashboard'laridagi oxirgi tranzaksiyalar ro'yxatida har bir yozuvda:
 
 | Maydon | Tip | Ma'nosi |
 | --- | --- | --- |
@@ -758,6 +758,8 @@ O'qituvchi bandligi shablonning **haqiqiy** o'qituvchisi bo'yicha tekshiriladi: 
 | Istisno qo'yilganda/o'zgarganda/o'chirilganda | Shu sanadagi generatsiya qilingan sessiya avtomatik moslashadi ([3.5](#35-shablon-ozgarsa--sessiyalar-avtomatik-moslashadi)): bekor qilinsa — o'chiriladi, vaqt o'zgarsa — yangilanadi, istisno o'chirilsa — asl holiga qaytadi |
 
 Javobga `sessionSync` qo'shildi (3.5 dagi format).
+
+**`PATCH /schedule-exceptions/:id` — qisman yangilash:** faqat yuborilgan maydonlar o'zgaradi; `startTime`/`endTime` (ikkalasi birga), `roomId`, `teacherId` uchun `null` — shablondagi qiymatga qaytarish; `exceptionDate` e'tiborsiz qoldiriladi. Batafsil: [frontend-clarifications-api.md → 3](frontend-clarifications-api.md#3-istisno-vaqtini-tozalash-patch-schedule-exceptionsid).
 
 ---
 
@@ -1192,3 +1194,4 @@ Auth talab qilinmaydi. Load balancer, docker healthcheck yoki status sahifasi uc
 | 2026-11-18 | Fan va sovg'a kategoriyasi: o'chirilgan nomni qayta ishlatish mumkin, aniq `409` xabarlari; kategoriya soft delete; sovg'ada `categoryId` tenant bo'yicha tekshiriladi; tranzaksiya/xarid/yo'qlama javoblarida `tenantId` |
 | 2026-11-18 | Yo'qlama/natija bitta tranzaksiyada (hammasi yoki hech narsa); auth tekshiruvi 1 ta DB so'rovi; yangi `GET /api/health` |
 | 2026-11-18 | Hujjat yakunlandi: "Mavjud frontendni buzadigan o'zgarishlar" jadvali qo'shildi |
+| 2026-11-19 | Tuzatishlar: tranzaksiya ro'yxatlarida `reversalOfId`/`reversal` (`/students/:id`, dashboard'lar); istisno va shablon PATCH — qisman yangilash va `null` bilan tozalash; qulflangan darsda mavzu tahriri. Tafsilot: [frontend-clarifications-api.md](frontend-clarifications-api.md) |

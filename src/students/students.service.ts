@@ -314,6 +314,9 @@ export class StudentsService {
             sourceType: true,
             note: true,
             createdAt: true,
+            // Teskari yozuv belgilari (2.4): bu yozuv bekor qilinganmi / o'zi teskari yozuvmi
+            reversalOfId: true,
+            reversal: { select: { id: true, createdAt: true } },
             teacher: { select: { id: true, fullName: true } },
           },
         },
@@ -566,6 +569,8 @@ export class StudentsService {
           sourceType: true,
           note: true,
           createdAt: true,
+          reversalOfId: true,
+          reversal: { select: { id: true, createdAt: true } },
         },
       }),
       this.prisma.purchase.count({

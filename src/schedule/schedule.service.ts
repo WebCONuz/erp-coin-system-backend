@@ -10,7 +10,10 @@ import { Prisma, Weekday } from 'src/generated/prisma/client';
 import { SessionType } from 'src/generated/prisma/enums';
 import { CreateScheduleTemplateDto } from './dto/create-schedule-template.dto';
 import { UpdateScheduleTemplateDto } from './dto/update-schedule-template.dto';
-import { CreateScheduleExceptionDto } from './dto/create-schedule-exception.dto';
+import {
+  CreateScheduleExceptionDto,
+  UpdateScheduleExceptionDto,
+} from './dto/create-schedule-exception.dto';
 import { GenerateSessionsDto } from './dto/generate-sessions.dto';
 import { QueryScheduleDto } from './dto/query-schedule.dto';
 import {
@@ -292,11 +295,11 @@ export class ScheduleService {
     const newEnd = dto.endTime ?? existing.endTime;
     const newRoom = dto.roomId ?? existing.roomId;
     const newTeacher =
-      'teacherId' in dto
+      dto.teacherId !== undefined
         ? (dto.teacherId ?? null)
         : (existing.teacherId ?? null);
     const newSubject =
-      'subjectId' in dto
+      dto.subjectId !== undefined
         ? (dto.subjectId ?? null)
         : (existing.subjectId ?? null);
 
@@ -520,7 +523,7 @@ export class ScheduleService {
   async updateException(
     id: string,
     tenantId: string,
-    dto: Partial<CreateScheduleExceptionDto>,
+    dto: UpdateScheduleExceptionDto,
   ) {
     const exc = await this.prisma.scheduleException.findFirst({
       where: { id, isDeleted: false, template: { tenantId } },
@@ -528,16 +531,25 @@ export class ScheduleService {
     if (!exc) throw new NotFoundException('Istisno topilmadi');
 
     const isCancelled = dto.isCancelled ?? exc.isCancelled;
-    const startTime = isCancelled ? null : (dto.startTime ?? exc.startTime);
-    const endTime = isCancelled ? null : (dto.endTime ?? exc.endTime);
+    // Maydon yuborilmasa — eski qiymat; `null` yuborilsa — tozalanadi (shablon vaqtiga qaytadi)
+    const startTime = isCancelled
+      ? null
+      : dto.startTime !== undefined
+        ? (dto.startTime ?? null)
+        : exc.startTime;
+    const endTime = isCancelled
+      ? null
+      : dto.endTime !== undefined
+        ? (dto.endTime ?? null)
+        : exc.endTime;
     const roomId = isCancelled
       ? null
-      : 'roomId' in dto
+      : dto.roomId !== undefined
         ? (dto.roomId ?? null)
         : exc.roomId;
     const teacherId = isCancelled
       ? null
-      : 'teacherId' in dto
+      : dto.teacherId !== undefined
         ? (dto.teacherId ?? null)
         : exc.teacherId;
     await this.assertExceptionChange(tenantId, {

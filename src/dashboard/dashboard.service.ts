@@ -129,6 +129,8 @@ export class DashboardService {
           sourceType: true,
           note: true,
           createdAt: true,
+          reversalOfId: true,
+          reversal: { select: { id: true, createdAt: true } },
           student: { select: { id: true, fullName: true, avatarUrl: true } },
           teacher: { select: { id: true, fullName: true } },
         },

@@ -22,7 +22,10 @@ import {
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleTemplateDto } from './dto/create-schedule-template.dto';
 import { UpdateScheduleTemplateDto } from './dto/update-schedule-template.dto';
-import { CreateScheduleExceptionDto } from './dto/create-schedule-exception.dto';
+import {
+  CreateScheduleExceptionDto,
+  UpdateScheduleExceptionDto,
+} from './dto/create-schedule-exception.dto';
 import { GenerateSessionsDto } from './dto/generate-sessions.dto';
 import { QueryScheduleDto } from './dto/query-schedule.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -239,7 +242,7 @@ export class ScheduleExceptionController {
   updateException(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
-    @Body() dto: CreateScheduleExceptionDto,
+    @Body() dto: UpdateScheduleExceptionDto,
   ) {
     return this.scheduleService.updateException(id, tenantId, dto);
   }

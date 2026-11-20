@@ -27,7 +27,11 @@ npm install
 
 ### 2. Environment o'zgaruvchilar
 
-Loyiha ildizida `.env` fayl yarating:
+Loyiha ildizida `.env` fayl yarating. Server ishga tushishida `.env` tekshiriladi ([src/config/env.validation.ts](src/config/env.validation.ts)) — xato bo'lsa server **ishga tushmaydi** va barcha muammolar ro'yxatini chiqaradi:
+
+- majburiy: `DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`;
+- `NODE_ENV=production` da qo'shimcha: `FRONTEND_DOMEN`, JWT kalitlari kamida 32 belgi va o'zaro farqli;
+- raqamli qiymatlar (`PORT`, `SMTP_PORT`, `DB_POOL_*`) — butun son.
 
 ```env
 PORT=3031
@@ -81,6 +85,30 @@ npx prisma db seed
 ```
 
 Seed **idempotent** — qayta ishga tushirish xavfsiz (qarang: [Seed ma'lumotlari](#seed-malumotlari)).
+
+#### Production'da migration (deploy)
+
+`migrate dev` faqat lokal uchun (sxemani solishtirib yangi migration yaratadi, bazani qayta qurishi mumkin). Production / staging'da:
+
+```bash
+# 1. Zaxira nusxa
+pg_dump "$DATABASE_URL" -Fc -f backup_$(date +%F_%H%M).dump
+
+# 2. Qo'llanmagan migrationlar ro'yxati
+npx prisma migrate status
+
+# 3. Migration fayllaridagi "Diqqat" izohlarini o'qing (ba'zilari qo'llashdan oldin tekshiruv SQL'ini so'raydi)
+
+# 4. Qo'llash — faqat repodagi tayyor migrationlar, yangisini yaratmaydi
+npx prisma migrate deploy
+
+# 5. Kerak bo'lsa (yangi tenant rollari / asosiy coin qoidalari backfill)
+npx prisma db seed
+```
+
+- Tartib: **avval migration, keyin yangi kodni ishga tushirish** (yangi kod yangi ustun/jadvallarni kutadi). Bir nechta instance bo'lsa — migration'ni bitta joydan (CI/pre-deploy bosqichi) ishga tushiring.
+- Migration yiqilsa: `npx prisma migrate status` holatni ko'rsatadi; tuzatilgach `npx prisma migrate resolve --rolled-back <nom>` va qayta `deploy`. Zaxiradan tiklash: `pg_restore --clean -d "$DATABASE_URL" <fayl>.dump`.
+- Frontendga ta'sir qiladigan migrationlar `docs/` dagi API hujjatlarining "Deploy eslatmasi" bo'limida.
 
 ### 4. Dev server
 
@@ -171,7 +199,7 @@ import { PrismaClient } from '../generated/prisma/client';
 
 ### Soft Delete
 
-Deyarli barcha modellarda `isDeleted: Boolean @default(false)` va `deletedAt` bor. Real `DELETE` ishlatilmaydi (yagona istisno — `Tenant.remove`). Barcha query'larda `isDeleted: false` filtr qo'shiladi.
+Deyarli barcha modellarda `isDeleted: Boolean @default(false)` va `deletedAt` bor. Real `DELETE` ishlatilmaydi (`Tenant.remove` ham soft delete). Barcha query'larda `isDeleted: false` filtr qo'shiladi.
 
 ---
 
@@ -233,7 +261,7 @@ src/
 1. Yo'qlama saqlanadi (`upsert`), sessiya `isChecked: true` bo'ladi
 2. `triggerType: auto` va `isActive: true` coin qoidalari topiladi
 3. Qoida tanlash ustuvorligi: **guruhga maxsus** qoida (`groupId === session.groupId`) → **tenant-wide** qoida (`groupId: null`) → hardcoded default
-4. Har bir o'quvchi uchun shu sessiya bo'yicha avvalgi avtomatik tranzaksiyalar bekor qilinib, joriy holatga mos yangisi yaratiladi — qayta saqlashda **coin dublikat bo'lmaydi**. O'quvchi coinni allaqachon sarflagan bo'lsa, u o'tkazib yuboriladi (`coinsSkippedFor`)
+4. Har bir o'quvchi uchun shu sessiya bo'yicha avvalgi avtomatik tranzaksiyalar bekor qilinib (teskari yozuv), joriy holatga mos yangisi yaratiladi — qayta saqlashda **coin dublikat bo'lmaydi**; coinlari o'zgarmagan o'quvchiga hech narsa yozilmaydi. O'quvchi coinni allaqachon sarflagan bo'lsa, u o'tkazib yuboriladi (`coinsSkippedFor`). Butun guruh bitta tranzaksiyada, o'quvchilar soniga bog'liq bo'lmagan so'rovlar bilan saqlanadi (`replaceSessionTransactionsBulk`, qaror — `planSessionCoins`)
 
 | `sourceType` | `direction` | Nima uchun                    | Qoida bo'lmasa |
 | ------------ | ----------- | ----------------------------- | -------------- |

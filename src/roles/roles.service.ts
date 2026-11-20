@@ -60,7 +60,6 @@ export class RolesService {
     const role = await this.prisma.role.findFirst({
       where: { id, tenantId, isDeleted: false },
       include: {
-        permissions: true,
         _count: { select: { users: true } },
       },
     });

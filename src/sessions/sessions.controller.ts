@@ -226,8 +226,9 @@ export class SessionsController {
   unlock(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('id') actorId: string,
   ) {
-    return this.sessionsService.unlock(id, tenantId);
+    return this.sessionsService.unlock(id, tenantId, actorId);
   }
 
   @Delete(':id')

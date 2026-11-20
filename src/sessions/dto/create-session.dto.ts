@@ -4,13 +4,14 @@ import {
   IsOptional,
   IsEnum,
   IsUUID,
-  IsDateString,
   Matches,
   IsInt,
   Min,
   Max,
+  MaxLength,
 } from 'class-validator';
 import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EvaluationMode, SessionType } from 'src/generated/prisma/enums';
 
@@ -19,8 +20,7 @@ export class CreateSessionDto {
     example: '2026-06-03',
     description: 'Dars bo‘ladigan sana (YYYY-MM-DD)',
   })
-  @IsDateString()
-  @IsNotEmpty()
+  @IsDateOnly()
   sessionDate: string;
 
   @ApiProperty({
@@ -74,6 +74,7 @@ export class CreateSessionDto {
   })
   @IsString()
   @IsOptional()
+  @MaxLength(300)
   topic?: string;
 
   @ApiProperty({ example: 'group-uuid-here', description: 'Guruh IDsi' })

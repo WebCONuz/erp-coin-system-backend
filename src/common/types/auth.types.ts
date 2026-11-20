@@ -9,8 +9,15 @@ export type AuthPayloadType = {
   roleId: string;
 };
 
+// Refresh token qaysi qurilma sessiyasiga tegishli (RefreshSession.id)
+export type RefreshPayloadType = AuthPayloadType & { sid: string };
+
+// Login/refresh so'rovining qurilma ma'lumoti (sessiya ro'yxatida ko'rsatish uchun)
+export type ClientMeta = { userAgent?: string; ipAddress?: string };
+
+// req.user — JwtStrategy.validate() qaytaradigan obyekt (JWT payload emas)
 export interface RequestWithUser extends Request {
-  user: AuthPayloadType;
+  user: ReqUserType;
 }
 
 export type ReqUserType = {

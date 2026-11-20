@@ -1,4 +1,5 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client';
 
@@ -8,7 +9,6 @@ import { PrismaClient } from '../generated/prisma/client';
 export const SENSITIVE_USER_OMIT = {
   user: {
     passwordHash: true,
-    refreshTokenHash: true,
     passwordResetToken: true,
     passwordResetExpiry: true,
   },
@@ -17,11 +17,6 @@ export const SENSITIVE_USER_OMIT = {
 // Interaktiv tranzaksiyalar uchun standart limitlar (Prisma default: maxWait 2s, timeout 5s).
 // Qulf kutish (yo'qlama, coin, jadval sinxronlash) va katta guruhlar uchun kengroq.
 const TRANSACTION_OPTIONS = { maxWait: 10_000, timeout: 30_000 } as const;
-
-const intFromEnv = (name: string, fallback: number) => {
-  const value = Number(process.env[name]);
-  return Number.isInteger(value) && value > 0 ? value : fallback;
-};
 
 type PrismaServiceOptions = {
   adapter: PrismaPg;
@@ -36,14 +31,16 @@ export class PrismaService
 {
   private readonly logger = new Logger(PrismaService.name);
 
-  constructor() {
+  constructor(config: ConfigService) {
     // pg connection pool — bitta instance bir vaqtda ochadigan ulanishlar soni.
     // PgBouncer/Postgres max_connections ga qarab DB_POOL_MAX bilan sozlanadi.
+    // Qiymatlar ishga tushishda tekshirilgan (validateEnv)
     const adapter = new PrismaPg({
-      connectionString: process.env.DATABASE_URL as string,
-      max: intFromEnv('DB_POOL_MAX', 10),
-      idleTimeoutMillis: intFromEnv('DB_POOL_IDLE_MS', 30_000),
-      connectionTimeoutMillis: intFromEnv('DB_CONNECT_TIMEOUT_MS', 10_000),
+      connectionString: config.getOrThrow<string>('DATABASE_URL'),
+      max: config.get<number>('DB_POOL_MAX') ?? 10,
+      idleTimeoutMillis: config.get<number>('DB_POOL_IDLE_MS') ?? 30_000,
+      connectionTimeoutMillis:
+        config.get<number>('DB_CONNECT_TIMEOUT_MS') ?? 10_000,
     });
     super({
       adapter,

@@ -226,7 +226,7 @@ export type ScheduleExceptionGroupByOutputType = {
   _max: ScheduleExceptionMaxAggregateOutputType | null;
 };
 
-type GetScheduleExceptionGroupByPayload<
+export type GetScheduleExceptionGroupByPayload<
   T extends ScheduleExceptionGroupByArgs,
 > = Prisma.PrismaPromise<
   Array<

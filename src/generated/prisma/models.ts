@@ -9,8 +9,8 @@
  */
 export type * from './models/Tenant';
 export type * from './models/Role';
-export type * from './models/RolePermission';
 export type * from './models/User';
+export type * from './models/RefreshSession';
 export type * from './models/Wallet';
 export type * from './models/Course';
 export type * from './models/Subject';
@@ -32,5 +32,5 @@ export type * from './models/SmsLog';
 export type * from './models/EmailTemplate';
 export type * from './models/EmailLog';
 export type * from './models/AuditLog';
-export type * from './models/ImportLog';
+export type * from './models/IdempotencyKey';
 export type * from './commonInputTypes';

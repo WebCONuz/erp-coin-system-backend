@@ -1,28 +1,9 @@
-import { IsOptional, IsNumber, Min, IsUUID, IsEnum } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsUUID, IsEnum } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PurchaseStatus } from 'src/generated/prisma/enums';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 
-export class QueryPurchaseDto {
-  @ApiPropertyOptional({ description: 'Faqat super_admin va creator uchun' })
-  @IsOptional()
-  @IsUUID()
-  tenantId?: string;
-
-  @ApiPropertyOptional({ example: 1, default: 1 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  page?: number = 1;
-
-  @ApiPropertyOptional({ example: 10, default: 10 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  limit?: number = 10;
-
+export class QueryPurchaseDto extends PaginationQueryDto {
   @ApiPropertyOptional({
     description: 'Aniq bir talabaning xaridlarini ko‘rish',
   })

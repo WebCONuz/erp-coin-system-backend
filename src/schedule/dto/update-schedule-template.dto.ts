@@ -1,5 +1,5 @@
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 import {
-  IsDateString,
   IsEnum,
   IsOptional,
   IsString,
@@ -51,7 +51,7 @@ export class UpdateScheduleTemplateDto {
   })
   @IsOptional()
   @ValidateIf((_o, v) => v !== null)
-  @IsDateString()
+  @IsDateOnly()
   validFrom?: string | null;
 
   @ApiPropertyOptional({
@@ -61,6 +61,6 @@ export class UpdateScheduleTemplateDto {
   })
   @IsOptional()
   @ValidateIf((_o, v) => v !== null)
-  @IsDateString()
+  @IsDateOnly()
   validTo?: string | null;
 }

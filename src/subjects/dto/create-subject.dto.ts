@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, Length, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  Length,
+  IsOptional,
+  MaxLength,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateSubjectDto {
@@ -17,5 +23,6 @@ export class CreateSubjectDto {
   })
   @IsString()
   @IsOptional()
+  @MaxLength(1000)
   description?: string;
 }

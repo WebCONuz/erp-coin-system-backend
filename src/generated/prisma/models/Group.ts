@@ -261,17 +261,18 @@ export type GroupGroupByOutputType = {
   _max: GroupMaxAggregateOutputType | null;
 };
 
-type GetGroupGroupByPayload<T extends GroupGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<GroupGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof GroupGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], GroupGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], GroupGroupByOutputType[P]>;
-    }
-  >
->;
+export type GetGroupGroupByPayload<T extends GroupGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<GroupGroupByOutputType, T['by']> & {
+        [P in keyof T & keyof GroupGroupByOutputType]: P extends '_count'
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], GroupGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], GroupGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type GroupWhereInput = {
   AND?: Prisma.GroupWhereInput | Prisma.GroupWhereInput[];

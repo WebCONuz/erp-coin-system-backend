@@ -1,4 +1,4 @@
-import { IsString, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUsername } from 'src/users/dto/username.decorator';
 
@@ -7,8 +7,11 @@ export class LoginDto {
   @IsUsername()
   username: string;
 
+  // Login'da uzunlik siyosati qo'llanmaydi — eski (qisqa) parollar ham kira olishi kerak.
+  // Yuqori chegara faqat juda katta qiymat bilan bcrypt'ni yuklashning oldini oladi
   @ApiProperty({ example: 'Parol123!' })
   @IsString()
-  @MinLength(6)
+  @IsNotEmpty()
+  @MaxLength(1024)
   password: string;
 }

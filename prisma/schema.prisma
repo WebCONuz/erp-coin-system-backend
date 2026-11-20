@@ -76,13 +76,6 @@ enum SourceType {
   purchase
 }
 
-enum ImportStatus {
-  pending
-  processing
-  done
-  failed
-}
-
 enum Weekday {
   monday
   tuesday
@@ -108,12 +101,6 @@ enum EmailStatus {
   pending
   sent
   failed
-}
-
-enum NotificationType {
-  sms
-  email
-  push
 }
 
 enum SmsTriggerType {
@@ -190,14 +177,14 @@ model Tenant {
   purchases          Purchase[]
   attendanceRecords  AttendanceRecord[]
   roles              Role[]
-  rolePermissions    RolePermission[]
   auditLogs          AuditLog[]
+  idempotencyKeys    IdempotencyKey[]
 
   @@map("tenants")
 }
 
 // ─────────────────────────────────────────
-// ROLES & PERMISSIONS
+// ROLES (ruxsatlar rol `level` i bilan tekshiriladi — RolesGuard, user-hierarchy)
 // ─────────────────────────────────────────
 
 model Role {
@@ -206,10 +193,6 @@ model Role {
   displayName     String   @map("display_name") @db.VarChar(100)
   level           Int      @default(1) @db.SmallInt
   scope           RoleScope @default(tenant)
-  canDelete       Boolean  @default(false) @map("can_delete")
-  canManageAdmins Boolean  @default(false) @map("can_manage_admins")
-  canManageUsers  Boolean  @default(false) @map("can_manage_users")
-  isSystem        Boolean  @default(false) @map("is_system")
   isActive        Boolean  @default(true) @map("is_active")
   isDeleted       Boolean  @default(false) @map("is_deleted")
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -220,28 +203,10 @@ model Role {
   tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   users       User[]
-  permissions RolePermission[]
 
   @@unique([tenantId, name])
   @@index([tenantId])
   @@map("roles")
-}
-
-model RolePermission {
-  id         String   @id @default(uuid()) @db.Uuid
-  permission String   @db.VarChar(100)
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
-
-  roleId   String @map("role_id") @db.Uuid
-  tenantId String @map("tenant_id") @db.Uuid
-
-  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@unique([roleId, permission])
-  @@index([roleId])
-  @@index([tenantId])
-  @@map("role_permissions")
 }
 
 // ─────────────────────────────────────────
@@ -265,7 +230,7 @@ model User {
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
-  refreshTokenHash     String?   @map("refresh_token_hash")
+  // Bir martalik tiklash tokenining sha256 hash'i (token o'zi faqat emailda)
   passwordResetToken   String?   @map("password_reset_token")
   passwordResetExpiry  DateTime? @map("password_reset_expiry") @db.Timestamptz
 
@@ -280,6 +245,8 @@ model User {
   archivedUsers User[] @relation("UserArchivedBy")
 
   wallet                    Wallet?
+  refreshSessions           RefreshSession[]
+  idempotencyKeys           IdempotencyKey[]
   taughtGroups              Group[]             @relation("GroupTeacher")
   createdGroups             Group[]             @relation("GroupCreatedBy")
   groupMemberships          GroupStudent[]      @relation("StudentMembership")
@@ -294,7 +261,6 @@ model User {
   purchases                 Purchase[]          @relation("StudentPurchases")
   purchasesApproved         Purchase[]          @relation("ApprovedByUser")
   purchasesDelivered        Purchase[]          @relation("DeliveredByUser")
-  importLogs                ImportLog[]
   createdCourses            Course[]
   createdSubjects           Subject[]
   smsLogsAsStudent          SmsLog[]            @relation("SmsStudent")
@@ -318,6 +284,30 @@ model User {
   @@index([email])
   @@index([roleId])
   @@map("users")
+}
+
+// ─────────────────────────────────────────
+// REFRESH_SESSIONS (har bir login — alohida qurilma sessiyasi)
+// ─────────────────────────────────────────
+
+model RefreshSession {
+  id                String    @id @default(uuid()) @db.Uuid
+  // Joriy refresh tokenning sha256 hash'i (token yuqori entropiyali — bcrypt shart emas)
+  tokenHash         String    @unique @map("token_hash") @db.VarChar(64)
+  // Oldingi token hash'i — bir vaqtdagi parallel refresh (bir nechta tab) uchun qisqa muhlat
+  previousTokenHash String?   @map("previous_token_hash") @db.VarChar(64)
+  rotatedAt         DateTime? @map("rotated_at") @db.Timestamptz
+  expiresAt         DateTime  @map("expires_at") @db.Timestamptz
+  userAgent         String?   @map("user_agent") @db.VarChar(300)
+  ipAddress         String?   @map("ip_address") @db.VarChar(64)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  lastUsedAt        DateTime  @default(now()) @map("last_used_at") @db.Timestamptz
+
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_sessions")
 }
 
 // ─────────────────────────────────────────
@@ -897,12 +887,13 @@ model SmsLog {
   deletedAt     DateTime?        @map("deleted_at") @db.Timestamptz
 
   tenantId   String  @map("tenant_id") @db.Uuid
-  studentId  String  @map("student_id") @db.Uuid
+  // Qabul qiluvchi tenant useri bo'lsa (ota-ona, lid — null)
+  studentId  String? @map("student_id") @db.Uuid
   templateId String? @map("template_id") @db.Uuid
   sentById   String  @map("sent_by") @db.Uuid
 
   tenant    Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  student   User         @relation("SmsStudent", fields: [studentId], references: [id])
+  student   User?        @relation("SmsStudent", fields: [studentId], references: [id])
   template  SmsTemplate? @relation(fields: [templateId], references: [id])
   sentBy    User         @relation("SmsSentBy", fields: [sentById], references: [id])
 
@@ -959,12 +950,13 @@ model EmailLog {
   deletedAt      DateTime?       @map("deleted_at") @db.Timestamptz
 
   tenantId   String  @map("tenant_id") @db.Uuid
-  studentId  String  @map("student_id") @db.Uuid
+  // Qabul qiluvchi tenant useri bo'lsa (ota-ona, lid — null)
+  studentId  String? @map("student_id") @db.Uuid
   templateId String? @map("template_id") @db.Uuid
   sentById   String  @map("sent_by") @db.Uuid
 
   tenant    Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  student   User           @relation("EmailStudent", fields: [studentId], references: [id])
+  student   User?          @relation("EmailStudent", fields: [studentId], references: [id])
   template  EmailTemplate? @relation(fields: [templateId], references: [id])
   sentBy    User           @relation("EmailSentBy", fields: [sentById], references: [id])
 
@@ -996,34 +988,39 @@ model AuditLog {
   tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   createdByUser User   @relation("AuditCreatedBy", fields: [createdBy], references: [id])
 
-  @@index([tenantId])
+  // Asosiy so'rov — tenant bo'yicha eng yangilari; entitet tarixi (?entityId=) — alohida
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@index([tenantId, entityId])
   @@index([createdBy])
   @@index([actionType])
   @@index([entityType])
-  @@index([createdAt(sort: Desc)])
   @@map("audit_logs")
 }
 
 // ─────────────────────────────────────────
-// IMPORT_LOGS
+// IDEMPOTENCY_KEYS (pul kabi amallarni takroriy so'rovdan himoya: coin berish, xarid)
 // ─────────────────────────────────────────
 
-model ImportLog {
-  id          String       @id @default(uuid()) @db.Uuid
-  entityType  String       @map("entity_type") @db.VarChar(50)
-  fileName    String       @map("file_name") @db.VarChar(300)
-  totalRows   Int          @default(0) @map("total_rows")
-  successRows Int          @default(0) @map("success_rows")
-  failedRows  Int          @default(0) @map("failed_rows")
-  status      ImportStatus @default(pending)
-  errorLog    Json?        @map("error_log")
-  isDeleted   Boolean      @default(false) @map("is_deleted")
-  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz
-  finishedAt  DateTime?    @map("finished_at") @db.Timestamptz
-  deletedAt   DateTime?    @map("deleted_at") @db.Timestamptz
+model IdempotencyKey {
+  id          String   @id @default(uuid()) @db.Uuid
+  // Klient yuborgan `Idempotency-Key` header'i
+  key         String   @db.VarChar(100)
+  // So'rov mazmuni (method + URL + body) hash'i — bir kalit boshqa so'rov uchun ishlatilmasin
+  requestHash String   @map("request_hash") @db.VarChar(64)
+  // null — so'rov hali bajarilmoqda; javob saqlangach takroriy so'rovga shu qaytariladi
+  statusCode  Int?     @map("status_code") @db.SmallInt
+  response    Json?
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  expiresAt   DateTime @map("expires_at") @db.Timestamptz
 
-  importedById String @map("imported_by") @db.Uuid
-  importedBy   User   @relation(fields: [importedById], references: [id])
+  tenantId String @map("tenant_id") @db.Uuid
+  userId   String @map("user_id") @db.Uuid
 
-  @@map("import_logs")
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Kalit har bir user uchun noyob
+  @@unique([tenantId, userId, key])
+  @@index([expiresAt])
+  @@map("idempotency_keys")
 }

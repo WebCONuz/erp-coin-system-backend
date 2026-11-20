@@ -104,12 +104,38 @@ export class StudentsController {
   }
 
   // ─── Arxivlash / O'chirish / Tiklash ───────────────────────────
-  @Delete(':id')
+  @Patch(':id/status')
   @Roles('admin', 'super_admin')
   @HttpCode(200)
   @ApiOperation({
     summary:
       "Student holatini o'zgartirish: arxivlash / arxivdan qaytarish / soft-delete / tiklash",
+  })
+  @ApiParam({ name: 'id', description: 'Student UUID' })
+  updateStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: ArchiveStudentDto,
+    @TenantContext() tenantId: string,
+    @CurrentUser('id') requesterId: string,
+    @CurrentUser('role') role: string,
+  ) {
+    return this.studentsService.archiveOrDelete(
+      id,
+      dto,
+      tenantId,
+      requesterId,
+      role,
+    );
+  }
+
+  // Eski yo'l — DELETE body bilan (ba'zi proxy/klientlar DELETE body'sini tashlab yuboradi).
+  // Frontend PATCH /students/:id/status ga o'tgach olib tashlanadi
+  @Delete(':id')
+  @Roles('admin', 'super_admin')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'ESKIRGAN — PATCH /students/:id/status dan foydalaning',
+    deprecated: true,
   })
   @ApiParam({ name: 'id', description: 'Student UUID' })
   archiveOrDelete(

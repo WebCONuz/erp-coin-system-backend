@@ -16,7 +16,10 @@ import {
   PurchaseStatus,
   SourceType,
 } from 'src/generated/prisma/enums';
-import { Prisma } from 'src/generated/prisma/client';
+import { AuditActionType, Prisma } from 'src/generated/prisma/client';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
+import { CoinTransactionsService } from 'src/coin-transaction/coin-transaction.service';
+import { AUDIT_ENTITY } from 'src/audit-log/utils/audit-entry';
 import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effective-transaction';
 
 // Xarid holatlari oqimi:
@@ -44,7 +47,11 @@ const PURCHASE_INCLUDE = {
 
 @Injectable()
 export class PurchasesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditLogService,
+    private readonly coinTrx: CoinTransactionsService,
+  ) {}
 
   // Xaridlarni faqat student (o'zinikini) va admin+ ko'radi. RolesGuard level
   // bo'yicha ishlagani uchun teacher'ni @Roles bilan to'sib bo'lmaydi — nom bo'yicha tekshiramiz.
@@ -130,7 +137,7 @@ export class PurchasesService {
   ) {
     const purchase = await this.prisma.purchase.findFirst({
       where: { id, isDeleted: false, tenantId },
-      include: { reward: true, student: { include: { wallet: true } } },
+      include: { reward: true },
     });
 
     if (!purchase) throw new NotFoundException('Xarid buyurtmasi topilmadi');
@@ -158,9 +165,35 @@ export class PurchasesService {
 
     const statusData = this.buildStatusData(target, adminId, dto.adminNote);
 
+    // Holat o'zgarishi audit izi — o'zgarish bilan bitta tx'da
+    const auditData = this.audit.data({
+      tenantId,
+      actorId: adminId,
+      action:
+        target === PurchaseStatus.approved
+          ? AuditActionType.approve
+          : target === PurchaseStatus.cancelled
+            ? AuditActionType.reject
+            : AuditActionType.update,
+      entityType: AUDIT_ENTITY.purchase,
+      entityId: id,
+      changes: {
+        from: purchase.status,
+        to: target,
+        studentId: purchase.studentId,
+        rewardId: purchase.rewardId,
+        coinSpent: purchase.coinSpent,
+        ...(target === PurchaseStatus.cancelled
+          ? { restock: dto.restock !== false }
+          : {}),
+      },
+      description: dto.adminNote,
+    });
+
     if (target !== PurchaseStatus.cancelled) {
       const updated = await this.prisma.$transaction(async (tx) => {
         await this.applyStatusChange(tx, id, fromStatuses, statusData);
+        await tx.auditLog.create({ data: auditData });
         return tx.purchase.findUniqueOrThrow({
           where: { id },
           include: PURCHASE_INCLUDE,
@@ -176,17 +209,13 @@ export class PurchasesService {
       };
     }
 
-    // BEKOR QILISH -> coin va zaxira qaytariladi
-    const wallet = purchase.student.wallet;
-
-    if (!wallet) {
-      throw new BadRequestException(
-        'Foydalanuvchining hamyoni topilmadi. Tanga qaytarishning iloji yo‘q.',
-      );
-    }
-
+    // BEKOR QILISH -> coin va zaxira qaytariladi. Qulf tartibi: xarid (holat) → hamyon → sovg'a
     return this.prisma.$transaction(async (tx) => {
       await this.applyStatusChange(tx, id, fromStatuses, statusData);
+      await tx.auditLog.create({ data: auditData });
+
+      // Hamyon boshqa coin amallari kabi qulflanadi (balansga ta'sir qiladigan har bir tx)
+      const wallet = await this.coinTrx.lockWallet(tx, purchase.studentId);
 
       // 1. Talabaning hamyoniga tangalarini qaytaramiz
       const updatedWallet = await tx.wallet.update({

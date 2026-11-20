@@ -189,19 +189,19 @@ export type RewardCategoryGroupByOutputType = {
   _max: RewardCategoryMaxAggregateOutputType | null;
 };
 
-type GetRewardCategoryGroupByPayload<T extends RewardCategoryGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<RewardCategoryGroupByOutputType, T['by']> & {
-        [P in keyof T &
-          keyof RewardCategoryGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], RewardCategoryGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], RewardCategoryGroupByOutputType[P]>;
-      }
-    >
-  >;
+export type GetRewardCategoryGroupByPayload<
+  T extends RewardCategoryGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<RewardCategoryGroupByOutputType, T['by']> & {
+      [P in keyof T & keyof RewardCategoryGroupByOutputType]: P extends '_count'
+        ? T[P] extends boolean
+          ? number
+          : Prisma.GetScalarType<T[P], RewardCategoryGroupByOutputType[P]>
+        : Prisma.GetScalarType<T[P], RewardCategoryGroupByOutputType[P]>;
+    }
+  >
+>;
 
 export type RewardCategoryWhereInput = {
   AND?: Prisma.RewardCategoryWhereInput | Prisma.RewardCategoryWhereInput[];

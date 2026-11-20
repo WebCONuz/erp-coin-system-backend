@@ -22,6 +22,8 @@ import { QueryMyCoinHistoryDto } from './dto/query-my-coin-history.dto';
 import { QueryCoinStatsDto } from './dto/query-coin-stats.dto';
 import { BulkGiveCoinDto } from './dto/bulk-give-coin.dto';
 import { ApplyCoinRuleDto } from './dto/apply-coin-rule.dto';
+import { QueryLeaderboardDto } from './dto/query-leaderboard.dto';
+import { Idempotent } from 'src/common/idempotency/idempotent.decorator';
 import { TenantContext } from 'src/auth/decorators/tenant-context.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -39,6 +41,7 @@ export class CoinTransactionsController {
 
   @Post('manual')
   @Roles('admin', 'super_admin', 'teacher')
+  @Idempotent()
   @ApiOperation({
     summary: 'Talabaga qo‘lda coin berish yoki chegirish (Admin / O‘qituvchi)',
   })
@@ -58,6 +61,7 @@ export class CoinTransactionsController {
 
   @Post('bulk-manual')
   @Roles('admin', 'super_admin', 'teacher')
+  @Idempotent()
   @ApiOperation({
     summary:
       "Bir nechta o'quvchiga birdaniga bir xil miqdorda coin berish/ayirish (Admin / O'qituvchi)",
@@ -78,6 +82,7 @@ export class CoinTransactionsController {
 
   @Post('apply-rule')
   @Roles('admin', 'super_admin', 'teacher')
+  @Idempotent()
   @ApiOperation({
     summary:
       "Mavjud tanga qoidasini bir yoki bir nechta o'quvchiga qo'llash (Admin / O'qituvchi)",
@@ -183,11 +188,11 @@ export class CoinTransactionsController {
   })
   getLeaderboard(
     @TenantContext() tenantId: string,
-    @Query('limit') limit?: number,
+    @Query() query: QueryLeaderboardDto,
   ) {
     return this.coinTransactionsService.getLeaderboard(
       tenantId,
-      limit ? Number(limit) : 10,
+      query.limit ?? 10,
     );
   }
 }

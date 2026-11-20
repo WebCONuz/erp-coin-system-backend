@@ -2,9 +2,16 @@ import {
   addDays,
   diffDays,
   HHMM_REGEX,
+  isValidDateOnly,
   isValidTimeZone,
+  localDateOf,
+  normalizeDateOnly,
   nowInTimeZone,
+  startOfMonth,
+  startOfWeek,
+  timeZoneOffsetMinutes,
   toDateString,
+  zonedDayStart,
 } from './tenant-time';
 
 describe('tenant-time', () => {
@@ -67,5 +74,75 @@ describe('tenant-time', () => {
 
   it("HH:MM matn sifatida to'g'ri tartiblanadi (ikki xonali soat sababli)", () => {
     expect('09:00' < '14:00').toBe(true);
+  });
+
+  it.each(['2026-11-20', '2028-02-29', '2026-12-31'])(
+    'isValidDateOnly qabul qiladi: %s',
+    (v) => expect(isValidDateOnly(v)).toBe(true),
+  );
+
+  it.each(['2026-02-30', '2026-13-01', '2026-1-1', '2026-11-20T00:00', ''])(
+    'isValidDateOnly rad etadi: "%s"',
+    (v) => expect(isValidDateOnly(v)).toBe(false),
+  );
+
+  describe('zonedDayStart / localDateOf', () => {
+    it("Toshkent yarim tuni — UTC bo'yicha oldingi kun 19:00", () => {
+      expect(zonedDayStart('Asia/Tashkent', '2026-11-20').toISOString()).toBe(
+        '2026-11-19T19:00:00.000Z',
+      );
+    });
+
+    it("UTC da o'zgarishsiz", () => {
+      expect(zonedDayStart('UTC', '2026-11-20').toISOString()).toBe(
+        '2026-11-20T00:00:00.000Z',
+      );
+    });
+
+    it('yozgi vaqt (Berlin: qishda +1, yozda +2)', () => {
+      expect(zonedDayStart('Europe/Berlin', '2026-01-15').toISOString()).toBe(
+        '2026-01-14T23:00:00.000Z',
+      );
+      expect(zonedDayStart('Europe/Berlin', '2026-07-15').toISOString()).toBe(
+        '2026-07-14T22:00:00.000Z',
+      );
+    });
+
+    it('instant mahalliy sanaga', () => {
+      expect(
+        localDateOf('Asia/Tashkent', new Date('2026-11-19T19:00:00Z')),
+      ).toBe('2026-11-20');
+      expect(
+        localDateOf('Asia/Tashkent', new Date('2026-11-19T18:59:59Z')),
+      ).toBe('2026-11-19');
+    });
+
+    it('timeZoneOffsetMinutes', () => {
+      expect(timeZoneOffsetMinutes('Asia/Tashkent', new Date())).toBe(300);
+      expect(timeZoneOffsetMinutes('UTC', new Date())).toBe(0);
+    });
+  });
+
+  it('startOfWeek — dushanba (yakshanba oldingi haftaga tegishli)', () => {
+    expect(startOfWeek('2026-11-20')).toBe('2026-11-16'); // juma → dushanba
+    expect(startOfWeek('2026-11-16')).toBe('2026-11-16');
+    expect(startOfWeek('2026-11-22')).toBe('2026-11-16'); // yakshanba
+  });
+
+  it('startOfMonth', () => {
+    expect(startOfMonth('2026-11-20')).toBe('2026-11-01');
+  });
+
+  describe('normalizeDateOnly', () => {
+    it("to'liq ISO satrdan klient yozgan sana olinadi (UTC ga aylantirilmaydi)", () => {
+      expect(normalizeDateOnly('2026-11-20T02:00:00+05:00')).toBe('2026-11-20');
+      expect(normalizeDateOnly('2026-11-20T23:30:00.000Z')).toBe('2026-11-20');
+    });
+
+    it("sana yoki boshqa qiymat o'zgarmaydi", () => {
+      expect(normalizeDateOnly('2026-11-20')).toBe('2026-11-20');
+      expect(normalizeDateOnly('abc')).toBe('abc');
+      expect(normalizeDateOnly(5)).toBe(5);
+    });
   });
 });

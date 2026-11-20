@@ -1,5 +1,6 @@
-import { IsDateString, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 
 export class GenerateSessionsDto {
   @ApiProperty({ example: 'group-uuid', description: 'Guruh IDsi' })
@@ -11,15 +12,13 @@ export class GenerateSessionsDto {
     example: '2026-09-01',
     description: 'Boshlanish sanasi (YYYY-MM-DD)',
   })
-  @IsDateString()
-  @IsNotEmpty()
+  @IsDateOnly()
   fromDate: string;
 
   @ApiProperty({
     example: '2026-09-30',
     description: 'Tugash sanasi (YYYY-MM-DD)',
   })
-  @IsDateString()
-  @IsNotEmpty()
+  @IsDateOnly()
   toDate: string;
 }

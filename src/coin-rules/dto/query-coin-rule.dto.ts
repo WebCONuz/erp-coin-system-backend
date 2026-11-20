@@ -1,42 +1,24 @@
 import {
   IsOptional,
-  IsNumber,
-  Min,
   IsString,
   IsUUID,
   IsEnum,
   IsBoolean,
+  MaxLength,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { TriggerType, CoinDirection } from 'src/generated/prisma/enums';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 
-export class QueryCoinRuleDto {
-  @ApiPropertyOptional({ description: 'Faqat super_admin va creator uchun' })
-  @IsOptional()
-  @IsUUID()
-  tenantId?: string;
-
-  @ApiPropertyOptional({ example: 1, default: 1 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  page?: number = 1;
-
-  @ApiPropertyOptional({ example: 10, default: 10 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  limit?: number = 10;
-
+export class QueryCoinRuleDto extends PaginationQueryDto {
   @ApiPropertyOptional({
     example: 'Darsdagi',
     description: 'Nomi bo‘yicha filtr',
   })
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   search?: string;
 
   @ApiPropertyOptional({

@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { TenantContext } from '../auth/decorators/tenant-context.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TenantService } from './tenant.service';
 import { UpdateTenantSettingsDto } from './dto/update-tenant-settings.dto';
 
@@ -31,7 +32,8 @@ export class TenantSettingsController {
   update(
     @TenantContext() tenantId: string,
     @Body() dto: UpdateTenantSettingsDto,
+    @CurrentUser('id') actorId: string,
   ) {
-    return this.tenantService.updateSettings(tenantId, dto);
+    return this.tenantService.updateSettings(tenantId, dto, actorId);
   }
 }

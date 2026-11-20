@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
@@ -26,6 +26,8 @@ import { AuditLogModule } from './audit-log/audit-log.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AUTH_THROTTLER } from './auth/throttle/auth-throttle';
 import { HealthModule } from './health/health.module';
+import { RequestContextInterceptor } from './common/interceptors/request-context.interceptor';
+import { validateEnv } from './config/env.validation';
 
 @Module({
   imports: [
@@ -46,7 +48,12 @@ import { HealthModule } from './health/health.module';
       ],
       errorMessage: "Juda ko'p urinish. Birozdan keyin qayta urinib ko'ring",
     }),
-    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    // .env server ishga tushishida tekshiriladi — xato bo'lsa server ishga tushmaydi
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+      validate: validateEnv,
+    }),
     PrismaModule,
     UsersModule,
     AuthModule,
@@ -76,6 +83,11 @@ import { HealthModule } from './health/health.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    // So'rov konteksti (IP, user-agent) — audit log uchun
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RequestContextInterceptor,
     },
   ],
 })

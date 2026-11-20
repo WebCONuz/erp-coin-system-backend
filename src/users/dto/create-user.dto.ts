@@ -3,11 +3,13 @@ import {
   IsOptional,
   IsEmail,
   IsUUID,
-  MinLength,
+  IsNotEmpty,
   Matches,
+  MaxLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsUsername } from './username.decorator';
+import { IsNewPassword } from './password.decorator';
 import { IsAvatarUrl } from './avatar-url.decorator';
 
 export class CreateUserDto {
@@ -29,13 +31,14 @@ export class CreateUserDto {
   })
   phone: string;
 
-  @ApiProperty({ example: 'Ali Valiyev' })
+  @ApiProperty({ example: 'Ali Valiyev', maxLength: 150 })
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(150)
   fullName: string;
 
-  @ApiProperty({ example: 'Parol123!' })
-  @IsString()
-  @MinLength(6)
+  @ApiProperty({ example: 'Parol123!', minLength: 8, maxLength: 72 })
+  @IsNewPassword()
   password: string;
 
   @ApiProperty({ example: 'uuid-of-role' })
@@ -45,6 +48,7 @@ export class CreateUserDto {
   @ApiPropertyOptional({ example: 'ali@gmail.com' })
   @IsOptional()
   @IsEmail()
+  @MaxLength(150)
   email?: string;
 
   @ApiPropertyOptional({ example: '+998901234567' })

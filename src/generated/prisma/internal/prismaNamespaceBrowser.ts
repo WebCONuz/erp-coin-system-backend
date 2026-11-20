@@ -56,8 +56,8 @@ export const AnyNull = runtime.AnyNull;
 export const ModelName = {
   Tenant: 'Tenant',
   Role: 'Role',
-  RolePermission: 'RolePermission',
   User: 'User',
+  RefreshSession: 'RefreshSession',
   Wallet: 'Wallet',
   Course: 'Course',
   Subject: 'Subject',
@@ -79,7 +79,7 @@ export const ModelName = {
   EmailTemplate: 'EmailTemplate',
   EmailLog: 'EmailLog',
   AuditLog: 'AuditLog',
-  ImportLog: 'ImportLog',
+  IdempotencyKey: 'IdempotencyKey',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -122,10 +122,6 @@ export const RoleScalarFieldEnum = {
   displayName: 'displayName',
   level: 'level',
   scope: 'scope',
-  canDelete: 'canDelete',
-  canManageAdmins: 'canManageAdmins',
-  canManageUsers: 'canManageUsers',
-  isSystem: 'isSystem',
   isActive: 'isActive',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
@@ -136,17 +132,6 @@ export const RoleScalarFieldEnum = {
 
 export type RoleScalarFieldEnum =
   (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum];
-
-export const RolePermissionScalarFieldEnum = {
-  id: 'id',
-  permission: 'permission',
-  createdAt: 'createdAt',
-  roleId: 'roleId',
-  tenantId: 'tenantId',
-} as const;
-
-export type RolePermissionScalarFieldEnum =
-  (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum];
 
 export const UserScalarFieldEnum = {
   id: 'id',
@@ -165,7 +150,6 @@ export const UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  refreshTokenHash: 'refreshTokenHash',
   passwordResetToken: 'passwordResetToken',
   passwordResetExpiry: 'passwordResetExpiry',
   tenantId: 'tenantId',
@@ -174,6 +158,22 @@ export const UserScalarFieldEnum = {
 
 export type UserScalarFieldEnum =
   (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+
+export const RefreshSessionScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  previousTokenHash: 'previousTokenHash',
+  rotatedAt: 'rotatedAt',
+  expiresAt: 'expiresAt',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt',
+  lastUsedAt: 'lastUsedAt',
+  userId: 'userId',
+} as const;
+
+export type RefreshSessionScalarFieldEnum =
+  (typeof RefreshSessionScalarFieldEnum)[keyof typeof RefreshSessionScalarFieldEnum];
 
 export const WalletScalarFieldEnum = {
   id: 'id',
@@ -574,24 +574,20 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum =
   (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum];
 
-export const ImportLogScalarFieldEnum = {
+export const IdempotencyKeyScalarFieldEnum = {
   id: 'id',
-  entityType: 'entityType',
-  fileName: 'fileName',
-  totalRows: 'totalRows',
-  successRows: 'successRows',
-  failedRows: 'failedRows',
-  status: 'status',
-  errorLog: 'errorLog',
-  isDeleted: 'isDeleted',
+  key: 'key',
+  requestHash: 'requestHash',
+  statusCode: 'statusCode',
+  response: 'response',
   createdAt: 'createdAt',
-  finishedAt: 'finishedAt',
-  deletedAt: 'deletedAt',
-  importedById: 'importedById',
+  expiresAt: 'expiresAt',
+  tenantId: 'tenantId',
+  userId: 'userId',
 } as const;
 
-export type ImportLogScalarFieldEnum =
-  (typeof ImportLogScalarFieldEnum)[keyof typeof ImportLogScalarFieldEnum];
+export type IdempotencyKeyScalarFieldEnum =
+  (typeof IdempotencyKeyScalarFieldEnum)[keyof typeof IdempotencyKeyScalarFieldEnum];
 
 export const SortOrder = {
   asc: 'asc',

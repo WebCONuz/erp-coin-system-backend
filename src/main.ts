@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
@@ -8,8 +9,15 @@ import * as basicAuth from 'express-basic-auth';
 import { Handler } from 'express';
 import helmet from 'helmet';
 import * as express from 'express';
-import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { UPLOADS_ROOT } from './common/utils/image-upload';
+import { IDEMPOTENCY_REPLAYED_HEADER } from './common/idempotency/idempotency';
+import { AppLogger } from './common/logger/app.logger';
+import {
+  REQUEST_ID_HEADER,
+  requestIdMiddleware,
+} from './common/middleware/request-id.middleware';
+import { EnvironmentVariables } from './config/env.validation';
 
 const logger = new Logger('Bootstrap');
 
@@ -20,12 +28,20 @@ const DEV_ORIGINS = [
   'http://localhost:3000',
 ];
 
-function setupSwagger(app: NestExpressApplication, isProd: boolean) {
-  // Production'da Swagger faqat SWAGGER_ENABLED=true bo'lsa ochiladi
-  if (isProd && process.env.SWAGGER_ENABLED !== 'true') return;
+type AppConfig = ConfigService<EnvironmentVariables, true>;
 
-  let user = process.env.SWAGGER_USER;
-  let password = process.env.SWAGGER_PASSWORD;
+function setupSwagger(
+  app: NestExpressApplication,
+  config: AppConfig,
+  isProd: boolean,
+) {
+  // Production'da Swagger faqat SWAGGER_ENABLED=true bo'lsa ochiladi
+  if (isProd && config.get('SWAGGER_ENABLED', { infer: true }) !== 'true') {
+    return;
+  }
+
+  let user = config.get('SWAGGER_USER', { infer: true });
+  let password = config.get('SWAGGER_PASSWORD', { infer: true });
 
   if (!user || !password) {
     if (isProd) {
@@ -45,35 +61,41 @@ function setupSwagger(app: NestExpressApplication, isProd: boolean) {
     authMiddleware({ users: { [user]: password }, challenge: true }),
   );
 
-  const config = new DocumentBuilder()
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        description: 'Enter your Bearer token',
-      },
-      'authorization',
-    )
-    .setTitle('ERP-COIN-SYSTEM')
-    .setDescription(
-      'A platform that allows students to earn coins and gain knowledge',
-    )
-    .setVersion('1.0.0')
-    .addTag('Nestjs, Prisma, Validation')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(
+    app,
+    new DocumentBuilder()
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Enter your Bearer token',
+        },
+        'authorization',
+      )
+      .setTitle('ERP-COIN-SYSTEM')
+      .setDescription(
+        'A platform that allows students to earn coins and gain knowledge',
+      )
+      .setVersion('1.0.0')
+      .addTag('Nestjs, Prisma, Validation')
+      .build(),
+  );
   SwaggerModule.setup('/api/docs', app, document);
 }
 
 async function start() {
-  // port
-  const PORT = process.env.PORT || 3001;
-  const isProd = process.env.NODE_ENV === 'production';
+  // .env AppModule import qilinganda tekshiriladi (validateEnv) — bu yerga faqat
+  // to'g'ri konfiguratsiya bilan yetib kelinadi
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true,
+  });
+  const config = app.get<AppConfig>(ConfigService);
+  const isProd = config.get('NODE_ENV', { infer: true }) === 'production';
+  const port = config.get('PORT', { infer: true }) ?? 3001;
 
-  // app
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // Loglar: production'da JSON (log yig'uvchi uchun), har bir qatorda so'rov ID'si
+  app.useLogger(new AppLogger({ json: isProd }));
 
   // SIGTERM/SIGINT (deploy, restart) — onModuleDestroy hook'lari ishlaydi, DB ulanishlari yopiladi
   app.enableShutdownHooks();
@@ -81,10 +103,14 @@ async function start() {
   // Reverse proxy (nginx) ortida haqiqiy klient IP'si X-Forwarded-For dan olinadi.
   // Aks holda throttler barcha so'rovlarni bitta (proxy) IP deb hisoblaydi.
   // Masalan: TRUST_PROXY=1 (bitta proxy). Proxy bo'lmasa — bermang.
-  if (process.env.TRUST_PROXY) {
-    const hops = Number(process.env.TRUST_PROXY);
-    app.set('trust proxy', Number.isNaN(hops) ? process.env.TRUST_PROXY : hops);
+  const trustProxy = config.get('TRUST_PROXY', { infer: true });
+  if (trustProxy) {
+    const hops = Number(trustProxy);
+    app.set('trust proxy', Number.isNaN(hops) ? trustProxy : hops);
   }
+
+  // Har bir so'rovga ID (javob header'i, xato javobi va loglarda) — eng birinchi
+  app.use(requestIdMiddleware);
 
   // cookie-parser
   app.use(cookieParser());
@@ -107,8 +133,8 @@ async function start() {
     }),
   );
 
-  // global prisma exception filter
-  app.useGlobalFilters(new PrismaExceptionFilter());
+  // Yagona xato formati (HTTP, Prisma, kutilmagan xatolar) — stack faqat logda
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // global validation
   app.useGlobalPipes(
@@ -125,16 +151,11 @@ async function start() {
   // helmet
   app.use(helmet());
 
-  // CORS — production'da faqat FRONTEND_DOMEN
+  // CORS — production'da faqat FRONTEND_DOMEN (env validatsiyasida majburiy)
+  const frontend = config.get('FRONTEND_DOMEN', { infer: true });
   const allowedOrigins: string[] = isProd ? [] : [...DEV_ORIGINS];
-  if (process.env.FRONTEND_DOMEN) {
-    allowedOrigins.push(process.env.FRONTEND_DOMEN);
-  }
-  if (isProd && !allowedOrigins.length) {
-    logger.warn(
-      "FRONTEND_DOMEN berilmagan — production'da brauzerdan hech qanday origin'ga ruxsat yo'q",
-    );
-  }
+  if (frontend) allowedOrigins.push(frontend);
+
   app.enableCors({
     origin: (
       origin: string | undefined,
@@ -146,13 +167,15 @@ async function start() {
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
+    // Frontend o'qiy oladigan header'lar: takroriy so'rovga saqlangan javob, so'rov ID'si
+    exposedHeaders: [IDEMPOTENCY_REPLAYED_HEADER, REQUEST_ID_HEADER],
   });
 
   // swagger
-  setupSwagger(app, isProd);
+  setupSwagger(app, config, isProd);
 
   // listen app
-  await app.listen(PORT, () => logger.log(`🚀 Server running at port ${PORT}`));
+  await app.listen(port, () => logger.log(`🚀 Server running at port ${port}`));
 }
 
 start().catch((err) => {

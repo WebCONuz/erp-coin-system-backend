@@ -15,12 +15,19 @@ import {
 } from './dto/update-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import * as bcrypt from 'bcrypt';
-import { Prisma } from 'src/generated/prisma/client';
+import { AuditActionType, Prisma } from 'src/generated/prisma/client';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
+import { AUDIT_ENTITY, definedFields } from 'src/audit-log/utils/audit-entry';
 import { assertCanManageUser, UserManager } from './utils/user-hierarchy';
+import { BCRYPT_ROUNDS } from './constants/password';
+import { releaseUnusedUpload } from 'src/common/utils/upload-cleanup';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private audit: AuditLogService,
+  ) {}
 
   // ─── Yaratish ───────────────────────────────────────────────
   async create(dto: CreateUserDto, tenantId: string, requester: UserManager) {
@@ -28,7 +35,7 @@ export class UsersService {
     await this.assertPhoneFreeInTenant(dto.phone, tenantId);
     await this.assertAssignableRole(dto.roleId, tenantId, requester);
 
-    const passwordHash = await bcrypt.hash(dto.password, 12);
+    const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
 
     const user = await this.prisma.user.create({
       data: {
@@ -46,6 +53,19 @@ export class UsersService {
         wallet: { create: {} },
       },
       include: { role: true },
+    });
+
+    await this.audit.recordSafe({
+      tenantId,
+      actorId: requester.id,
+      action: AuditActionType.create,
+      entityType: AUDIT_ENTITY.user,
+      entityId: user.id,
+      changes: {
+        username: user.username,
+        fullName: user.fullName,
+        role: user.role.name,
+      },
     });
 
     return user;
@@ -135,7 +155,7 @@ export class UsersService {
     }
 
     // Base Query setting (super_admin bo'lsa barcha tenantlarni ko'rishi mumkin)
-    const where: Prisma.UserWhereInput = { isActive: true };
+    const where: Prisma.UserWhereInput = { isActive: true, isDeleted: false };
 
     if (requesterRole !== 'super_admin') {
       where.tenantId = tenantId;
@@ -223,7 +243,7 @@ export class UsersService {
       roleFilter.level = { lte: maxLevel };
     }
 
-    const where: Prisma.UserWhereInput = { role: roleFilter };
+    const where: Prisma.UserWhereInput = { role: roleFilter, isDeleted: false };
 
     // Tenant scope
     const isElevated =
@@ -293,7 +313,10 @@ export class UsersService {
     const { search, page = 1, limit = 20, sortBy = 'createdAt' } = query;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.UserWhereInput = { role: { name: 'teacher' } };
+    const where: Prisma.UserWhereInput = {
+      role: { name: 'teacher' },
+      isDeleted: false,
+    };
 
     // Tenant scope
     const isElevated =
@@ -356,6 +379,7 @@ export class UsersService {
     const where: Prisma.UserWhereInput = {
       id,
       role: { name: 'teacher' },
+      isDeleted: false,
     };
 
     const isElevated =
@@ -418,6 +442,7 @@ export class UsersService {
       role: {
         name: 'student',
       },
+      isDeleted: false,
     };
 
     // Multi-tenant tekshiruvi
@@ -476,9 +501,11 @@ export class UsersService {
         some: {
           group: { isDeleted: false, ...teacherGroupAccessWhere(teacherId) },
           isActive: true,
+          isDeleted: false,
         },
       },
       isActive: true,
+      isDeleted: false,
     };
 
     if (search) {
@@ -516,7 +543,11 @@ export class UsersService {
     requesterRole: string,
     requesterId: string,
   ) {
-    const where: Prisma.UserWhereInput = { id, isActive: true };
+    const where: Prisma.UserWhereInput = {
+      id,
+      isActive: true,
+      isDeleted: false,
+    };
 
     // super_admin istalgan tenantni ko'ra oladi
     if (requesterRole !== 'super_admin') {
@@ -537,11 +568,17 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
 
-    // Teacher faqat o'z guruhidagi studentni ko'ra oladi
+    // Teacher faqat o'ziga tegishli (asosiy / sessiya / jadval orqali) guruhdagi studentni ko'ra oladi
     if (requesterRole === 'teacher') {
-      const isInTeacherGroup = user.groupMemberships.some(
-        (m) => m.group.teacherId === requesterId,
-      );
+      const isInTeacherGroup = await this.prisma.group.findFirst({
+        where: {
+          tenantId: user.tenantId,
+          isDeleted: false,
+          students: { some: { studentId: id, isDeleted: false } },
+          ...teacherGroupAccessWhere(requesterId),
+        },
+        select: { id: true },
+      });
       if (!isInTeacherGroup) {
         throw new ForbiddenException("Siz bu foydalanuvchini ko'ra olmaysiz");
       }
@@ -580,6 +617,26 @@ export class UsersService {
       data: dto,
       include: { role: true },
     });
+    if (dto.avatarUrl !== undefined && dto.avatarUrl !== target.avatarUrl) {
+      await releaseUnusedUpload(this.prisma, target.avatarUrl);
+    }
+
+    // Rol o'zgarishi alohida amal turi bilan (huquq berish — eng muhim hodisa)
+    const roleChanged =
+      dto.roleId !== undefined && dto.roleId !== target.roleId;
+    await this.audit.recordSafe({
+      tenantId: target.tenantId,
+      actorId: requester.id,
+      action: roleChanged ? AuditActionType.assign : AuditActionType.update,
+      entityType: AUDIT_ENTITY.user,
+      entityId: id,
+      changes: {
+        ...definedFields(dto),
+        ...(roleChanged
+          ? { roleFrom: target.role.name, roleTo: user.role.name }
+          : {}),
+      },
+    });
 
     return user;
   }
@@ -609,17 +666,30 @@ export class UsersService {
       assertCanManageUser(requester, user);
     }
 
-    const passwordHash = await bcrypt.hash(dto.newPassword, 12);
-    await this.prisma.user.update({
-      where: { id },
-      data: {
-        passwordHash,
-        // Barcha qurilmalardagi sessiyalar bekor qilinadi — qayta login talab qilinadi
-        refreshTokenHash: null,
-        passwordResetToken: null,
-        passwordResetExpiry: null,
-      },
-    });
+    const passwordHash = await bcrypt.hash(dto.newPassword, BCRYPT_ROUNDS);
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id },
+        data: {
+          passwordHash,
+          passwordResetToken: null,
+          passwordResetExpiry: null,
+        },
+      }),
+      // Barcha qurilmalardagi sessiyalar bekor qilinadi — qayta login talab qilinadi
+      this.prisma.refreshSession.deleteMany({ where: { userId: id } }),
+      this.prisma.auditLog.create({
+        data: this.audit.data({
+          tenantId: user.tenantId,
+          actorId: requester.id,
+          action: AuditActionType.update,
+          entityType: AUDIT_ENTITY.user,
+          entityId: id,
+          changes: { field: 'password', self: id === requester.id },
+          description: "Parol o'zgartirildi",
+        }),
+      }),
+    ]);
 
     return { message: "Parol muvaffaqiyatli o'zgartirildi. Qayta kiring." };
   }
@@ -631,16 +701,28 @@ export class UsersService {
     // Faqat o'zidan past darajadagi user (super_admin/creator'ni ham, boshqa adminni ham arxivlab bo'lmaydi)
     assertCanManageUser(requester, user);
 
-    await this.prisma.user.update({
-      where: { id },
-      data: {
-        isActive: false,
-        archivedAt: new Date(),
-        archivedById: requester.id,
-        // Arxivlangan user qayta kira olmasligi uchun sessiyasi ham bekor qilinadi
-        refreshTokenHash: null,
-      },
-    });
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id },
+        data: {
+          isActive: false,
+          archivedAt: new Date(),
+          archivedById: requester.id,
+        },
+      }),
+      // Arxivlangan user qayta kira olmasligi uchun barcha qurilma sessiyalari ham bekor qilinadi
+      this.prisma.refreshSession.deleteMany({ where: { userId: id } }),
+      this.prisma.auditLog.create({
+        data: this.audit.data({
+          tenantId: user.tenantId,
+          actorId: requester.id,
+          action: AuditActionType.archive,
+          entityType: AUDIT_ENTITY.user,
+          entityId: id,
+          changes: { username: user.username, role: user.role.name },
+        }),
+      }),
+    ]);
 
     return { message: 'Foydalanuvchi arxivlandi' };
   }
@@ -681,7 +763,7 @@ export class UsersService {
   async updateOwnProfile(userId: string, dto: UpdateOwnProfileDto) {
     const me = await this.prisma.user.findFirst({
       where: { id: userId, isActive: true },
-      select: { id: true, tenantId: true },
+      select: { id: true, tenantId: true, avatarUrl: true },
     });
     if (!me) throw new NotFoundException('Foydalanuvchi topilmadi');
 
@@ -708,13 +790,17 @@ export class UsersService {
       },
       include: { role: true },
     });
+    if (dto.avatarUrl !== undefined && dto.avatarUrl !== me.avatarUrl) {
+      await releaseUnusedUpload(this.prisma, me.avatarUrl);
+    }
 
     return user;
   }
 
   // Arxivdan qaytarish
   async restore(id: string, tenantId: string, requester: UserManager) {
-    const where: Prisma.UserWhereInput = { id };
+    // Arxivdan qaytarish — o'chirilgan (isDeleted) user bu yerda tiklanmaydi
+    const where: Prisma.UserWhereInput = { id, isDeleted: false };
     if (requester.role !== 'super_admin') where.tenantId = tenantId;
 
     const user = await this.prisma.user.findFirst({
@@ -724,14 +810,26 @@ export class UsersService {
     if (!user) throw new NotFoundException('Foydalanuvchi topilmadi');
     assertCanManageUser(requester, user);
 
-    await this.prisma.user.update({
-      where: { id },
-      data: {
-        isActive: true,
-        archivedAt: null,
-        archivedById: null,
-      },
-    });
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id },
+        data: {
+          isActive: true,
+          archivedAt: null,
+          archivedById: null,
+        },
+      }),
+      this.prisma.auditLog.create({
+        data: this.audit.data({
+          tenantId: user.tenantId,
+          actorId: requester.id,
+          action: AuditActionType.restore,
+          entityType: AUDIT_ENTITY.user,
+          entityId: id,
+          changes: { username: user.username },
+        }),
+      }),
+    ]);
 
     return { message: 'Foydalanuvchi tiklandi' };
   }
@@ -742,7 +840,11 @@ export class UsersService {
     tenantId: string,
     requesterRole: string,
   ) {
-    const where: Prisma.UserWhereInput = { id, isActive: true };
+    const where: Prisma.UserWhereInput = {
+      id,
+      isActive: true,
+      isDeleted: false,
+    };
     if (requesterRole !== 'super_admin') where.tenantId = tenantId;
 
     const user = await this.prisma.user.findFirst({

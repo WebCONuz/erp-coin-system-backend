@@ -41,7 +41,6 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null;
   updatedAt: Date | null;
   deletedAt: Date | null;
-  refreshTokenHash: string | null;
   passwordResetToken: string | null;
   passwordResetExpiry: Date | null;
   tenantId: string | null;
@@ -65,7 +64,6 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null;
   updatedAt: Date | null;
   deletedAt: Date | null;
-  refreshTokenHash: string | null;
   passwordResetToken: string | null;
   passwordResetExpiry: Date | null;
   tenantId: string | null;
@@ -89,7 +87,6 @@ export type UserCountAggregateOutputType = {
   createdAt: number;
   updatedAt: number;
   deletedAt: number;
-  refreshTokenHash: number;
   passwordResetToken: number;
   passwordResetExpiry: number;
   tenantId: number;
@@ -114,7 +111,6 @@ export type UserMinAggregateInputType = {
   createdAt?: true;
   updatedAt?: true;
   deletedAt?: true;
-  refreshTokenHash?: true;
   passwordResetToken?: true;
   passwordResetExpiry?: true;
   tenantId?: true;
@@ -138,7 +134,6 @@ export type UserMaxAggregateInputType = {
   createdAt?: true;
   updatedAt?: true;
   deletedAt?: true;
-  refreshTokenHash?: true;
   passwordResetToken?: true;
   passwordResetExpiry?: true;
   tenantId?: true;
@@ -162,7 +157,6 @@ export type UserCountAggregateInputType = {
   createdAt?: true;
   updatedAt?: true;
   deletedAt?: true;
-  refreshTokenHash?: true;
   passwordResetToken?: true;
   passwordResetExpiry?: true;
   tenantId?: true;
@@ -266,7 +260,6 @@ export type UserGroupByOutputType = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  refreshTokenHash: string | null;
   passwordResetToken: string | null;
   passwordResetExpiry: Date | null;
   tenantId: string;
@@ -276,17 +269,18 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null;
 };
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<UserGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof UserGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], UserGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], UserGroupByOutputType[P]>;
-    }
-  >
->;
+export type GetUserGroupByPayload<T extends UserGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<UserGroupByOutputType, T['by']> & {
+        [P in keyof T & keyof UserGroupByOutputType]: P extends '_count'
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], UserGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], UserGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type UserWhereInput = {
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[];
@@ -308,7 +302,6 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<'User'> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'User'> | Date | string | null;
-  refreshTokenHash?: Prisma.StringNullableFilter<'User'> | string | null;
   passwordResetToken?: Prisma.StringNullableFilter<'User'> | string | null;
   passwordResetExpiry?:
     | Prisma.DateTimeNullableFilter<'User'>
@@ -336,6 +329,8 @@ export type UserWhereInput = {
     Prisma.WalletNullableScalarRelationFilter,
     Prisma.WalletWhereInput
   > | null;
+  refreshSessions?: Prisma.RefreshSessionListRelationFilter;
+  idempotencyKeys?: Prisma.IdempotencyKeyListRelationFilter;
   taughtGroups?: Prisma.GroupListRelationFilter;
   createdGroups?: Prisma.GroupListRelationFilter;
   groupMemberships?: Prisma.GroupStudentListRelationFilter;
@@ -350,7 +345,6 @@ export type UserWhereInput = {
   purchases?: Prisma.PurchaseListRelationFilter;
   purchasesApproved?: Prisma.PurchaseListRelationFilter;
   purchasesDelivered?: Prisma.PurchaseListRelationFilter;
-  importLogs?: Prisma.ImportLogListRelationFilter;
   createdCourses?: Prisma.CourseListRelationFilter;
   createdSubjects?: Prisma.SubjectListRelationFilter;
   smsLogsAsStudent?: Prisma.SmsLogListRelationFilter;
@@ -385,7 +379,6 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
-  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder;
   passwordResetToken?: Prisma.SortOrderInput | Prisma.SortOrder;
   passwordResetExpiry?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
@@ -397,6 +390,8 @@ export type UserOrderByWithRelationInput = {
   archivedBy?: Prisma.UserOrderByWithRelationInput;
   archivedUsers?: Prisma.UserOrderByRelationAggregateInput;
   wallet?: Prisma.WalletOrderByWithRelationInput;
+  refreshSessions?: Prisma.RefreshSessionOrderByRelationAggregateInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyOrderByRelationAggregateInput;
   taughtGroups?: Prisma.GroupOrderByRelationAggregateInput;
   createdGroups?: Prisma.GroupOrderByRelationAggregateInput;
   groupMemberships?: Prisma.GroupStudentOrderByRelationAggregateInput;
@@ -411,7 +406,6 @@ export type UserOrderByWithRelationInput = {
   purchases?: Prisma.PurchaseOrderByRelationAggregateInput;
   purchasesApproved?: Prisma.PurchaseOrderByRelationAggregateInput;
   purchasesDelivered?: Prisma.PurchaseOrderByRelationAggregateInput;
-  importLogs?: Prisma.ImportLogOrderByRelationAggregateInput;
   createdCourses?: Prisma.CourseOrderByRelationAggregateInput;
   createdSubjects?: Prisma.SubjectOrderByRelationAggregateInput;
   smsLogsAsStudent?: Prisma.SmsLogOrderByRelationAggregateInput;
@@ -451,7 +445,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
     createdAt?: Prisma.DateTimeFilter<'User'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string;
     deletedAt?: Prisma.DateTimeNullableFilter<'User'> | Date | string | null;
-    refreshTokenHash?: Prisma.StringNullableFilter<'User'> | string | null;
     passwordResetToken?: Prisma.StringNullableFilter<'User'> | string | null;
     passwordResetExpiry?:
       | Prisma.DateTimeNullableFilter<'User'>
@@ -479,6 +472,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
       Prisma.WalletNullableScalarRelationFilter,
       Prisma.WalletWhereInput
     > | null;
+    refreshSessions?: Prisma.RefreshSessionListRelationFilter;
+    idempotencyKeys?: Prisma.IdempotencyKeyListRelationFilter;
     taughtGroups?: Prisma.GroupListRelationFilter;
     createdGroups?: Prisma.GroupListRelationFilter;
     groupMemberships?: Prisma.GroupStudentListRelationFilter;
@@ -493,7 +488,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
     purchases?: Prisma.PurchaseListRelationFilter;
     purchasesApproved?: Prisma.PurchaseListRelationFilter;
     purchasesDelivered?: Prisma.PurchaseListRelationFilter;
-    importLogs?: Prisma.ImportLogListRelationFilter;
     createdCourses?: Prisma.CourseListRelationFilter;
     createdSubjects?: Prisma.SubjectListRelationFilter;
     smsLogsAsStudent?: Prisma.SmsLogListRelationFilter;
@@ -530,7 +524,6 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
-  refreshTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder;
   passwordResetToken?: Prisma.SortOrderInput | Prisma.SortOrder;
   passwordResetExpiry?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
@@ -578,10 +571,6 @@ export type UserScalarWhereWithAggregatesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.StringNullableWithAggregatesFilter<'User'>
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.StringNullableWithAggregatesFilter<'User'>
     | string
@@ -610,7 +599,6 @@ export type UserCreateInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -620,6 +608,8 @@ export type UserCreateInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -634,7 +624,6 @@ export type UserCreateInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -669,7 +658,6 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -677,6 +665,8 @@ export type UserUncheckedCreateInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -691,7 +681,6 @@ export type UserUncheckedCreateInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -732,10 +721,6 @@ export type UserUpdateInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -752,6 +737,8 @@ export type UserUpdateInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -766,7 +753,6 @@ export type UserUpdateInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -812,10 +798,6 @@ export type UserUncheckedUpdateInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -830,6 +812,8 @@ export type UserUncheckedUpdateInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -844,7 +828,6 @@ export type UserUncheckedUpdateInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -879,7 +862,6 @@ export type UserCreateManyInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -907,10 +889,6 @@ export type UserUpdateManyMutationInput = {
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
     | Date
-    | string
-    | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   passwordResetToken?:
@@ -950,10 +928,6 @@ export type UserUncheckedUpdateManyInput = {
   deletedAt?:
     | Prisma.NullableDateTimeFieldUpdateOperationsInput
     | Date
-    | string
-    | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
     | string
     | null;
   passwordResetToken?:
@@ -1006,7 +980,6 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrder;
-  refreshTokenHash?: Prisma.SortOrder;
   passwordResetToken?: Prisma.SortOrder;
   passwordResetExpiry?: Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
@@ -1030,7 +1003,6 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrder;
-  refreshTokenHash?: Prisma.SortOrder;
   passwordResetToken?: Prisma.SortOrder;
   passwordResetExpiry?: Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
@@ -1054,7 +1026,6 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrder;
-  refreshTokenHash?: Prisma.SortOrder;
   passwordResetToken?: Prisma.SortOrder;
   passwordResetExpiry?: Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
@@ -1464,6 +1435,32 @@ export type UserUncheckedUpdateManyWithoutArchivedByNestedInput = {
     | Prisma.UserUpdateManyWithWhereWithoutArchivedByInput
     | Prisma.UserUpdateManyWithWhereWithoutArchivedByInput[];
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[];
+};
+
+export type UserCreateNestedOneWithoutRefreshSessionsInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutRefreshSessionsInput,
+    Prisma.UserUncheckedCreateWithoutRefreshSessionsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshSessionsInput;
+  connect?: Prisma.UserWhereUniqueInput;
+};
+
+export type UserUpdateOneRequiredWithoutRefreshSessionsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutRefreshSessionsInput,
+    Prisma.UserUncheckedCreateWithoutRefreshSessionsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshSessionsInput;
+  upsert?: Prisma.UserUpsertWithoutRefreshSessionsInput;
+  connect?: Prisma.UserWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.UserUpdateToOneWithWhereWithoutRefreshSessionsInput,
+      Prisma.UserUpdateWithoutRefreshSessionsInput
+    >,
+    Prisma.UserUncheckedUpdateWithoutRefreshSessionsInput
+  >;
 };
 
 export type UserCreateNestedOneWithoutWalletInput = {
@@ -2120,13 +2117,15 @@ export type UserCreateNestedOneWithoutSmsLogsSentByInput = {
   connect?: Prisma.UserWhereUniqueInput;
 };
 
-export type UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput = {
+export type UserUpdateOneWithoutSmsLogsAsStudentNestedInput = {
   create?: Prisma.XOR<
     Prisma.UserCreateWithoutSmsLogsAsStudentInput,
     Prisma.UserUncheckedCreateWithoutSmsLogsAsStudentInput
   >;
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSmsLogsAsStudentInput;
   upsert?: Prisma.UserUpsertWithoutSmsLogsAsStudentInput;
+  disconnect?: Prisma.UserWhereInput | boolean;
+  delete?: Prisma.UserWhereInput | boolean;
   connect?: Prisma.UserWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
@@ -2198,13 +2197,15 @@ export type UserCreateNestedOneWithoutEmailLogsSentByInput = {
   connect?: Prisma.UserWhereUniqueInput;
 };
 
-export type UserUpdateOneRequiredWithoutEmailLogsAsStudentNestedInput = {
+export type UserUpdateOneWithoutEmailLogsAsStudentNestedInput = {
   create?: Prisma.XOR<
     Prisma.UserCreateWithoutEmailLogsAsStudentInput,
     Prisma.UserUncheckedCreateWithoutEmailLogsAsStudentInput
   >;
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmailLogsAsStudentInput;
   upsert?: Prisma.UserUpsertWithoutEmailLogsAsStudentInput;
+  disconnect?: Prisma.UserWhereInput | boolean;
+  delete?: Prisma.UserWhereInput | boolean;
   connect?: Prisma.UserWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
@@ -2258,29 +2259,29 @@ export type UserUpdateOneRequiredWithoutAuditLogsCreatedByNestedInput = {
   >;
 };
 
-export type UserCreateNestedOneWithoutImportLogsInput = {
+export type UserCreateNestedOneWithoutIdempotencyKeysInput = {
   create?: Prisma.XOR<
-    Prisma.UserCreateWithoutImportLogsInput,
-    Prisma.UserUncheckedCreateWithoutImportLogsInput
+    Prisma.UserCreateWithoutIdempotencyKeysInput,
+    Prisma.UserUncheckedCreateWithoutIdempotencyKeysInput
   >;
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutImportLogsInput;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIdempotencyKeysInput;
   connect?: Prisma.UserWhereUniqueInput;
 };
 
-export type UserUpdateOneRequiredWithoutImportLogsNestedInput = {
+export type UserUpdateOneRequiredWithoutIdempotencyKeysNestedInput = {
   create?: Prisma.XOR<
-    Prisma.UserCreateWithoutImportLogsInput,
-    Prisma.UserUncheckedCreateWithoutImportLogsInput
+    Prisma.UserCreateWithoutIdempotencyKeysInput,
+    Prisma.UserUncheckedCreateWithoutIdempotencyKeysInput
   >;
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutImportLogsInput;
-  upsert?: Prisma.UserUpsertWithoutImportLogsInput;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIdempotencyKeysInput;
+  upsert?: Prisma.UserUpsertWithoutIdempotencyKeysInput;
   connect?: Prisma.UserWhereUniqueInput;
   update?: Prisma.XOR<
     Prisma.XOR<
-      Prisma.UserUpdateToOneWithWhereWithoutImportLogsInput,
-      Prisma.UserUpdateWithoutImportLogsInput
+      Prisma.UserUpdateToOneWithWhereWithoutIdempotencyKeysInput,
+      Prisma.UserUpdateWithoutIdempotencyKeysInput
     >,
-    Prisma.UserUncheckedUpdateWithoutImportLogsInput
+    Prisma.UserUncheckedUpdateWithoutIdempotencyKeysInput
   >;
 };
 
@@ -2299,7 +2300,6 @@ export type UserCreateWithoutTenantInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   role: Prisma.RoleCreateNestedOneWithoutUsersInput;
@@ -2308,6 +2308,8 @@ export type UserCreateWithoutTenantInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -2322,7 +2324,6 @@ export type UserCreateWithoutTenantInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -2357,13 +2358,14 @@ export type UserUncheckedCreateWithoutTenantInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   roleId: string;
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -2378,7 +2380,6 @@ export type UserUncheckedCreateWithoutTenantInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -2457,7 +2458,6 @@ export type UserScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<'User'> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'User'> | Date | string | null;
-  refreshTokenHash?: Prisma.StringNullableFilter<'User'> | string | null;
   passwordResetToken?: Prisma.StringNullableFilter<'User'> | string | null;
   passwordResetExpiry?:
     | Prisma.DateTimeNullableFilter<'User'>
@@ -2483,7 +2483,6 @@ export type UserCreateWithoutRoleInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -2492,6 +2491,8 @@ export type UserCreateWithoutRoleInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -2506,7 +2507,6 @@ export type UserCreateWithoutRoleInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -2541,13 +2541,14 @@ export type UserUncheckedCreateWithoutRoleInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -2562,7 +2563,6 @@ export type UserUncheckedCreateWithoutRoleInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -2636,7 +2636,6 @@ export type UserCreateWithoutCreatedUsersInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -2645,6 +2644,8 @@ export type UserCreateWithoutCreatedUsersInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -2659,7 +2660,6 @@ export type UserCreateWithoutCreatedUsersInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -2694,13 +2694,14 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
   roleId: string;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -2715,7 +2716,6 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -2756,7 +2756,6 @@ export type UserCreateWithoutCreatedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -2765,6 +2764,8 @@ export type UserCreateWithoutCreatedByInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -2779,7 +2780,6 @@ export type UserCreateWithoutCreatedByInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -2813,7 +2813,6 @@ export type UserUncheckedCreateWithoutCreatedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -2821,6 +2820,8 @@ export type UserUncheckedCreateWithoutCreatedByInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -2835,7 +2836,6 @@ export type UserUncheckedCreateWithoutCreatedByInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -2883,7 +2883,6 @@ export type UserCreateWithoutArchivedUsersInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -2892,6 +2891,8 @@ export type UserCreateWithoutArchivedUsersInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatedByInput;
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -2906,7 +2907,6 @@ export type UserCreateWithoutArchivedUsersInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -2941,13 +2941,14 @@ export type UserUncheckedCreateWithoutArchivedUsersInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
   roleId: string;
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -2962,7 +2963,6 @@ export type UserUncheckedCreateWithoutArchivedUsersInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -3003,7 +3003,6 @@ export type UserCreateWithoutArchivedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -3012,6 +3011,8 @@ export type UserCreateWithoutArchivedByInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -3026,7 +3027,6 @@ export type UserCreateWithoutArchivedByInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -3060,7 +3060,6 @@ export type UserUncheckedCreateWithoutArchivedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -3068,6 +3067,8 @@ export type UserUncheckedCreateWithoutArchivedByInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -3082,7 +3083,6 @@ export type UserUncheckedCreateWithoutArchivedByInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -3158,10 +3158,6 @@ export type UserUpdateWithoutCreatedUsersInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -3177,6 +3173,8 @@ export type UserUpdateWithoutCreatedUsersInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -3191,7 +3189,6 @@ export type UserUpdateWithoutCreatedUsersInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -3237,10 +3234,6 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -3254,6 +3247,8 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   roleId?: Prisma.StringFieldUpdateOperationsInput | string;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -3268,7 +3263,6 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -3357,10 +3351,6 @@ export type UserUpdateWithoutArchivedUsersInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -3376,6 +3366,8 @@ export type UserUpdateWithoutArchivedUsersInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatedByNestedInput;
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -3390,7 +3382,6 @@ export type UserUpdateWithoutArchivedUsersInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -3436,10 +3427,6 @@ export type UserUncheckedUpdateWithoutArchivedUsersInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -3453,6 +3440,8 @@ export type UserUncheckedUpdateWithoutArchivedUsersInput = {
   roleId?: Prisma.StringFieldUpdateOperationsInput | string;
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -3467,7 +3456,6 @@ export type UserUncheckedUpdateWithoutArchivedUsersInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -3513,6 +3501,291 @@ export type UserUpdateManyWithWhereWithoutArchivedByInput = {
   >;
 };
 
+export type UserCreateWithoutRefreshSessionsInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
+  role: Prisma.RoleCreateNestedOneWithoutUsersInput;
+  createdBy?: Prisma.UserCreateNestedOneWithoutCreatedUsersInput;
+  createdUsers?: Prisma.UserCreateNestedManyWithoutCreatedByInput;
+  archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
+  archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
+  taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
+  createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
+};
+
+export type UserUncheckedCreateWithoutRefreshSessionsInput = {
+  id?: string;
+  username: string;
+  phone: string;
+  passwordHash: string;
+  fullName: string;
+  email?: string | null;
+  avatarUrl?: string | null;
+  parentPhone?: string | null;
+  isActive?: boolean;
+  isDeleted?: boolean;
+  archivedAt?: Date | string | null;
+  archivedById?: string | null;
+  createdById?: string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  passwordResetToken?: string | null;
+  passwordResetExpiry?: Date | string | null;
+  tenantId: string;
+  roleId: string;
+  createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
+  archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
+  taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutAddedByInput;
+  ledSessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTeacherInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutRecordedByInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutStudentInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutTeacherInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
+  createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
+  createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedCreateNestedManyWithoutSentByInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedCreateNestedManyWithoutStudentInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedCreateNestedManyWithoutSentByInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedCreateNestedManyWithoutTeacherInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutCreatedByInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCreatedByInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedCreateNestedManyWithoutCreatedByInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCreatedByUserInput;
+  holidaysCreated?: Prisma.HolidayUncheckedCreateNestedManyWithoutCreatedByInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
+};
+
+export type UserCreateOrConnectWithoutRefreshSessionsInput = {
+  where: Prisma.UserWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutRefreshSessionsInput,
+    Prisma.UserUncheckedCreateWithoutRefreshSessionsInput
+  >;
+};
+
+export type UserUpsertWithoutRefreshSessionsInput = {
+  update: Prisma.XOR<
+    Prisma.UserUpdateWithoutRefreshSessionsInput,
+    Prisma.UserUncheckedUpdateWithoutRefreshSessionsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutRefreshSessionsInput,
+    Prisma.UserUncheckedCreateWithoutRefreshSessionsInput
+  >;
+  where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutRefreshSessionsInput = {
+  where?: Prisma.UserWhereInput;
+  data: Prisma.XOR<
+    Prisma.UserUpdateWithoutRefreshSessionsInput,
+    Prisma.UserUncheckedUpdateWithoutRefreshSessionsInput
+  >;
+};
+
+export type UserUpdateWithoutRefreshSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutUsersNestedInput;
+  role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
+  createdBy?: Prisma.UserUpdateOneWithoutCreatedUsersNestedInput;
+  createdUsers?: Prisma.UserUpdateManyWithoutCreatedByNestedInput;
+  archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
+  archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
+  createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutRefreshSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  username?: Prisma.StringFieldUpdateOperationsInput | string;
+  phone?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  parentPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  archivedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  archivedById?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  passwordResetToken?:
+    | Prisma.NullableStringFieldUpdateOperationsInput
+    | string
+    | null;
+  passwordResetExpiry?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
+  roleId?: Prisma.StringFieldUpdateOperationsInput | string;
+  createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
+  archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
+  taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
+  groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
+  addedGroupStudents?: Prisma.GroupStudentUncheckedUpdateManyWithoutAddedByNestedInput;
+  ledSessions?: Prisma.SessionUncheckedUpdateManyWithoutTeacherNestedInput;
+  attendanceRecorded?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutRecordedByNestedInput;
+  attendanceAsStudent?: Prisma.AttendanceRecordUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsReceived?: Prisma.CoinTransactionUncheckedUpdateManyWithoutStudentNestedInput;
+  coinTransactionsGiven?: Prisma.CoinTransactionUncheckedUpdateManyWithoutTeacherNestedInput;
+  coinRulesCreated?: Prisma.CoinRuleUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
+  purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
+  purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
+  createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
+  createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
+  smsLogsSentBy?: Prisma.SmsLogUncheckedUpdateManyWithoutSentByNestedInput;
+  emailLogsAsStudent?: Prisma.EmailLogUncheckedUpdateManyWithoutStudentNestedInput;
+  emailLogsSentBy?: Prisma.EmailLogUncheckedUpdateManyWithoutSentByNestedInput;
+  scheduleTemplatesCreated?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  scheduledTemplates?: Prisma.ScheduleTemplateUncheckedUpdateManyWithoutTeacherNestedInput;
+  scheduleExceptionsCreated?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutCreatedByNestedInput;
+  smsTemplatesCreated?: Prisma.SmsTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  emailTemplatesCreated?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCreatedByNestedInput;
+  rewardCategories?: Prisma.RewardCategoryUncheckedUpdateManyWithoutCreatedByNestedInput;
+  auditLogsCreatedBy?: Prisma.AuditLogUncheckedUpdateManyWithoutCreatedByUserNestedInput;
+  holidaysCreated?: Prisma.HolidayUncheckedUpdateManyWithoutCreatedByNestedInput;
+  substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
+};
+
 export type UserCreateWithoutWalletInput = {
   id?: string;
   username: string;
@@ -3528,7 +3801,6 @@ export type UserCreateWithoutWalletInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -3537,6 +3809,8 @@ export type UserCreateWithoutWalletInput = {
   createdUsers?: Prisma.UserCreateNestedManyWithoutCreatedByInput;
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -3551,7 +3825,6 @@ export type UserCreateWithoutWalletInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -3586,13 +3859,14 @@ export type UserUncheckedCreateWithoutWalletInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
   roleId: string;
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -3607,7 +3881,6 @@ export type UserUncheckedCreateWithoutWalletInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -3676,10 +3949,6 @@ export type UserUpdateWithoutWalletInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -3695,6 +3964,8 @@ export type UserUpdateWithoutWalletInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatedByNestedInput;
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -3709,7 +3980,6 @@ export type UserUpdateWithoutWalletInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -3755,10 +4025,6 @@ export type UserUncheckedUpdateWithoutWalletInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -3772,6 +4038,8 @@ export type UserUncheckedUpdateWithoutWalletInput = {
   roleId?: Prisma.StringFieldUpdateOperationsInput | string;
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -3786,7 +4054,6 @@ export type UserUncheckedUpdateWithoutWalletInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -3819,7 +4086,6 @@ export type UserCreateWithoutCreatedCoursesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -3829,6 +4095,8 @@ export type UserCreateWithoutCreatedCoursesInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -3843,7 +4111,6 @@ export type UserCreateWithoutCreatedCoursesInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
   smsLogsSentBy?: Prisma.SmsLogCreateNestedManyWithoutSentByInput;
@@ -3877,7 +4144,6 @@ export type UserUncheckedCreateWithoutCreatedCoursesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -3885,6 +4151,8 @@ export type UserUncheckedCreateWithoutCreatedCoursesInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -3899,7 +4167,6 @@ export type UserUncheckedCreateWithoutCreatedCoursesInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
   smsLogsSentBy?: Prisma.SmsLogUncheckedCreateNestedManyWithoutSentByInput;
@@ -3967,10 +4234,6 @@ export type UserUpdateWithoutCreatedCoursesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -3987,6 +4250,8 @@ export type UserUpdateWithoutCreatedCoursesInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -4001,7 +4266,6 @@ export type UserUpdateWithoutCreatedCoursesInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
   smsLogsSentBy?: Prisma.SmsLogUpdateManyWithoutSentByNestedInput;
@@ -4046,10 +4310,6 @@ export type UserUncheckedUpdateWithoutCreatedCoursesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -4064,6 +4324,8 @@ export type UserUncheckedUpdateWithoutCreatedCoursesInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -4078,7 +4340,6 @@ export type UserUncheckedUpdateWithoutCreatedCoursesInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
   smsLogsSentBy?: Prisma.SmsLogUncheckedUpdateManyWithoutSentByNestedInput;
@@ -4110,7 +4371,6 @@ export type UserCreateWithoutCreatedSubjectsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -4120,6 +4380,8 @@ export type UserCreateWithoutCreatedSubjectsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -4134,7 +4396,6 @@ export type UserCreateWithoutCreatedSubjectsInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
   smsLogsSentBy?: Prisma.SmsLogCreateNestedManyWithoutSentByInput;
@@ -4168,7 +4429,6 @@ export type UserUncheckedCreateWithoutCreatedSubjectsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -4176,6 +4436,8 @@ export type UserUncheckedCreateWithoutCreatedSubjectsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -4190,7 +4452,6 @@ export type UserUncheckedCreateWithoutCreatedSubjectsInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
   smsLogsSentBy?: Prisma.SmsLogUncheckedCreateNestedManyWithoutSentByInput;
@@ -4258,10 +4519,6 @@ export type UserUpdateWithoutCreatedSubjectsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -4278,6 +4535,8 @@ export type UserUpdateWithoutCreatedSubjectsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -4292,7 +4551,6 @@ export type UserUpdateWithoutCreatedSubjectsInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
   smsLogsSentBy?: Prisma.SmsLogUpdateManyWithoutSentByNestedInput;
@@ -4337,10 +4595,6 @@ export type UserUncheckedUpdateWithoutCreatedSubjectsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -4355,6 +4609,8 @@ export type UserUncheckedUpdateWithoutCreatedSubjectsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -4369,7 +4625,6 @@ export type UserUncheckedUpdateWithoutCreatedSubjectsInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
   smsLogsSentBy?: Prisma.SmsLogUncheckedUpdateManyWithoutSentByNestedInput;
@@ -4401,7 +4656,6 @@ export type UserCreateWithoutTaughtGroupsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -4411,6 +4665,8 @@ export type UserCreateWithoutTaughtGroupsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
   addedGroupStudents?: Prisma.GroupStudentCreateNestedManyWithoutAddedByInput;
@@ -4424,7 +4680,6 @@ export type UserCreateWithoutTaughtGroupsInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -4459,7 +4714,6 @@ export type UserUncheckedCreateWithoutTaughtGroupsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -4467,6 +4721,8 @@ export type UserUncheckedCreateWithoutTaughtGroupsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
   addedGroupStudents?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutAddedByInput;
@@ -4480,7 +4736,6 @@ export type UserUncheckedCreateWithoutTaughtGroupsInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -4521,7 +4776,6 @@ export type UserCreateWithoutCreatedGroupsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -4531,6 +4785,8 @@ export type UserCreateWithoutCreatedGroupsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
   addedGroupStudents?: Prisma.GroupStudentCreateNestedManyWithoutAddedByInput;
@@ -4544,7 +4800,6 @@ export type UserCreateWithoutCreatedGroupsInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -4579,7 +4834,6 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -4587,6 +4841,8 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
   addedGroupStudents?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutAddedByInput;
@@ -4600,7 +4856,6 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -4669,10 +4924,6 @@ export type UserUpdateWithoutTaughtGroupsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -4689,6 +4940,8 @@ export type UserUpdateWithoutTaughtGroupsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
   addedGroupStudents?: Prisma.GroupStudentUpdateManyWithoutAddedByNestedInput;
@@ -4702,7 +4955,6 @@ export type UserUpdateWithoutTaughtGroupsInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -4748,10 +5000,6 @@ export type UserUncheckedUpdateWithoutTaughtGroupsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -4766,6 +5014,8 @@ export type UserUncheckedUpdateWithoutTaughtGroupsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
   addedGroupStudents?: Prisma.GroupStudentUncheckedUpdateManyWithoutAddedByNestedInput;
@@ -4779,7 +5029,6 @@ export type UserUncheckedUpdateWithoutTaughtGroupsInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -4840,10 +5089,6 @@ export type UserUpdateWithoutCreatedGroupsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -4860,6 +5105,8 @@ export type UserUpdateWithoutCreatedGroupsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
   addedGroupStudents?: Prisma.GroupStudentUpdateManyWithoutAddedByNestedInput;
@@ -4873,7 +5120,6 @@ export type UserUpdateWithoutCreatedGroupsInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -4919,10 +5165,6 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -4937,6 +5179,8 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
   addedGroupStudents?: Prisma.GroupStudentUncheckedUpdateManyWithoutAddedByNestedInput;
@@ -4950,7 +5194,6 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -4983,7 +5226,6 @@ export type UserCreateWithoutGroupMembershipsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -4993,6 +5235,8 @@ export type UserCreateWithoutGroupMembershipsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   addedGroupStudents?: Prisma.GroupStudentCreateNestedManyWithoutAddedByInput;
@@ -5006,7 +5250,6 @@ export type UserCreateWithoutGroupMembershipsInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -5041,7 +5284,6 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -5049,6 +5291,8 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   addedGroupStudents?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutAddedByInput;
@@ -5062,7 +5306,6 @@ export type UserUncheckedCreateWithoutGroupMembershipsInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -5103,7 +5346,6 @@ export type UserCreateWithoutAddedGroupStudentsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -5113,6 +5355,8 @@ export type UserCreateWithoutAddedGroupStudentsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -5126,7 +5370,6 @@ export type UserCreateWithoutAddedGroupStudentsInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -5161,7 +5404,6 @@ export type UserUncheckedCreateWithoutAddedGroupStudentsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -5169,6 +5411,8 @@ export type UserUncheckedCreateWithoutAddedGroupStudentsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -5182,7 +5426,6 @@ export type UserUncheckedCreateWithoutAddedGroupStudentsInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -5251,10 +5494,6 @@ export type UserUpdateWithoutGroupMembershipsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -5271,6 +5510,8 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   addedGroupStudents?: Prisma.GroupStudentUpdateManyWithoutAddedByNestedInput;
@@ -5284,7 +5525,6 @@ export type UserUpdateWithoutGroupMembershipsInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -5330,10 +5570,6 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -5348,6 +5584,8 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   addedGroupStudents?: Prisma.GroupStudentUncheckedUpdateManyWithoutAddedByNestedInput;
@@ -5361,7 +5599,6 @@ export type UserUncheckedUpdateWithoutGroupMembershipsInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -5422,10 +5659,6 @@ export type UserUpdateWithoutAddedGroupStudentsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -5442,6 +5675,8 @@ export type UserUpdateWithoutAddedGroupStudentsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -5455,7 +5690,6 @@ export type UserUpdateWithoutAddedGroupStudentsInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -5501,10 +5735,6 @@ export type UserUncheckedUpdateWithoutAddedGroupStudentsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -5519,6 +5749,8 @@ export type UserUncheckedUpdateWithoutAddedGroupStudentsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -5532,7 +5764,6 @@ export type UserUncheckedUpdateWithoutAddedGroupStudentsInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -5565,7 +5796,6 @@ export type UserCreateWithoutScheduledTemplatesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -5575,6 +5805,8 @@ export type UserCreateWithoutScheduledTemplatesInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -5589,7 +5821,6 @@ export type UserCreateWithoutScheduledTemplatesInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -5623,7 +5854,6 @@ export type UserUncheckedCreateWithoutScheduledTemplatesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -5631,6 +5861,8 @@ export type UserUncheckedCreateWithoutScheduledTemplatesInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -5645,7 +5877,6 @@ export type UserUncheckedCreateWithoutScheduledTemplatesInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -5685,7 +5916,6 @@ export type UserCreateWithoutScheduleTemplatesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -5695,6 +5925,8 @@ export type UserCreateWithoutScheduleTemplatesCreatedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -5709,7 +5941,6 @@ export type UserCreateWithoutScheduleTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -5743,7 +5974,6 @@ export type UserUncheckedCreateWithoutScheduleTemplatesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -5751,6 +5981,8 @@ export type UserUncheckedCreateWithoutScheduleTemplatesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -5765,7 +5997,6 @@ export type UserUncheckedCreateWithoutScheduleTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -5833,10 +6064,6 @@ export type UserUpdateWithoutScheduledTemplatesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -5853,6 +6080,8 @@ export type UserUpdateWithoutScheduledTemplatesInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -5867,7 +6096,6 @@ export type UserUpdateWithoutScheduledTemplatesInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -5912,10 +6140,6 @@ export type UserUncheckedUpdateWithoutScheduledTemplatesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -5930,6 +6154,8 @@ export type UserUncheckedUpdateWithoutScheduledTemplatesInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -5944,7 +6170,6 @@ export type UserUncheckedUpdateWithoutScheduledTemplatesInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6004,10 +6229,6 @@ export type UserUpdateWithoutScheduleTemplatesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6024,6 +6245,8 @@ export type UserUpdateWithoutScheduleTemplatesCreatedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -6038,7 +6261,6 @@ export type UserUpdateWithoutScheduleTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -6083,10 +6305,6 @@ export type UserUncheckedUpdateWithoutScheduleTemplatesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6101,6 +6319,8 @@ export type UserUncheckedUpdateWithoutScheduleTemplatesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6115,7 +6335,6 @@ export type UserUncheckedUpdateWithoutScheduleTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6147,7 +6366,6 @@ export type UserCreateWithoutScheduleExceptionsCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -6157,6 +6375,8 @@ export type UserCreateWithoutScheduleExceptionsCreatedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -6171,7 +6391,6 @@ export type UserCreateWithoutScheduleExceptionsCreatedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -6205,7 +6424,6 @@ export type UserUncheckedCreateWithoutScheduleExceptionsCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -6213,6 +6431,8 @@ export type UserUncheckedCreateWithoutScheduleExceptionsCreatedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -6227,7 +6447,6 @@ export type UserUncheckedCreateWithoutScheduleExceptionsCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -6267,7 +6486,6 @@ export type UserCreateWithoutSubstituteExceptionsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -6277,6 +6495,8 @@ export type UserCreateWithoutSubstituteExceptionsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -6291,7 +6511,6 @@ export type UserCreateWithoutSubstituteExceptionsInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -6325,7 +6544,6 @@ export type UserUncheckedCreateWithoutSubstituteExceptionsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -6333,6 +6551,8 @@ export type UserUncheckedCreateWithoutSubstituteExceptionsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -6347,7 +6567,6 @@ export type UserUncheckedCreateWithoutSubstituteExceptionsInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -6415,10 +6634,6 @@ export type UserUpdateWithoutScheduleExceptionsCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6435,6 +6650,8 @@ export type UserUpdateWithoutScheduleExceptionsCreatedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -6449,7 +6666,6 @@ export type UserUpdateWithoutScheduleExceptionsCreatedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -6494,10 +6710,6 @@ export type UserUncheckedUpdateWithoutScheduleExceptionsCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6512,6 +6724,8 @@ export type UserUncheckedUpdateWithoutScheduleExceptionsCreatedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6526,7 +6740,6 @@ export type UserUncheckedUpdateWithoutScheduleExceptionsCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6586,10 +6799,6 @@ export type UserUpdateWithoutSubstituteExceptionsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6606,6 +6815,8 @@ export type UserUpdateWithoutSubstituteExceptionsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -6620,7 +6831,6 @@ export type UserUpdateWithoutSubstituteExceptionsInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -6665,10 +6875,6 @@ export type UserUncheckedUpdateWithoutSubstituteExceptionsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6683,6 +6889,8 @@ export type UserUncheckedUpdateWithoutSubstituteExceptionsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6697,7 +6905,6 @@ export type UserUncheckedUpdateWithoutSubstituteExceptionsInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6729,7 +6936,6 @@ export type UserCreateWithoutHolidaysCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -6739,6 +6945,8 @@ export type UserCreateWithoutHolidaysCreatedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -6753,7 +6961,6 @@ export type UserCreateWithoutHolidaysCreatedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -6787,7 +6994,6 @@ export type UserUncheckedCreateWithoutHolidaysCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -6795,6 +7001,8 @@ export type UserUncheckedCreateWithoutHolidaysCreatedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -6809,7 +7017,6 @@ export type UserUncheckedCreateWithoutHolidaysCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -6877,10 +7084,6 @@ export type UserUpdateWithoutHolidaysCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6897,6 +7100,8 @@ export type UserUpdateWithoutHolidaysCreatedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -6911,7 +7116,6 @@ export type UserUpdateWithoutHolidaysCreatedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -6956,10 +7160,6 @@ export type UserUncheckedUpdateWithoutHolidaysCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -6974,6 +7174,8 @@ export type UserUncheckedUpdateWithoutHolidaysCreatedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -6988,7 +7190,6 @@ export type UserUncheckedUpdateWithoutHolidaysCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -7020,7 +7221,6 @@ export type UserCreateWithoutCoinRulesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -7030,6 +7230,8 @@ export type UserCreateWithoutCoinRulesCreatedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -7043,7 +7245,6 @@ export type UserCreateWithoutCoinRulesCreatedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -7078,7 +7279,6 @@ export type UserUncheckedCreateWithoutCoinRulesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -7086,6 +7286,8 @@ export type UserUncheckedCreateWithoutCoinRulesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -7099,7 +7301,6 @@ export type UserUncheckedCreateWithoutCoinRulesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -7168,10 +7369,6 @@ export type UserUpdateWithoutCoinRulesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -7188,6 +7385,8 @@ export type UserUpdateWithoutCoinRulesCreatedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -7201,7 +7400,6 @@ export type UserUpdateWithoutCoinRulesCreatedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -7247,10 +7445,6 @@ export type UserUncheckedUpdateWithoutCoinRulesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -7265,6 +7459,8 @@ export type UserUncheckedUpdateWithoutCoinRulesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -7278,7 +7474,6 @@ export type UserUncheckedUpdateWithoutCoinRulesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -7311,7 +7506,6 @@ export type UserCreateWithoutLedSessionsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -7321,6 +7515,8 @@ export type UserCreateWithoutLedSessionsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -7334,7 +7530,6 @@ export type UserCreateWithoutLedSessionsInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -7369,7 +7564,6 @@ export type UserUncheckedCreateWithoutLedSessionsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -7377,6 +7571,8 @@ export type UserUncheckedCreateWithoutLedSessionsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -7390,7 +7586,6 @@ export type UserUncheckedCreateWithoutLedSessionsInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -7459,10 +7654,6 @@ export type UserUpdateWithoutLedSessionsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -7479,6 +7670,8 @@ export type UserUpdateWithoutLedSessionsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -7492,7 +7685,6 @@ export type UserUpdateWithoutLedSessionsInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -7538,10 +7730,6 @@ export type UserUncheckedUpdateWithoutLedSessionsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -7556,6 +7744,8 @@ export type UserUncheckedUpdateWithoutLedSessionsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -7569,7 +7759,6 @@ export type UserUncheckedUpdateWithoutLedSessionsInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -7602,7 +7791,6 @@ export type UserCreateWithoutAttendanceAsStudentInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -7612,6 +7800,8 @@ export type UserCreateWithoutAttendanceAsStudentInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -7625,7 +7815,6 @@ export type UserCreateWithoutAttendanceAsStudentInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -7660,7 +7849,6 @@ export type UserUncheckedCreateWithoutAttendanceAsStudentInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -7668,6 +7856,8 @@ export type UserUncheckedCreateWithoutAttendanceAsStudentInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -7681,7 +7871,6 @@ export type UserUncheckedCreateWithoutAttendanceAsStudentInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -7722,7 +7911,6 @@ export type UserCreateWithoutAttendanceRecordedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -7732,6 +7920,8 @@ export type UserCreateWithoutAttendanceRecordedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -7745,7 +7935,6 @@ export type UserCreateWithoutAttendanceRecordedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -7780,7 +7969,6 @@ export type UserUncheckedCreateWithoutAttendanceRecordedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -7788,6 +7976,8 @@ export type UserUncheckedCreateWithoutAttendanceRecordedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -7801,7 +7991,6 @@ export type UserUncheckedCreateWithoutAttendanceRecordedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -7870,10 +8059,6 @@ export type UserUpdateWithoutAttendanceAsStudentInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -7890,6 +8075,8 @@ export type UserUpdateWithoutAttendanceAsStudentInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -7903,7 +8090,6 @@ export type UserUpdateWithoutAttendanceAsStudentInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -7949,10 +8135,6 @@ export type UserUncheckedUpdateWithoutAttendanceAsStudentInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -7967,6 +8149,8 @@ export type UserUncheckedUpdateWithoutAttendanceAsStudentInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -7980,7 +8164,6 @@ export type UserUncheckedUpdateWithoutAttendanceAsStudentInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -8041,10 +8224,6 @@ export type UserUpdateWithoutAttendanceRecordedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -8061,6 +8240,8 @@ export type UserUpdateWithoutAttendanceRecordedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -8074,7 +8255,6 @@ export type UserUpdateWithoutAttendanceRecordedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -8120,10 +8300,6 @@ export type UserUncheckedUpdateWithoutAttendanceRecordedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -8138,6 +8314,8 @@ export type UserUncheckedUpdateWithoutAttendanceRecordedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -8151,7 +8329,6 @@ export type UserUncheckedUpdateWithoutAttendanceRecordedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -8184,7 +8361,6 @@ export type UserCreateWithoutCoinTransactionsReceivedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -8194,6 +8370,8 @@ export type UserCreateWithoutCoinTransactionsReceivedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -8207,7 +8385,6 @@ export type UserCreateWithoutCoinTransactionsReceivedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -8242,7 +8419,6 @@ export type UserUncheckedCreateWithoutCoinTransactionsReceivedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -8250,6 +8426,8 @@ export type UserUncheckedCreateWithoutCoinTransactionsReceivedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -8263,7 +8441,6 @@ export type UserUncheckedCreateWithoutCoinTransactionsReceivedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -8304,7 +8481,6 @@ export type UserCreateWithoutCoinTransactionsGivenInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -8314,6 +8490,8 @@ export type UserCreateWithoutCoinTransactionsGivenInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -8327,7 +8505,6 @@ export type UserCreateWithoutCoinTransactionsGivenInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -8362,7 +8539,6 @@ export type UserUncheckedCreateWithoutCoinTransactionsGivenInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -8370,6 +8546,8 @@ export type UserUncheckedCreateWithoutCoinTransactionsGivenInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -8383,7 +8561,6 @@ export type UserUncheckedCreateWithoutCoinTransactionsGivenInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -8452,10 +8629,6 @@ export type UserUpdateWithoutCoinTransactionsReceivedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -8472,6 +8645,8 @@ export type UserUpdateWithoutCoinTransactionsReceivedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -8485,7 +8660,6 @@ export type UserUpdateWithoutCoinTransactionsReceivedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -8531,10 +8705,6 @@ export type UserUncheckedUpdateWithoutCoinTransactionsReceivedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -8549,6 +8719,8 @@ export type UserUncheckedUpdateWithoutCoinTransactionsReceivedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -8562,7 +8734,6 @@ export type UserUncheckedUpdateWithoutCoinTransactionsReceivedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -8623,10 +8794,6 @@ export type UserUpdateWithoutCoinTransactionsGivenInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -8643,6 +8810,8 @@ export type UserUpdateWithoutCoinTransactionsGivenInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -8656,7 +8825,6 @@ export type UserUpdateWithoutCoinTransactionsGivenInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -8702,10 +8870,6 @@ export type UserUncheckedUpdateWithoutCoinTransactionsGivenInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -8720,6 +8884,8 @@ export type UserUncheckedUpdateWithoutCoinTransactionsGivenInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -8733,7 +8899,6 @@ export type UserUncheckedUpdateWithoutCoinTransactionsGivenInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -8766,7 +8931,6 @@ export type UserCreateWithoutRewardCategoriesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -8776,6 +8940,8 @@ export type UserCreateWithoutRewardCategoriesInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -8790,7 +8956,6 @@ export type UserCreateWithoutRewardCategoriesInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -8824,7 +8989,6 @@ export type UserUncheckedCreateWithoutRewardCategoriesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -8832,6 +8996,8 @@ export type UserUncheckedCreateWithoutRewardCategoriesInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -8846,7 +9012,6 @@ export type UserUncheckedCreateWithoutRewardCategoriesInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -8914,10 +9079,6 @@ export type UserUpdateWithoutRewardCategoriesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -8934,6 +9095,8 @@ export type UserUpdateWithoutRewardCategoriesInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -8948,7 +9111,6 @@ export type UserUpdateWithoutRewardCategoriesInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -8993,10 +9155,6 @@ export type UserUncheckedUpdateWithoutRewardCategoriesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -9011,6 +9169,8 @@ export type UserUncheckedUpdateWithoutRewardCategoriesInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -9025,7 +9185,6 @@ export type UserUncheckedUpdateWithoutRewardCategoriesInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -9057,7 +9216,6 @@ export type UserCreateWithoutRewardsCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -9067,6 +9225,8 @@ export type UserCreateWithoutRewardsCreatedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -9080,7 +9240,6 @@ export type UserCreateWithoutRewardsCreatedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -9115,7 +9274,6 @@ export type UserUncheckedCreateWithoutRewardsCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -9123,6 +9281,8 @@ export type UserUncheckedCreateWithoutRewardsCreatedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -9136,7 +9296,6 @@ export type UserUncheckedCreateWithoutRewardsCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -9205,10 +9364,6 @@ export type UserUpdateWithoutRewardsCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -9225,6 +9380,8 @@ export type UserUpdateWithoutRewardsCreatedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -9238,7 +9395,6 @@ export type UserUpdateWithoutRewardsCreatedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -9284,10 +9440,6 @@ export type UserUncheckedUpdateWithoutRewardsCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -9302,6 +9454,8 @@ export type UserUncheckedUpdateWithoutRewardsCreatedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -9315,7 +9469,6 @@ export type UserUncheckedUpdateWithoutRewardsCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -9348,7 +9501,6 @@ export type UserCreateWithoutPurchasesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -9358,6 +9510,8 @@ export type UserCreateWithoutPurchasesInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -9371,7 +9525,6 @@ export type UserCreateWithoutPurchasesInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -9406,7 +9559,6 @@ export type UserUncheckedCreateWithoutPurchasesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -9414,6 +9566,8 @@ export type UserUncheckedCreateWithoutPurchasesInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -9427,7 +9581,6 @@ export type UserUncheckedCreateWithoutPurchasesInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -9468,7 +9621,6 @@ export type UserCreateWithoutPurchasesApprovedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -9478,6 +9630,8 @@ export type UserCreateWithoutPurchasesApprovedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -9491,7 +9645,6 @@ export type UserCreateWithoutPurchasesApprovedInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -9526,7 +9679,6 @@ export type UserUncheckedCreateWithoutPurchasesApprovedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -9534,6 +9686,8 @@ export type UserUncheckedCreateWithoutPurchasesApprovedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -9547,7 +9701,6 @@ export type UserUncheckedCreateWithoutPurchasesApprovedInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -9588,7 +9741,6 @@ export type UserCreateWithoutPurchasesDeliveredInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -9598,6 +9750,8 @@ export type UserCreateWithoutPurchasesDeliveredInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -9611,7 +9765,6 @@ export type UserCreateWithoutPurchasesDeliveredInput = {
   rewardsCreated?: Prisma.RewardCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -9646,7 +9799,6 @@ export type UserUncheckedCreateWithoutPurchasesDeliveredInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -9654,6 +9806,8 @@ export type UserUncheckedCreateWithoutPurchasesDeliveredInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -9667,7 +9821,6 @@ export type UserUncheckedCreateWithoutPurchasesDeliveredInput = {
   rewardsCreated?: Prisma.RewardUncheckedCreateNestedManyWithoutCreatedByInput;
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -9736,10 +9889,6 @@ export type UserUpdateWithoutPurchasesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -9756,6 +9905,8 @@ export type UserUpdateWithoutPurchasesInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -9769,7 +9920,6 @@ export type UserUpdateWithoutPurchasesInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -9815,10 +9965,6 @@ export type UserUncheckedUpdateWithoutPurchasesInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -9833,6 +9979,8 @@ export type UserUncheckedUpdateWithoutPurchasesInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -9846,7 +9994,6 @@ export type UserUncheckedUpdateWithoutPurchasesInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -9907,10 +10054,6 @@ export type UserUpdateWithoutPurchasesApprovedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -9927,6 +10070,8 @@ export type UserUpdateWithoutPurchasesApprovedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -9940,7 +10085,6 @@ export type UserUpdateWithoutPurchasesApprovedInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -9986,10 +10130,6 @@ export type UserUncheckedUpdateWithoutPurchasesApprovedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10004,6 +10144,8 @@ export type UserUncheckedUpdateWithoutPurchasesApprovedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -10017,7 +10159,6 @@ export type UserUncheckedUpdateWithoutPurchasesApprovedInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -10078,10 +10219,6 @@ export type UserUpdateWithoutPurchasesDeliveredInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10098,6 +10235,8 @@ export type UserUpdateWithoutPurchasesDeliveredInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -10111,7 +10250,6 @@ export type UserUpdateWithoutPurchasesDeliveredInput = {
   rewardsCreated?: Prisma.RewardUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -10157,10 +10295,6 @@ export type UserUncheckedUpdateWithoutPurchasesDeliveredInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10175,6 +10309,8 @@ export type UserUncheckedUpdateWithoutPurchasesDeliveredInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -10188,7 +10324,6 @@ export type UserUncheckedUpdateWithoutPurchasesDeliveredInput = {
   rewardsCreated?: Prisma.RewardUncheckedUpdateManyWithoutCreatedByNestedInput;
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -10221,7 +10356,6 @@ export type UserCreateWithoutSmsTemplatesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -10231,6 +10365,8 @@ export type UserCreateWithoutSmsTemplatesCreatedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -10245,7 +10381,6 @@ export type UserCreateWithoutSmsTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -10279,7 +10414,6 @@ export type UserUncheckedCreateWithoutSmsTemplatesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -10287,6 +10421,8 @@ export type UserUncheckedCreateWithoutSmsTemplatesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -10301,7 +10437,6 @@ export type UserUncheckedCreateWithoutSmsTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -10369,10 +10504,6 @@ export type UserUpdateWithoutSmsTemplatesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10389,6 +10520,8 @@ export type UserUpdateWithoutSmsTemplatesCreatedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -10403,7 +10536,6 @@ export type UserUpdateWithoutSmsTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -10448,10 +10580,6 @@ export type UserUncheckedUpdateWithoutSmsTemplatesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10466,6 +10594,8 @@ export type UserUncheckedUpdateWithoutSmsTemplatesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -10480,7 +10610,6 @@ export type UserUncheckedUpdateWithoutSmsTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -10512,7 +10641,6 @@ export type UserCreateWithoutSmsLogsAsStudentInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -10522,6 +10650,8 @@ export type UserCreateWithoutSmsLogsAsStudentInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -10536,7 +10666,6 @@ export type UserCreateWithoutSmsLogsAsStudentInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsSentBy?: Prisma.SmsLogCreateNestedManyWithoutSentByInput;
@@ -10570,7 +10699,6 @@ export type UserUncheckedCreateWithoutSmsLogsAsStudentInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -10578,6 +10706,8 @@ export type UserUncheckedCreateWithoutSmsLogsAsStudentInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -10592,7 +10722,6 @@ export type UserUncheckedCreateWithoutSmsLogsAsStudentInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsSentBy?: Prisma.SmsLogUncheckedCreateNestedManyWithoutSentByInput;
@@ -10632,7 +10761,6 @@ export type UserCreateWithoutSmsLogsSentByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -10642,6 +10770,8 @@ export type UserCreateWithoutSmsLogsSentByInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -10656,7 +10786,6 @@ export type UserCreateWithoutSmsLogsSentByInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -10690,7 +10819,6 @@ export type UserUncheckedCreateWithoutSmsLogsSentByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -10698,6 +10826,8 @@ export type UserUncheckedCreateWithoutSmsLogsSentByInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -10712,7 +10842,6 @@ export type UserUncheckedCreateWithoutSmsLogsSentByInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -10780,10 +10909,6 @@ export type UserUpdateWithoutSmsLogsAsStudentInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10800,6 +10925,8 @@ export type UserUpdateWithoutSmsLogsAsStudentInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -10814,7 +10941,6 @@ export type UserUpdateWithoutSmsLogsAsStudentInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsSentBy?: Prisma.SmsLogUpdateManyWithoutSentByNestedInput;
@@ -10859,10 +10985,6 @@ export type UserUncheckedUpdateWithoutSmsLogsAsStudentInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10877,6 +10999,8 @@ export type UserUncheckedUpdateWithoutSmsLogsAsStudentInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -10891,7 +11015,6 @@ export type UserUncheckedUpdateWithoutSmsLogsAsStudentInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsSentBy?: Prisma.SmsLogUncheckedUpdateManyWithoutSentByNestedInput;
@@ -10951,10 +11074,6 @@ export type UserUpdateWithoutSmsLogsSentByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -10971,6 +11090,8 @@ export type UserUpdateWithoutSmsLogsSentByInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -10985,7 +11106,6 @@ export type UserUpdateWithoutSmsLogsSentByInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -11030,10 +11150,6 @@ export type UserUncheckedUpdateWithoutSmsLogsSentByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -11048,6 +11164,8 @@ export type UserUncheckedUpdateWithoutSmsLogsSentByInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11062,7 +11180,6 @@ export type UserUncheckedUpdateWithoutSmsLogsSentByInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11094,7 +11211,6 @@ export type UserCreateWithoutEmailTemplatesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -11104,6 +11220,8 @@ export type UserCreateWithoutEmailTemplatesCreatedInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -11118,7 +11236,6 @@ export type UserCreateWithoutEmailTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -11152,7 +11269,6 @@ export type UserUncheckedCreateWithoutEmailTemplatesCreatedInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -11160,6 +11276,8 @@ export type UserUncheckedCreateWithoutEmailTemplatesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -11174,7 +11292,6 @@ export type UserUncheckedCreateWithoutEmailTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -11242,10 +11359,6 @@ export type UserUpdateWithoutEmailTemplatesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -11262,6 +11375,8 @@ export type UserUpdateWithoutEmailTemplatesCreatedInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -11276,7 +11391,6 @@ export type UserUpdateWithoutEmailTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -11321,10 +11435,6 @@ export type UserUncheckedUpdateWithoutEmailTemplatesCreatedInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -11339,6 +11449,8 @@ export type UserUncheckedUpdateWithoutEmailTemplatesCreatedInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11353,7 +11465,6 @@ export type UserUncheckedUpdateWithoutEmailTemplatesCreatedInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11385,7 +11496,6 @@ export type UserCreateWithoutEmailLogsAsStudentInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -11395,6 +11505,8 @@ export type UserCreateWithoutEmailLogsAsStudentInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -11409,7 +11521,6 @@ export type UserCreateWithoutEmailLogsAsStudentInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -11443,7 +11554,6 @@ export type UserUncheckedCreateWithoutEmailLogsAsStudentInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -11451,6 +11561,8 @@ export type UserUncheckedCreateWithoutEmailLogsAsStudentInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -11465,7 +11577,6 @@ export type UserUncheckedCreateWithoutEmailLogsAsStudentInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -11505,7 +11616,6 @@ export type UserCreateWithoutEmailLogsSentByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -11515,6 +11625,8 @@ export type UserCreateWithoutEmailLogsSentByInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -11529,7 +11641,6 @@ export type UserCreateWithoutEmailLogsSentByInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -11563,7 +11674,6 @@ export type UserUncheckedCreateWithoutEmailLogsSentByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -11571,6 +11681,8 @@ export type UserUncheckedCreateWithoutEmailLogsSentByInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -11585,7 +11697,6 @@ export type UserUncheckedCreateWithoutEmailLogsSentByInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -11653,10 +11764,6 @@ export type UserUpdateWithoutEmailLogsAsStudentInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -11673,6 +11780,8 @@ export type UserUpdateWithoutEmailLogsAsStudentInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -11687,7 +11796,6 @@ export type UserUpdateWithoutEmailLogsAsStudentInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -11732,10 +11840,6 @@ export type UserUncheckedUpdateWithoutEmailLogsAsStudentInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -11750,6 +11854,8 @@ export type UserUncheckedUpdateWithoutEmailLogsAsStudentInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11764,7 +11870,6 @@ export type UserUncheckedUpdateWithoutEmailLogsAsStudentInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11824,10 +11929,6 @@ export type UserUpdateWithoutEmailLogsSentByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -11844,6 +11945,8 @@ export type UserUpdateWithoutEmailLogsSentByInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -11858,7 +11961,6 @@ export type UserUpdateWithoutEmailLogsSentByInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -11903,10 +12005,6 @@ export type UserUncheckedUpdateWithoutEmailLogsSentByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -11921,6 +12019,8 @@ export type UserUncheckedUpdateWithoutEmailLogsSentByInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11935,7 +12035,6 @@ export type UserUncheckedUpdateWithoutEmailLogsSentByInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -11967,7 +12066,6 @@ export type UserCreateWithoutAuditLogsCreatedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -11977,6 +12075,8 @@ export type UserCreateWithoutAuditLogsCreatedByInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -11991,7 +12091,6 @@ export type UserCreateWithoutAuditLogsCreatedByInput = {
   purchases?: Prisma.PurchaseCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogCreateNestedManyWithoutStudentInput;
@@ -12025,7 +12124,6 @@ export type UserUncheckedCreateWithoutAuditLogsCreatedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -12033,6 +12131,8 @@ export type UserUncheckedCreateWithoutAuditLogsCreatedByInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -12047,7 +12147,6 @@ export type UserUncheckedCreateWithoutAuditLogsCreatedByInput = {
   purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutStudentInput;
   purchasesApproved?: Prisma.PurchaseUncheckedCreateNestedManyWithoutApprovedByInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedCreateNestedManyWithoutDeliveredByInput;
-  importLogs?: Prisma.ImportLogUncheckedCreateNestedManyWithoutImportedByInput;
   createdCourses?: Prisma.CourseUncheckedCreateNestedManyWithoutCreatedByInput;
   createdSubjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutCreatedByInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedCreateNestedManyWithoutStudentInput;
@@ -12115,10 +12214,6 @@ export type UserUpdateWithoutAuditLogsCreatedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12135,6 +12230,8 @@ export type UserUpdateWithoutAuditLogsCreatedByInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -12149,7 +12246,6 @@ export type UserUpdateWithoutAuditLogsCreatedByInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -12194,10 +12290,6 @@ export type UserUncheckedUpdateWithoutAuditLogsCreatedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12212,6 +12304,8 @@ export type UserUncheckedUpdateWithoutAuditLogsCreatedByInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -12226,7 +12320,6 @@ export type UserUncheckedUpdateWithoutAuditLogsCreatedByInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -12243,7 +12336,7 @@ export type UserUncheckedUpdateWithoutAuditLogsCreatedByInput = {
   substituteExceptions?: Prisma.ScheduleExceptionUncheckedUpdateManyWithoutTeacherNestedInput;
 };
 
-export type UserCreateWithoutImportLogsInput = {
+export type UserCreateWithoutIdempotencyKeysInput = {
   id?: string;
   username: string;
   phone: string;
@@ -12258,7 +12351,6 @@ export type UserCreateWithoutImportLogsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutUsersInput;
@@ -12268,6 +12360,7 @@ export type UserCreateWithoutImportLogsInput = {
   archivedBy?: Prisma.UserCreateNestedOneWithoutArchivedUsersInput;
   archivedUsers?: Prisma.UserCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentCreateNestedManyWithoutStudentInput;
@@ -12299,7 +12392,7 @@ export type UserCreateWithoutImportLogsInput = {
   substituteExceptions?: Prisma.ScheduleExceptionCreateNestedManyWithoutTeacherInput;
 };
 
-export type UserUncheckedCreateWithoutImportLogsInput = {
+export type UserUncheckedCreateWithoutIdempotencyKeysInput = {
   id?: string;
   username: string;
   phone: string;
@@ -12316,7 +12409,6 @@ export type UserUncheckedCreateWithoutImportLogsInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -12324,6 +12416,7 @@ export type UserUncheckedCreateWithoutImportLogsInput = {
   createdUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCreatedByInput;
   archivedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutArchivedByInput;
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedCreateNestedManyWithoutUserInput;
   taughtGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutTeacherInput;
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatedByInput;
   groupMemberships?: Prisma.GroupStudentUncheckedCreateNestedManyWithoutStudentInput;
@@ -12355,35 +12448,35 @@ export type UserUncheckedCreateWithoutImportLogsInput = {
   substituteExceptions?: Prisma.ScheduleExceptionUncheckedCreateNestedManyWithoutTeacherInput;
 };
 
-export type UserCreateOrConnectWithoutImportLogsInput = {
+export type UserCreateOrConnectWithoutIdempotencyKeysInput = {
   where: Prisma.UserWhereUniqueInput;
   create: Prisma.XOR<
-    Prisma.UserCreateWithoutImportLogsInput,
-    Prisma.UserUncheckedCreateWithoutImportLogsInput
+    Prisma.UserCreateWithoutIdempotencyKeysInput,
+    Prisma.UserUncheckedCreateWithoutIdempotencyKeysInput
   >;
 };
 
-export type UserUpsertWithoutImportLogsInput = {
+export type UserUpsertWithoutIdempotencyKeysInput = {
   update: Prisma.XOR<
-    Prisma.UserUpdateWithoutImportLogsInput,
-    Prisma.UserUncheckedUpdateWithoutImportLogsInput
+    Prisma.UserUpdateWithoutIdempotencyKeysInput,
+    Prisma.UserUncheckedUpdateWithoutIdempotencyKeysInput
   >;
   create: Prisma.XOR<
-    Prisma.UserCreateWithoutImportLogsInput,
-    Prisma.UserUncheckedCreateWithoutImportLogsInput
+    Prisma.UserCreateWithoutIdempotencyKeysInput,
+    Prisma.UserUncheckedCreateWithoutIdempotencyKeysInput
   >;
   where?: Prisma.UserWhereInput;
 };
 
-export type UserUpdateToOneWithWhereWithoutImportLogsInput = {
+export type UserUpdateToOneWithWhereWithoutIdempotencyKeysInput = {
   where?: Prisma.UserWhereInput;
   data: Prisma.XOR<
-    Prisma.UserUpdateWithoutImportLogsInput,
-    Prisma.UserUncheckedUpdateWithoutImportLogsInput
+    Prisma.UserUpdateWithoutIdempotencyKeysInput,
+    Prisma.UserUncheckedUpdateWithoutIdempotencyKeysInput
   >;
 };
 
-export type UserUpdateWithoutImportLogsInput = {
+export type UserUpdateWithoutIdempotencyKeysInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   phone?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -12406,10 +12499,6 @@ export type UserUpdateWithoutImportLogsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12426,6 +12515,7 @@ export type UserUpdateWithoutImportLogsInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -12457,7 +12547,7 @@ export type UserUpdateWithoutImportLogsInput = {
   substituteExceptions?: Prisma.ScheduleExceptionUpdateManyWithoutTeacherNestedInput;
 };
 
-export type UserUncheckedUpdateWithoutImportLogsInput = {
+export type UserUncheckedUpdateWithoutIdempotencyKeysInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   phone?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -12485,10 +12575,6 @@ export type UserUncheckedUpdateWithoutImportLogsInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12503,6 +12589,7 @@ export type UserUncheckedUpdateWithoutImportLogsInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -12551,7 +12638,6 @@ export type UserCreateManyTenantInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   roleId: string;
@@ -12580,10 +12666,6 @@ export type UserUpdateWithoutTenantInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12599,6 +12681,8 @@ export type UserUpdateWithoutTenantInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -12613,7 +12697,6 @@ export type UserUpdateWithoutTenantInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -12659,10 +12742,6 @@ export type UserUncheckedUpdateWithoutTenantInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12676,6 +12755,8 @@ export type UserUncheckedUpdateWithoutTenantInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -12690,7 +12771,6 @@ export type UserUncheckedUpdateWithoutTenantInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -12736,10 +12816,6 @@ export type UserUncheckedUpdateManyWithoutTenantInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12769,7 +12845,6 @@ export type UserCreateManyRoleInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -12798,10 +12873,6 @@ export type UserUpdateWithoutRoleInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12817,6 +12888,8 @@ export type UserUpdateWithoutRoleInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -12831,7 +12904,6 @@ export type UserUpdateWithoutRoleInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -12877,10 +12949,6 @@ export type UserUncheckedUpdateWithoutRoleInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12894,6 +12962,8 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -12908,7 +12978,6 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -12954,10 +13023,6 @@ export type UserUncheckedUpdateManyWithoutRoleInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -12986,7 +13051,6 @@ export type UserCreateManyCreatedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -13009,7 +13073,6 @@ export type UserCreateManyArchivedByInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  refreshTokenHash?: string | null;
   passwordResetToken?: string | null;
   passwordResetExpiry?: Date | string | null;
   tenantId: string;
@@ -13039,10 +13102,6 @@ export type UserUpdateWithoutCreatedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -13058,6 +13117,8 @@ export type UserUpdateWithoutCreatedByInput = {
   archivedBy?: Prisma.UserUpdateOneWithoutArchivedUsersNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -13072,7 +13133,6 @@ export type UserUpdateWithoutCreatedByInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -13117,10 +13177,6 @@ export type UserUncheckedUpdateWithoutCreatedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -13135,6 +13191,8 @@ export type UserUncheckedUpdateWithoutCreatedByInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -13149,7 +13207,6 @@ export type UserUncheckedUpdateWithoutCreatedByInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -13194,10 +13251,6 @@ export type UserUncheckedUpdateManyWithoutCreatedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -13234,10 +13287,6 @@ export type UserUpdateWithoutArchivedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -13253,6 +13302,8 @@ export type UserUpdateWithoutArchivedByInput = {
   createdUsers?: Prisma.UserUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUpdateManyWithoutStudentNestedInput;
@@ -13267,7 +13318,6 @@ export type UserUpdateWithoutArchivedByInput = {
   purchases?: Prisma.PurchaseUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUpdateManyWithoutStudentNestedInput;
@@ -13309,10 +13359,6 @@ export type UserUncheckedUpdateWithoutArchivedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -13327,6 +13373,8 @@ export type UserUncheckedUpdateWithoutArchivedByInput = {
   createdUsers?: Prisma.UserUncheckedUpdateManyWithoutCreatedByNestedInput;
   archivedUsers?: Prisma.UserUncheckedUpdateManyWithoutArchivedByNestedInput;
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput;
+  refreshSessions?: Prisma.RefreshSessionUncheckedUpdateManyWithoutUserNestedInput;
+  idempotencyKeys?: Prisma.IdempotencyKeyUncheckedUpdateManyWithoutUserNestedInput;
   taughtGroups?: Prisma.GroupUncheckedUpdateManyWithoutTeacherNestedInput;
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatedByNestedInput;
   groupMemberships?: Prisma.GroupStudentUncheckedUpdateManyWithoutStudentNestedInput;
@@ -13341,7 +13389,6 @@ export type UserUncheckedUpdateWithoutArchivedByInput = {
   purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutStudentNestedInput;
   purchasesApproved?: Prisma.PurchaseUncheckedUpdateManyWithoutApprovedByNestedInput;
   purchasesDelivered?: Prisma.PurchaseUncheckedUpdateManyWithoutDeliveredByNestedInput;
-  importLogs?: Prisma.ImportLogUncheckedUpdateManyWithoutImportedByNestedInput;
   createdCourses?: Prisma.CourseUncheckedUpdateManyWithoutCreatedByNestedInput;
   createdSubjects?: Prisma.SubjectUncheckedUpdateManyWithoutCreatedByNestedInput;
   smsLogsAsStudent?: Prisma.SmsLogUncheckedUpdateManyWithoutStudentNestedInput;
@@ -13383,10 +13430,6 @@ export type UserUncheckedUpdateManyWithoutArchivedByInput = {
     | Date
     | string
     | null;
-  refreshTokenHash?:
-    | Prisma.NullableStringFieldUpdateOperationsInput
-    | string
-    | null;
   passwordResetToken?:
     | Prisma.NullableStringFieldUpdateOperationsInput
     | string
@@ -13407,6 +13450,8 @@ export type UserUncheckedUpdateManyWithoutArchivedByInput = {
 export type UserCountOutputType = {
   createdUsers: number;
   archivedUsers: number;
+  refreshSessions: number;
+  idempotencyKeys: number;
   taughtGroups: number;
   createdGroups: number;
   groupMemberships: number;
@@ -13421,7 +13466,6 @@ export type UserCountOutputType = {
   purchases: number;
   purchasesApproved: number;
   purchasesDelivered: number;
-  importLogs: number;
   createdCourses: number;
   createdSubjects: number;
   smsLogsAsStudent: number;
@@ -13445,6 +13489,8 @@ export type UserCountOutputTypeSelect<
 > = {
   createdUsers?: boolean | UserCountOutputTypeCountCreatedUsersArgs;
   archivedUsers?: boolean | UserCountOutputTypeCountArchivedUsersArgs;
+  refreshSessions?: boolean | UserCountOutputTypeCountRefreshSessionsArgs;
+  idempotencyKeys?: boolean | UserCountOutputTypeCountIdempotencyKeysArgs;
   taughtGroups?: boolean | UserCountOutputTypeCountTaughtGroupsArgs;
   createdGroups?: boolean | UserCountOutputTypeCountCreatedGroupsArgs;
   groupMemberships?: boolean | UserCountOutputTypeCountGroupMembershipsArgs;
@@ -13465,7 +13511,6 @@ export type UserCountOutputTypeSelect<
   purchases?: boolean | UserCountOutputTypeCountPurchasesArgs;
   purchasesApproved?: boolean | UserCountOutputTypeCountPurchasesApprovedArgs;
   purchasesDelivered?: boolean | UserCountOutputTypeCountPurchasesDeliveredArgs;
-  importLogs?: boolean | UserCountOutputTypeCountImportLogsArgs;
   createdCourses?: boolean | UserCountOutputTypeCountCreatedCoursesArgs;
   createdSubjects?: boolean | UserCountOutputTypeCountCreatedSubjectsArgs;
   smsLogsAsStudent?: boolean | UserCountOutputTypeCountSmsLogsAsStudentArgs;
@@ -13524,6 +13569,26 @@ export type UserCountOutputTypeCountArchivedUsersArgs<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   where?: Prisma.UserWhereInput;
+};
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRefreshSessionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.RefreshSessionWhereInput;
+};
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountIdempotencyKeysArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.IdempotencyKeyWhereInput;
 };
 
 /**
@@ -13664,16 +13729,6 @@ export type UserCountOutputTypeCountPurchasesDeliveredArgs<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   where?: Prisma.PurchaseWhereInput;
-};
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountImportLogsArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  where?: Prisma.ImportLogWhereInput;
 };
 
 /**
@@ -13847,7 +13902,6 @@ export type UserSelect<
     createdAt?: boolean;
     updatedAt?: boolean;
     deletedAt?: boolean;
-    refreshTokenHash?: boolean;
     passwordResetToken?: boolean;
     passwordResetExpiry?: boolean;
     tenantId?: boolean;
@@ -13859,6 +13913,8 @@ export type UserSelect<
     archivedBy?: boolean | Prisma.User$archivedByArgs<ExtArgs>;
     archivedUsers?: boolean | Prisma.User$archivedUsersArgs<ExtArgs>;
     wallet?: boolean | Prisma.User$walletArgs<ExtArgs>;
+    refreshSessions?: boolean | Prisma.User$refreshSessionsArgs<ExtArgs>;
+    idempotencyKeys?: boolean | Prisma.User$idempotencyKeysArgs<ExtArgs>;
     taughtGroups?: boolean | Prisma.User$taughtGroupsArgs<ExtArgs>;
     createdGroups?: boolean | Prisma.User$createdGroupsArgs<ExtArgs>;
     groupMemberships?: boolean | Prisma.User$groupMembershipsArgs<ExtArgs>;
@@ -13879,7 +13935,6 @@ export type UserSelect<
     purchases?: boolean | Prisma.User$purchasesArgs<ExtArgs>;
     purchasesApproved?: boolean | Prisma.User$purchasesApprovedArgs<ExtArgs>;
     purchasesDelivered?: boolean | Prisma.User$purchasesDeliveredArgs<ExtArgs>;
-    importLogs?: boolean | Prisma.User$importLogsArgs<ExtArgs>;
     createdCourses?: boolean | Prisma.User$createdCoursesArgs<ExtArgs>;
     createdSubjects?: boolean | Prisma.User$createdSubjectsArgs<ExtArgs>;
     smsLogsAsStudent?: boolean | Prisma.User$smsLogsAsStudentArgs<ExtArgs>;
@@ -13931,7 +13986,6 @@ export type UserSelectCreateManyAndReturn<
     createdAt?: boolean;
     updatedAt?: boolean;
     deletedAt?: boolean;
-    refreshTokenHash?: boolean;
     passwordResetToken?: boolean;
     passwordResetExpiry?: boolean;
     tenantId?: boolean;
@@ -13965,7 +14019,6 @@ export type UserSelectUpdateManyAndReturn<
     createdAt?: boolean;
     updatedAt?: boolean;
     deletedAt?: boolean;
-    refreshTokenHash?: boolean;
     passwordResetToken?: boolean;
     passwordResetExpiry?: boolean;
     tenantId?: boolean;
@@ -13995,7 +14048,6 @@ export type UserSelectScalar = {
   createdAt?: boolean;
   updatedAt?: boolean;
   deletedAt?: boolean;
-  refreshTokenHash?: boolean;
   passwordResetToken?: boolean;
   passwordResetExpiry?: boolean;
   tenantId?: boolean;
@@ -14022,7 +14074,6 @@ export type UserOmit<
   | 'createdAt'
   | 'updatedAt'
   | 'deletedAt'
-  | 'refreshTokenHash'
   | 'passwordResetToken'
   | 'passwordResetExpiry'
   | 'tenantId'
@@ -14040,6 +14091,8 @@ export type UserInclude<
   archivedBy?: boolean | Prisma.User$archivedByArgs<ExtArgs>;
   archivedUsers?: boolean | Prisma.User$archivedUsersArgs<ExtArgs>;
   wallet?: boolean | Prisma.User$walletArgs<ExtArgs>;
+  refreshSessions?: boolean | Prisma.User$refreshSessionsArgs<ExtArgs>;
+  idempotencyKeys?: boolean | Prisma.User$idempotencyKeysArgs<ExtArgs>;
   taughtGroups?: boolean | Prisma.User$taughtGroupsArgs<ExtArgs>;
   createdGroups?: boolean | Prisma.User$createdGroupsArgs<ExtArgs>;
   groupMemberships?: boolean | Prisma.User$groupMembershipsArgs<ExtArgs>;
@@ -14058,7 +14111,6 @@ export type UserInclude<
   purchases?: boolean | Prisma.User$purchasesArgs<ExtArgs>;
   purchasesApproved?: boolean | Prisma.User$purchasesApprovedArgs<ExtArgs>;
   purchasesDelivered?: boolean | Prisma.User$purchasesDeliveredArgs<ExtArgs>;
-  importLogs?: boolean | Prisma.User$importLogsArgs<ExtArgs>;
   createdCourses?: boolean | Prisma.User$createdCoursesArgs<ExtArgs>;
   createdSubjects?: boolean | Prisma.User$createdSubjectsArgs<ExtArgs>;
   smsLogsAsStudent?: boolean | Prisma.User$smsLogsAsStudentArgs<ExtArgs>;
@@ -14116,6 +14168,8 @@ export type $UserPayload<
     archivedBy: Prisma.$UserPayload<ExtArgs> | null;
     archivedUsers: Prisma.$UserPayload<ExtArgs>[];
     wallet: Prisma.$WalletPayload<ExtArgs> | null;
+    refreshSessions: Prisma.$RefreshSessionPayload<ExtArgs>[];
+    idempotencyKeys: Prisma.$IdempotencyKeyPayload<ExtArgs>[];
     taughtGroups: Prisma.$GroupPayload<ExtArgs>[];
     createdGroups: Prisma.$GroupPayload<ExtArgs>[];
     groupMemberships: Prisma.$GroupStudentPayload<ExtArgs>[];
@@ -14130,7 +14184,6 @@ export type $UserPayload<
     purchases: Prisma.$PurchasePayload<ExtArgs>[];
     purchasesApproved: Prisma.$PurchasePayload<ExtArgs>[];
     purchasesDelivered: Prisma.$PurchasePayload<ExtArgs>[];
-    importLogs: Prisma.$ImportLogPayload<ExtArgs>[];
     createdCourses: Prisma.$CoursePayload<ExtArgs>[];
     createdSubjects: Prisma.$SubjectPayload<ExtArgs>[];
     smsLogsAsStudent: Prisma.$SmsLogPayload<ExtArgs>[];
@@ -14165,7 +14218,6 @@ export type $UserPayload<
       createdAt: Date;
       updatedAt: Date;
       deletedAt: Date | null;
-      refreshTokenHash: string | null;
       passwordResetToken: string | null;
       passwordResetExpiry: Date | null;
       tenantId: string;
@@ -14809,6 +14861,28 @@ export interface Prisma__UserClient<
     ExtArgs,
     GlobalOmitOptions
   >;
+  refreshSessions<T extends Prisma.User$refreshSessionsArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.User$refreshSessionsArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$RefreshSessionPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  idempotencyKeys<T extends Prisma.User$idempotencyKeysArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.User$idempotencyKeysArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$IdempotencyKeyPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
   taughtGroups<T extends Prisma.User$taughtGroupsArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.User$taughtGroupsArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
@@ -14969,17 +15043,6 @@ export interface Prisma__UserClient<
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$PurchasePayload<ExtArgs>,
-        T,
-        'findMany',
-        GlobalOmitOptions
-      >
-    | Null
-  >;
-  importLogs<T extends Prisma.User$importLogsArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.User$importLogsArgs<ExtArgs>>,
-  ): Prisma.PrismaPromise<
-    | runtime.Types.Result.GetResult<
-        Prisma.$ImportLogPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -15225,7 +15288,6 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<'User', 'DateTime'>;
   readonly updatedAt: Prisma.FieldRef<'User', 'DateTime'>;
   readonly deletedAt: Prisma.FieldRef<'User', 'DateTime'>;
-  readonly refreshTokenHash: Prisma.FieldRef<'User', 'String'>;
   readonly passwordResetToken: Prisma.FieldRef<'User', 'String'>;
   readonly passwordResetExpiry: Prisma.FieldRef<'User', 'DateTime'>;
   readonly tenantId: Prisma.FieldRef<'User', 'String'>;
@@ -15808,6 +15870,68 @@ export type User$walletArgs<
 };
 
 /**
+ * User.refreshSessions
+ */
+export type User$refreshSessionsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the RefreshSession
+   */
+  select?: Prisma.RefreshSessionSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the RefreshSession
+   */
+  omit?: Prisma.RefreshSessionOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefreshSessionInclude<ExtArgs> | null;
+  where?: Prisma.RefreshSessionWhereInput;
+  orderBy?:
+    | Prisma.RefreshSessionOrderByWithRelationInput
+    | Prisma.RefreshSessionOrderByWithRelationInput[];
+  cursor?: Prisma.RefreshSessionWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.RefreshSessionScalarFieldEnum
+    | Prisma.RefreshSessionScalarFieldEnum[];
+};
+
+/**
+ * User.idempotencyKeys
+ */
+export type User$idempotencyKeysArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the IdempotencyKey
+   */
+  select?: Prisma.IdempotencyKeySelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the IdempotencyKey
+   */
+  omit?: Prisma.IdempotencyKeyOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.IdempotencyKeyInclude<ExtArgs> | null;
+  where?: Prisma.IdempotencyKeyWhereInput;
+  orderBy?:
+    | Prisma.IdempotencyKeyOrderByWithRelationInput
+    | Prisma.IdempotencyKeyOrderByWithRelationInput[];
+  cursor?: Prisma.IdempotencyKeyWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.IdempotencyKeyScalarFieldEnum
+    | Prisma.IdempotencyKeyScalarFieldEnum[];
+};
+
+/**
  * User.taughtGroups
  */
 export type User$taughtGroupsArgs<
@@ -16223,37 +16347,6 @@ export type User$purchasesDeliveredArgs<
   take?: number;
   skip?: number;
   distinct?: Prisma.PurchaseScalarFieldEnum | Prisma.PurchaseScalarFieldEnum[];
-};
-
-/**
- * User.importLogs
- */
-export type User$importLogsArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  /**
-   * Select specific fields to fetch from the ImportLog
-   */
-  select?: Prisma.ImportLogSelect<ExtArgs> | null;
-  /**
-   * Omit specific fields from the ImportLog
-   */
-  omit?: Prisma.ImportLogOmit<ExtArgs> | null;
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ImportLogInclude<ExtArgs> | null;
-  where?: Prisma.ImportLogWhereInput;
-  orderBy?:
-    | Prisma.ImportLogOrderByWithRelationInput
-    | Prisma.ImportLogOrderByWithRelationInput[];
-  cursor?: Prisma.ImportLogWhereUniqueInput;
-  take?: number;
-  skip?: number;
-  distinct?:
-    | Prisma.ImportLogScalarFieldEnum
-    | Prisma.ImportLogScalarFieldEnum[];
 };
 
 /**

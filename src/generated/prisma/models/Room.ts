@@ -233,17 +233,18 @@ export type RoomGroupByOutputType = {
   _max: RoomMaxAggregateOutputType | null;
 };
 
-type GetRoomGroupByPayload<T extends RoomGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<RoomGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof RoomGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], RoomGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], RoomGroupByOutputType[P]>;
-    }
-  >
->;
+export type GetRoomGroupByPayload<T extends RoomGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<RoomGroupByOutputType, T['by']> & {
+        [P in keyof T & keyof RoomGroupByOutputType]: P extends '_count'
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], RoomGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], RoomGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type RoomWhereInput = {
   AND?: Prisma.RoomWhereInput | Prisma.RoomWhereInput[];

@@ -4,24 +4,17 @@ import {
   IsEnum,
   IsBoolean,
   IsString,
-  IsUUID,
+  MaxLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { RoleScope } from 'src/generated/prisma/enums';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 
-interface TransformParams {
-  value: unknown;
-}
-
-export class QueryRoleDto {
-  @ApiPropertyOptional({ description: 'Faqat super_admin uchun' })
-  @IsOptional()
-  @IsUUID()
-  tenantId?: string;
-
+export class QueryRoleDto extends PaginationQueryDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   search?: string;
 
   @ApiPropertyOptional({ enum: RoleScope })
@@ -31,17 +24,7 @@ export class QueryRoleDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @Transform(({ value }) => value === 'true')
+  @Transform(({ value }) => value === 'true' || value === true)
   @IsBoolean()
   isActive?: boolean;
-
-  @ApiPropertyOptional({ default: 1 })
-  @IsOptional()
-  @Transform(({ value }: TransformParams) => parseInt(String(value), 10))
-  page?: number = 1;
-
-  @ApiPropertyOptional({ default: 20 })
-  @IsOptional()
-  @Transform(({ value }: TransformParams) => parseInt(String(value), 10))
-  limit?: number = 20;
 }

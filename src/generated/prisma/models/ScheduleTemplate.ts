@@ -252,19 +252,20 @@ export type ScheduleTemplateGroupByOutputType = {
   _max: ScheduleTemplateMaxAggregateOutputType | null;
 };
 
-type GetScheduleTemplateGroupByPayload<T extends ScheduleTemplateGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<ScheduleTemplateGroupByOutputType, T['by']> & {
-        [P in keyof T &
-          keyof ScheduleTemplateGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], ScheduleTemplateGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], ScheduleTemplateGroupByOutputType[P]>;
-      }
-    >
-  >;
+export type GetScheduleTemplateGroupByPayload<
+  T extends ScheduleTemplateGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<ScheduleTemplateGroupByOutputType, T['by']> & {
+      [P in keyof T &
+        keyof ScheduleTemplateGroupByOutputType]: P extends '_count'
+        ? T[P] extends boolean
+          ? number
+          : Prisma.GetScalarType<T[P], ScheduleTemplateGroupByOutputType[P]>
+        : Prisma.GetScalarType<T[P], ScheduleTemplateGroupByOutputType[P]>;
+    }
+  >
+>;
 
 export type ScheduleTemplateWhereInput = {
   AND?: Prisma.ScheduleTemplateWhereInput | Prisma.ScheduleTemplateWhereInput[];

@@ -21,8 +21,11 @@ import {
 } from 'src/generated/prisma/enums';
 import { CoinTransactionsService } from 'src/coin-transaction/coin-transaction.service';
 import { assertTeacherCoinLimit } from 'src/common/utils/teacher-coin-limit';
+import { ACTIVE_TEACHING_USER_WHERE } from 'src/common/utils/user-role-checks';
 import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effective-transaction';
-import { Prisma } from 'src/generated/prisma/client';
+import { AuditActionType, Prisma } from 'src/generated/prisma/client';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
+import { AUDIT_ENTITY } from 'src/audit-log/utils/audit-entry';
 import { SessionCoinItem } from 'src/common/types';
 import {
   addDays,
@@ -41,6 +44,7 @@ import {
   assertNoSessionConflict,
   lockTenantSchedule,
 } from './utils/session-conflicts';
+import { recordChanged } from './utils/attendance-record';
 import {
   ALL_SESSION_MANAGED_SOURCE_TYPES,
   ATTENDANCE_EDIT_WINDOW_DAYS,
@@ -125,6 +129,7 @@ export class SessionsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly coinTrxService: CoinTransactionsService,
+    private readonly audit: AuditLogService,
   ) {}
 
   // 0. SESSIYA TURLARI VA ULARNING TEKSHIRISH REJIMLARI (frontend formasi uchun)
@@ -166,9 +171,7 @@ export class SessionsService {
             where: {
               id: refs.teacherId,
               tenantId,
-              isDeleted: false,
-              isActive: true,
-              role: { name: { in: ['teacher', 'admin'] } },
+              ...ACTIVE_TEACHING_USER_WHERE,
             },
             select: { id: true },
           })
@@ -214,7 +217,7 @@ export class SessionsService {
       // eski sanalarga ko'plab dars yaratib coin "ishlab chiqarish"ning oldini olish
       const tz = await getTenantTimezone(this.prisma, tenantId);
       const earliest = addDays(nowInTimeZone(tz).date, -TEACHER_BACKDATE_DAYS);
-      if (dto.sessionDate.slice(0, 10) < earliest) {
+      if (dto.sessionDate < earliest) {
         throw codedError(
           HttpStatus.FORBIDDEN,
           `O'qituvchi ${TEACHER_BACKDATE_DAYS} kundan eski sanaga dars qo'sha olmaydi (eng erta: ${earliest}). Administratorga murojaat qiling`,
@@ -246,7 +249,8 @@ export class SessionsService {
       );
     }
 
-    const sessionDate = new Date(dto.sessionDate.slice(0, 10));
+    // DTO sanani 'YYYY-MM-DD' ga keltiradi (IsDateOnly) — tekshiruv va saqlash bir xil sanada
+    const sessionDate = new Date(dto.sessionDate);
 
     return this.prisma.$transaction(async (tx) => {
       // Qulf ostida: parallel so'rovlar bir xil slotga ikkita dars yarata olmaydi
@@ -284,7 +288,7 @@ export class SessionsService {
 
       return tx.session.create({
         data: {
-          sessionDate: new Date(dto.sessionDate),
+          sessionDate,
           startTime: dto.startTime,
           endTime: dto.endTime,
           sessionType: dto.sessionType,
@@ -527,14 +531,38 @@ export class SessionsService {
         SESSION_ERROR_CODES.SESSION_LOCKED,
       );
 
-    return this.prisma.session.update({
-      where: { id },
-      data: { isLocked: true, lockedAt: new Date(), lockedById: requesterId },
-      select: { id: true, isLocked: true, lockedAt: true },
+    const [locked] = await this.prisma.$transaction([
+      this.prisma.session.update({
+        where: { id },
+        data: { isLocked: true, lockedAt: new Date(), lockedById: requesterId },
+        select: { id: true, isLocked: true, lockedAt: true },
+      }),
+      this.sessionAudit(tenantId, requesterId, id, { isLocked: true }),
+    ]);
+    return locked;
+  }
+
+  // Qulflash/qulfdan chiqarish/o'chirish — yo'qlama va coin tahririga ta'sir qiladi
+  private sessionAudit(
+    tenantId: string,
+    actorId: string,
+    sessionId: string,
+    changes: Prisma.InputJsonValue,
+    action: AuditActionType = AuditActionType.update,
+  ) {
+    return this.prisma.auditLog.create({
+      data: this.audit.data({
+        tenantId,
+        actorId,
+        action,
+        entityType: AUDIT_ENTITY.session,
+        entityId: sessionId,
+        changes,
+      }),
     });
   }
 
-  async unlock(id: string, tenantId: string) {
+  async unlock(id: string, tenantId: string, actorId: string) {
     const session = await this.prisma.session.findFirst({
       where: { id, tenantId, isDeleted: false },
     });
@@ -546,11 +574,15 @@ export class SessionsService {
         'SESSION_NOT_LOCKED',
       );
 
-    return this.prisma.session.update({
-      where: { id },
-      data: { isLocked: false, lockedAt: null, lockedById: null },
-      select: { id: true, isLocked: true },
-    });
+    const [unlocked] = await this.prisma.$transaction([
+      this.prisma.session.update({
+        where: { id },
+        data: { isLocked: false, lockedAt: null, lockedById: null },
+        select: { id: true, isLocked: true },
+      }),
+      this.sessionAudit(tenantId, actorId, id, { isLocked: false }),
+    ]);
+    return unlocked;
   }
 
   // 4. DARSLAR RO'YXATINI OLISH
@@ -669,10 +701,7 @@ export class SessionsService {
     const { page = 1, limit = 20, groupId, from, to } = query;
     const skip = (page - 1) * limit;
 
-    const sessionFilter: Prisma.SessionWhereInput = {
-      tenantId,
-      isDeleted: false,
-    };
+    const sessionFilter: Prisma.SessionWhereInput = { isDeleted: false };
 
     if (groupId) sessionFilter.groupId = groupId;
 
@@ -683,8 +712,10 @@ export class SessionsService {
       };
     }
 
+    // Tenant filtri yozuvning o'z tenantId'si bo'yicha (session join orqali emas)
     const where: Prisma.AttendanceRecordWhereInput = {
       studentId,
+      tenantId,
       isDeleted: false,
       session: sessionFilter,
     };
@@ -842,7 +873,12 @@ export class SessionsService {
     const [members, existing] = await Promise.all([
       this.membersAtSessionDate(session, studentIds),
       this.prisma.attendanceRecord.findMany({
-        where: { sessionId: session.id, studentId: { in: studentIds } },
+        where: {
+          sessionId: session.id,
+          tenantId: session.tenantId,
+          studentId: { in: studentIds },
+          student: { tenantId: session.tenantId },
+        },
         select: { studentId: true },
       }),
     ]);
@@ -879,6 +915,13 @@ export class SessionsService {
       where: {
         groupId: session.groupId,
         ...(studentIds ? { studentId: { in: studentIds } } : {}),
+        // Ikki tomonlama himoya: a'zo shu tenantdagi student bo'lishi shart — guruhga
+        // noto'g'ri qo'shilgan begona user yo'qlamaga va coinga tushmaydi
+        student: {
+          tenantId: session.tenantId,
+          isDeleted: false,
+          role: { name: 'student' },
+        },
         OR: [{ isDeleted: false }, { leftAt: { not: null } }],
       },
       select: {
@@ -1153,39 +1196,88 @@ export class SessionsService {
     return this.prisma.$transaction(async (tx) => {
       await this.lockCheckableSession(tx, sessionId, mode);
 
+      await this.saveRecords(tx, sessionId, tenantId, recordedById, ordered);
+
+      // Butun guruh coinlari bitta to'plamda (so'rovlar soni o'quvchilar soniga bog'liq emas)
+      const results = await this.coinTrxService.replaceSessionTransactionsBulk(
+        tx,
+        {
+          tenantId,
+          sessionId,
+          sourceTypes: SESSION_MANAGED_SOURCE_TYPES[mode],
+          students: ordered.map((p) => ({
+            studentId: p.studentId,
+            items: p.items,
+          })),
+          actorId: recordedById,
+        },
+      );
+
       const coinsSkippedFor: CoinSkippedItem[] = [];
       for (const item of ordered) {
-        await tx.attendanceRecord.upsert({
-          where: {
-            sessionId_studentId: { sessionId, studentId: item.studentId },
-          },
-          update: { ...item.fields, recordedById, isDeleted: false },
-          create: {
-            ...item.fields,
-            sessionId,
-            tenantId,
-            studentId: item.studentId,
-            recordedById,
-          },
-        });
-
-        const result = await this.coinTrxService.replaceSessionTransactions(
-          tx,
-          {
-            tenantId,
-            sessionId,
-            studentId: item.studentId,
-            sourceTypes: SESSION_MANAGED_SOURCE_TYPES[mode],
-            items: item.items,
-            actorId: recordedById,
-          },
+        this.collectSkipped(
+          item.studentId,
+          results.get(item.studentId)!,
+          coinsSkippedFor,
         );
-        this.collectSkipped(item.studentId, result, coinsSkippedFor);
       }
 
       await this.markChecked(tx, sessionId);
       return coinsSkippedFor;
     }, CHECK_TX_OPTIONS);
+  }
+
+  /**
+   * Yo'qlama/natija yozuvlarini saqlaydi: yangilari — bitta createMany, mavjudlari — faqat
+   * qiymati o'zgarganlari yangilanadi (qayta saqlashda o'zgarmagan o'quvchilarga so'rov yo'q).
+   * Sessiya qatori qulflangan — parallel saqlash bu yerga navbat bilan keladi.
+   */
+  private async saveRecords(
+    tx: Prisma.TransactionClient,
+    sessionId: string,
+    tenantId: string,
+    recordedById: string,
+    plan: CheckPlanItem[],
+  ) {
+    const existing = await tx.attendanceRecord.findMany({
+      where: { sessionId, studentId: { in: plan.map((p) => p.studentId) } },
+      select: {
+        id: true,
+        studentId: true,
+        isPresent: true,
+        status: true,
+        homeworkDone: true,
+        score: true,
+        note: true,
+        isDeleted: true,
+      },
+    });
+    const byStudent = new Map(existing.map((r) => [r.studentId, r]));
+
+    const toCreate: Prisma.AttendanceRecordCreateManyInput[] = [];
+    for (const item of plan) {
+      const current = byStudent.get(item.studentId);
+      if (!current) {
+        toCreate.push({
+          ...item.fields,
+          sessionId,
+          tenantId,
+          studentId: item.studentId,
+          recordedById,
+        });
+        continue;
+      }
+      if (!current.isDeleted && !recordChanged(current, item.fields)) continue;
+
+      await tx.attendanceRecord.update({
+        where: { id: current.id },
+        data: { ...item.fields, recordedById, isDeleted: false },
+      });
+    }
+
+    if (toCreate.length) {
+      await tx.attendanceRecord.createMany({ data: toCreate });
+    }
   }
 
   // isChecked + birinchi saqlash vaqti (checkedAt faqat birinchi marta yoziladi)
@@ -1229,30 +1321,17 @@ export class SessionsService {
     requesterRole?: string,
     requesterId?: string,
   ) {
+    // Sessiya bir marta o'qiladi (ruxsat tekshiruvi bilan) — a'zolar va yozuvlar shundan
     const session = await this.findOne(
       sessionId,
       tenantId,
       requesterRole,
       requesterId,
     );
-    const raw = await this.prisma.session.findUniqueOrThrow({
-      where: { id: sessionId },
-      select: {
-        groupId: true,
-        tenantId: true,
-        sessionDate: true,
-        evaluationMode: true,
-      },
-    });
 
     const [members, records] = await Promise.all([
-      this.membersAtSessionDate(raw),
-      this.getAttendanceBySession(
-        sessionId,
-        tenantId,
-        requesterRole,
-        requesterId,
-      ),
+      this.membersAtSessionDate(session),
+      this.recordsWithCoins(session.id, session.evaluationMode),
     ]);
     const recordByStudent = new Map(records.map((r) => [r.studentId, r]));
 
@@ -1316,8 +1395,8 @@ export class SessionsService {
     return {
       session: {
         id: session.id,
-        sessionDate: raw.sessionDate,
-        evaluationMode: raw.evaluationMode,
+        sessionDate: session.sessionDate,
+        evaluationMode: session.evaluationMode,
       },
       students,
     };
@@ -1336,7 +1415,14 @@ export class SessionsService {
       requesterRole,
       requesterId,
     );
+    return this.recordsWithCoins(session.id, session.evaluationMode);
+  }
 
+  // Sessiya yozuvlari + shu tekshiruv orqali har bir o'quvchiga berilgan sof coin
+  private async recordsWithCoins(
+    sessionId: string,
+    evaluationMode: EvaluationMode,
+  ) {
     const [records, transactions] = await Promise.all([
       this.prisma.attendanceRecord.findMany({
         where: { sessionId, isDeleted: false },
@@ -1349,7 +1435,7 @@ export class SessionsService {
           sessionId,
           ...EFFECTIVE_COIN_TX_WHERE,
           sourceType: {
-            in: SESSION_MANAGED_SOURCE_TYPES[session.evaluationMode],
+            in: SESSION_MANAGED_SOURCE_TYPES[evaluationMode],
           },
         },
         select: { studentId: true, amount: true, direction: true },
@@ -1414,6 +1500,24 @@ export class SessionsService {
         where: { id },
         data: { isDeleted: true, deletedAt: new Date() },
       });
+
+      if (actorId) {
+        await tx.auditLog.create({
+          data: this.audit.data({
+            tenantId,
+            actorId,
+            action: AuditActionType.delete,
+            entityType: AUDIT_ENTITY.session,
+            entityId: id,
+            changes: {
+              keepCoins,
+              reversedTransactions,
+              sessionDate: toDateString(deleted.sessionDate),
+              groupId: deleted.groupId,
+            },
+          }),
+        });
+      }
 
       return { ...deleted, reversedTransactions };
     });

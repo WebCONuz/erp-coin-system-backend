@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { mkdir, writeFile } from 'fs/promises';
-import { join } from 'path';
+import { mkdir, unlink, writeFile } from 'fs/promises';
+import { join, relative, resolve, sep } from 'path';
 
 // Yuklangan fayllar shu papkadan `/uploads` orqali statik beriladi (main.ts)
 export const UPLOADS_ROOT = join(process.cwd(), 'uploads');
@@ -74,4 +74,31 @@ export async function saveImage(
   await writeFile(join(dir, filename), file.buffer);
 
   return `/uploads/${subdir}/${filename}`;
+}
+
+/**
+ * `/uploads/...` URL'idan diskdagi yo'l — faqat UPLOADS_ROOT ichida bo'lsa (`..` bilan
+ * tashqariga chiqish, tashqi https URL yoki boshqa qiymat — null).
+ */
+export function uploadedFilePath(
+  url: string | null | undefined,
+): string | null {
+  if (!url || !url.startsWith('/uploads/')) return null;
+  const path = resolve(UPLOADS_ROOT, url.slice('/uploads/'.length));
+  const rel = relative(UPLOADS_ROOT, path);
+  if (!rel || rel.startsWith('..') || rel.includes(`..${sep}`)) return null;
+  return path;
+}
+
+// Faylni o'chirish (yo'q bo'lsa — xato emas). Chaqiruvchi fayl boshqa joyda ishlatilmasligini tekshiradi
+export async function removeUploadedFile(url: string): Promise<boolean> {
+  const path = uploadedFilePath(url);
+  if (!path) return false;
+  try {
+    await unlink(path);
+    return true;
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return false;
+    throw err;
+  }
 }

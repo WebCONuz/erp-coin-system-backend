@@ -40,10 +40,6 @@ export type RoleMinAggregateOutputType = {
   displayName: string | null;
   level: number | null;
   scope: $Enums.RoleScope | null;
-  canDelete: boolean | null;
-  canManageAdmins: boolean | null;
-  canManageUsers: boolean | null;
-  isSystem: boolean | null;
   isActive: boolean | null;
   isDeleted: boolean | null;
   createdAt: Date | null;
@@ -58,10 +54,6 @@ export type RoleMaxAggregateOutputType = {
   displayName: string | null;
   level: number | null;
   scope: $Enums.RoleScope | null;
-  canDelete: boolean | null;
-  canManageAdmins: boolean | null;
-  canManageUsers: boolean | null;
-  isSystem: boolean | null;
   isActive: boolean | null;
   isDeleted: boolean | null;
   createdAt: Date | null;
@@ -76,10 +68,6 @@ export type RoleCountAggregateOutputType = {
   displayName: number;
   level: number;
   scope: number;
-  canDelete: number;
-  canManageAdmins: number;
-  canManageUsers: number;
-  isSystem: number;
   isActive: number;
   isDeleted: number;
   createdAt: number;
@@ -103,10 +91,6 @@ export type RoleMinAggregateInputType = {
   displayName?: true;
   level?: true;
   scope?: true;
-  canDelete?: true;
-  canManageAdmins?: true;
-  canManageUsers?: true;
-  isSystem?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -121,10 +105,6 @@ export type RoleMaxAggregateInputType = {
   displayName?: true;
   level?: true;
   scope?: true;
-  canDelete?: true;
-  canManageAdmins?: true;
-  canManageUsers?: true;
-  isSystem?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -139,10 +119,6 @@ export type RoleCountAggregateInputType = {
   displayName?: true;
   level?: true;
   scope?: true;
-  canDelete?: true;
-  canManageAdmins?: true;
-  canManageUsers?: true;
-  isSystem?: true;
   isActive?: true;
   isDeleted?: true;
   createdAt?: true;
@@ -251,10 +227,6 @@ export type RoleGroupByOutputType = {
   displayName: string;
   level: number;
   scope: $Enums.RoleScope;
-  canDelete: boolean;
-  canManageAdmins: boolean;
-  canManageUsers: boolean;
-  isSystem: boolean;
   isActive: boolean;
   isDeleted: boolean;
   createdAt: Date;
@@ -268,17 +240,18 @@ export type RoleGroupByOutputType = {
   _max: RoleMaxAggregateOutputType | null;
 };
 
-type GetRoleGroupByPayload<T extends RoleGroupByArgs> = Prisma.PrismaPromise<
-  Array<
-    Prisma.PickEnumerable<RoleGroupByOutputType, T['by']> & {
-      [P in keyof T & keyof RoleGroupByOutputType]: P extends '_count'
-        ? T[P] extends boolean
-          ? number
-          : Prisma.GetScalarType<T[P], RoleGroupByOutputType[P]>
-        : Prisma.GetScalarType<T[P], RoleGroupByOutputType[P]>;
-    }
-  >
->;
+export type GetRoleGroupByPayload<T extends RoleGroupByArgs> =
+  Prisma.PrismaPromise<
+    Array<
+      Prisma.PickEnumerable<RoleGroupByOutputType, T['by']> & {
+        [P in keyof T & keyof RoleGroupByOutputType]: P extends '_count'
+          ? T[P] extends boolean
+            ? number
+            : Prisma.GetScalarType<T[P], RoleGroupByOutputType[P]>
+          : Prisma.GetScalarType<T[P], RoleGroupByOutputType[P]>;
+      }
+    >
+  >;
 
 export type RoleWhereInput = {
   AND?: Prisma.RoleWhereInput | Prisma.RoleWhereInput[];
@@ -289,10 +262,6 @@ export type RoleWhereInput = {
   displayName?: Prisma.StringFilter<'Role'> | string;
   level?: Prisma.IntFilter<'Role'> | number;
   scope?: Prisma.EnumRoleScopeFilter<'Role'> | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFilter<'Role'> | boolean;
-  canManageAdmins?: Prisma.BoolFilter<'Role'> | boolean;
-  canManageUsers?: Prisma.BoolFilter<'Role'> | boolean;
-  isSystem?: Prisma.BoolFilter<'Role'> | boolean;
   isActive?: Prisma.BoolFilter<'Role'> | boolean;
   isDeleted?: Prisma.BoolFilter<'Role'> | boolean;
   createdAt?: Prisma.DateTimeFilter<'Role'> | Date | string;
@@ -304,7 +273,6 @@ export type RoleWhereInput = {
     Prisma.TenantWhereInput
   > | null;
   users?: Prisma.UserListRelationFilter;
-  permissions?: Prisma.RolePermissionListRelationFilter;
 };
 
 export type RoleOrderByWithRelationInput = {
@@ -313,10 +281,6 @@ export type RoleOrderByWithRelationInput = {
   displayName?: Prisma.SortOrder;
   level?: Prisma.SortOrder;
   scope?: Prisma.SortOrder;
-  canDelete?: Prisma.SortOrder;
-  canManageAdmins?: Prisma.SortOrder;
-  canManageUsers?: Prisma.SortOrder;
-  isSystem?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -325,7 +289,6 @@ export type RoleOrderByWithRelationInput = {
   tenantId?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenant?: Prisma.TenantOrderByWithRelationInput;
   users?: Prisma.UserOrderByRelationAggregateInput;
-  permissions?: Prisma.RolePermissionOrderByRelationAggregateInput;
 };
 
 export type RoleWhereUniqueInput = Prisma.AtLeast<
@@ -339,10 +302,6 @@ export type RoleWhereUniqueInput = Prisma.AtLeast<
     displayName?: Prisma.StringFilter<'Role'> | string;
     level?: Prisma.IntFilter<'Role'> | number;
     scope?: Prisma.EnumRoleScopeFilter<'Role'> | $Enums.RoleScope;
-    canDelete?: Prisma.BoolFilter<'Role'> | boolean;
-    canManageAdmins?: Prisma.BoolFilter<'Role'> | boolean;
-    canManageUsers?: Prisma.BoolFilter<'Role'> | boolean;
-    isSystem?: Prisma.BoolFilter<'Role'> | boolean;
     isActive?: Prisma.BoolFilter<'Role'> | boolean;
     isDeleted?: Prisma.BoolFilter<'Role'> | boolean;
     createdAt?: Prisma.DateTimeFilter<'Role'> | Date | string;
@@ -354,7 +313,6 @@ export type RoleWhereUniqueInput = Prisma.AtLeast<
       Prisma.TenantWhereInput
     > | null;
     users?: Prisma.UserListRelationFilter;
-    permissions?: Prisma.RolePermissionListRelationFilter;
   },
   'id' | 'tenantId_name'
 >;
@@ -365,10 +323,6 @@ export type RoleOrderByWithAggregationInput = {
   displayName?: Prisma.SortOrder;
   level?: Prisma.SortOrder;
   scope?: Prisma.SortOrder;
-  canDelete?: Prisma.SortOrder;
-  canManageAdmins?: Prisma.SortOrder;
-  canManageUsers?: Prisma.SortOrder;
-  isSystem?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -395,10 +349,6 @@ export type RoleScalarWhereWithAggregatesInput = {
   displayName?: Prisma.StringWithAggregatesFilter<'Role'> | string;
   level?: Prisma.IntWithAggregatesFilter<'Role'> | number;
   scope?: Prisma.EnumRoleScopeWithAggregatesFilter<'Role'> | $Enums.RoleScope;
-  canDelete?: Prisma.BoolWithAggregatesFilter<'Role'> | boolean;
-  canManageAdmins?: Prisma.BoolWithAggregatesFilter<'Role'> | boolean;
-  canManageUsers?: Prisma.BoolWithAggregatesFilter<'Role'> | boolean;
-  isSystem?: Prisma.BoolWithAggregatesFilter<'Role'> | boolean;
   isActive?: Prisma.BoolWithAggregatesFilter<'Role'> | boolean;
   isDeleted?: Prisma.BoolWithAggregatesFilter<'Role'> | boolean;
   createdAt?: Prisma.DateTimeWithAggregatesFilter<'Role'> | Date | string;
@@ -417,10 +367,6 @@ export type RoleCreateInput = {
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -428,7 +374,6 @@ export type RoleCreateInput = {
   deletedAt?: Date | string | null;
   tenant?: Prisma.TenantCreateNestedOneWithoutRolesInput;
   users?: Prisma.UserCreateNestedManyWithoutRoleInput;
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput;
 };
 
 export type RoleUncheckedCreateInput = {
@@ -437,10 +382,6 @@ export type RoleUncheckedCreateInput = {
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -448,7 +389,6 @@ export type RoleUncheckedCreateInput = {
   deletedAt?: Date | string | null;
   tenantId?: string | null;
   users?: Prisma.UserUncheckedCreateNestedManyWithoutRoleInput;
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput;
 };
 
 export type RoleUpdateInput = {
@@ -457,10 +397,6 @@ export type RoleUpdateInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -472,7 +408,6 @@ export type RoleUpdateInput = {
     | null;
   tenant?: Prisma.TenantUpdateOneWithoutRolesNestedInput;
   users?: Prisma.UserUpdateManyWithoutRoleNestedInput;
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput;
 };
 
 export type RoleUncheckedUpdateInput = {
@@ -481,10 +416,6 @@ export type RoleUncheckedUpdateInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -496,7 +427,6 @@ export type RoleUncheckedUpdateInput = {
     | null;
   tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   users?: Prisma.UserUncheckedUpdateManyWithoutRoleNestedInput;
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput;
 };
 
 export type RoleCreateManyInput = {
@@ -505,10 +435,6 @@ export type RoleCreateManyInput = {
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -523,10 +449,6 @@ export type RoleUpdateManyMutationInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -544,10 +466,6 @@ export type RoleUncheckedUpdateManyInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -581,10 +499,6 @@ export type RoleCountOrderByAggregateInput = {
   displayName?: Prisma.SortOrder;
   level?: Prisma.SortOrder;
   scope?: Prisma.SortOrder;
-  canDelete?: Prisma.SortOrder;
-  canManageAdmins?: Prisma.SortOrder;
-  canManageUsers?: Prisma.SortOrder;
-  isSystem?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -603,10 +517,6 @@ export type RoleMaxOrderByAggregateInput = {
   displayName?: Prisma.SortOrder;
   level?: Prisma.SortOrder;
   scope?: Prisma.SortOrder;
-  canDelete?: Prisma.SortOrder;
-  canManageAdmins?: Prisma.SortOrder;
-  canManageUsers?: Prisma.SortOrder;
-  isSystem?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -621,10 +531,6 @@ export type RoleMinOrderByAggregateInput = {
   displayName?: Prisma.SortOrder;
   level?: Prisma.SortOrder;
   scope?: Prisma.SortOrder;
-  canDelete?: Prisma.SortOrder;
-  canManageAdmins?: Prisma.SortOrder;
-  canManageUsers?: Prisma.SortOrder;
-  isSystem?: Prisma.SortOrder;
   isActive?: Prisma.SortOrder;
   isDeleted?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
@@ -744,32 +650,6 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null;
 };
 
-export type RoleCreateNestedOneWithoutPermissionsInput = {
-  create?: Prisma.XOR<
-    Prisma.RoleCreateWithoutPermissionsInput,
-    Prisma.RoleUncheckedCreateWithoutPermissionsInput
-  >;
-  connectOrCreate?: Prisma.RoleCreateOrConnectWithoutPermissionsInput;
-  connect?: Prisma.RoleWhereUniqueInput;
-};
-
-export type RoleUpdateOneRequiredWithoutPermissionsNestedInput = {
-  create?: Prisma.XOR<
-    Prisma.RoleCreateWithoutPermissionsInput,
-    Prisma.RoleUncheckedCreateWithoutPermissionsInput
-  >;
-  connectOrCreate?: Prisma.RoleCreateOrConnectWithoutPermissionsInput;
-  upsert?: Prisma.RoleUpsertWithoutPermissionsInput;
-  connect?: Prisma.RoleWhereUniqueInput;
-  update?: Prisma.XOR<
-    Prisma.XOR<
-      Prisma.RoleUpdateToOneWithWhereWithoutPermissionsInput,
-      Prisma.RoleUpdateWithoutPermissionsInput
-    >,
-    Prisma.RoleUncheckedUpdateWithoutPermissionsInput
-  >;
-};
-
 export type RoleCreateNestedOneWithoutUsersInput = {
   create?: Prisma.XOR<
     Prisma.RoleCreateWithoutUsersInput,
@@ -802,17 +682,12 @@ export type RoleCreateWithoutTenantInput = {
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   users?: Prisma.UserCreateNestedManyWithoutRoleInput;
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput;
 };
 
 export type RoleUncheckedCreateWithoutTenantInput = {
@@ -821,17 +696,12 @@ export type RoleUncheckedCreateWithoutTenantInput = {
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   users?: Prisma.UserUncheckedCreateNestedManyWithoutRoleInput;
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput;
 };
 
 export type RoleCreateOrConnectWithoutTenantInput = {
@@ -884,10 +754,6 @@ export type RoleScalarWhereInput = {
   displayName?: Prisma.StringFilter<'Role'> | string;
   level?: Prisma.IntFilter<'Role'> | number;
   scope?: Prisma.EnumRoleScopeFilter<'Role'> | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFilter<'Role'> | boolean;
-  canManageAdmins?: Prisma.BoolFilter<'Role'> | boolean;
-  canManageUsers?: Prisma.BoolFilter<'Role'> | boolean;
-  isSystem?: Prisma.BoolFilter<'Role'> | boolean;
   isActive?: Prisma.BoolFilter<'Role'> | boolean;
   isDeleted?: Prisma.BoolFilter<'Role'> | boolean;
   createdAt?: Prisma.DateTimeFilter<'Role'> | Date | string;
@@ -896,135 +762,18 @@ export type RoleScalarWhereInput = {
   tenantId?: Prisma.UuidNullableFilter<'Role'> | string | null;
 };
 
-export type RoleCreateWithoutPermissionsInput = {
-  id?: string;
-  name: string;
-  displayName: string;
-  level?: number;
-  scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
-  isActive?: boolean;
-  isDeleted?: boolean;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-  deletedAt?: Date | string | null;
-  tenant?: Prisma.TenantCreateNestedOneWithoutRolesInput;
-  users?: Prisma.UserCreateNestedManyWithoutRoleInput;
-};
-
-export type RoleUncheckedCreateWithoutPermissionsInput = {
-  id?: string;
-  name: string;
-  displayName: string;
-  level?: number;
-  scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
-  isActive?: boolean;
-  isDeleted?: boolean;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-  deletedAt?: Date | string | null;
-  tenantId?: string | null;
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutRoleInput;
-};
-
-export type RoleCreateOrConnectWithoutPermissionsInput = {
-  where: Prisma.RoleWhereUniqueInput;
-  create: Prisma.XOR<
-    Prisma.RoleCreateWithoutPermissionsInput,
-    Prisma.RoleUncheckedCreateWithoutPermissionsInput
-  >;
-};
-
-export type RoleUpsertWithoutPermissionsInput = {
-  update: Prisma.XOR<
-    Prisma.RoleUpdateWithoutPermissionsInput,
-    Prisma.RoleUncheckedUpdateWithoutPermissionsInput
-  >;
-  create: Prisma.XOR<
-    Prisma.RoleCreateWithoutPermissionsInput,
-    Prisma.RoleUncheckedCreateWithoutPermissionsInput
-  >;
-  where?: Prisma.RoleWhereInput;
-};
-
-export type RoleUpdateToOneWithWhereWithoutPermissionsInput = {
-  where?: Prisma.RoleWhereInput;
-  data: Prisma.XOR<
-    Prisma.RoleUpdateWithoutPermissionsInput,
-    Prisma.RoleUncheckedUpdateWithoutPermissionsInput
-  >;
-};
-
-export type RoleUpdateWithoutPermissionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string;
-  name?: Prisma.StringFieldUpdateOperationsInput | string;
-  displayName?: Prisma.StringFieldUpdateOperationsInput | string;
-  level?: Prisma.IntFieldUpdateOperationsInput | number;
-  scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  deletedAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
-  tenant?: Prisma.TenantUpdateOneWithoutRolesNestedInput;
-  users?: Prisma.UserUpdateManyWithoutRoleNestedInput;
-};
-
-export type RoleUncheckedUpdateWithoutPermissionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string;
-  name?: Prisma.StringFieldUpdateOperationsInput | string;
-  displayName?: Prisma.StringFieldUpdateOperationsInput | string;
-  level?: Prisma.IntFieldUpdateOperationsInput | number;
-  scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  deletedAt?:
-    | Prisma.NullableDateTimeFieldUpdateOperationsInput
-    | Date
-    | string
-    | null;
-  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  users?: Prisma.UserUncheckedUpdateManyWithoutRoleNestedInput;
-};
-
 export type RoleCreateWithoutUsersInput = {
   id?: string;
   name: string;
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   tenant?: Prisma.TenantCreateNestedOneWithoutRolesInput;
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput;
 };
 
 export type RoleUncheckedCreateWithoutUsersInput = {
@@ -1033,17 +782,12 @@ export type RoleUncheckedCreateWithoutUsersInput = {
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId?: string | null;
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput;
 };
 
 export type RoleCreateOrConnectWithoutUsersInput = {
@@ -1080,10 +824,6 @@ export type RoleUpdateWithoutUsersInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1094,7 +834,6 @@ export type RoleUpdateWithoutUsersInput = {
     | string
     | null;
   tenant?: Prisma.TenantUpdateOneWithoutRolesNestedInput;
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput;
 };
 
 export type RoleUncheckedUpdateWithoutUsersInput = {
@@ -1103,10 +842,6 @@ export type RoleUncheckedUpdateWithoutUsersInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1117,7 +852,6 @@ export type RoleUncheckedUpdateWithoutUsersInput = {
     | string
     | null;
   tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput;
 };
 
 export type RoleCreateManyTenantInput = {
@@ -1126,10 +860,6 @@ export type RoleCreateManyTenantInput = {
   displayName: string;
   level?: number;
   scope?: $Enums.RoleScope;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: Date | string;
@@ -1143,10 +873,6 @@ export type RoleUpdateWithoutTenantInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1157,7 +883,6 @@ export type RoleUpdateWithoutTenantInput = {
     | string
     | null;
   users?: Prisma.UserUpdateManyWithoutRoleNestedInput;
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput;
 };
 
 export type RoleUncheckedUpdateWithoutTenantInput = {
@@ -1166,10 +891,6 @@ export type RoleUncheckedUpdateWithoutTenantInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1180,7 +901,6 @@ export type RoleUncheckedUpdateWithoutTenantInput = {
     | string
     | null;
   users?: Prisma.UserUncheckedUpdateManyWithoutRoleNestedInput;
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput;
 };
 
 export type RoleUncheckedUpdateManyWithoutTenantInput = {
@@ -1189,10 +909,6 @@ export type RoleUncheckedUpdateManyWithoutTenantInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string;
   level?: Prisma.IntFieldUpdateOperationsInput | number;
   scope?: Prisma.EnumRoleScopeFieldUpdateOperationsInput | $Enums.RoleScope;
-  canDelete?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageAdmins?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  canManageUsers?: Prisma.BoolFieldUpdateOperationsInput | boolean;
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1210,7 +926,6 @@ export type RoleUncheckedUpdateManyWithoutTenantInput = {
 
 export type RoleCountOutputType = {
   users: number;
-  permissions: number;
 };
 
 export type RoleCountOutputTypeSelect<
@@ -1218,7 +933,6 @@ export type RoleCountOutputTypeSelect<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   users?: boolean | RoleCountOutputTypeCountUsersArgs;
-  permissions?: boolean | RoleCountOutputTypeCountPermissionsArgs;
 };
 
 /**
@@ -1244,16 +958,6 @@ export type RoleCountOutputTypeCountUsersArgs<
   where?: Prisma.UserWhereInput;
 };
 
-/**
- * RoleCountOutputType without action
- */
-export type RoleCountOutputTypeCountPermissionsArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  where?: Prisma.RolePermissionWhereInput;
-};
-
 export type RoleSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -1264,10 +968,6 @@ export type RoleSelect<
     displayName?: boolean;
     level?: boolean;
     scope?: boolean;
-    canDelete?: boolean;
-    canManageAdmins?: boolean;
-    canManageUsers?: boolean;
-    isSystem?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -1276,7 +976,6 @@ export type RoleSelect<
     tenantId?: boolean;
     tenant?: boolean | Prisma.Role$tenantArgs<ExtArgs>;
     users?: boolean | Prisma.Role$usersArgs<ExtArgs>;
-    permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>;
     _count?: boolean | Prisma.RoleCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['role']
@@ -1292,10 +991,6 @@ export type RoleSelectCreateManyAndReturn<
     displayName?: boolean;
     level?: boolean;
     scope?: boolean;
-    canDelete?: boolean;
-    canManageAdmins?: boolean;
-    canManageUsers?: boolean;
-    isSystem?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -1317,10 +1012,6 @@ export type RoleSelectUpdateManyAndReturn<
     displayName?: boolean;
     level?: boolean;
     scope?: boolean;
-    canDelete?: boolean;
-    canManageAdmins?: boolean;
-    canManageUsers?: boolean;
-    isSystem?: boolean;
     isActive?: boolean;
     isDeleted?: boolean;
     createdAt?: boolean;
@@ -1338,10 +1029,6 @@ export type RoleSelectScalar = {
   displayName?: boolean;
   level?: boolean;
   scope?: boolean;
-  canDelete?: boolean;
-  canManageAdmins?: boolean;
-  canManageUsers?: boolean;
-  isSystem?: boolean;
   isActive?: boolean;
   isDeleted?: boolean;
   createdAt?: boolean;
@@ -1359,10 +1046,6 @@ export type RoleOmit<
   | 'displayName'
   | 'level'
   | 'scope'
-  | 'canDelete'
-  | 'canManageAdmins'
-  | 'canManageUsers'
-  | 'isSystem'
   | 'isActive'
   | 'isDeleted'
   | 'createdAt'
@@ -1377,7 +1060,6 @@ export type RoleInclude<
 > = {
   tenant?: boolean | Prisma.Role$tenantArgs<ExtArgs>;
   users?: boolean | Prisma.Role$usersArgs<ExtArgs>;
-  permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>;
   _count?: boolean | Prisma.RoleCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type RoleIncludeCreateManyAndReturn<
@@ -1401,7 +1083,6 @@ export type $RolePayload<
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs> | null;
     users: Prisma.$UserPayload<ExtArgs>[];
-    permissions: Prisma.$RolePermissionPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1410,10 +1091,6 @@ export type $RolePayload<
       displayName: string;
       level: number;
       scope: $Enums.RoleScope;
-      canDelete: boolean;
-      canManageAdmins: boolean;
-      canManageUsers: boolean;
-      isSystem: boolean;
       isActive: boolean;
       isDeleted: boolean;
       createdAt: Date;
@@ -1994,17 +1671,6 @@ export interface Prisma__RoleClient<
       >
     | Null
   >;
-  permissions<T extends Prisma.Role$permissionsArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.Role$permissionsArgs<ExtArgs>>,
-  ): Prisma.PrismaPromise<
-    | runtime.Types.Result.GetResult<
-        Prisma.$RolePermissionPayload<ExtArgs>,
-        T,
-        'findMany',
-        GlobalOmitOptions
-      >
-    | Null
-  >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2052,10 +1718,6 @@ export interface RoleFieldRefs {
   readonly displayName: Prisma.FieldRef<'Role', 'String'>;
   readonly level: Prisma.FieldRef<'Role', 'Int'>;
   readonly scope: Prisma.FieldRef<'Role', 'RoleScope'>;
-  readonly canDelete: Prisma.FieldRef<'Role', 'Boolean'>;
-  readonly canManageAdmins: Prisma.FieldRef<'Role', 'Boolean'>;
-  readonly canManageUsers: Prisma.FieldRef<'Role', 'Boolean'>;
-  readonly isSystem: Prisma.FieldRef<'Role', 'Boolean'>;
   readonly isActive: Prisma.FieldRef<'Role', 'Boolean'>;
   readonly isDeleted: Prisma.FieldRef<'Role', 'Boolean'>;
   readonly createdAt: Prisma.FieldRef<'Role', 'DateTime'>;
@@ -2564,37 +2226,6 @@ export type Role$usersArgs<
   take?: number;
   skip?: number;
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[];
-};
-
-/**
- * Role.permissions
- */
-export type Role$permissionsArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  /**
-   * Select specific fields to fetch from the RolePermission
-   */
-  select?: Prisma.RolePermissionSelect<ExtArgs> | null;
-  /**
-   * Omit specific fields from the RolePermission
-   */
-  omit?: Prisma.RolePermissionOmit<ExtArgs> | null;
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RolePermissionInclude<ExtArgs> | null;
-  where?: Prisma.RolePermissionWhereInput;
-  orderBy?:
-    | Prisma.RolePermissionOrderByWithRelationInput
-    | Prisma.RolePermissionOrderByWithRelationInput[];
-  cursor?: Prisma.RolePermissionWhereUniqueInput;
-  take?: number;
-  skip?: number;
-  distinct?:
-    | Prisma.RolePermissionScalarFieldEnum
-    | Prisma.RolePermissionScalarFieldEnum[];
 };
 
 /**

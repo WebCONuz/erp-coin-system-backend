@@ -11,7 +11,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCoinRuleDto } from './dto/create-coin-rule.dto';
 import { QueryCoinRuleDto } from './dto/query-coin-rule.dto';
 import { UpdateCoinRuleDto } from './dto/update-coin-rule.dto';
-import { Prisma } from 'src/generated/prisma/client';
+import { AuditActionType, Prisma } from 'src/generated/prisma/client';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
+import { AUDIT_ENTITY, definedFields } from 'src/audit-log/utils/audit-entry';
 import {
   CoinDirection,
   SourceType,
@@ -21,7 +23,10 @@ import { BUILT_IN_LOCKED_FIELDS } from './constants';
 
 @Injectable()
 export class CoinRulesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditLogService,
+  ) {}
 
   async create(
     tenantId: string,
@@ -70,7 +75,7 @@ export class CoinRulesService {
         tx,
       );
 
-      return tx.coinRule.create({
+      const created = await tx.coinRule.create({
         data: {
           name: dto.name,
           description: dto.description || null,
@@ -83,6 +88,37 @@ export class CoinRulesService {
           createdById: requester.id,
         },
       });
+      await tx.auditLog.create({
+        data: this.ruleAudit(tenantId, requester.id, created.id, {
+          action: AuditActionType.create,
+          changes: {
+            name: created.name,
+            coinAmount: created.coinAmount,
+            direction: created.direction,
+            triggerType: created.triggerType,
+            sourceType: created.sourceType,
+            groupId: created.groupId,
+          },
+        }),
+      });
+      return created;
+    });
+  }
+
+  // Qoidalar coin miqdorini belgilaydi — har bir o'zgarish audit qilinadi
+  private ruleAudit(
+    tenantId: string,
+    actorId: string,
+    ruleId: string,
+    entry: { action: AuditActionType; changes: Prisma.InputJsonValue },
+  ) {
+    return this.audit.data({
+      tenantId,
+      actorId,
+      action: entry.action,
+      entityType: AUDIT_ENTITY.coinRule,
+      entityId: ruleId,
+      changes: entry.changes,
     });
   }
 
@@ -206,7 +242,12 @@ export class CoinRulesService {
     return coinRule;
   }
 
-  async update(id: string, dto: UpdateCoinRuleDto, tenantId: string) {
+  async update(
+    id: string,
+    dto: UpdateCoinRuleDto,
+    tenantId: string,
+    actorId: string,
+  ) {
     const rule = await this.findRawOrFail(id, tenantId);
 
     // Asosiy qoidada yo'qlama logikasi tayanadigan maydonlar o'zgarmaydi.
@@ -245,6 +286,20 @@ export class CoinRulesService {
         id,
       );
 
+      await tx.auditLog.create({
+        data: this.ruleAudit(tenantId, actorId, id, {
+          action: AuditActionType.update,
+          changes: {
+            ...definedFields(dto),
+            before: {
+              name: rule.name,
+              coinAmount: rule.coinAmount,
+              isActive: rule.isActive,
+            },
+          },
+        }),
+      });
+
       return tx.coinRule.update({
         where: { id },
         data: dto,
@@ -267,7 +322,7 @@ export class CoinRulesService {
     });
   }
 
-  async remove(id: string, tenantId: string) {
+  async remove(id: string, tenantId: string, actorId: string) {
     const rule = await this.findRawOrFail(id, tenantId);
 
     if (rule.isBuiltIn) {
@@ -276,10 +331,19 @@ export class CoinRulesService {
       );
     }
 
-    return this.prisma.coinRule.update({
-      where: { id },
-      data: { isDeleted: true, isActive: false, deletedAt: new Date() },
-    });
+    const [deleted] = await this.prisma.$transaction([
+      this.prisma.coinRule.update({
+        where: { id },
+        data: { isDeleted: true, isActive: false, deletedAt: new Date() },
+      }),
+      this.prisma.auditLog.create({
+        data: this.ruleAudit(tenantId, actorId, id, {
+          action: AuditActionType.delete,
+          changes: { name: rule.name, coinAmount: rule.coinAmount },
+        }),
+      }),
+    ]);
+    return deleted;
   }
 
   private async findRawOrFail(id: string, tenantId: string) {

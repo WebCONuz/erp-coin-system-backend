@@ -206,7 +206,7 @@ export type SmsTemplateGroupByOutputType = {
   _max: SmsTemplateMaxAggregateOutputType | null;
 };
 
-type GetSmsTemplateGroupByPayload<T extends SmsTemplateGroupByArgs> =
+export type GetSmsTemplateGroupByPayload<T extends SmsTemplateGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<SmsTemplateGroupByOutputType, T['by']> & {

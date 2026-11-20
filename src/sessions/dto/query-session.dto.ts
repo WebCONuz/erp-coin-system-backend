@@ -1,36 +1,11 @@
-import {
-  IsOptional,
-  IsNumber,
-  Min,
-  IsUUID,
-  IsEnum,
-  IsDateString,
-  IsBoolean,
-} from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { IsOptional, IsUUID, IsEnum, IsBoolean } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { EvaluationMode, SessionType } from 'src/generated/prisma/enums';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 
-export class QuerySessionDto {
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsUUID()
-  tenantId?: string;
-
-  @ApiPropertyOptional({ example: 1 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  page?: number = 1;
-
-  @ApiPropertyOptional({ example: 10 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  limit?: number = 10;
-
+export class QuerySessionDto extends PaginationQueryDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
@@ -53,7 +28,7 @@ export class QuerySessionDto {
 
   @ApiPropertyOptional({ example: '2026-06-03' })
   @IsOptional()
-  @IsDateString()
+  @IsDateOnly()
   date?: string;
 
   @ApiPropertyOptional({

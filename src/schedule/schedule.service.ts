@@ -20,6 +20,7 @@ import {
   canTeacherAccessGroup,
   teacherGroupAccessWhere,
 } from 'src/common/utils/teacher-group-access';
+import { ACTIVE_TEACHING_USER_WHERE } from 'src/common/utils/user-role-checks';
 import {
   diffDays,
   getTenantTimezone,
@@ -28,7 +29,7 @@ import {
 } from 'src/common/utils/tenant-time';
 import {
   ConflictKind,
-  findSessionConflict,
+  loadScheduleIndex,
   lockTenantSchedule,
   timeOverlap,
 } from 'src/sessions/utils/session-conflicts';
@@ -38,6 +39,22 @@ const timeLt = (a: string, b: string) => a < b;
 
 // Bitta generate-sessions so'rovida ko'pi bilan shuncha kun (≈ bir chorak)
 export const MAX_GENERATE_DAYS = 92;
+
+// Jadval o'zgarishi + sinxronlash (ko'p sessiyali shablonlar, dam olish kunida barcha shablonlar)
+const SYNC_TX_OPTIONS = { maxWait: 10_000, timeout: 60_000 } as const;
+
+const TEMPLATE_INCLUDE = {
+  group: {
+    select: {
+      id: true,
+      name: true,
+      teacher: { select: { id: true, fullName: true } },
+    },
+  },
+  room: { select: { id: true, name: true } },
+  subject: { select: { id: true, name: true } },
+  teacher: { select: { id: true, fullName: true } },
+} satisfies Prisma.ScheduleTemplateInclude;
 
 // Shablon + istisno bo'yicha hisoblangan bitta dars
 interface Occurrence {
@@ -140,44 +157,38 @@ export class ScheduleService {
       subjectId: dto.subjectId,
     });
 
-    await this.checkTemplateConflicts({
-      tenantId: resolvedTenantId,
-      weekday: dto.weekday,
-      startTime: dto.startTime,
-      endTime: dto.endTime,
-      groupId: dto.groupId,
-      roomId: dto.roomId,
-      teacherId: dto.teacherId ?? group.teacherId,
-      validFrom,
-      validTo,
-    });
-
-    const created = await this.prisma.scheduleTemplate.create({
-      data: {
+    // To'qnashuv tekshiruvi va yaratish jadval qulfi ostida — parallel ikki so'rov
+    // bir xil slotga ikkita shablon yarata olmaydi
+    const created = await this.prisma.$transaction(async (tx) => {
+      await lockTenantSchedule(tx, resolvedTenantId);
+      await this.checkTemplateConflicts(tx, {
+        tenantId: resolvedTenantId,
         weekday: dto.weekday,
         startTime: dto.startTime,
         endTime: dto.endTime,
         groupId: dto.groupId,
         roomId: dto.roomId,
-        teacherId: dto.teacherId ?? null,
-        subjectId: dto.subjectId ?? null,
+        teacherId: dto.teacherId ?? group.teacherId,
         validFrom,
         validTo,
-        tenantId: resolvedTenantId,
-        createdById,
-      },
-      include: {
-        group: {
-          select: {
-            id: true,
-            name: true,
-            teacher: { select: { id: true, fullName: true } },
-          },
+      });
+
+      return tx.scheduleTemplate.create({
+        data: {
+          weekday: dto.weekday,
+          startTime: dto.startTime,
+          endTime: dto.endTime,
+          groupId: dto.groupId,
+          roomId: dto.roomId,
+          teacherId: dto.teacherId ?? null,
+          subjectId: dto.subjectId ?? null,
+          validFrom,
+          validTo,
+          tenantId: resolvedTenantId,
+          createdById,
         },
-        room: { select: { id: true, name: true } },
-        subject: { select: { id: true, name: true } },
-        teacher: { select: { id: true, fullName: true } },
-      },
+        include: TEMPLATE_INCLUDE,
+      });
     });
 
     return this.withEffectiveTeacher(created);
@@ -323,47 +334,41 @@ export class ScheduleService {
       subjectId: dto.subjectId ?? undefined,
     });
 
-    await this.checkTemplateConflicts({
+    // To'qnashuv tekshiruvi, yangilash va kelajakdagi tekshirilmagan sessiyalarni moslash —
+    // bitta tx'da, jadval qulfi ostida
+    const { result: updated, sessionSync } = await this.withTemplateSync(
       tenantId,
-      weekday: newWeekday,
-      startTime: newStart,
-      endTime: newEnd,
-      groupId: existing.groupId,
-      roomId: newRoom,
-      teacherId: newTeacher ?? group.teacherId,
-      validFrom: newValidFrom,
-      validTo: newValidTo,
-      excludeId: id,
-    });
+      id,
+      async (tx) => {
+        await this.checkTemplateConflicts(tx, {
+          tenantId,
+          weekday: newWeekday,
+          startTime: newStart,
+          endTime: newEnd,
+          groupId: existing.groupId,
+          roomId: newRoom,
+          teacherId: newTeacher ?? group.teacherId,
+          validFrom: newValidFrom,
+          validTo: newValidTo,
+          excludeId: id,
+        });
 
-    const updated = await this.prisma.scheduleTemplate.update({
-      where: { id },
-      data: {
-        weekday: newWeekday,
-        startTime: newStart,
-        endTime: newEnd,
-        roomId: newRoom,
-        teacherId: newTeacher,
-        subjectId: newSubject,
-        validFrom: newValidFrom,
-        validTo: newValidTo,
-      },
-      include: {
-        group: {
-          select: {
-            id: true,
-            name: true,
-            teacher: { select: { id: true, fullName: true } },
+        return tx.scheduleTemplate.update({
+          where: { id },
+          data: {
+            weekday: newWeekday,
+            startTime: newStart,
+            endTime: newEnd,
+            roomId: newRoom,
+            teacherId: newTeacher,
+            subjectId: newSubject,
+            validFrom: newValidFrom,
+            validTo: newValidTo,
           },
-        },
-        room: { select: { id: true, name: true } },
-        subject: { select: { id: true, name: true } },
-        teacher: { select: { id: true, fullName: true } },
+          include: TEMPLATE_INCLUDE,
+        });
       },
-    });
-
-    // Kelajakdagi tekshirilmagan sessiyalar yangi jadvalga moslashtiriladi
-    const sessionSync = await this.syncTemplateSessions(id, tenantId);
+    );
 
     return { ...this.withEffectiveTeacher(updated), sessionSync };
   }
@@ -374,13 +379,13 @@ export class ScheduleService {
     });
     if (!existing) throw new NotFoundException('Dars jadvali topilmadi');
 
-    await this.prisma.scheduleTemplate.update({
-      where: { id },
-      data: { isDeleted: true, isActive: false, deletedAt: new Date() },
-    });
-
-    // Shu shablondan yaratilgan kelajakdagi tekshirilmagan sessiyalar o'chiriladi
-    const sessionSync = await this.syncTemplateSessions(id, tenantId);
+    // Shu shablondan yaratilgan kelajakdagi tekshirilmagan sessiyalar ham o'chiriladi (bitta tx)
+    const { sessionSync } = await this.withTemplateSync(tenantId, id, (tx) =>
+      tx.scheduleTemplate.update({
+        where: { id },
+        data: { isDeleted: true, isActive: false, deletedAt: new Date() },
+      }),
+    );
 
     return { message: "Dars jadvali o'chirildi", sessionSync };
   }
@@ -406,16 +411,7 @@ export class ScheduleService {
       teacherId: dto.teacherId,
     });
 
-    const exceptionDate = new Date(dto.exceptionDate.slice(0, 10));
-
-    // DB'da (templateId, exceptionDate) unique — o'chirilgan istisno ham joyni band qiladi,
-    // shuning uchun o'chirilgan bo'lsa u qayta tiklanadi (avval 500/409 xato berardi)
-    const existing = await this.prisma.scheduleException.findUnique({
-      where: { templateId_exceptionDate: { templateId, exceptionDate } },
-    });
-    if (existing && !existing.isDeleted) {
-      throw new ConflictException("Bu sanaga allaqachon istisno qo'yilgan");
-    }
+    const exceptionDate = new Date(dto.exceptionDate);
 
     const data = {
       isCancelled: dto.isCancelled,
@@ -427,16 +423,30 @@ export class ScheduleService {
       createdById,
     };
 
-    const exception = existing
-      ? await this.prisma.scheduleException.update({
-          where: { id: existing.id },
-          data: { ...data, isDeleted: false, deletedAt: null },
-        })
-      : await this.prisma.scheduleException.create({
-          data: { templateId, exceptionDate, ...data },
+    // Istisno va sessiyalarni moslash bitta tx'da
+    const { result: exception, sessionSync } = await this.withTemplateSync(
+      tenantId,
+      templateId,
+      async (tx) => {
+        // DB'da (templateId, exceptionDate) unique — o'chirilgan istisno ham joyni band qiladi,
+        // shuning uchun o'chirilgan bo'lsa u qayta tiklanadi
+        const existing = await tx.scheduleException.findUnique({
+          where: { templateId_exceptionDate: { templateId, exceptionDate } },
         });
+        if (existing && !existing.isDeleted) {
+          throw new ConflictException("Bu sanaga allaqachon istisno qo'yilgan");
+        }
 
-    const sessionSync = await this.syncTemplateSessions(templateId, tenantId);
+        return existing
+          ? tx.scheduleException.update({
+              where: { id: existing.id },
+              data: { ...data, isDeleted: false, deletedAt: null },
+            })
+          : tx.scheduleException.create({
+              data: { templateId, exceptionDate, ...data },
+            });
+      },
+    );
     return { ...exception, sessionSync };
   }
 
@@ -480,13 +490,7 @@ export class ScheduleService {
         : true,
       teacherId
         ? this.prisma.user.findFirst({
-            where: {
-              id: teacherId,
-              tenantId,
-              isDeleted: false,
-              isActive: true,
-              role: { name: { in: ['teacher', 'admin'] } },
-            },
+            where: { id: teacherId, tenantId, ...ACTIVE_TEACHING_USER_WHERE },
             select: { id: true },
           })
         : true,
@@ -560,21 +564,21 @@ export class ScheduleService {
       teacherId,
     });
 
-    const updated = await this.prisma.scheduleException.update({
-      where: { id },
-      data: {
-        isCancelled,
-        startTime,
-        endTime,
-        roomId,
-        teacherId,
-        note: dto.note ?? exc.note,
-      },
-    });
-
-    const sessionSync = await this.syncTemplateSessions(
-      exc.templateId,
+    const { result: updated, sessionSync } = await this.withTemplateSync(
       tenantId,
+      exc.templateId,
+      (tx) =>
+        tx.scheduleException.update({
+          where: { id },
+          data: {
+            isCancelled,
+            startTime,
+            endTime,
+            roomId,
+            teacherId,
+            note: dto.note ?? exc.note,
+          },
+        }),
     );
     return { ...updated, sessionSync };
   }
@@ -585,14 +589,14 @@ export class ScheduleService {
     });
     if (!exc) throw new NotFoundException('Istisno topilmadi');
 
-    await this.prisma.scheduleException.update({
-      where: { id },
-      data: { isDeleted: true, deletedAt: new Date() },
-    });
-
-    const sessionSync = await this.syncTemplateSessions(
-      exc.templateId,
+    const { sessionSync } = await this.withTemplateSync(
       tenantId,
+      exc.templateId,
+      (tx) =>
+        tx.scheduleException.update({
+          where: { id },
+          data: { isDeleted: true, deletedAt: new Date() },
+        }),
     );
     return { message: "Istisno o'chirildi", sessionSync };
   }
@@ -834,7 +838,7 @@ export class ScheduleService {
 
     const group = await this.prisma.group.findFirst({
       where: { id: dto.groupId, tenantId, isDeleted: false },
-      select: { id: true, teacherId: true },
+      select: { id: true, teacherId: true, name: true },
     });
     if (!group) throw new NotFoundException('Guruh topilmadi');
 
@@ -889,7 +893,19 @@ export class ScheduleService {
       const conflicts: ScheduleSlotConflict[] = [];
       let skipped = 0;
 
-      for (const occ of occurrences) {
+      // Xona/o'qituvchi/guruh bandligi — oraliq uchun bir marta o'qiladi (har bir dars uchun
+      // so'rov yo'q). Shu so'rovda rejalashtirilgan darslar ham indeksga qo'shiladi —
+      // bir-biri bilan to'qnashadigan darslar ham yaratilmaydi
+      const index = await loadScheduleIndex(tx, {
+        tenantId,
+        from: fromStr,
+        to: toStr,
+        groupIds: [dto.groupId],
+        roomIds: [...new Set(occurrences.map((o) => o.roomId))],
+        teacherIds: [...new Set(occurrences.map((o) => o.teacherId))],
+      });
+
+      for (const [i, occ] of occurrences.entries()) {
         if (
           takenSlots.has(`${occ.date}_${occ.startTime}`) ||
           takenTemplateDates.has(`${occ.templateId}_${occ.date}`)
@@ -899,9 +915,7 @@ export class ScheduleService {
         }
 
         // Xona yoki o'qituvchi shu vaqtda boshqa guruhning (masalan qo'lda qo'shilgan) darsida band
-        const conflict = await findSessionConflict(tx, {
-          tenantId,
-          sessionDate: new Date(occ.date),
+        const conflict = index.findConflict(occ.date, {
           startTime: occ.startTime,
           endTime: occ.endTime,
           groupId: dto.groupId,
@@ -920,6 +934,15 @@ export class ScheduleService {
         }
 
         takenSlots.add(`${occ.date}_${occ.startTime}`);
+        index.add(occ.date, {
+          id: `planned-${i}`,
+          startTime: occ.startTime,
+          endTime: occ.endTime,
+          groupId: dto.groupId,
+          roomId: occ.roomId,
+          teacherId: occ.teacherId,
+          groupName: group.name,
+        });
         toCreate.push(this.occurrenceToSession(occ, dto.groupId, tenantId));
       }
 
@@ -1046,33 +1069,43 @@ export class ScheduleService {
    * (dam olish kuni qo'shilganda/o'chirilganda).
    */
   async syncAllTemplateSessions(tenantId: string): Promise<SessionSyncResult> {
-    const tz = await getTenantTimezone(this.prisma, tenantId);
-    const today = nowInTimeZone(tz).date;
-    const rows = await this.prisma.session.findMany({
-      where: {
-        tenantId,
-        isDeleted: false,
-        templateId: { not: null },
-        sessionDate: { gte: new Date(today) },
-      },
-      distinct: ['templateId'],
-      select: { templateId: true },
-    });
+    const today = await this.tenantToday(tenantId);
 
-    const total: SessionSyncResult = {
-      updated: 0,
-      removed: 0,
-      created: 0,
-      conflicts: [],
-    };
-    for (const { templateId } of rows) {
-      const r = await this.syncTemplateSessions(templateId!, tenantId);
-      total.updated += r.updated;
-      total.removed += r.removed;
-      total.created += r.created;
-      total.conflicts.push(...r.conflicts);
-    }
-    return total;
+    // Barcha shablonlar bitta tx'da, jadval qulfi bir marta olinadi
+    return this.prisma.$transaction(async (tx) => {
+      await lockTenantSchedule(tx, tenantId);
+
+      const rows = await tx.session.findMany({
+        where: {
+          tenantId,
+          isDeleted: false,
+          templateId: { not: null },
+          sessionDate: { gte: new Date(today) },
+        },
+        distinct: ['templateId'],
+        select: { templateId: true },
+      });
+
+      const total: SessionSyncResult = {
+        updated: 0,
+        removed: 0,
+        created: 0,
+        conflicts: [],
+      };
+      for (const { templateId } of rows) {
+        const r = await this.syncTemplateSessionsInTx(
+          tx,
+          templateId!,
+          tenantId,
+          today,
+        );
+        total.updated += r.updated;
+        total.removed += r.removed;
+        total.created += r.created;
+        total.conflicts.push(...r.conflicts);
+      }
+      return total;
+    }, SYNC_TX_OPTIONS);
   }
 
   /**
@@ -1089,150 +1122,211 @@ export class ScheduleService {
     templateId: string,
     tenantId: string,
   ): Promise<SessionSyncResult> {
+    const today = await this.tenantToday(tenantId);
+    return this.prisma.$transaction(async (tx) => {
+      await lockTenantSchedule(tx, tenantId);
+      return this.syncTemplateSessionsInTx(tx, templateId, tenantId, today);
+    });
+  }
+
+  private async tenantToday(tenantId: string): Promise<string> {
+    const tz = await getTenantTimezone(this.prisma, tenantId);
+    return nowInTimeZone(tz).date;
+  }
+
+  /**
+   * Shablon yoki istisnoni o'zgartirish va shu shablonning kelajakdagi sessiyalarini moslash —
+   * **bitta tranzaksiyada**, tenant jadval qulfi ostida: o'zgarish saqlanib, sinxronlash
+   * yiqilsa (yoki aksincha) jadval va sessiyalar nomuvofiq qolmaydi.
+   */
+  private async withTemplateSync<T>(
+    tenantId: string,
+    templateId: string,
+    write: (tx: Prisma.TransactionClient) => Promise<T>,
+  ): Promise<{ result: T; sessionSync: SessionSyncResult }> {
+    const today = await this.tenantToday(tenantId);
+    return this.prisma.$transaction(async (tx) => {
+      await lockTenantSchedule(tx, tenantId);
+      const result = await write(tx);
+      const sessionSync = await this.syncTemplateSessionsInTx(
+        tx,
+        templateId,
+        tenantId,
+        today,
+      );
+      return { result, sessionSync };
+    }, SYNC_TX_OPTIONS);
+  }
+
+  // Jadval qulfi chaqiruvchida olingan bo'lishi shart
+  private async syncTemplateSessionsInTx(
+    tx: Prisma.TransactionClient,
+    templateId: string,
+    tenantId: string,
+    today: string,
+  ): Promise<SessionSyncResult> {
     const result: SessionSyncResult = {
       updated: 0,
       removed: 0,
       created: 0,
       conflicts: [],
     };
-    const tz = await getTenantTimezone(this.prisma, tenantId);
-    const today = nowInTimeZone(tz).date;
 
-    return this.prisma.$transaction(async (tx) => {
-      await lockTenantSchedule(tx, tenantId);
+    const template = await tx.scheduleTemplate.findFirst({
+      where: { id: templateId, tenantId },
+      include: { group: { select: { teacherId: true, name: true } } },
+    });
+    if (!template) return result;
 
-      const template = await tx.scheduleTemplate.findFirst({
-        where: { id: templateId, tenantId },
-        include: { group: { select: { teacherId: true } } },
-      });
-      if (!template) return result;
+    const sessions = await tx.session.findMany({
+      where: {
+        templateId,
+        isDeleted: false,
+        sessionDate: { gte: new Date(today) },
+      },
+      orderBy: { sessionDate: 'asc' },
+    });
+    if (!sessions.length) return result;
 
-      const sessions = await tx.session.findMany({
-        where: {
-          templateId,
-          isDeleted: false,
-          sessionDate: { gte: new Date(today) },
-        },
-        orderBy: { sessionDate: 'asc' },
-      });
-      if (!sessions.length) return result;
+    const horizon = toDateString(sessions[sessions.length - 1].sessionDate);
+    const desired = new Map<string, Occurrence>();
+    if (template.isActive && !template.isDeleted) {
+      const { occurrences } = await this.computeOccurrences(
+        tx,
+        tenantId,
+        [template],
+        template.group.teacherId,
+        today,
+        horizon,
+      );
+      for (const occ of occurrences) desired.set(occ.date, occ);
+    }
 
-      const horizon = toDateString(sessions[sessions.length - 1].sessionDate);
-      const desired = new Map<string, Occurrence>();
-      if (template.isActive && !template.isDeleted) {
-        const { occurrences } = await this.computeOccurrences(
-          tx,
-          tenantId,
-          [template],
-          template.group.teacherId,
-          today,
-          horizon,
-        );
-        for (const occ of occurrences) desired.set(occ.date, occ);
-      }
+    // Oraliqdagi bandlik bir marta o'qiladi — har bir sessiya uchun DB'ga so'rov yo'q
+    const index = await loadScheduleIndex(tx, {
+      tenantId,
+      from: today,
+      to: horizon,
+      groupIds: [template.groupId],
+      roomIds: [
+        ...new Set([
+          ...sessions.map((s) => s.roomId),
+          ...[...desired.values()].map((o) => o.roomId),
+        ]),
+      ],
+      teacherIds: [
+        ...new Set([
+          ...sessions.map((s) => s.teacherId),
+          ...[...desired.values()].map((o) => o.teacherId),
+        ]),
+      ],
+    });
 
-      for (const session of sessions) {
-        const date = toDateString(session.sessionDate);
-        const occ = desired.get(date);
-        desired.delete(date);
+    for (const session of sessions) {
+      const date = toDateString(session.sessionDate);
+      const occ = desired.get(date);
+      desired.delete(date);
 
-        // Tekshirilgan/qulflangan dars tarix — o'zgartirilmaydi
-        if (session.isChecked || session.isLocked) continue;
+      // Tekshirilgan/qulflangan dars tarix — o'zgartirilmaydi
+      if (session.isChecked || session.isLocked) continue;
 
-        if (!occ) {
-          await tx.session.update({
-            where: { id: session.id },
-            data: { isDeleted: true, deletedAt: new Date() },
-          });
-          result.removed++;
-          continue;
-        }
-
-        const changed =
-          session.startTime !== occ.startTime ||
-          session.endTime !== occ.endTime ||
-          session.roomId !== occ.roomId ||
-          session.teacherId !== occ.teacherId ||
-          session.subjectId !== occ.subjectId;
-        if (!changed) continue;
-
-        const conflict = await findSessionConflict(tx, {
-          tenantId,
-          sessionDate: session.sessionDate,
-          startTime: occ.startTime,
-          endTime: occ.endTime,
-          groupId: session.groupId,
-          roomId: occ.roomId,
-          teacherId: occ.teacherId,
-          excludeSessionId: session.id,
-        });
-        if (conflict) {
-          result.conflicts.push({
-            date,
-            startTime: occ.startTime,
-            endTime: occ.endTime,
-            kind: conflict.kind,
-            groupName: conflict.groupName,
-          });
-          continue;
-        }
-
+      if (!occ) {
         await tx.session.update({
           where: { id: session.id },
-          data: {
-            startTime: occ.startTime,
-            endTime: occ.endTime,
-            roomId: occ.roomId,
-            teacherId: occ.teacherId,
-            subjectId: occ.subjectId,
-          },
+          data: { isDeleted: true, deletedAt: new Date() },
         });
-        result.updated++;
+        index.remove(date, session.id);
+        result.removed++;
+        continue;
       }
 
-      // Hafta kuni o'zgargan yoki istisno o'chirilgan sanalar — yangi darslar
-      for (const occ of desired.values()) {
-        const sessionDate = new Date(occ.date);
-        const taken = await tx.session.findFirst({
-          where: {
-            tenantId,
-            groupId: template.groupId,
-            sessionDate,
-            startTime: occ.startTime,
-            isDeleted: false,
-          },
-          select: { id: true },
-        });
-        if (taken) continue;
+      const changed =
+        session.startTime !== occ.startTime ||
+        session.endTime !== occ.endTime ||
+        session.roomId !== occ.roomId ||
+        session.teacherId !== occ.teacherId ||
+        session.subjectId !== occ.subjectId;
+      if (!changed) continue;
 
-        const conflict = await findSessionConflict(tx, {
-          tenantId,
-          sessionDate,
+      const conflict = index.findConflict(date, {
+        startTime: occ.startTime,
+        endTime: occ.endTime,
+        groupId: session.groupId,
+        roomId: occ.roomId,
+        teacherId: occ.teacherId,
+        excludeId: session.id,
+      });
+      if (conflict) {
+        result.conflicts.push({
+          date,
           startTime: occ.startTime,
           endTime: occ.endTime,
-          groupId: template.groupId,
-          roomId: occ.roomId,
-          teacherId: occ.teacherId,
+          kind: conflict.kind,
+          groupName: conflict.groupName,
         });
-        if (conflict) {
-          result.conflicts.push({
-            date: occ.date,
-            startTime: occ.startTime,
-            endTime: occ.endTime,
-            kind: conflict.kind,
-            groupName: conflict.groupName,
-          });
-          continue;
-        }
-
-        await tx.session.create({
-          data: this.occurrenceToSession(occ, template.groupId, tenantId),
-        });
-        result.created++;
+        continue;
       }
 
-      return result;
-    });
+      await tx.session.update({
+        where: { id: session.id },
+        data: {
+          startTime: occ.startTime,
+          endTime: occ.endTime,
+          roomId: occ.roomId,
+          teacherId: occ.teacherId,
+          subjectId: occ.subjectId,
+        },
+      });
+      index.update(date, session.id, {
+        startTime: occ.startTime,
+        endTime: occ.endTime,
+        roomId: occ.roomId,
+        teacherId: occ.teacherId,
+      });
+      result.updated++;
+    }
+
+    // Hafta kuni o'zgargan yoki istisno o'chirilgan sanalar — yangi darslar
+    for (const occ of desired.values()) {
+      if (index.hasGroupStart(occ.date, template.groupId, occ.startTime)) {
+        continue;
+      }
+
+      const conflict = index.findConflict(occ.date, {
+        startTime: occ.startTime,
+        endTime: occ.endTime,
+        groupId: template.groupId,
+        roomId: occ.roomId,
+        teacherId: occ.teacherId,
+      });
+      if (conflict) {
+        result.conflicts.push({
+          date: occ.date,
+          startTime: occ.startTime,
+          endTime: occ.endTime,
+          kind: conflict.kind,
+          groupName: conflict.groupName,
+        });
+        continue;
+      }
+
+      const created = await tx.session.create({
+        data: this.occurrenceToSession(occ, template.groupId, tenantId),
+        select: { id: true },
+      });
+      index.add(occ.date, {
+        id: created.id,
+        startTime: occ.startTime,
+        endTime: occ.endTime,
+        groupId: template.groupId,
+        roomId: occ.roomId,
+        teacherId: occ.teacherId,
+        groupName: template.group.name,
+      });
+      result.created++;
+    }
+
+    return result;
   }
 
   // ─── Private: Conflict detection ──────────────────────────────
@@ -1264,9 +1358,7 @@ export class ScheduleService {
             where: {
               id: refs.teacherId,
               tenantId,
-              isDeleted: false,
-              isActive: true,
-              role: { name: { in: ['teacher', 'admin'] } },
+              ...ACTIVE_TEACHING_USER_WHERE,
             },
             select: { id: true },
           })
@@ -1300,18 +1392,21 @@ export class ScheduleService {
    * shu guruh, shu xona yoki shu o'qituvchi (shablon teacheri, bo'lmasa guruh teacheri) band.
    * Muddatlari kesishmaydigan shablonlar (masalan, 1-chorak va 2-chorak) to'qnashmaydi.
    */
-  private async checkTemplateConflicts(slot: {
-    tenantId: string;
-    weekday: Weekday;
-    startTime: string;
-    endTime: string;
-    groupId: string;
-    roomId: string;
-    teacherId: string;
-    validFrom: Date | null;
-    validTo: Date | null;
-    excludeId?: string;
-  }) {
+  private async checkTemplateConflicts(
+    db: Prisma.TransactionClient,
+    slot: {
+      tenantId: string;
+      weekday: Weekday;
+      startTime: string;
+      endTime: string;
+      groupId: string;
+      roomId: string;
+      teacherId: string;
+      validFrom: Date | null;
+      validTo: Date | null;
+      excludeId?: string;
+    },
+  ) {
     const validityOverlap: Prisma.ScheduleTemplateWhereInput[] = [];
     if (slot.validTo) {
       validityOverlap.push({
@@ -1324,7 +1419,7 @@ export class ScheduleService {
       });
     }
 
-    const candidates = await this.prisma.scheduleTemplate.findMany({
+    const candidates = await db.scheduleTemplate.findMany({
       where: {
         tenantId: slot.tenantId,
         weekday: slot.weekday,

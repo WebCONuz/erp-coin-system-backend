@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { teacherGroupAccessWhere } from 'src/common/utils/teacher-group-access';
+import { addDays, getTenantToday } from 'src/common/utils/tenant-time';
 
 @Injectable()
 export class TeachersService {
@@ -14,17 +15,12 @@ export class TeachersService {
     });
     if (!teacher) throw new NotFoundException("O'qituvchi topilmadi");
 
-    const now = new Date();
-    const todayStart = new Date(now);
-    todayStart.setHours(0, 0, 0, 0);
-    const todayEnd = new Date(todayStart);
-    todayEnd.setDate(todayStart.getDate() + 1);
-
-    const weekEnd = new Date(todayStart);
-    weekEnd.setDate(todayStart.getDate() + 7);
-
-    const twoWeeksAgo = new Date(todayStart);
-    twoWeeksAgo.setDate(todayStart.getDate() - 14);
+    // "Bugun" — tenant timezone'ida; sessionDate (@db.Date) bilan kalendar sana sifatida solishtiriladi
+    const { today } = await getTenantToday(this.prisma, tenantId);
+    const todayStart = new Date(today);
+    const todayEnd = new Date(addDays(today, 1));
+    const weekEnd = new Date(addDays(today, 7));
+    const twoWeeksAgo = new Date(addDays(today, -14));
 
     const [
       activeGroups,

@@ -1,40 +1,22 @@
 import {
   IsOptional,
-  IsNumber,
-  Min,
   IsString,
   IsUUID,
   IsBoolean,
+  MaxLength,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 
-export class QueryRewardDto {
-  @ApiPropertyOptional({ description: 'Faqat super_admin va creator uchun' })
-  @IsOptional()
-  @IsUUID()
-  tenantId?: string;
-
-  @ApiPropertyOptional({ example: 1, default: 1 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  page?: number = 1;
-
-  @ApiPropertyOptional({ example: 10, default: 10 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  limit?: number = 10;
-
+export class QueryRewardDto extends PaginationQueryDto {
   @ApiPropertyOptional({
     example: 'Futbolka',
     description: 'Nomi bo‘yicha qidiruv',
   })
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   search?: string;
 
   @ApiPropertyOptional({
@@ -42,7 +24,7 @@ export class QueryRewardDto {
     description: "Kategoriya bo'yicha filter",
   })
   @IsOptional()
-  @IsString()
+  @IsUUID()
   categoryId?: string;
 
   @ApiPropertyOptional({

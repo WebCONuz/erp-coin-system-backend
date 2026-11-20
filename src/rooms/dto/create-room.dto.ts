@@ -6,6 +6,7 @@ import {
   Max,
   IsOptional,
   Length,
+  MaxLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -35,5 +36,6 @@ export class CreateRoomDto {
   })
   @IsString()
   @IsOptional()
+  @MaxLength(1000)
   description?: string;
 }

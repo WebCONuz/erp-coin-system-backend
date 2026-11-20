@@ -7,6 +7,7 @@ import {
   IsInt,
   Min,
   Max,
+  MaxLength,
 } from 'class-validator';
 import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
 import { ApiPropertyOptional } from '@nestjs/swagger';
@@ -59,6 +60,7 @@ export class UpdateSessionDto {
   @ApiPropertyOptional({ example: 'Mavzu nomi' })
   @IsOptional()
   @IsString()
+  @MaxLength(300)
   topic?: string;
 
   @ApiPropertyOptional({ example: 'room-uuid' })

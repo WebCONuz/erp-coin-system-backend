@@ -38,10 +38,6 @@ async function seedRoles(systemTenantId: string) {
       displayName: 'Creator (System)',
       level: ROLE_LEVELS.creator,
       scope: 'system',
-      canDelete: true,
-      canManageAdmins: true,
-      canManageUsers: true,
-      isSystem: true,
       tenantId: systemTenantId,
     },
   });
@@ -54,10 +50,6 @@ async function seedRoles(systemTenantId: string) {
       displayName: 'Super Admin',
       level: ROLE_LEVELS.super_admin,
       scope: 'system',
-      canDelete: true,
-      canManageAdmins: true,
-      canManageUsers: true,
-      isSystem: true,
       tenantId: systemTenantId,
     },
   });

@@ -286,19 +286,20 @@ export type CoinTransactionGroupByOutputType = {
   _max: CoinTransactionMaxAggregateOutputType | null;
 };
 
-type GetCoinTransactionGroupByPayload<T extends CoinTransactionGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<CoinTransactionGroupByOutputType, T['by']> & {
-        [P in keyof T &
-          keyof CoinTransactionGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], CoinTransactionGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], CoinTransactionGroupByOutputType[P]>;
-      }
-    >
-  >;
+export type GetCoinTransactionGroupByPayload<
+  T extends CoinTransactionGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<CoinTransactionGroupByOutputType, T['by']> & {
+      [P in keyof T &
+        keyof CoinTransactionGroupByOutputType]: P extends '_count'
+        ? T[P] extends boolean
+          ? number
+          : Prisma.GetScalarType<T[P], CoinTransactionGroupByOutputType[P]>
+        : Prisma.GetScalarType<T[P], CoinTransactionGroupByOutputType[P]>;
+    }
+  >
+>;
 
 export type CoinTransactionWhereInput = {
   AND?: Prisma.CoinTransactionWhereInput | Prisma.CoinTransactionWhereInput[];

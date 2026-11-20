@@ -4,13 +4,13 @@ import {
   IsOptional,
   IsString,
   IsEmail,
-  MinLength,
   Matches,
   IsNotEmpty,
   MaxLength,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsUsername } from './username.decorator';
+import { IsNewPassword } from './password.decorator';
 import { IsAvatarUrl } from './avatar-url.decorator';
 
 export class UpdateUserDto extends PartialType(
@@ -51,6 +51,7 @@ export class UpdateOwnProfileDto {
   @ApiPropertyOptional({ example: 'ali@gmail.com' })
   @IsOptional()
   @IsEmail()
+  @MaxLength(150)
   email?: string;
 
   @ApiPropertyOptional({
@@ -69,10 +70,10 @@ export class ChangePasswordDto {
   })
   @IsOptional()
   @IsString()
+  @MaxLength(1024)
   oldPassword?: string;
 
-  @ApiProperty()
-  @IsString()
-  @MinLength(6)
+  @ApiProperty({ minLength: 8, maxLength: 72 })
+  @IsNewPassword()
   newPassword: string;
 }

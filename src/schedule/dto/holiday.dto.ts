@@ -1,17 +1,11 @@
 import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 
 export class CreateHolidayDto {
   @ApiProperty({ example: '2026-12-31', description: 'Sana (YYYY-MM-DD)' })
-  @IsDateString()
-  @IsNotEmpty()
+  @IsDateOnly()
   date: string;
 
   @ApiProperty({ example: 'Yangi yil' })
@@ -24,11 +18,11 @@ export class CreateHolidayDto {
 export class QueryHolidayDto extends TenantQueryDto {
   @ApiPropertyOptional({ example: '2026-01-01' })
   @IsOptional()
-  @IsDateString()
+  @IsDateOnly()
   from?: string;
 
   @ApiPropertyOptional({ example: '2026-12-31' })
   @IsOptional()
-  @IsDateString()
+  @IsDateOnly()
   to?: string;
 }

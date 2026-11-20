@@ -1,14 +1,15 @@
 import {
   IsBoolean,
-  IsDateString,
   IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
+  MaxLength,
   IsUUID,
   ValidateIf,
 } from 'class-validator';
 import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -21,8 +22,7 @@ export class CreateScheduleExceptionDto {
     example: '2026-08-25',
     description: 'Istisno sanasi (YYYY-MM-DD)',
   })
-  @IsDateString()
-  @IsNotEmpty()
+  @IsDateOnly()
   exceptionDate: string;
 
   @ApiProperty({
@@ -73,6 +73,7 @@ export class CreateScheduleExceptionDto {
   @ApiPropertyOptional({ example: "Bayram sababli dars ko'chirildi" })
   @IsOptional()
   @IsString()
+  @MaxLength(300)
   note?: string;
 }
 

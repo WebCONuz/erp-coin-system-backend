@@ -55,15 +55,15 @@ export type Tenant = Prisma.TenantModel;
  */
 export type Role = Prisma.RoleModel;
 /**
- * Model RolePermission
- *
- */
-export type RolePermission = Prisma.RolePermissionModel;
-/**
  * Model User
  *
  */
 export type User = Prisma.UserModel;
+/**
+ * Model RefreshSession
+ *
+ */
+export type RefreshSession = Prisma.RefreshSessionModel;
 /**
  * Model Wallet
  *
@@ -170,7 +170,7 @@ export type EmailLog = Prisma.EmailLogModel;
  */
 export type AuditLog = Prisma.AuditLogModel;
 /**
- * Model ImportLog
+ * Model IdempotencyKey
  *
  */
-export type ImportLog = Prisma.ImportLogModel;
+export type IdempotencyKey = Prisma.IdempotencyKeyModel;

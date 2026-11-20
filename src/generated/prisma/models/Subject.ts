@@ -213,7 +213,7 @@ export type SubjectGroupByOutputType = {
   _max: SubjectMaxAggregateOutputType | null;
 };
 
-type GetSubjectGroupByPayload<T extends SubjectGroupByArgs> =
+export type GetSubjectGroupByPayload<T extends SubjectGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<SubjectGroupByOutputType, T['by']> & {

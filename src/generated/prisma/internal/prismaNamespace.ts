@@ -93,12 +93,12 @@ export type PrismaVersion = {
 };
 
 /**
- * Prisma Client JS version: 7.5.0
- * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+ * Prisma Client JS version: 7.10.1
+ * Query Engine version: d1b3f377ca835d73fd50954a5e22128b9ebdd6b8
  */
 export const prismaVersion: PrismaVersion = {
-  client: '7.5.0',
-  engine: '280c870be64f457428992c43c1f6d557fab6e29e',
+  client: '7.10.1',
+  engine: 'd1b3f377ca835d73fd50954a5e22128b9ebdd6b8',
 };
 
 /**
@@ -173,6 +173,22 @@ export type Subset<T, U> = {
 };
 
 /**
+ * Resolved type of the argument passed to the `PrismaClient` constructor.
+ *
+ * When called without a narrower options type (the common case), this resolves
+ * to `PrismaClientOptions` directly, which produces a clear TypeScript error
+ * message (`not assignable to parameter of type 'PrismaClientOptions'`) when
+ * the argument is missing or incomplete. When the user supplies a narrower
+ * options type (e.g. via a literal), it falls back to `Subset` to keep
+ * filtering out unknown properties.
+ */
+export type PrismaClientConstructorArgs<Options extends PrismaClientOptions> = [
+  PrismaClientOptions,
+] extends [Options]
+  ? PrismaClientOptions
+  : Subset<Options, PrismaClientOptions>;
+
+/**
  * SelectSubset
  * @desc From `T` pick properties that exist in `U`. Simple version of Intersection.
  * Additionally, it validates, if both select and include are present. If the case, it errors.
@@ -201,7 +217,7 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
  */
 export type XOR<T, U> = T extends object
   ? U extends object
-    ? (Without<T, U> & U) | (Without<U, T> & T)
+    ? ((Without<T, U> & U) | (Without<U, T> & T)) & object
     : U
   : T;
 
@@ -414,8 +430,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never
 export const ModelName = {
   Tenant: 'Tenant',
   Role: 'Role',
-  RolePermission: 'RolePermission',
   User: 'User',
+  RefreshSession: 'RefreshSession',
   Wallet: 'Wallet',
   Course: 'Course',
   Subject: 'Subject',
@@ -437,7 +453,7 @@ export const ModelName = {
   EmailTemplate: 'EmailTemplate',
   EmailLog: 'EmailLog',
   AuditLog: 'AuditLog',
-  ImportLog: 'ImportLog',
+  IdempotencyKey: 'IdempotencyKey',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -462,8 +478,8 @@ export type TypeMap<
     modelProps:
       | 'tenant'
       | 'role'
-      | 'rolePermission'
       | 'user'
+      | 'refreshSession'
       | 'wallet'
       | 'course'
       | 'subject'
@@ -485,7 +501,7 @@ export type TypeMap<
       | 'emailTemplate'
       | 'emailLog'
       | 'auditLog'
-      | 'importLog';
+      | 'idempotencyKey';
     txIsolationLevel: TransactionIsolationLevel;
   };
   model: {
@@ -641,82 +657,6 @@ export type TypeMap<
         };
       };
     };
-    RolePermission: {
-      payload: Prisma.$RolePermissionPayload<ExtArgs>;
-      fields: Prisma.RolePermissionFieldRefs;
-      operations: {
-        findUnique: {
-          args: Prisma.RolePermissionFindUniqueArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload> | null;
-        };
-        findUniqueOrThrow: {
-          args: Prisma.RolePermissionFindUniqueOrThrowArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>;
-        };
-        findFirst: {
-          args: Prisma.RolePermissionFindFirstArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload> | null;
-        };
-        findFirstOrThrow: {
-          args: Prisma.RolePermissionFindFirstOrThrowArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>;
-        };
-        findMany: {
-          args: Prisma.RolePermissionFindManyArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>[];
-        };
-        create: {
-          args: Prisma.RolePermissionCreateArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>;
-        };
-        createMany: {
-          args: Prisma.RolePermissionCreateManyArgs<ExtArgs>;
-          result: BatchPayload;
-        };
-        createManyAndReturn: {
-          args: Prisma.RolePermissionCreateManyAndReturnArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>[];
-        };
-        delete: {
-          args: Prisma.RolePermissionDeleteArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>;
-        };
-        update: {
-          args: Prisma.RolePermissionUpdateArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>;
-        };
-        deleteMany: {
-          args: Prisma.RolePermissionDeleteManyArgs<ExtArgs>;
-          result: BatchPayload;
-        };
-        updateMany: {
-          args: Prisma.RolePermissionUpdateManyArgs<ExtArgs>;
-          result: BatchPayload;
-        };
-        updateManyAndReturn: {
-          args: Prisma.RolePermissionUpdateManyAndReturnArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>[];
-        };
-        upsert: {
-          args: Prisma.RolePermissionUpsertArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RolePermissionPayload>;
-        };
-        aggregate: {
-          args: Prisma.RolePermissionAggregateArgs<ExtArgs>;
-          result: runtime.Types.Utils.Optional<Prisma.AggregateRolePermission>;
-        };
-        groupBy: {
-          args: Prisma.RolePermissionGroupByArgs<ExtArgs>;
-          result: runtime.Types.Utils.Optional<Prisma.RolePermissionGroupByOutputType>[];
-        };
-        count: {
-          args: Prisma.RolePermissionCountArgs<ExtArgs>;
-          result:
-            | runtime.Types.Utils.Optional<Prisma.RolePermissionCountAggregateOutputType>
-            | number;
-        };
-      };
-    };
     User: {
       payload: Prisma.$UserPayload<ExtArgs>;
       fields: Prisma.UserFieldRefs;
@@ -789,6 +729,82 @@ export type TypeMap<
           args: Prisma.UserCountArgs<ExtArgs>;
           result:
             | runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    RefreshSession: {
+      payload: Prisma.$RefreshSessionPayload<ExtArgs>;
+      fields: Prisma.RefreshSessionFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.RefreshSessionFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.RefreshSessionFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>;
+        };
+        findFirst: {
+          args: Prisma.RefreshSessionFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.RefreshSessionFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>;
+        };
+        findMany: {
+          args: Prisma.RefreshSessionFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>[];
+        };
+        create: {
+          args: Prisma.RefreshSessionCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>;
+        };
+        createMany: {
+          args: Prisma.RefreshSessionCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        createManyAndReturn: {
+          args: Prisma.RefreshSessionCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>[];
+        };
+        delete: {
+          args: Prisma.RefreshSessionDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>;
+        };
+        update: {
+          args: Prisma.RefreshSessionUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>;
+        };
+        deleteMany: {
+          args: Prisma.RefreshSessionDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.RefreshSessionUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateManyAndReturn: {
+          args: Prisma.RefreshSessionUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>[];
+        };
+        upsert: {
+          args: Prisma.RefreshSessionUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RefreshSessionPayload>;
+        };
+        aggregate: {
+          args: Prisma.RefreshSessionAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRefreshSession>;
+        };
+        groupBy: {
+          args: Prisma.RefreshSessionGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.RefreshSessionGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.RefreshSessionCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.RefreshSessionCountAggregateOutputType>
             | number;
         };
       };
@@ -2389,78 +2405,78 @@ export type TypeMap<
         };
       };
     };
-    ImportLog: {
-      payload: Prisma.$ImportLogPayload<ExtArgs>;
-      fields: Prisma.ImportLogFieldRefs;
+    IdempotencyKey: {
+      payload: Prisma.$IdempotencyKeyPayload<ExtArgs>;
+      fields: Prisma.IdempotencyKeyFieldRefs;
       operations: {
         findUnique: {
-          args: Prisma.ImportLogFindUniqueArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload> | null;
+          args: Prisma.IdempotencyKeyFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload> | null;
         };
         findUniqueOrThrow: {
-          args: Prisma.ImportLogFindUniqueOrThrowArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>;
+          args: Prisma.IdempotencyKeyFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>;
         };
         findFirst: {
-          args: Prisma.ImportLogFindFirstArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload> | null;
+          args: Prisma.IdempotencyKeyFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload> | null;
         };
         findFirstOrThrow: {
-          args: Prisma.ImportLogFindFirstOrThrowArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>;
+          args: Prisma.IdempotencyKeyFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>;
         };
         findMany: {
-          args: Prisma.ImportLogFindManyArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>[];
+          args: Prisma.IdempotencyKeyFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>[];
         };
         create: {
-          args: Prisma.ImportLogCreateArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>;
+          args: Prisma.IdempotencyKeyCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>;
         };
         createMany: {
-          args: Prisma.ImportLogCreateManyArgs<ExtArgs>;
+          args: Prisma.IdempotencyKeyCreateManyArgs<ExtArgs>;
           result: BatchPayload;
         };
         createManyAndReturn: {
-          args: Prisma.ImportLogCreateManyAndReturnArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>[];
+          args: Prisma.IdempotencyKeyCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>[];
         };
         delete: {
-          args: Prisma.ImportLogDeleteArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>;
+          args: Prisma.IdempotencyKeyDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>;
         };
         update: {
-          args: Prisma.ImportLogUpdateArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>;
+          args: Prisma.IdempotencyKeyUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>;
         };
         deleteMany: {
-          args: Prisma.ImportLogDeleteManyArgs<ExtArgs>;
+          args: Prisma.IdempotencyKeyDeleteManyArgs<ExtArgs>;
           result: BatchPayload;
         };
         updateMany: {
-          args: Prisma.ImportLogUpdateManyArgs<ExtArgs>;
+          args: Prisma.IdempotencyKeyUpdateManyArgs<ExtArgs>;
           result: BatchPayload;
         };
         updateManyAndReturn: {
-          args: Prisma.ImportLogUpdateManyAndReturnArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>[];
+          args: Prisma.IdempotencyKeyUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>[];
         };
         upsert: {
-          args: Prisma.ImportLogUpsertArgs<ExtArgs>;
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportLogPayload>;
+          args: Prisma.IdempotencyKeyUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IdempotencyKeyPayload>;
         };
         aggregate: {
-          args: Prisma.ImportLogAggregateArgs<ExtArgs>;
-          result: runtime.Types.Utils.Optional<Prisma.AggregateImportLog>;
+          args: Prisma.IdempotencyKeyAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIdempotencyKey>;
         };
         groupBy: {
-          args: Prisma.ImportLogGroupByArgs<ExtArgs>;
-          result: runtime.Types.Utils.Optional<Prisma.ImportLogGroupByOutputType>[];
+          args: Prisma.IdempotencyKeyGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.IdempotencyKeyGroupByOutputType>[];
         };
         count: {
-          args: Prisma.ImportLogCountArgs<ExtArgs>;
+          args: Prisma.IdempotencyKeyCountArgs<ExtArgs>;
           result:
-            | runtime.Types.Utils.Optional<Prisma.ImportLogCountAggregateOutputType>
+            | runtime.Types.Utils.Optional<Prisma.IdempotencyKeyCountAggregateOutputType>
             | number;
         };
       };
@@ -2528,10 +2544,6 @@ export const RoleScalarFieldEnum = {
   displayName: 'displayName',
   level: 'level',
   scope: 'scope',
-  canDelete: 'canDelete',
-  canManageAdmins: 'canManageAdmins',
-  canManageUsers: 'canManageUsers',
-  isSystem: 'isSystem',
   isActive: 'isActive',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
@@ -2542,17 +2554,6 @@ export const RoleScalarFieldEnum = {
 
 export type RoleScalarFieldEnum =
   (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum];
-
-export const RolePermissionScalarFieldEnum = {
-  id: 'id',
-  permission: 'permission',
-  createdAt: 'createdAt',
-  roleId: 'roleId',
-  tenantId: 'tenantId',
-} as const;
-
-export type RolePermissionScalarFieldEnum =
-  (typeof RolePermissionScalarFieldEnum)[keyof typeof RolePermissionScalarFieldEnum];
 
 export const UserScalarFieldEnum = {
   id: 'id',
@@ -2571,7 +2572,6 @@ export const UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  refreshTokenHash: 'refreshTokenHash',
   passwordResetToken: 'passwordResetToken',
   passwordResetExpiry: 'passwordResetExpiry',
   tenantId: 'tenantId',
@@ -2580,6 +2580,22 @@ export const UserScalarFieldEnum = {
 
 export type UserScalarFieldEnum =
   (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+
+export const RefreshSessionScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  previousTokenHash: 'previousTokenHash',
+  rotatedAt: 'rotatedAt',
+  expiresAt: 'expiresAt',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt',
+  lastUsedAt: 'lastUsedAt',
+  userId: 'userId',
+} as const;
+
+export type RefreshSessionScalarFieldEnum =
+  (typeof RefreshSessionScalarFieldEnum)[keyof typeof RefreshSessionScalarFieldEnum];
 
 export const WalletScalarFieldEnum = {
   id: 'id',
@@ -2980,24 +2996,20 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum =
   (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum];
 
-export const ImportLogScalarFieldEnum = {
+export const IdempotencyKeyScalarFieldEnum = {
   id: 'id',
-  entityType: 'entityType',
-  fileName: 'fileName',
-  totalRows: 'totalRows',
-  successRows: 'successRows',
-  failedRows: 'failedRows',
-  status: 'status',
-  errorLog: 'errorLog',
-  isDeleted: 'isDeleted',
+  key: 'key',
+  requestHash: 'requestHash',
+  statusCode: 'statusCode',
+  response: 'response',
   createdAt: 'createdAt',
-  finishedAt: 'finishedAt',
-  deletedAt: 'deletedAt',
-  importedById: 'importedById',
+  expiresAt: 'expiresAt',
+  tenantId: 'tenantId',
+  userId: 'userId',
 } as const;
 
-export type ImportLogScalarFieldEnum =
-  (typeof ImportLogScalarFieldEnum)[keyof typeof ImportLogScalarFieldEnum];
+export type IdempotencyKeyScalarFieldEnum =
+  (typeof IdempotencyKeyScalarFieldEnum)[keyof typeof IdempotencyKeyScalarFieldEnum];
 
 export const SortOrder = {
   asc: 'asc',
@@ -3386,22 +3398,6 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
- * Reference to a field of type 'ImportStatus'
- */
-export type EnumImportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
-  $PrismaModel,
-  'ImportStatus'
->;
-
-/**
- * Reference to a field of type 'ImportStatus[]'
- */
-export type ListEnumImportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
-  $PrismaModel,
-  'ImportStatus[]'
->;
-
-/**
  * Batch Payload for updateMany & deleteMany & createMany
  */
 export type BatchPayload = {
@@ -3416,22 +3412,10 @@ export const defineExtension = runtime.Extensions
 >;
 export type DefaultPrismaClient = PrismaClient;
 export type ErrorFormat = 'pretty' | 'colorless' | 'minimal';
-export type PrismaClientOptions = (
-  | {
-      /**
-       * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-pg`.
-       */
-      adapter: runtime.SqlDriverAdapterFactory;
-      accelerateUrl?: never;
-    }
-  | {
-      /**
-       * Prisma Accelerate URL allowing the client to connect through Accelerate instead of a direct database.
-       */
-      accelerateUrl: string;
-      adapter?: never;
-    }
-) & {
+/**
+ * Options common to all variants of `PrismaClientOptions`, regardless of whether you connect to your database through a driver adapter or through Prisma Accelerate.
+ */
+export interface PrismaClientBaseOptions {
   /**
    * @default "colorless"
    */
@@ -3502,12 +3486,79 @@ export type PrismaClientOptions = (
    * ```
    */
   comments?: runtime.SqlCommenterPlugin[];
-};
+  /**
+   * Optional maximum size for the query plan cache. If not provided, a default size will be used.
+   * A value of `0` can be used to disable the cache entirely. A higher cache size can improve
+   * performance for applications that execute a large number of unique queries, while a smaller
+   * cache size can reduce memory usage.
+   *
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   queryPlanCacheMaxSize: 100,
+   * })
+   * ```
+   */
+  queryPlanCacheMaxSize?: number;
+}
+
+/**
+ * `PrismaClient` options for connecting to your database through Prisma Accelerate instead of a driver adapter.
+ *
+ * Learn more: https://pris.ly/d/accelerate
+ */
+export interface PrismaClientOptionsWithAccelerateUrl extends PrismaClientBaseOptions {
+  /**
+   * The Prisma Accelerate connection URL. Use this option to connect to your database through Prisma Accelerate instead of using a driver adapter to connect directly.
+   *
+   * Learn more: https://pris.ly/d/accelerate
+   */
+  accelerateUrl: string;
+  adapter?: never;
+}
+
+/**
+ * `PrismaClient` options for connecting to your database through a driver adapter. This is the common case in Prisma 7.
+ *
+ * Learn more: https://pris.ly/d/driver-adapters
+ */
+export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions {
+  /**
+   * A driver adapter that PrismaClient uses to connect to your database, such as the ones provided by `@prisma/adapter-pg`, `@prisma/adapter-libsql`, `@prisma/adapter-planetscale`, etc.
+   *
+   * A driver adapter is **required** unless you connect to your database through Prisma Accelerate (in which case use `accelerateUrl` instead).
+   *
+   * Learn more: https://pris.ly/d/driver-adapters
+   *
+   * @example
+   * ```ts
+   * import { PrismaPg } from '@prisma/adapter-pg'
+   * import { PrismaClient } from './generated/prisma/client'
+   *
+   * const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * const prisma = new PrismaClient({ adapter })
+   * ```
+   */
+  adapter: runtime.SqlDriverAdapterFactory;
+  accelerateUrl?: never;
+}
+
+/**
+ * Options passed to the `PrismaClient` constructor.
+ *
+ * A driver adapter (or, alternatively, a Prisma Accelerate URL) is **required**. See {@link PrismaClientOptionsWithAdapter} and {@link PrismaClientOptionsWithAccelerateUrl} for the two variants. All other properties live in {@link PrismaClientBaseOptions} and are optional.
+ *
+ * Learn more about driver adapters: https://pris.ly/d/driver-adapters
+ */
+export type PrismaClientOptions =
+  | PrismaClientOptionsWithAccelerateUrl
+  | PrismaClientOptionsWithAdapter;
 export type GlobalOmitConfig = {
   tenant?: Prisma.TenantOmit;
   role?: Prisma.RoleOmit;
-  rolePermission?: Prisma.RolePermissionOmit;
   user?: Prisma.UserOmit;
+  refreshSession?: Prisma.RefreshSessionOmit;
   wallet?: Prisma.WalletOmit;
   course?: Prisma.CourseOmit;
   subject?: Prisma.SubjectOmit;
@@ -3529,7 +3580,7 @@ export type GlobalOmitConfig = {
   emailTemplate?: Prisma.EmailTemplateOmit;
   emailLog?: Prisma.EmailLogOmit;
   auditLog?: Prisma.AuditLogOmit;
-  importLog?: Prisma.ImportLogOmit;
+  idempotencyKey?: Prisma.IdempotencyKeyOmit;
 };
 
 /* Types for Logging */

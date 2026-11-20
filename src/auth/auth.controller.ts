@@ -18,6 +18,15 @@ import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthThrottle } from './throttle/auth-throttle';
+import { ClientMeta } from 'src/common/types';
+
+const refreshCookie = (req: Request) =>
+  req.cookies?.refresh_token as string | undefined;
+
+const clientMeta = (req: Request): ClientMeta => ({
+  userAgent: req.headers['user-agent'],
+  ipAddress: req.ip,
+});
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -28,9 +37,16 @@ export class AuthController {
   @AuthThrottle()
   @Post('login')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Tizimga kirish' })
-  login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
-    return this.authService.login(dto, res);
+  @ApiOperation({
+    summary:
+      'Tizimga kirish — har bir login alohida qurilma sessiyasi (boshqa qurilmalar chiqib ketmaydi)',
+  })
+  login(
+    @Body() dto: LoginDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.login(dto, res, clientMeta(req));
   }
 
   @Public()
@@ -38,18 +54,27 @@ export class AuthController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Access tokenni yangilash' })
   refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authService.refresh(req.cookies?.refresh_token as string, res);
+    return this.authService.refresh(refreshCookie(req), res);
+  }
+
+  // Access token muddati o'tgan bo'lsa ham ishlaydi — refresh cookie bo'yicha joriy qurilma yopiladi
+  @Public()
+  @Post('logout')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Tizimdan chiqish (faqat joriy qurilma)' })
+  logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(refreshCookie(req), res);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('logout')
+  @Post('logout-all')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Tizimdan chiqish' })
-  logout(
+  @ApiOperation({ summary: 'Barcha qurilmalardan chiqish' })
+  logoutAll(
     @CurrentUser('id') userId: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return this.authService.logout(userId, res);
+    return this.authService.logoutAll(userId, res);
   }
 
   @UseGuards(JwtAuthGuard)

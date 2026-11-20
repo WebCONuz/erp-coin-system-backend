@@ -3,6 +3,7 @@ import { Prisma } from 'src/generated/prisma/client';
 import {
   assertNoSessionConflict,
   findSessionConflict,
+  ScheduleIndex,
   SessionSlot,
   timeOverlap,
 } from './session-conflicts';
@@ -80,6 +81,46 @@ describe('findSessionConflict', () => {
       isDeleted: false,
       id: { not: 'self' },
     });
+  });
+
+  it('ScheduleIndex — xotirada tekshiradi, o`zini chiqaradi, qo`shilgan/ko`chirilganni ko`radi', () => {
+    const index = new ScheduleIndex([
+      { date: '2026-11-20', ...candidate({ roomId: 'r1' }), groupName: '9-B' },
+    ]);
+    const s = { ...slot };
+    expect(index.findConflict('2026-11-20', s)).toMatchObject({
+      kind: 'room',
+    });
+    expect(index.findConflict('2026-11-21', s)).toBeNull(); // boshqa sana
+    expect(
+      index.findConflict('2026-11-20', { ...s, excludeId: 'other' }),
+    ).toBeNull();
+
+    // ko'chirilgan sessiya endi to'qnashmaydi
+    index.update('2026-11-20', 'other', {
+      startTime: '12:00',
+      endTime: '13:00',
+    });
+    expect(index.findConflict('2026-11-20', s)).toBeNull();
+
+    // shu operatsiyada rejalashtirilgan dars ham band qiladi
+    index.add('2026-11-21', {
+      id: 'planned-1',
+      startTime: '10:00',
+      endTime: '11:00',
+      groupId: 'g9',
+      roomId: 'r9',
+      teacherId: 'teacher1',
+      groupName: '10-A',
+    });
+    expect(index.findConflict('2026-11-21', s)).toMatchObject({
+      kind: 'teacher',
+      groupName: '10-A',
+    });
+    expect(index.hasGroupStart('2026-11-21', 'g9', '10:00')).toBe(true);
+
+    index.remove('2026-11-21', 'planned-1');
+    expect(index.findConflict('2026-11-21', s)).toBeNull();
   });
 
   it('assertNoSessionConflict — 409 SCHEDULE_CONFLICT', async () => {

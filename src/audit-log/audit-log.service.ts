@@ -1,5 +1,7 @@
 import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { getRequestContext } from 'src/common/context/request-context';
+import { AuditEntry, buildAuditData } from './utils/audit-entry';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuditActionType, Prisma } from 'src/generated/prisma/client';
 import {
@@ -13,6 +15,12 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
+import {
+  addDays,
+  getTenantTimezone,
+  zonedDayStart,
+} from 'src/common/utils/tenant-time';
 
 export class QueryAuditLogDto extends TenantQueryDto {
   @ApiPropertyOptional({ enum: AuditActionType })
@@ -46,12 +54,12 @@ export class QueryAuditLogDto extends TenantQueryDto {
     description: 'Boshlanish sanasi',
   })
   @IsOptional()
-  @IsString()
+  @IsDateOnly()
   fromDate?: string;
 
   @ApiPropertyOptional({ example: '2026-12-31', description: 'Tugash sanasi' })
   @IsOptional()
-  @IsString()
+  @IsDateOnly()
   toDate?: string;
 
   @ApiPropertyOptional({ default: 1 })
@@ -72,7 +80,35 @@ export class QueryAuditLogDto extends TenantQueryDto {
 
 @Injectable()
 export class AuditLogService {
+  private readonly logger = new Logger(AuditLogService.name);
+
   constructor(private readonly prisma: PrismaService) {}
+
+  /**
+   * Audit yozuvi uchun `data` — chaqiruvchi o'z tranzaksiyasida yozadi:
+   * `tx.auditLog.create({ data: this.audit.data({...}) })` (interaktiv tx) yoki
+   * `this.prisma.$transaction([..., this.prisma.auditLog.create({ data })])` (massiv tx).
+   * Shunda amal va uning audit izi birga saqlanadi yoki birga bekor bo'ladi.
+   * IP va user-agent joriy so'rov kontekstidan olinadi.
+   */
+  data(entry: AuditEntry): Prisma.AuditLogUncheckedCreateInput {
+    return buildAuditData(entry, getRequestContext());
+  }
+
+  /**
+   * Tranzaksiyadan tashqarida (asosiy amal allaqachon saqlangan) — audit xatosi amalni
+   * buzmasligi kerak: aks holda klient xato ko'rib, so'rovni takrorlaydi (masalan coin
+   * ikki marta beriladi). Xato faqat logga yoziladi.
+   */
+  async recordSafe(entry: AuditEntry): Promise<void> {
+    try {
+      await this.prisma.auditLog.create({ data: this.data(entry) });
+    } catch (err) {
+      this.logger.error(
+        `Audit yozilmadi [${entry.action} ${entry.entityType} ${entry.entityId}]: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  }
 
   async findAll(query: QueryAuditLogDto, tenantId: string) {
     const {
@@ -94,9 +130,11 @@ export class AuditLogService {
     if (entityId) where.entityId = entityId;
     if (userId) where.createdBy = userId;
     if (fromDate || toDate) {
+      // Sanalar tenant mahalliy kunlari: from — kun boshidan, to — kun oxirigacha
+      const tz = await getTenantTimezone(this.prisma, tenantId);
       where.createdAt = {
-        ...(fromDate ? { gte: new Date(fromDate) } : {}),
-        ...(toDate ? { lte: new Date(toDate + 'T23:59:59') } : {}),
+        ...(fromDate ? { gte: zonedDayStart(tz, fromDate) } : {}),
+        ...(toDate ? { lt: zonedDayStart(tz, addDays(toDate, 1)) } : {}),
       };
     }
 

@@ -16,6 +16,17 @@ import {
   canTeacherAccessGroup,
   teacherGroupAccessWhere,
 } from 'src/common/utils/teacher-group-access';
+import {
+  assertActiveStudent,
+  assertActiveStudents,
+  assertTeachingUser,
+} from 'src/common/utils/user-role-checks';
+import {
+  addDays,
+  getTenantToday,
+  localDateOf,
+  zonedDayStart,
+} from 'src/common/utils/tenant-time';
 
 @Injectable()
 export class GroupsService {
@@ -28,11 +39,8 @@ export class GroupsService {
     });
     if (!course) throw new NotFoundException('Kurs topilmadi');
 
-    // 2. O'qituvchi mavjudligini va shu tenantga tegishliligini tekshiramiz
-    const teacher = await this.prisma.user.findFirst({
-      where: { id: dto.teacherId, tenantId, isDeleted: false },
-    });
-    if (!teacher) throw new NotFoundException('O‘qituvchi topilmadi');
+    // 2. O'qituvchi shu tenantdagi faol teacher/admin bo'lishi shart (student emas)
+    await assertTeachingUser(this.prisma, tenantId, dto.teacherId);
 
     return this.prisma.group.create({
       data: {
@@ -169,6 +177,15 @@ export class GroupsService {
       if (!isMember) {
         throw new ForbiddenException("Siz bu guruhni ko'ra olmaysiz");
       }
+      // Guruhdoshlarning telefon raqami studentga ko'rsatilmaydi (o'ziniki qoladi)
+      return {
+        ...group,
+        students: group.students.map((s) =>
+          s.student.id === requesterId
+            ? s
+            : { ...s, student: { ...s.student, phone: null } },
+        ),
+      };
     }
 
     // Teacher o'zi dars beradigan, yoki shu guruhda unga sessiya/jadval
@@ -211,17 +228,11 @@ export class GroupsService {
       };
     }
 
-    // "Bugun" server LOKAL vaqti bo'yicha aniqlanadi (getUTC* emas), keyin
-    // UTC-yarim tun sifatida kodlanadi — Session.sessionDate saqlanish
-    // konventsiyasiga mos (batafsil izoh: dashboard.service.ts)
-    const now = new Date();
-    const todayStart = new Date(
-      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()),
-    );
-    const thirtyDaysAgoStart = new Date(todayStart);
-    thirtyDaysAgoStart.setUTCDate(todayStart.getUTCDate() - 29); // bugun bilan birga 30 kun
-    const sevenDaysAgoStart = new Date(todayStart);
-    sevenDaysAgoStart.setUTCDate(todayStart.getUTCDate() - 6); // bugun bilan birga 7 kun
+    // Kunlar tenant timezone'ida: tranzaksiya (createdAt — instant) mahalliy sanasi bo'yicha
+    // guruhlanadi, oraliq boshi — mahalliy yarim tunning UTC instant'i
+    const { tz, today } = await getTenantToday(this.prisma, tenantId);
+    const thirtyDaysAgoStart = zonedDayStart(tz, addDays(today, -29)); // bugun bilan birga 30 kun
+    const sevenDaysAgoStart = zonedDayStart(tz, addDays(today, -6)); // bugun bilan birga 7 kun
 
     const [walletAgg, transactions] = await this.prisma.$transaction([
       this.prisma.wallet.aggregate({
@@ -257,7 +268,7 @@ export class GroupsService {
     const dailyDeduct = new Map<string, number>();
 
     for (const t of transactions) {
-      const dateStr = t.createdAt.toISOString().split('T')[0];
+      const dateStr = localDateOf(tz, t.createdAt);
       const delta = t.direction === CoinDirection.earn ? t.amount : -t.amount;
       dailyNet.set(dateStr, (dailyNet.get(dateStr) ?? 0) + delta);
       if (!isEffective(t)) continue;
@@ -274,9 +285,7 @@ export class GroupsService {
     const avgBalanceTrend: { date: string; avgBalance: number }[] = [];
     let runningSum = currentSum;
     for (let i = 0; i < 30; i++) {
-      const dayStart = new Date(todayStart);
-      dayStart.setUTCDate(todayStart.getUTCDate() - i);
-      const dateStr = dayStart.toISOString().split('T')[0];
+      const dateStr = addDays(today, -i);
       avgBalanceTrend.unshift({
         date: dateStr,
         avgBalance: Math.round((runningSum / studentCount) * 100) / 100,
@@ -288,9 +297,7 @@ export class GroupsService {
     const weeklyTrend: { date: string; earned: number; deducted: number }[] =
       [];
     for (let i = 6; i >= 0; i--) {
-      const dayStart = new Date(todayStart);
-      dayStart.setUTCDate(todayStart.getUTCDate() - i);
-      const dateStr = dayStart.toISOString().split('T')[0];
+      const dateStr = addDays(today, -i);
       weeklyTrend.push({
         date: dateStr,
         earned: dailyEarn.get(dateStr) ?? 0,
@@ -381,10 +388,7 @@ export class GroupsService {
     }
 
     if (dto.teacherId) {
-      const teacher = await this.prisma.user.findFirst({
-        where: { id: dto.teacherId, tenantId, isDeleted: false },
-      });
-      if (!teacher) throw new NotFoundException('O‘qituvchi topilmadi');
+      await assertTeachingUser(this.prisma, tenantId, dto.teacherId);
     }
 
     return this.prisma.group.update({
@@ -430,53 +434,60 @@ export class GroupsService {
   ) {
     const group = await this.findOne(groupId, tenantId);
 
-    // 1. O'quvchi bazada bormi va shu tenantgami?
-    const student = await this.prisma.user.findFirst({
-      where: { id: dto.studentId, tenantId, isDeleted: false },
-    });
-    if (!student) throw new NotFoundException('O‘quvchi topilmadi');
+    // 1. Shu tenantdagi faol student bo'lishi shart (xodim yoki boshqa tenant useri emas)
+    await assertActiveStudent(this.prisma, tenantId, dto.studentId);
 
-    // 2. O'quvchi allaqachon shu guruhda bormi (o'chirilmagan holatda)?
-    const existingMembership = await this.prisma.groupStudent.findFirst({
-      where: { groupId, studentId: dto.studentId, isDeleted: false },
-    });
-    if (existingMembership)
-      throw new BadRequestException('O‘quvchi allaqachon ushbu guruhga a’zo');
+    // Sig'im tekshiruvi va yozish guruh qatori qulfi ostida — parallel qo'shishlar
+    // maxStudents dan oshib ketmaydi
+    return this.prisma.$transaction(async (tx) => {
+      await this.lockGroup(tx, groupId);
 
-    // 3. Guruhda bo'sh joy bormi?
-    const currentStudentsCount = await this.prisma.groupStudent.count({
-      where: { groupId, isDeleted: false },
-    });
-    if (currentStudentsCount >= group.maxStudents) {
-      throw new BadRequestException(
-        'Guruhda bo‘sh joy qolmagan (Maksimal sig‘imga yetdi)',
-      );
-    }
-
-    // 4. Agar oldin o'chirib yuborilgan a'zolik bo'lsa, uni tiklaymiz (Restore), bo'lmasa yangi ochamiz
-    const softDeletedMembership = await this.prisma.groupStudent.findFirst({
-      where: { groupId, studentId: dto.studentId, isDeleted: true },
-    });
-
-    if (softDeletedMembership) {
-      return this.prisma.groupStudent.update({
-        where: { id: softDeletedMembership.id },
-        data: {
-          isDeleted: false,
-          isActive: true,
-          joinedAt: new Date(),
-          addedById,
-          archivedAt: null,
-          leftAt: null,
+      // 2. O'quvchi allaqachon shu guruhda bormi (o'chirilmagan holatda)?
+      const membership = await tx.groupStudent.findUnique({
+        where: {
+          groupId_studentId: { groupId, studentId: dto.studentId },
         },
+        select: { id: true, isDeleted: true },
+      });
+      if (membership && !membership.isDeleted)
+        throw new BadRequestException('O‘quvchi allaqachon ushbu guruhga a’zo');
+
+      // 3. Guruhda bo'sh joy bormi?
+      const currentStudentsCount = await tx.groupStudent.count({
+        where: { groupId, isDeleted: false },
+      });
+      if (currentStudentsCount >= group.maxStudents) {
+        throw new BadRequestException(
+          'Guruhda bo‘sh joy qolmagan (Maksimal sig‘imga yetdi)',
+        );
+      }
+
+      // 4. Oldin chiqarilgan a'zolik bo'lsa — tiklanadi (Restore), bo'lmasa yangi ochiladi
+      if (membership) {
+        return tx.groupStudent.update({
+          where: { id: membership.id },
+          data: {
+            isDeleted: false,
+            isActive: true,
+            joinedAt: new Date(),
+            addedById,
+            archivedAt: null,
+            leftAt: null,
+          },
+          select: { id: true },
+        });
+      }
+
+      return tx.groupStudent.create({
+        data: { groupId, studentId: dto.studentId, addedById },
         select: { id: true },
       });
-    }
-
-    return this.prisma.groupStudent.create({
-      data: { groupId, studentId: dto.studentId, addedById },
-      select: { id: true },
     });
+  }
+
+  // Guruh qatorini tx oxirigacha qulflaydi (a'zolar sonini tekshirib, keyin qo'shish uchun)
+  private async lockGroup(tx: Prisma.TransactionClient, groupId: string) {
+    await tx.$queryRaw`SELECT id FROM groups WHERE id = ${groupId}::uuid FOR UPDATE`;
   }
 
   async removeStudent(groupId: string, studentId: string, tenantId: string) {
@@ -514,13 +525,33 @@ export class GroupsService {
     // 1. Guruhni topamiz va sig'imini tekshiramiz
     const group = await this.findOne(groupId, tenantId);
 
+    // 1a. Barcha ID'lar shu tenantdagi faol student bo'lishi shart — aks holda boshqa
+    // tenant o'quvchisini (yoki xodimni) guruhga qo'shib, uning ma'lumotini ko'rish va
+    // yo'qlama orqali unga coin yozish mumkin bo'lardi
+    await assertActiveStudents(this.prisma, tenantId, studentIds);
+
+    // 2–7. Sig'im tekshiruvi va yozish guruh qatori qulfi ostida bitta tx'da —
+    // parallel qo'shishlar maxStudents dan oshib ketmaydi
+    return this.prisma.$transaction(async (tx) => {
+      await this.lockGroup(tx, groupId);
+      return this.addStudentsLocked(tx, group, groupId, addedById, studentIds);
+    });
+  }
+
+  private async addStudentsLocked(
+    tx: Prisma.TransactionClient,
+    group: { maxStudents: number },
+    groupId: string,
+    addedById: string,
+    studentIds: string[],
+  ) {
     // 2. Guruhda hozir nechta faol o'quvchi borligini aniqlaymiz
-    const currentStudentsCount = await this.prisma.groupStudent.count({
+    const currentStudentsCount = await tx.groupStudent.count({
       where: { groupId, isDeleted: false },
     });
 
     // 3. Bazada yuborilgan IDlar bo'yicha eski a'zolik tarixi bor-yo'qligini tekshiramiz
-    const existingRecords = await this.prisma.groupStudent.findMany({
+    const existingRecords = await tx.groupStudent.findMany({
       where: {
         groupId,
         studentId: { in: studentIds },
@@ -541,8 +572,8 @@ export class GroupsService {
     });
 
     // Mutloq yangi bo'lgan (bazada umuman yozuvi yo'q) o'quvchilar ID-lari
-    const knownIds = existingRecords.map((r) => r.studentId);
-    const brandNewIds = studentIds.filter((id) => !knownIds.includes(id));
+    const knownIds = new Set(existingRecords.map((r) => r.studentId));
+    const brandNewIds = studentIds.filter((id) => !knownIds.has(id));
 
     // 5. Guruhga haqiqatda qo'shilayotgan jami yangi o'quvchilar soni
     const totalToInsertOrRestore = softDeletedIds.length + brandNewIds.length;
@@ -561,39 +592,35 @@ export class GroupsService {
       );
     }
 
-    // 7. Baza bilan Tranzaksiya boshlaymiz (Hamma amal yoki bajariladi, yoki bekor bo'ladi)
-    await this.prisma.$transaction(async (tx) => {
-      // A. Oldin o'chirilganlarni TIKLAYMIZ (Soft-delete bekor qilinadi)
-      if (softDeletedIds.length > 0) {
-        await tx.groupStudent.updateMany({
-          where: {
-            groupId,
-            studentId: { in: softDeletedIds },
-          },
-          data: {
-            isDeleted: false,
-            isActive: true,
-            joinedAt: new Date(), // Qo'shilgan vaqtini yangilaymiz
-            addedById,
-            archivedAt: null, // Eski o'chirilgan vaqtini tozalaymiz
-            leftAt: null,
-          },
-        });
-      }
+    // 7. Yozish (shu tx ichida — hammasi yoki hech biri)
+    // A. Oldin o'chirilganlarni TIKLAYMIZ (Soft-delete bekor qilinadi)
+    if (softDeletedIds.length > 0) {
+      await tx.groupStudent.updateMany({
+        where: {
+          groupId,
+          studentId: { in: softDeletedIds },
+        },
+        data: {
+          isDeleted: false,
+          isActive: true,
+          joinedAt: new Date(), // Qo'shilgan vaqtini yangilaymiz
+          addedById,
+          archivedAt: null, // Eski o'chirilgan vaqtini tozalaymiz
+          leftAt: null,
+        },
+      });
+    }
 
-      // B. Umuman yangi bo'lgan o'quvchilarni YARATAMIZ (Bulk Insert)
-      if (brandNewIds.length > 0) {
-        const newRecordsData = brandNewIds.map((studentId) => ({
+    // B. Umuman yangi bo'lgan o'quvchilarni YARATAMIZ (Bulk Insert)
+    if (brandNewIds.length > 0) {
+      await tx.groupStudent.createMany({
+        data: brandNewIds.map((studentId) => ({
           groupId,
           studentId,
           addedById,
-        }));
-
-        await tx.groupStudent.createMany({
-          data: newRecordsData,
-        });
-      }
-    });
+        })),
+      });
+    }
 
     // 8. Administratorga to'liq va shaffof hisobot qaytaramiz
     return {

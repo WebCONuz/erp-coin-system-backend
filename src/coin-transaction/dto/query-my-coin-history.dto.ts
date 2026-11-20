@@ -1,30 +1,9 @@
-import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
-import {
-  IsOptional,
-  IsNumber,
-  Min,
-  IsEnum,
-  IsDateString,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsEnum, IsDateString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CoinDirection, SourceType } from 'src/generated/prisma/enums';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 
-export class QueryMyCoinHistoryDto extends TenantQueryDto {
-  @ApiPropertyOptional({ example: 1, default: 1 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  page?: number = 1;
-
-  @ApiPropertyOptional({ example: 20, default: 20 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  limit?: number = 20;
-
+export class QueryMyCoinHistoryDto extends PaginationQueryDto {
   @ApiPropertyOptional({ enum: CoinDirection })
   @IsOptional()
   @IsEnum(CoinDirection)

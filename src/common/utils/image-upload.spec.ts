@@ -1,5 +1,11 @@
 import { BadRequestException } from '@nestjs/common';
-import { detectImageExtension, saveImage } from './image-upload';
+import { join } from 'path';
+import {
+  detectImageExtension,
+  saveImage,
+  UPLOADS_ROOT,
+  uploadedFilePath,
+} from './image-upload';
 
 const bytes = (...b: number[]) => Buffer.from(b);
 
@@ -38,6 +44,24 @@ describe('detectImageExtension', () => {
     ['matn', 'hello world'],
   ])('%s — rasm emas', (_name, content) => {
     expect(detectImageExtension(Buffer.from(content))).toBeNull();
+  });
+});
+
+describe('uploadedFilePath', () => {
+  it('/uploads ichidagi fayl — diskdagi yo`l', () => {
+    expect(uploadedFilePath('/uploads/avatars/a.png')).toBe(
+      join(UPLOADS_ROOT, 'avatars', 'a.png'),
+    );
+  });
+
+  it.each([
+    ['tashqi URL', 'https://cdn.example.com/a.png'],
+    ['papkadan tashqariga', '/uploads/../.env'],
+    ['ichma-ich tashqariga', '/uploads/avatars/../../src/main.ts'],
+    ['uploads ning o`zi', '/uploads/'],
+    ['bo`sh', ''],
+  ])('%s — null (o`chirilmaydi)', (_name, url) => {
+    expect(uploadedFilePath(url)).toBeNull();
   });
 });
 

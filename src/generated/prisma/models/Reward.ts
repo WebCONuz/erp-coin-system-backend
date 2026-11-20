@@ -286,7 +286,7 @@ export type RewardGroupByOutputType = {
   _max: RewardMaxAggregateOutputType | null;
 };
 
-type GetRewardGroupByPayload<T extends RewardGroupByArgs> =
+export type GetRewardGroupByPayload<T extends RewardGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<RewardGroupByOutputType, T['by']> & {

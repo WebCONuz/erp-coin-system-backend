@@ -90,15 +90,6 @@ export const SourceType = {
 
 export type SourceType = (typeof SourceType)[keyof typeof SourceType];
 
-export const ImportStatus = {
-  pending: 'pending',
-  processing: 'processing',
-  done: 'done',
-  failed: 'failed',
-} as const;
-
-export type ImportStatus = (typeof ImportStatus)[keyof typeof ImportStatus];
-
 export const Weekday = {
   monday: 'monday',
   tuesday: 'tuesday',
@@ -134,15 +125,6 @@ export const EmailStatus = {
 } as const;
 
 export type EmailStatus = (typeof EmailStatus)[keyof typeof EmailStatus];
-
-export const NotificationType = {
-  sms: 'sms',
-  email: 'email',
-  push: 'push',
-} as const;
-
-export type NotificationType =
-  (typeof NotificationType)[keyof typeof NotificationType];
 
 export const SmsTriggerType = {
   absence: 'absence',

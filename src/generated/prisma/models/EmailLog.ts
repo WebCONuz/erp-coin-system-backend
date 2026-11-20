@@ -226,7 +226,7 @@ export type EmailLogGroupByOutputType = {
   createdAt: Date;
   deletedAt: Date | null;
   tenantId: string;
-  studentId: string;
+  studentId: string | null;
   templateId: string | null;
   sentById: string;
   _count: EmailLogCountAggregateOutputType | null;
@@ -234,7 +234,7 @@ export type EmailLogGroupByOutputType = {
   _max: EmailLogMaxAggregateOutputType | null;
 };
 
-type GetEmailLogGroupByPayload<T extends EmailLogGroupByArgs> =
+export type GetEmailLogGroupByPayload<T extends EmailLogGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<EmailLogGroupByOutputType, T['by']> & {
@@ -265,14 +265,17 @@ export type EmailLogWhereInput = {
   createdAt?: Prisma.DateTimeFilter<'EmailLog'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'EmailLog'> | Date | string | null;
   tenantId?: Prisma.UuidFilter<'EmailLog'> | string;
-  studentId?: Prisma.UuidFilter<'EmailLog'> | string;
+  studentId?: Prisma.UuidNullableFilter<'EmailLog'> | string | null;
   templateId?: Prisma.UuidNullableFilter<'EmailLog'> | string | null;
   sentById?: Prisma.UuidFilter<'EmailLog'> | string;
   tenant?: Prisma.XOR<
     Prisma.TenantScalarRelationFilter,
     Prisma.TenantWhereInput
   >;
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+  student?: Prisma.XOR<
+    Prisma.UserNullableScalarRelationFilter,
+    Prisma.UserWhereInput
+  > | null;
   template?: Prisma.XOR<
     Prisma.EmailTemplateNullableScalarRelationFilter,
     Prisma.EmailTemplateWhereInput
@@ -293,7 +296,7 @@ export type EmailLogOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
-  studentId?: Prisma.SortOrder;
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder;
   templateId?: Prisma.SortOrderInput | Prisma.SortOrder;
   sentById?: Prisma.SortOrder;
   tenant?: Prisma.TenantOrderByWithRelationInput;
@@ -325,7 +328,7 @@ export type EmailLogWhereUniqueInput = Prisma.AtLeast<
       | string
       | null;
     tenantId?: Prisma.UuidFilter<'EmailLog'> | string;
-    studentId?: Prisma.UuidFilter<'EmailLog'> | string;
+    studentId?: Prisma.UuidNullableFilter<'EmailLog'> | string | null;
     templateId?: Prisma.UuidNullableFilter<'EmailLog'> | string | null;
     sentById?: Prisma.UuidFilter<'EmailLog'> | string;
     tenant?: Prisma.XOR<
@@ -333,9 +336,9 @@ export type EmailLogWhereUniqueInput = Prisma.AtLeast<
       Prisma.TenantWhereInput
     >;
     student?: Prisma.XOR<
-      Prisma.UserScalarRelationFilter,
+      Prisma.UserNullableScalarRelationFilter,
       Prisma.UserWhereInput
-    >;
+    > | null;
     template?: Prisma.XOR<
       Prisma.EmailTemplateNullableScalarRelationFilter,
       Prisma.EmailTemplateWhereInput
@@ -358,7 +361,7 @@ export type EmailLogOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
-  studentId?: Prisma.SortOrder;
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder;
   templateId?: Prisma.SortOrderInput | Prisma.SortOrder;
   sentById?: Prisma.SortOrder;
   _count?: Prisma.EmailLogCountOrderByAggregateInput;
@@ -401,7 +404,10 @@ export type EmailLogScalarWhereWithAggregatesInput = {
     | string
     | null;
   tenantId?: Prisma.UuidWithAggregatesFilter<'EmailLog'> | string;
-  studentId?: Prisma.UuidWithAggregatesFilter<'EmailLog'> | string;
+  studentId?:
+    | Prisma.UuidNullableWithAggregatesFilter<'EmailLog'>
+    | string
+    | null;
   templateId?:
     | Prisma.UuidNullableWithAggregatesFilter<'EmailLog'>
     | string
@@ -422,7 +428,7 @@ export type EmailLogCreateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutEmailLogsInput;
-  student: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
   template?: Prisma.EmailTemplateCreateNestedOneWithoutEmailLogsInput;
   sentBy: Prisma.UserCreateNestedOneWithoutEmailLogsSentByInput;
 };
@@ -440,7 +446,7 @@ export type EmailLogUncheckedCreateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -473,7 +479,7 @@ export type EmailLogUpdateInput = {
     | string
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutEmailLogsNestedInput;
-  student?: Prisma.UserUpdateOneRequiredWithoutEmailLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutEmailLogsAsStudentNestedInput;
   template?: Prisma.EmailTemplateUpdateOneWithoutEmailLogsNestedInput;
   sentBy?: Prisma.UserUpdateOneRequiredWithoutEmailLogsSentByNestedInput;
 };
@@ -506,7 +512,7 @@ export type EmailLogUncheckedUpdateInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -524,7 +530,7 @@ export type EmailLogCreateManyInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -586,7 +592,7 @@ export type EmailLogUncheckedUpdateManyInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1047,7 +1053,7 @@ export type EmailLogCreateWithoutTenantInput = {
   sentAt?: Date | string | null;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
-  student: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
   template?: Prisma.EmailTemplateCreateNestedOneWithoutEmailLogsInput;
   sentBy: Prisma.UserCreateNestedOneWithoutEmailLogsSentByInput;
 };
@@ -1064,7 +1070,7 @@ export type EmailLogUncheckedCreateWithoutTenantInput = {
   sentAt?: Date | string | null;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -1130,7 +1136,7 @@ export type EmailLogScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<'EmailLog'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'EmailLog'> | Date | string | null;
   tenantId?: Prisma.UuidFilter<'EmailLog'> | string;
-  studentId?: Prisma.UuidFilter<'EmailLog'> | string;
+  studentId?: Prisma.UuidNullableFilter<'EmailLog'> | string | null;
   templateId?: Prisma.UuidNullableFilter<'EmailLog'> | string | null;
   sentById?: Prisma.UuidFilter<'EmailLog'> | string;
 };
@@ -1197,7 +1203,7 @@ export type EmailLogCreateWithoutSentByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutEmailLogsInput;
-  student: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
   template?: Prisma.EmailTemplateCreateNestedOneWithoutEmailLogsInput;
 };
 
@@ -1214,7 +1220,7 @@ export type EmailLogUncheckedCreateWithoutSentByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
 };
 
@@ -1302,7 +1308,7 @@ export type EmailLogCreateWithoutTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutEmailLogsInput;
-  student: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutEmailLogsAsStudentInput;
   sentBy: Prisma.UserCreateNestedOneWithoutEmailLogsSentByInput;
 };
 
@@ -1319,7 +1325,7 @@ export type EmailLogUncheckedCreateWithoutTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   sentById: string;
 };
 
@@ -1378,7 +1384,7 @@ export type EmailLogCreateManyTenantInput = {
   sentAt?: Date | string | null;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -1410,7 +1416,7 @@ export type EmailLogUpdateWithoutTenantInput = {
     | Date
     | string
     | null;
-  student?: Prisma.UserUpdateOneRequiredWithoutEmailLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutEmailLogsAsStudentNestedInput;
   template?: Prisma.EmailTemplateUpdateOneWithoutEmailLogsNestedInput;
   sentBy?: Prisma.UserUpdateOneRequiredWithoutEmailLogsSentByNestedInput;
 };
@@ -1442,7 +1448,7 @@ export type EmailLogUncheckedUpdateWithoutTenantInput = {
     | Date
     | string
     | null;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1474,7 +1480,7 @@ export type EmailLogUncheckedUpdateManyWithoutTenantInput = {
     | Date
     | string
     | null;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1509,7 +1515,7 @@ export type EmailLogCreateManySentByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
 };
 
@@ -1637,7 +1643,7 @@ export type EmailLogUpdateWithoutSentByInput = {
     | string
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutEmailLogsNestedInput;
-  student?: Prisma.UserUpdateOneRequiredWithoutEmailLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutEmailLogsAsStudentNestedInput;
   template?: Prisma.EmailTemplateUpdateOneWithoutEmailLogsNestedInput;
 };
 
@@ -1669,7 +1675,7 @@ export type EmailLogUncheckedUpdateWithoutSentByInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
@@ -1701,7 +1707,7 @@ export type EmailLogUncheckedUpdateManyWithoutSentByInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
@@ -1718,7 +1724,7 @@ export type EmailLogCreateManyTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   sentById: string;
 };
 
@@ -1750,7 +1756,7 @@ export type EmailLogUpdateWithoutTemplateInput = {
     | string
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutEmailLogsNestedInput;
-  student?: Prisma.UserUpdateOneRequiredWithoutEmailLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutEmailLogsAsStudentNestedInput;
   sentBy?: Prisma.UserUpdateOneRequiredWithoutEmailLogsSentByNestedInput;
 };
 
@@ -1782,7 +1788,7 @@ export type EmailLogUncheckedUpdateWithoutTemplateInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
@@ -1814,7 +1820,7 @@ export type EmailLogUncheckedUpdateManyWithoutTemplateInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
@@ -1839,7 +1845,7 @@ export type EmailLogSelect<
     templateId?: boolean;
     sentById?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-    student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    student?: boolean | Prisma.EmailLog$studentArgs<ExtArgs>;
     template?: boolean | Prisma.EmailLog$templateArgs<ExtArgs>;
     sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
@@ -1867,7 +1873,7 @@ export type EmailLogSelectCreateManyAndReturn<
     templateId?: boolean;
     sentById?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-    student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    student?: boolean | Prisma.EmailLog$studentArgs<ExtArgs>;
     template?: boolean | Prisma.EmailLog$templateArgs<ExtArgs>;
     sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
@@ -1895,7 +1901,7 @@ export type EmailLogSelectUpdateManyAndReturn<
     templateId?: boolean;
     sentById?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-    student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    student?: boolean | Prisma.EmailLog$studentArgs<ExtArgs>;
     template?: boolean | Prisma.EmailLog$templateArgs<ExtArgs>;
     sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
@@ -1946,7 +1952,7 @@ export type EmailLogInclude<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  student?: boolean | Prisma.EmailLog$studentArgs<ExtArgs>;
   template?: boolean | Prisma.EmailLog$templateArgs<ExtArgs>;
   sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -1955,7 +1961,7 @@ export type EmailLogIncludeCreateManyAndReturn<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  student?: boolean | Prisma.EmailLog$studentArgs<ExtArgs>;
   template?: boolean | Prisma.EmailLog$templateArgs<ExtArgs>;
   sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -1964,7 +1970,7 @@ export type EmailLogIncludeUpdateManyAndReturn<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  student?: boolean | Prisma.EmailLog$studentArgs<ExtArgs>;
   template?: boolean | Prisma.EmailLog$templateArgs<ExtArgs>;
   sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -1976,7 +1982,7 @@ export type $EmailLogPayload<
   name: 'EmailLog';
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>;
-    student: Prisma.$UserPayload<ExtArgs>;
+    student: Prisma.$UserPayload<ExtArgs> | null;
     template: Prisma.$EmailTemplatePayload<ExtArgs> | null;
     sentBy: Prisma.$UserPayload<ExtArgs>;
   };
@@ -1994,7 +2000,7 @@ export type $EmailLogPayload<
       createdAt: Date;
       deletedAt: Date | null;
       tenantId: string;
-      studentId: string;
+      studentId: string | null;
       templateId: string | null;
       sentById: string;
     },
@@ -2561,17 +2567,16 @@ export interface Prisma__EmailLogClient<
     ExtArgs,
     GlobalOmitOptions
   >;
-  student<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>,
+  student<T extends Prisma.EmailLog$studentArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.EmailLog$studentArgs<ExtArgs>>,
   ): Prisma.Prisma__UserClient<
-    | runtime.Types.Result.GetResult<
-        Prisma.$UserPayload<ExtArgs>,
-        T,
-        'findUniqueOrThrow',
-        GlobalOmitOptions
-      >
-    | Null,
-    Null,
+    runtime.Types.Result.GetResult<
+      Prisma.$UserPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
     ExtArgs,
     GlobalOmitOptions
   >;
@@ -3122,6 +3127,28 @@ export type EmailLogDeleteManyArgs<
    * Limit how many EmailLogs to delete.
    */
   limit?: number;
+};
+
+/**
+ * EmailLog.student
+ */
+export type EmailLog$studentArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  where?: Prisma.UserWhereInput;
 };
 
 /**

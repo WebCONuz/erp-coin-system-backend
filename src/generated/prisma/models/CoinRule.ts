@@ -282,7 +282,7 @@ export type CoinRuleGroupByOutputType = {
   _max: CoinRuleMaxAggregateOutputType | null;
 };
 
-type GetCoinRuleGroupByPayload<T extends CoinRuleGroupByArgs> =
+export type GetCoinRuleGroupByPayload<T extends CoinRuleGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<CoinRuleGroupByOutputType, T['by']> & {

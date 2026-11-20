@@ -2,34 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EFFECTIVE_COIN_TX_WHERE } from 'src/coin-transaction/constants/effective-transaction';
 import { CoinDirection } from 'src/generated/prisma/enums';
+import { ACTIVE_STUDENT_WHERE } from 'src/common/utils/user-role-checks';
+import {
+  addDays,
+  getTenantToday,
+  startOfMonth,
+  zonedDayStart,
+} from 'src/common/utils/tenant-time';
+import { buildTrendBuckets, sumByLocalDay } from 'src/common/utils/coin-trend';
 
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAdminDashboard(tenantId: string) {
-    const now = new Date();
+    // "Bugun" — tenant timezone'ida (server vaqtida emas). Session.sessionDate (@db.Date —
+    // kalendar sana, UTC-yarim tun sifatida kodlangan) bilan sana sifatida solishtiriladi;
+    // coin tranzaksiyalari (createdAt — instant) uchun mahalliy yarim tunning UTC instant'i
+    const { tz, today } = await getTenantToday(this.prisma, tenantId);
+    const todayStart = new Date(today);
+    const todayEnd = new Date(addDays(today, 1));
+    const twoWeeksAgo = new Date(addDays(today, -14));
 
-    // "Bugun" server LOKAL vaqti bo'yicha aniqlanadi (getFullYear/getMonth/getDate —
-    // getUTC* EMAS), keyin UTC-yarim tun sifatida kodlanadi — chunki Session.sessionDate
-    // xuddi shunday saqlanadi (lokal kalendar sana, UTC-midnight sifatida). Agar UTC
-    // getterlar ishlatilsa, lokal yarim tundan keyingi bir necha soat davomida "bugun"
-    // noto'g'ri kechagi kun sifatida hisoblanib qoladi.
-    const todayStart = new Date(
-      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()),
-    );
-    const todayEnd = new Date(todayStart);
-    todayEnd.setUTCDate(todayStart.getUTCDate() + 1);
-
-    const sevenDaysAgo = new Date(todayStart);
-    sevenDaysAgo.setUTCDate(todayStart.getUTCDate() - 6); // bugun bilan birga 7 kun
-
-    const twoWeeksAgo = new Date(todayStart);
-    twoWeeksAgo.setUTCDate(todayStart.getUTCDate() - 14);
-
-    const startOfMonth = new Date(
-      Date.UTC(now.getFullYear(), now.getMonth(), 1),
-    );
+    const weekStartDate = addDays(today, -6); // bugun bilan birga 7 kun
+    const sevenDaysAgo = zonedDayStart(tz, weekStartDate);
+    const monthStartAt = zonedDayStart(tz, startOfMonth(today));
 
     const [
       groupsCount,
@@ -73,8 +70,11 @@ export class DashboardService {
       this.prisma.reward.count({
         where: { tenantId, isDeleted: false, isActive: true },
       }),
+      // Muomaladagi coin — faqat o'quvchilar hamyonlari (xodimlarniki hisoblanmaydi)
       this.prisma.wallet.aggregate({
-        where: { user: { tenantId, isDeleted: false } },
+        where: {
+          user: { tenantId, isDeleted: false, role: { name: 'student' } },
+        },
         _sum: { balance: true },
       }),
       this.prisma.coinTransaction.aggregate({
@@ -82,7 +82,7 @@ export class DashboardService {
           tenantId,
           direction: CoinDirection.earn,
           ...EFFECTIVE_COIN_TX_WHERE,
-          createdAt: { gte: startOfMonth },
+          createdAt: { gte: monthStartAt },
         },
         _sum: { amount: true },
       }),
@@ -91,7 +91,7 @@ export class DashboardService {
           tenantId,
           direction: CoinDirection.deduct,
           ...EFFECTIVE_COIN_TX_WHERE,
-          createdAt: { gte: startOfMonth },
+          createdAt: { gte: monthStartAt },
         },
         _sum: { amount: true },
       }),
@@ -136,7 +136,7 @@ export class DashboardService {
         },
       }),
       this.prisma.wallet.findMany({
-        where: { user: { tenantId, isDeleted: false, isActive: true } },
+        where: { user: { tenantId, ...ACTIVE_STUDENT_WHERE } },
         orderBy: { balance: 'desc' },
         take: 5,
         select: {
@@ -154,30 +154,13 @@ export class DashboardService {
       }),
     ]);
 
-    // Oxirgi 7 kunlik earn/deduct trend (chart uchun)
-    const weeklyTrend: { date: string; earned: number; deducted: number }[] =
-      [];
-    for (let i = 0; i < 7; i++) {
-      const bucketStart = new Date(sevenDaysAgo);
-      bucketStart.setUTCDate(sevenDaysAgo.getUTCDate() + i);
-      const bucketEnd = new Date(bucketStart);
-      bucketEnd.setUTCDate(bucketStart.getUTCDate() + 1);
-
-      let earned = 0;
-      let deducted = 0;
-      for (const t of weekTransactions) {
-        if (t.createdAt >= bucketStart && t.createdAt < bucketEnd) {
-          if (t.direction === CoinDirection.earn) earned += t.amount;
-          else deducted += t.amount;
-        }
-      }
-
-      weeklyTrend.push({
-        date: bucketStart.toISOString().split('T')[0],
-        earned,
-        deducted,
-      });
-    }
+    // Oxirgi 7 kunlik earn/deduct trend (chart uchun) — tenant mahalliy kunlari bo'yicha
+    const weeklyTrend = buildTrendBuckets(
+      sumByLocalDay(tz, weekTransactions),
+      weekStartDate,
+      7,
+      1,
+    ).map((b) => ({ date: b.from, earned: b.earned, deducted: b.deducted }));
 
     return {
       stats: {

@@ -79,8 +79,9 @@ export class CoinRulesController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateCoinRuleDto,
     @TenantContext() tenantId: string,
+    @CurrentUser('id') actorId: string,
   ) {
-    return this.coinRulesService.update(id, dto, tenantId);
+    return this.coinRulesService.update(id, dto, tenantId, actorId);
   }
 
   @Delete(':id')
@@ -90,7 +91,8 @@ export class CoinRulesController {
   remove(
     @Param('id', ParseUUIDPipe) id: string,
     @TenantContext() tenantId: string,
+    @CurrentUser('id') actorId: string,
   ) {
-    return this.coinRulesService.remove(id, tenantId);
+    return this.coinRulesService.remove(id, tenantId, actorId);
   }
 }

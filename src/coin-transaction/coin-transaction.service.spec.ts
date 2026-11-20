@@ -6,9 +6,11 @@ import {
 import { CoinDirection, SourceType } from 'src/generated/prisma/enums';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CoinTransactionsService } from './coin-transaction.service';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
 
-// Hamyon va tranzaksiyalar uchun xotiradagi soxta tx: balans o'zgarishlari, yaratilgan
-// yozuvlar va wallet.update chaqiruvlari tartibi kuzatiladi. DB'ga murojaat yo'q.
+// Hamyon va tranzaksiyalar uchun xotiradagi soxta tx: balans o'zgarishlari va yaratilgan
+// yozuvlar kuzatiladi (yakka — wallet.update + create, ommaviy — raw UPDATE + createMany).
+// DB'ga murojaat yo'q.
 function makeTx(initial: {
   balance: number;
   active?: Record<string, unknown>[];
@@ -18,13 +20,32 @@ function makeTx(initial: {
   const created: Record<string, unknown>[] = [];
   const balanceSteps: number[] = [];
 
+  const applyDelta = (delta: number) => {
+    state.balance += delta;
+    state.minBalance = Math.min(state.minBalance, state.balance);
+    balanceSteps.push(state.balance);
+  };
+
   const tx = {
-    $executeRaw: jest.fn().mockResolvedValue(0), // INSERT ... ON CONFLICT (hamyon)
+    // INSERT ... ON CONFLICT (hamyon ochish) yoki ommaviy balans UPDATE (unnest(walletIds, deltas))
+    $executeRaw: jest
+      .fn()
+      .mockImplementation(
+        (strings: TemplateStringsArray, ...values: unknown[]) => {
+          if (strings.join('').includes('UPDATE wallets')) {
+            (values[1] as number[]).forEach(applyDelta);
+          }
+          return Promise.resolve(1);
+        },
+      ),
+    // SELECT ... FOR UPDATE
     $queryRaw: jest
       .fn()
       .mockImplementation(() =>
-        Promise.resolve([{ id: 'wallet-1', balance: state.balance }]),
-      ), // SELECT ... FOR UPDATE
+        Promise.resolve([
+          { id: 'wallet-1', user_id: 'student-1', balance: state.balance },
+        ]),
+      ),
     coinTransaction: {
       findMany: jest.fn().mockResolvedValue(initial.active ?? []),
       findUnique: jest
@@ -36,7 +57,15 @@ function makeTx(initial: {
           created.push(data);
           return Promise.resolve({ id: `new-${created.length}`, ...data });
         }),
+      createMany: jest
+        .fn()
+        .mockImplementation(({ data }: { data: Record<string, unknown>[] }) => {
+          created.push(...data);
+          return Promise.resolve({ count: data.length });
+        }),
     },
+    // Audit yozuvi amal bilan bitta tx'da
+    auditLog: { create: jest.fn().mockResolvedValue({ id: 'audit-1' }) },
     wallet: {
       update: jest
         .fn()
@@ -47,9 +76,7 @@ function makeTx(initial: {
             data: { balance: { increment?: number; decrement?: number } };
           }) => {
             const b = data.balance;
-            state.balance += b.increment ?? -(b.decrement ?? 0);
-            state.minBalance = Math.min(state.minBalance, state.balance);
-            balanceSteps.push(state.balance);
+            applyDelta(b.increment ?? -(b.decrement ?? 0));
             return Promise.resolve({ balance: state.balance });
           },
         ),
@@ -66,7 +93,11 @@ function makeService(
     $transaction: jest.fn((cb: (t: unknown) => unknown) => cb(tx)),
     coinTransaction: { findFirst: findFirst ?? jest.fn() },
   } as unknown as PrismaService;
-  return new CoinTransactionsService(prisma);
+  const audit = {
+    data: jest.fn((entry: Record<string, unknown>) => entry),
+    recordSafe: jest.fn(),
+  } as unknown as AuditLogService;
+  return new CoinTransactionsService(prisma, audit);
 }
 
 const trx = (over: Record<string, unknown> = {}) => ({
@@ -123,7 +154,7 @@ describe('CoinTransactionsService.replaceSessionTransactions', () => {
     expect(created.every((c) => c.tenantId === 'tenant-1')).toBe(true);
   });
 
-  it("qayta saqlash — eski yozuv o'chirilmaydi, teskari yozuv qo'shiladi (dublikat yo'q)", async () => {
+  it("o'zgarmagan qayta saqlash — hech narsa yozilmaydi (tarixda ortiqcha juftlik yo'q)", async () => {
     const { tx, state, created } = makeTx({
       balance: 5,
       active: [trx({ amount: 5 })],
@@ -132,18 +163,35 @@ describe('CoinTransactionsService.replaceSessionTransactions', () => {
       earnItem(SourceType.attendance, 5),
     ]);
 
+    expect(result).toMatchObject({ skipped: false, reversed: 0, created: 0 });
+    expect(created).toHaveLength(0);
+    expect(state.balance).toBe(5);
+  });
+
+  it("o'zgargan qayta saqlash — eski yozuv o'chirilmaydi, teskari yozuv qo'shiladi (dublikat yo'q)", async () => {
+    const { tx, state, created } = makeTx({
+      balance: 5,
+      active: [trx({ amount: 5 })],
+    });
+    const result = await replace(makeService(tx), tx, [
+      earnItem(SourceType.attendance, 8),
+    ]);
+
     expect(result).toMatchObject({ reversed: 1, created: 1 });
-    expect(state.balance).toBe(5); // sof natija o'zgarmadi
+    expect(state.balance).toBe(8); // -5 (teskari) + 8
     expect(created[0]).toMatchObject({
       direction: CoinDirection.deduct,
       amount: 5,
       reversalOfId: 'trx-1',
       sessionId: 'session-1',
+      teacherId: 'teacher-1',
     });
     expect(created[1]).toMatchObject({
       direction: CoinDirection.earn,
-      reversalOfId: null,
+      amount: 8,
+      walletId: 'wallet-1',
     });
+    expect(created[1].reversalOfId).toBeUndefined();
   });
 
   it("coin sarflangan bo'lsa — hech narsa o'zgarmaydi (COINS_ALREADY_SPENT)", async () => {
@@ -179,9 +227,9 @@ describe('CoinTransactionsService.replaceSessionTransactions', () => {
     expect(state.balance).toBe(11);
   });
 
-  it('bekor qilishda balans hech qachon manfiyga tushmaydi (avval ayirishlar qaytariladi)', async () => {
+  it('bekor qilishda balans manfiyga tushmaydi (sof o`zgarish bitta UPDATE bilan)', async () => {
     // balans 2: avval +5 berilgan, -3 jarima; hammasini bekor qilish oxirida 0 bo'ladi
-    const { tx, state } = makeTx({
+    const { tx, state, created } = makeTx({
       balance: 2,
       active: [
         trx({ id: 'earn', amount: 5 }),
@@ -192,6 +240,7 @@ describe('CoinTransactionsService.replaceSessionTransactions', () => {
 
     expect(state.balance).toBe(0);
     expect(state.minBalance).toBeGreaterThanOrEqual(0);
+    expect(created.map((c) => c.reversalOfId)).toEqual(['earn', 'deduct']);
   });
 });
 
@@ -271,6 +320,14 @@ describe('CoinTransactionsService.cancelTransaction', () => {
       reversalOfId: 'trx-1',
       tenantId: 'tenant-1',
       teacherId: 'admin-1',
+    });
+    // Bekor qilish audit izi shu tx ichida yoziladi
+    expect(made.tx.auditLog.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        action: 'coin_transaction',
+        entityId: 'trx-1',
+        actorId: 'admin-1',
+      }) as unknown,
     });
   });
 

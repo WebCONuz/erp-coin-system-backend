@@ -26,17 +26,27 @@ function setup() {
     .mockImplementation(({ data }: { data: Record<string, unknown> }) =>
       Promise.resolve({ ...existing, ...data }),
     );
-  const prisma = {
+  const prisma: Record<string, unknown> = {
     scheduleException: {
       findFirst: jest.fn().mockResolvedValue(existing),
       update,
     },
     room: { findFirst: jest.fn().mockResolvedValue({ id: 'room-x' }) },
     user: { findFirst: jest.fn().mockResolvedValue({ id: 'teacher-x' }) },
-  } as unknown as PrismaService;
-  const service = new ScheduleService(prisma);
+    // tenant timezone ("bugun") va jadval qulfi
+    tenant: { findUnique: jest.fn().mockResolvedValue({ timezone: 'UTC' }) },
+    $queryRaw: jest.fn().mockResolvedValue([]),
+  };
+  // Istisno yozish + sinxronlash bitta tx'da — tx sifatida shu mock uzatiladi
+  prisma.$transaction = jest.fn((cb: (tx: unknown) => unknown) => cb(prisma));
+  const service = new ScheduleService(prisma as unknown as PrismaService);
   jest
-    .spyOn(service, 'syncTemplateSessions')
+    .spyOn(
+      service as unknown as {
+        syncTemplateSessionsInTx: () => Promise<unknown>;
+      },
+      'syncTemplateSessionsInTx',
+    )
     .mockResolvedValue({ updated: 0, removed: 0, created: 0, conflicts: [] });
   return { service, update };
 }

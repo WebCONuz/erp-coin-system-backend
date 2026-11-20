@@ -13,11 +13,24 @@ import {
   StudentSortBy,
   SortOrder,
 } from './dto/query-student.dto';
-import { Prisma } from 'src/generated/prisma/client';
+import { AuditActionType, Prisma } from 'src/generated/prisma/client';
+import { AuditLogService } from 'src/audit-log/audit-log.service';
+import { releaseUnusedUpload } from 'src/common/utils/upload-cleanup';
+import { AUDIT_ENTITY, definedFields } from 'src/audit-log/utils/audit-entry';
+import {
+  addDays,
+  getTenantToday,
+  startOfMonth,
+  startOfWeek,
+  zonedDayStart,
+} from 'src/common/utils/tenant-time';
 
 @Injectable()
 export class StudentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly audit: AuditLogService,
+  ) {}
 
   // ─── (private) sortBy/sortOrder → Prisma orderBy ────────────────
   private buildStudentOrderBy(
@@ -225,7 +238,33 @@ export class StudentsService {
       updateData.archivedById = null;
     }
 
-    await this.prisma.user.update({ where: { id }, data: updateData });
+    const action =
+      dto.isDeleted === true
+        ? AuditActionType.delete
+        : dto.isDeleted === false || dto.isActive === true
+          ? AuditActionType.restore
+          : AuditActionType.archive;
+
+    await this.prisma.$transaction([
+      this.prisma.user.update({ where: { id }, data: updateData }),
+      // Arxivlangan/o'chirilgan o'quvchining barcha qurilma sessiyalari yopiladi
+      ...(updateData.isActive === false
+        ? [this.prisma.refreshSession.deleteMany({ where: { userId: id } })]
+        : []),
+      this.prisma.auditLog.create({
+        data: this.audit.data({
+          tenantId: student.tenantId,
+          actorId: requesterId,
+          action,
+          entityType: AUDIT_ENTITY.user,
+          entityId: id,
+          changes: {
+            username: student.username,
+            ...definedFields(dto),
+          },
+        }),
+      }),
+    ]);
 
     const messages: Record<string, string> = {
       deleted: "O'quvchi o'chirildi (soft delete)",
@@ -421,23 +460,17 @@ export class StudentsService {
     });
     if (!student) throw new NotFoundException("O'quvchi topilmadi");
 
-    const now = new Date();
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay());
-    startOfWeek.setHours(0, 0, 0, 0);
+    // "Bugun", hafta (dushanbadan) va oy — tenant timezone'ida.
+    // Coin (createdAt — instant) uchun mahalliy yarim tunning UTC instant'i,
+    // sessiya (sessionDate — @db.Date) uchun kalendar sana ishlatiladi
+    const { tz, today } = await getTenantToday(this.prisma, tenantId);
+    const weekStartAt = zonedDayStart(tz, startOfWeek(today));
+    const monthStartAt = zonedDayStart(tz, startOfMonth(today));
 
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    const thirtyDaysAgo = new Date(now);
-    thirtyDaysAgo.setDate(now.getDate() - 30);
-
-    const todayStart = new Date(now);
-    todayStart.setHours(0, 0, 0, 0);
-    const todayEnd = new Date(todayStart);
-    todayEnd.setDate(todayStart.getDate() + 1);
-
-    const weekEnd = new Date(todayStart);
-    weekEnd.setDate(todayStart.getDate() + 7);
+    const thirtyDaysAgo = new Date(addDays(today, -30));
+    const todayStart = new Date(today);
+    const todayEnd = new Date(addDays(today, 1));
+    const weekEnd = new Date(addDays(today, 7));
 
     const activeGroupIds = (
       await this.prisma.groupStudent.findMany({
@@ -466,7 +499,7 @@ export class StudentsService {
           studentId,
           direction: 'earn',
           ...EFFECTIVE_COIN_TX_WHERE,
-          createdAt: { gte: startOfWeek },
+          createdAt: { gte: weekStartAt },
         },
         _sum: { amount: true },
       }),
@@ -475,7 +508,7 @@ export class StudentsService {
           studentId,
           direction: 'deduct',
           ...EFFECTIVE_COIN_TX_WHERE,
-          createdAt: { gte: startOfWeek },
+          createdAt: { gte: weekStartAt },
         },
         _sum: { amount: true },
       }),
@@ -484,7 +517,7 @@ export class StudentsService {
           studentId,
           direction: 'earn',
           ...EFFECTIVE_COIN_TX_WHERE,
-          createdAt: { gte: startOfMonth },
+          createdAt: { gte: monthStartAt },
         },
         _sum: { amount: true },
       }),
@@ -493,7 +526,7 @@ export class StudentsService {
           studentId,
           direction: 'deduct',
           ...EFFECTIVE_COIN_TX_WHERE,
-          createdAt: { gte: startOfMonth },
+          createdAt: { gte: monthStartAt },
         },
         _sum: { amount: true },
       }),
@@ -656,11 +689,18 @@ export class StudentsService {
   async updateAvatar(id: string, tenantId: string, avatarUrl: string) {
     await this.assertStudentExists(id, tenantId);
 
-    return this.prisma.user.update({
+    const previous = await this.prisma.user.findUnique({
+      where: { id },
+      select: { avatarUrl: true },
+    });
+    const updated = await this.prisma.user.update({
       where: { id },
       data: { avatarUrl },
       select: { id: true, avatarUrl: true },
     });
+    // Eski avatar fayli diskda yetim qolmasin (boshqa joyda ishlatilmasa)
+    await releaseUnusedUpload(this.prisma, previous?.avatarUrl);
+    return updated;
   }
 
   // ─── (private) Teacher o'z guruhidagi studentlar ───────────────

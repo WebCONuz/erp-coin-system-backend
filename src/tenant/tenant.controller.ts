@@ -47,21 +47,34 @@ export class TenantController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Tenantni yangilash' })
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateTenantDto) {
-    return this.tenantsService.update(id, dto);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateTenantDto,
+    @CurrentUser('id') actorId: string,
+  ) {
+    return this.tenantsService.update(id, dto, actorId);
   }
 
   @Patch(':id/toggle-active')
   @HttpCode(200)
   @ApiOperation({ summary: "Tenant faolligini o'zgartirish" })
-  toggleActive(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tenantsService.toggleActive(id);
+  toggleActive(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') actorId: string,
+  ) {
+    return this.tenantsService.toggleActive(id, actorId);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  @ApiOperation({ summary: "Tenantni o'chirish" })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tenantsService.remove(id);
+  @ApiOperation({
+    summary:
+      "Tenantni o'chirish (soft delete — ma'lumotlar saqlanadi, userlar kira olmaydi, slug bo'shatiladi)",
+  })
+  remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') actorId: string,
+  ) {
+    return this.tenantsService.remove(id, actorId);
   }
 }

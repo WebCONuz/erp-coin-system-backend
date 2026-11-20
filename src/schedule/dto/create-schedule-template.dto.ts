@@ -4,10 +4,10 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  IsDateString,
   Matches,
 } from 'class-validator';
 import { HHMM_MESSAGE, HHMM_REGEX } from 'src/common/utils/tenant-time';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Weekday } from 'src/generated/prisma/enums';
 
@@ -66,7 +66,7 @@ export class CreateScheduleTemplateDto {
     description: 'Amal qilish boshlanishi (YYYY-MM-DD). Berilmasa — cheklovsiz',
   })
   @IsOptional()
-  @IsDateString()
+  @IsDateOnly()
   validFrom?: string;
 
   @ApiPropertyOptional({
@@ -75,7 +75,7 @@ export class CreateScheduleTemplateDto {
       'Amal qilish tugashi (YYYY-MM-DD, shu kun ham kiradi). Berilmasa — cheklovsiz',
   })
   @IsOptional()
-  @IsDateString()
+  @IsDateOnly()
   validTo?: string;
 
   @ApiPropertyOptional({ description: 'Faqat super_admin uchun' })

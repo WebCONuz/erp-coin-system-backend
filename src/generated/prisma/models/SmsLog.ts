@@ -233,7 +233,7 @@ export type SmsLogGroupByOutputType = {
   createdAt: Date;
   deletedAt: Date | null;
   tenantId: string;
-  studentId: string;
+  studentId: string | null;
   templateId: string | null;
   sentById: string;
   _count: SmsLogCountAggregateOutputType | null;
@@ -241,7 +241,7 @@ export type SmsLogGroupByOutputType = {
   _max: SmsLogMaxAggregateOutputType | null;
 };
 
-type GetSmsLogGroupByPayload<T extends SmsLogGroupByArgs> =
+export type GetSmsLogGroupByPayload<T extends SmsLogGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<SmsLogGroupByOutputType, T['by']> & {
@@ -275,14 +275,17 @@ export type SmsLogWhereInput = {
   createdAt?: Prisma.DateTimeFilter<'SmsLog'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'SmsLog'> | Date | string | null;
   tenantId?: Prisma.UuidFilter<'SmsLog'> | string;
-  studentId?: Prisma.UuidFilter<'SmsLog'> | string;
+  studentId?: Prisma.UuidNullableFilter<'SmsLog'> | string | null;
   templateId?: Prisma.UuidNullableFilter<'SmsLog'> | string | null;
   sentById?: Prisma.UuidFilter<'SmsLog'> | string;
   tenant?: Prisma.XOR<
     Prisma.TenantScalarRelationFilter,
     Prisma.TenantWhereInput
   >;
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+  student?: Prisma.XOR<
+    Prisma.UserNullableScalarRelationFilter,
+    Prisma.UserWhereInput
+  > | null;
   template?: Prisma.XOR<
     Prisma.SmsTemplateNullableScalarRelationFilter,
     Prisma.SmsTemplateWhereInput
@@ -304,7 +307,7 @@ export type SmsLogOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
-  studentId?: Prisma.SortOrder;
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder;
   templateId?: Prisma.SortOrderInput | Prisma.SortOrder;
   sentById?: Prisma.SortOrder;
   tenant?: Prisma.TenantOrderByWithRelationInput;
@@ -335,7 +338,7 @@ export type SmsLogWhereUniqueInput = Prisma.AtLeast<
     createdAt?: Prisma.DateTimeFilter<'SmsLog'> | Date | string;
     deletedAt?: Prisma.DateTimeNullableFilter<'SmsLog'> | Date | string | null;
     tenantId?: Prisma.UuidFilter<'SmsLog'> | string;
-    studentId?: Prisma.UuidFilter<'SmsLog'> | string;
+    studentId?: Prisma.UuidNullableFilter<'SmsLog'> | string | null;
     templateId?: Prisma.UuidNullableFilter<'SmsLog'> | string | null;
     sentById?: Prisma.UuidFilter<'SmsLog'> | string;
     tenant?: Prisma.XOR<
@@ -343,9 +346,9 @@ export type SmsLogWhereUniqueInput = Prisma.AtLeast<
       Prisma.TenantWhereInput
     >;
     student?: Prisma.XOR<
-      Prisma.UserScalarRelationFilter,
+      Prisma.UserNullableScalarRelationFilter,
       Prisma.UserWhereInput
-    >;
+    > | null;
     template?: Prisma.XOR<
       Prisma.SmsTemplateNullableScalarRelationFilter,
       Prisma.SmsTemplateWhereInput
@@ -369,7 +372,7 @@ export type SmsLogOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder;
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   tenantId?: Prisma.SortOrder;
-  studentId?: Prisma.SortOrder;
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder;
   templateId?: Prisma.SortOrderInput | Prisma.SortOrder;
   sentById?: Prisma.SortOrder;
   _count?: Prisma.SmsLogCountOrderByAggregateInput;
@@ -418,7 +421,7 @@ export type SmsLogScalarWhereWithAggregatesInput = {
     | string
     | null;
   tenantId?: Prisma.UuidWithAggregatesFilter<'SmsLog'> | string;
-  studentId?: Prisma.UuidWithAggregatesFilter<'SmsLog'> | string;
+  studentId?: Prisma.UuidNullableWithAggregatesFilter<'SmsLog'> | string | null;
   templateId?:
     | Prisma.UuidNullableWithAggregatesFilter<'SmsLog'>
     | string
@@ -440,7 +443,7 @@ export type SmsLogCreateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutSmsLogsInput;
-  student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
   template?: Prisma.SmsTemplateCreateNestedOneWithoutSmsLogsInput;
   sentBy: Prisma.UserCreateNestedOneWithoutSmsLogsSentByInput;
 };
@@ -459,7 +462,7 @@ export type SmsLogUncheckedCreateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -496,7 +499,7 @@ export type SmsLogUpdateInput = {
     | string
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsLogsNestedInput;
-  student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutSmsLogsAsStudentNestedInput;
   template?: Prisma.SmsTemplateUpdateOneWithoutSmsLogsNestedInput;
   sentBy?: Prisma.UserUpdateOneRequiredWithoutSmsLogsSentByNestedInput;
 };
@@ -533,7 +536,7 @@ export type SmsLogUncheckedUpdateInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -552,7 +555,7 @@ export type SmsLogCreateManyInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -622,7 +625,7 @@ export type SmsLogUncheckedUpdateManyInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1059,7 +1062,7 @@ export type SmsLogCreateWithoutTenantInput = {
   sentAt?: Date | string | null;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
-  student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
   template?: Prisma.SmsTemplateCreateNestedOneWithoutSmsLogsInput;
   sentBy: Prisma.UserCreateNestedOneWithoutSmsLogsSentByInput;
 };
@@ -1077,7 +1080,7 @@ export type SmsLogUncheckedCreateWithoutTenantInput = {
   sentAt?: Date | string | null;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -1146,7 +1149,7 @@ export type SmsLogScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<'SmsLog'> | Date | string;
   deletedAt?: Prisma.DateTimeNullableFilter<'SmsLog'> | Date | string | null;
   tenantId?: Prisma.UuidFilter<'SmsLog'> | string;
-  studentId?: Prisma.UuidFilter<'SmsLog'> | string;
+  studentId?: Prisma.UuidNullableFilter<'SmsLog'> | string | null;
   templateId?: Prisma.UuidNullableFilter<'SmsLog'> | string | null;
   sentById?: Prisma.UuidFilter<'SmsLog'> | string;
 };
@@ -1216,7 +1219,7 @@ export type SmsLogCreateWithoutSentByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutSmsLogsInput;
-  student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
   template?: Prisma.SmsTemplateCreateNestedOneWithoutSmsLogsInput;
 };
 
@@ -1234,7 +1237,7 @@ export type SmsLogUncheckedCreateWithoutSentByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
 };
 
@@ -1323,7 +1326,7 @@ export type SmsLogCreateWithoutTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenant: Prisma.TenantCreateNestedOneWithoutSmsLogsInput;
-  student: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
+  student?: Prisma.UserCreateNestedOneWithoutSmsLogsAsStudentInput;
   sentBy: Prisma.UserCreateNestedOneWithoutSmsLogsSentByInput;
 };
 
@@ -1341,7 +1344,7 @@ export type SmsLogUncheckedCreateWithoutTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   sentById: string;
 };
 
@@ -1401,7 +1404,7 @@ export type SmsLogCreateManyTenantInput = {
   sentAt?: Date | string | null;
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
   sentById: string;
 };
@@ -1437,7 +1440,7 @@ export type SmsLogUpdateWithoutTenantInput = {
     | Date
     | string
     | null;
-  student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutSmsLogsAsStudentNestedInput;
   template?: Prisma.SmsTemplateUpdateOneWithoutSmsLogsNestedInput;
   sentBy?: Prisma.UserUpdateOneRequiredWithoutSmsLogsSentByNestedInput;
 };
@@ -1473,7 +1476,7 @@ export type SmsLogUncheckedUpdateWithoutTenantInput = {
     | Date
     | string
     | null;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1509,7 +1512,7 @@ export type SmsLogUncheckedUpdateManyWithoutTenantInput = {
     | Date
     | string
     | null;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
@@ -1546,7 +1549,7 @@ export type SmsLogCreateManySentByInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   templateId?: string | null;
 };
 
@@ -1690,7 +1693,7 @@ export type SmsLogUpdateWithoutSentByInput = {
     | string
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsLogsNestedInput;
-  student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutSmsLogsAsStudentNestedInput;
   template?: Prisma.SmsTemplateUpdateOneWithoutSmsLogsNestedInput;
 };
 
@@ -1726,7 +1729,7 @@ export type SmsLogUncheckedUpdateWithoutSentByInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
@@ -1762,7 +1765,7 @@ export type SmsLogUncheckedUpdateManyWithoutSentByInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
 };
 
@@ -1780,7 +1783,7 @@ export type SmsLogCreateManyTemplateInput = {
   createdAt?: Date | string;
   deletedAt?: Date | string | null;
   tenantId: string;
-  studentId: string;
+  studentId?: string | null;
   sentById: string;
 };
 
@@ -1816,7 +1819,7 @@ export type SmsLogUpdateWithoutTemplateInput = {
     | string
     | null;
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSmsLogsNestedInput;
-  student?: Prisma.UserUpdateOneRequiredWithoutSmsLogsAsStudentNestedInput;
+  student?: Prisma.UserUpdateOneWithoutSmsLogsAsStudentNestedInput;
   sentBy?: Prisma.UserUpdateOneRequiredWithoutSmsLogsSentByNestedInput;
 };
 
@@ -1852,7 +1855,7 @@ export type SmsLogUncheckedUpdateWithoutTemplateInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
@@ -1888,7 +1891,7 @@ export type SmsLogUncheckedUpdateManyWithoutTemplateInput = {
     | string
     | null;
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string;
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string;
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   sentById?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 
@@ -1914,7 +1917,7 @@ export type SmsLogSelect<
     templateId?: boolean;
     sentById?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-    student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    student?: boolean | Prisma.SmsLog$studentArgs<ExtArgs>;
     template?: boolean | Prisma.SmsLog$templateArgs<ExtArgs>;
     sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
@@ -1943,7 +1946,7 @@ export type SmsLogSelectCreateManyAndReturn<
     templateId?: boolean;
     sentById?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-    student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    student?: boolean | Prisma.SmsLog$studentArgs<ExtArgs>;
     template?: boolean | Prisma.SmsLog$templateArgs<ExtArgs>;
     sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
@@ -1972,7 +1975,7 @@ export type SmsLogSelectUpdateManyAndReturn<
     templateId?: boolean;
     sentById?: boolean;
     tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-    student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    student?: boolean | Prisma.SmsLog$studentArgs<ExtArgs>;
     template?: boolean | Prisma.SmsLog$templateArgs<ExtArgs>;
     sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
   },
@@ -2025,7 +2028,7 @@ export type SmsLogInclude<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  student?: boolean | Prisma.SmsLog$studentArgs<ExtArgs>;
   template?: boolean | Prisma.SmsLog$templateArgs<ExtArgs>;
   sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -2034,7 +2037,7 @@ export type SmsLogIncludeCreateManyAndReturn<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  student?: boolean | Prisma.SmsLog$studentArgs<ExtArgs>;
   template?: boolean | Prisma.SmsLog$templateArgs<ExtArgs>;
   sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -2043,7 +2046,7 @@ export type SmsLogIncludeUpdateManyAndReturn<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>;
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+  student?: boolean | Prisma.SmsLog$studentArgs<ExtArgs>;
   template?: boolean | Prisma.SmsLog$templateArgs<ExtArgs>;
   sentBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -2055,7 +2058,7 @@ export type $SmsLogPayload<
   name: 'SmsLog';
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>;
-    student: Prisma.$UserPayload<ExtArgs>;
+    student: Prisma.$UserPayload<ExtArgs> | null;
     template: Prisma.$SmsTemplatePayload<ExtArgs> | null;
     sentBy: Prisma.$UserPayload<ExtArgs>;
   };
@@ -2074,7 +2077,7 @@ export type $SmsLogPayload<
       createdAt: Date;
       deletedAt: Date | null;
       tenantId: string;
-      studentId: string;
+      studentId: string | null;
       templateId: string | null;
       sentById: string;
     },
@@ -2641,17 +2644,16 @@ export interface Prisma__SmsLogClient<
     ExtArgs,
     GlobalOmitOptions
   >;
-  student<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>,
+  student<T extends Prisma.SmsLog$studentArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.SmsLog$studentArgs<ExtArgs>>,
   ): Prisma.Prisma__UserClient<
-    | runtime.Types.Result.GetResult<
-        Prisma.$UserPayload<ExtArgs>,
-        T,
-        'findUniqueOrThrow',
-        GlobalOmitOptions
-      >
-    | Null,
-    Null,
+    runtime.Types.Result.GetResult<
+      Prisma.$UserPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
     ExtArgs,
     GlobalOmitOptions
   >;
@@ -3197,6 +3199,28 @@ export type SmsLogDeleteManyArgs<
    * Limit how many SmsLogs to delete.
    */
   limit?: number;
+};
+
+/**
+ * SmsLog.student
+ */
+export type SmsLog$studentArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null;
+  where?: Prisma.UserWhereInput;
 };
 
 /**

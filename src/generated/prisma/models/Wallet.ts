@@ -191,7 +191,7 @@ export type WalletGroupByOutputType = {
   _max: WalletMaxAggregateOutputType | null;
 };
 
-type GetWalletGroupByPayload<T extends WalletGroupByArgs> =
+export type GetWalletGroupByPayload<T extends WalletGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<WalletGroupByOutputType, T['by']> & {

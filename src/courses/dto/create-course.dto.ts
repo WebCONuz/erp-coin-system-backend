@@ -1,5 +1,11 @@
-import { IsString, IsNotEmpty, Length, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsString,
+  IsNotEmpty,
+  Length,
+  IsOptional,
+  MaxLength,
+} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateCourseDto {
   @ApiProperty({
@@ -11,11 +17,12 @@ export class CreateCourseDto {
   @Length(3, 150)
   title: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'Bu kurs Node.js asoslari va backend dasturlashni o‘rgatadi.',
     description: 'kurs tavsifi',
   })
   @IsString()
   @IsOptional()
-  description: string;
+  @MaxLength(1000)
+  description?: string;
 }

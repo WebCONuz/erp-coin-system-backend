@@ -317,7 +317,7 @@ export type SessionGroupByOutputType = {
   _max: SessionMaxAggregateOutputType | null;
 };
 
-type GetSessionGroupByPayload<T extends SessionGroupByArgs> =
+export type GetSessionGroupByPayload<T extends SessionGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<SessionGroupByOutputType, T['by']> & {

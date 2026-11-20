@@ -185,7 +185,7 @@ export type HolidayGroupByOutputType = {
   _max: HolidayMaxAggregateOutputType | null;
 };
 
-type GetHolidayGroupByPayload<T extends HolidayGroupByArgs> =
+export type GetHolidayGroupByPayload<T extends HolidayGroupByArgs> =
   Prisma.PrismaPromise<
     Array<
       Prisma.PickEnumerable<HolidayGroupByOutputType, T['by']> & {

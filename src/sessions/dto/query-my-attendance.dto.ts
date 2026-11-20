@@ -1,29 +1,9 @@
-import { TenantQueryDto } from 'src/common/dto/tenant-query.dto';
-import {
-  IsOptional,
-  IsNumber,
-  Min,
-  IsUUID,
-  IsDateString,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsUUID } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { IsDateOnly } from 'src/common/dto/is-date-only.decorator';
 
-export class QueryMyAttendanceDto extends TenantQueryDto {
-  @ApiPropertyOptional({ example: 1, default: 1 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  page?: number = 1;
-
-  @ApiPropertyOptional({ example: 20, default: 20 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
-  limit?: number = 20;
-
+export class QueryMyAttendanceDto extends PaginationQueryDto {
   @ApiPropertyOptional({ description: 'Muayyan guruh bo‘yicha filtr' })
   @IsOptional()
   @IsUUID()
@@ -34,11 +14,11 @@ export class QueryMyAttendanceDto extends TenantQueryDto {
     description: 'Boshlanish sanasi',
   })
   @IsOptional()
-  @IsDateString()
+  @IsDateOnly()
   from?: string;
 
   @ApiPropertyOptional({ example: '2026-08-31', description: 'Tugash sanasi' })
   @IsOptional()
-  @IsDateString()
+  @IsDateOnly()
   to?: string;
 }

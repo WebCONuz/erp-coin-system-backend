@@ -258,19 +258,20 @@ export type AttendanceRecordGroupByOutputType = {
   _max: AttendanceRecordMaxAggregateOutputType | null;
 };
 
-type GetAttendanceRecordGroupByPayload<T extends AttendanceRecordGroupByArgs> =
-  Prisma.PrismaPromise<
-    Array<
-      Prisma.PickEnumerable<AttendanceRecordGroupByOutputType, T['by']> & {
-        [P in keyof T &
-          keyof AttendanceRecordGroupByOutputType]: P extends '_count'
-          ? T[P] extends boolean
-            ? number
-            : Prisma.GetScalarType<T[P], AttendanceRecordGroupByOutputType[P]>
-          : Prisma.GetScalarType<T[P], AttendanceRecordGroupByOutputType[P]>;
-      }
-    >
-  >;
+export type GetAttendanceRecordGroupByPayload<
+  T extends AttendanceRecordGroupByArgs,
+> = Prisma.PrismaPromise<
+  Array<
+    Prisma.PickEnumerable<AttendanceRecordGroupByOutputType, T['by']> & {
+      [P in keyof T &
+        keyof AttendanceRecordGroupByOutputType]: P extends '_count'
+        ? T[P] extends boolean
+          ? number
+          : Prisma.GetScalarType<T[P], AttendanceRecordGroupByOutputType[P]>
+        : Prisma.GetScalarType<T[P], AttendanceRecordGroupByOutputType[P]>;
+    }
+  >
+>;
 
 export type AttendanceRecordWhereInput = {
   AND?: Prisma.AttendanceRecordWhereInput | Prisma.AttendanceRecordWhereInput[];

@@ -11,10 +11,18 @@ import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { UpdateTenantSettingsDto } from './dto/update-tenant-settings.dto';
 import { DEFAULT_TENANT_ROLES } from '../roles/constants';
 import { DEFAULT_TENANT_COIN_RULES } from '../coin-rules/constants';
+import { invalidateTenantTimezone } from '../common/utils/tenant-time';
+import { archivedName } from '../common/utils/soft-delete-unique';
+import { AuditActionType, Prisma } from '../generated/prisma/client';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AUDIT_ENTITY, definedFields } from '../audit-log/utils/audit-entry';
 
 @Injectable()
 export class TenantService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private audit: AuditLogService,
+  ) {}
 
   async create(dto: CreateTenantDto, createdById: string) {
     const existing = await this.prisma.tenant.findUnique({
@@ -54,6 +62,15 @@ export class TenantService {
         },
       },
     });
+    await this.audit.recordSafe({
+      tenantId: data.id,
+      actorId: createdById,
+      action: AuditActionType.create,
+      entityType: AUDIT_ENTITY.tenant,
+      entityId: data.id,
+      changes: { name: data.name, slug: data.slug, type: data.type },
+    });
+
     return {
       status: 'success',
       message: 'Successfully created',
@@ -75,6 +92,7 @@ export class TenantService {
         _count: { select: { users: true, groups: true } },
       },
       where: {
+        isDeleted: false,
         NOT: { OR: [{ name: 'Asosiy tashkilot' }, { name: 'System Tenant' }] },
       },
     });
@@ -86,8 +104,9 @@ export class TenantService {
   }
 
   async findOne(id: string) {
-    const tenant = await this.prisma.tenant.findUnique({
-      where: { id },
+    // O'chirilgan (soft delete) tenant — topilmaydi
+    const tenant = await this.prisma.tenant.findFirst({
+      where: { id, isDeleted: false },
       include: {
         _count: { select: { users: true, groups: true, courses: true } },
       },
@@ -116,18 +135,44 @@ export class TenantService {
     return { status: 'success', data: settings };
   }
 
-  async updateSettings(tenantId: string, dto: UpdateTenantSettingsDto) {
-    await this.getSettings(tenantId);
-    const data = await this.prisma.tenant.update({
-      where: { id: tenantId },
-      data: {
-        ...(dto.teacherCoinLimit !== undefined
-          ? { teacherCoinLimit: dto.teacherCoinLimit }
-          : {}),
-        ...(dto.timezone !== undefined ? { timezone: dto.timezone } : {}),
-      },
-      select: TenantService.SETTINGS_SELECT,
-    });
+  async updateSettings(
+    tenantId: string,
+    dto: UpdateTenantSettingsDto,
+    actorId: string,
+  ) {
+    const before = await this.getSettings(tenantId);
+    const changes = definedFields(dto);
+    const [data] = await this.prisma.$transaction([
+      this.prisma.tenant.update({
+        where: { id: tenantId },
+        data: {
+          ...(dto.teacherCoinLimit !== undefined
+            ? { teacherCoinLimit: dto.teacherCoinLimit }
+            : {}),
+          ...(dto.timezone !== undefined ? { timezone: dto.timezone } : {}),
+        },
+        select: TenantService.SETTINGS_SELECT,
+      }),
+      // Coin limiti va timezone — coin berish va "bugun" hisobiga ta'sir qiladi
+      this.prisma.auditLog.create({
+        data: this.audit.data({
+          tenantId,
+          actorId,
+          action: AuditActionType.update,
+          entityType: AUDIT_ENTITY.tenant,
+          entityId: tenantId,
+          changes: {
+            settings: changes,
+            before: {
+              teacherCoinLimit: before.data.teacherCoinLimit,
+              timezone: before.data.timezone,
+            },
+          } as Prisma.InputJsonValue,
+        }),
+      }),
+    ]);
+    // "Bugun" hisoblari yangi timezone'ni darhol ishlatsin
+    invalidateTenantTimezone(tenantId);
     return { status: 'success', message: 'Sozlamalar saqlandi', data };
   }
 
@@ -138,7 +183,7 @@ export class TenantService {
     }
   }
 
-  async update(id: string, dto: UpdateTenantDto) {
+  async update(id: string, dto: UpdateTenantDto, actorId: string) {
     const tenant = await this.findOne(id); // mavjudligini tekshirish
 
     if (dto.slug && dto.slug !== tenant.data.slug) {
@@ -154,6 +199,15 @@ export class TenantService {
       }
     }
     const data = await this.prisma.tenant.update({ where: { id }, data: dto });
+    invalidateTenantTimezone(id);
+    await this.audit.recordSafe({
+      tenantId: id,
+      actorId,
+      action: AuditActionType.update,
+      entityType: AUDIT_ENTITY.tenant,
+      entityId: id,
+      changes: definedFields(dto) as Prisma.InputJsonValue,
+    });
 
     return {
       status: 'success',
@@ -162,10 +216,40 @@ export class TenantService {
     };
   }
 
-  async remove(id: string) {
+  /**
+   * Soft delete: tenant va uning ma'lumotlari (coin tarixi, yo'qlama, xaridlar) saqlanadi,
+   * userlari kira olmaydi (ACTIVE_ACCOUNT_WHERE), barcha qurilma sessiyalari yopiladi.
+   * Slug bo'shatiladi — shu slug bilan yangi tenant ochish mumkin.
+   */
+  async remove(id: string, actorId: string) {
     const tenant = await this.findOne(id);
     this.assertNotSystemTenant(tenant.data.slug, "o'chirish");
-    await this.prisma.tenant.delete({ where: { id } });
+
+    await this.prisma.$transaction([
+      this.prisma.tenant.update({
+        where: { id },
+        data: {
+          isDeleted: true,
+          isActive: false,
+          deletedAt: new Date(),
+          slug: archivedName(tenant.data.slug, id, 100),
+        },
+      }),
+      this.prisma.refreshSession.deleteMany({
+        where: { user: { tenantId: id } },
+      }),
+      this.prisma.auditLog.create({
+        data: this.audit.data({
+          tenantId: id,
+          actorId,
+          action: AuditActionType.delete,
+          entityType: AUDIT_ENTITY.tenant,
+          entityId: id,
+          changes: { name: tenant.data.name, slug: tenant.data.slug },
+        }),
+      }),
+    ]);
+    invalidateTenantTimezone(id);
 
     return {
       status: 'success',
@@ -174,15 +258,29 @@ export class TenantService {
     };
   }
 
-  async toggleActive(id: string) {
+  async toggleActive(id: string, actorId: string) {
     const tenant = await this.findOne(id);
     if (tenant.data.isActive) {
       this.assertNotSystemTenant(tenant.data.slug, 'nofaol qilish');
     }
-    await this.prisma.tenant.update({
-      where: { id },
-      data: { isActive: !tenant.data.isActive },
-    });
+    await this.prisma.$transaction([
+      this.prisma.tenant.update({
+        where: { id },
+        data: { isActive: !tenant.data.isActive },
+      }),
+      this.prisma.auditLog.create({
+        data: this.audit.data({
+          tenantId: id,
+          actorId,
+          action: tenant.data.isActive
+            ? AuditActionType.archive
+            : AuditActionType.restore,
+          entityType: AUDIT_ENTITY.tenant,
+          entityId: id,
+          changes: { isActive: !tenant.data.isActive },
+        }),
+      }),
+    ]);
 
     return {
       status: 'success',

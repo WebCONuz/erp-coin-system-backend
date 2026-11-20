@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRewardDto } from './dto/create-reward.dto';
@@ -13,10 +14,14 @@ import {
   SourceType,
 } from 'src/generated/prisma/enums';
 import { Prisma } from 'src/generated/prisma/client';
+import { CoinTransactionsService } from 'src/coin-transaction/coin-transaction.service';
 
 @Injectable()
 export class RewardsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly coinTrx: CoinTransactionsService,
+  ) {}
 
   // Kategoriya shu tenantdagi, o'chirilmagan bo'lishi shart (boshqa tenant kategoriyasini biriktirib bo'lmaydi)
   private async assertCategoryInTenant(categoryId: string, tenantId: string) {
@@ -32,11 +37,12 @@ export class RewardsService {
     return this.prisma.reward.create({
       data: {
         title: dto.title,
-        description: dto.description || '',
+        description: dto.description || null,
         coinPrice: dto.coinPrice,
-        stock: dto.stock || 0,
+        // Berilmasa 0 — admin zaxirani kiritguncha sotilmaydi (cheksiz uchun aniq -1 yuboriladi)
+        stock: dto.stock ?? 0,
         rewardType: dto.rewardType,
-        imageUrl: dto.imageUrl || '',
+        imageUrl: dto.imageUrl || null,
         categoryId: dto.categoryId,
         tenantId,
         createdById,
@@ -193,90 +199,62 @@ export class RewardsService {
 
   // 🛒 SOVG‘ANI SOTIB OLISH (Purchase Logic)
   async purchase(rewardId: string, studentId: string, tenantId: string) {
-    // 1. Sovg'ani tekshiramiz (Sxemada narx maydoni `coinPrice` deb nomlangan)
-    const reward = await this.prisma.reward.findFirst({
-      where: { id: rewardId, tenantId, isDeleted: false, isActive: true },
-    });
-
-    if (!reward) {
-      throw new NotFoundException('Sovg‘a topilmadi yoki faol emas');
-    }
-
-    // `stock: -1` cheksiz miqdordagi sovg'alar uchun ishlashi mumkinligini inobatga olamiz
-    if (reward.stock !== -1 && reward.stock <= 0) {
-      throw new BadRequestException('Afsuski, ushbu sovg‘a omborda qolmagan.');
-    }
-
-    // 2. Talaba va uning hamyonini (Wallet) tekshiramiz
-    const studentWithWallet = await this.prisma.user.findFirst({
+    // 1. Sotib oluvchi — shu tenantdagi o'quvchi (xodimlarning hamyoni do'kon uchun emas)
+    const buyer = await this.prisma.user.findFirst({
       where: { id: studentId, tenantId, isDeleted: false },
-      include: { wallet: true },
+      select: { role: { select: { name: true } } },
     });
-
-    if (!studentWithWallet) {
+    if (!buyer) {
       throw new NotFoundException('Talaba topilmadi');
     }
-
-    if (!studentWithWallet.wallet) {
-      throw new BadRequestException(
-        'Talabaning hamyoni (Wallet) faollashtirilmagan.',
-      );
+    if (buyer.role.name !== 'student') {
+      throw new ForbiddenException("Sovg'ani faqat o'quvchi sotib oladi");
     }
 
-    const wallet = studentWithWallet.wallet;
-
-    if (wallet.balance < reward.coinPrice) {
-      throw new BadRequestException(
-        `Tangalaringiz yetarli emas. Sovg‘a narxi: ${reward.coinPrice} tanga, sizda esa ${wallet.balance} tanga bor.`,
-      );
-    }
-
-    // 3. Kompleks Tranzaksiya boshlanadi
+    // 2. Tekshiruv va yozish — bitta tx'da, qulf ostida. Qulf tartibi: hamyon → sovg'a
+    // (xaridni bekor qilish: xarid → hamyon → sovg'a — aylana yo'q, deadlock bo'lmaydi)
     return this.prisma.$transaction(async (tx) => {
-      // A. Talabaning hamyonidan (Wallet) tangalarni AYIRAMIZ.
-      // Shartli update: parallel xaridlarda balans manfiyga tushmasligi uchun.
-      const walletDebit = await tx.wallet.updateMany({
-        where: { id: wallet.id, balance: { gte: reward.coinPrice } },
-        data: {
-          balance: { decrement: reward.coinPrice },
-        },
+      // A. Hamyon qulflanadi — parallel xaridlar/coin ayirishlar navbat bilan
+      const wallet = await this.coinTrx.lockWallet(tx, studentId);
+
+      // B. Sovg'a qatori qulflanib, qayta o'qiladi: narx va zaxira shu paytdagisi
+      // (tekshiruvdan keyin admin narxni o'zgartirsa ham eski narx bilan sotilmaydi)
+      await tx.$queryRaw`SELECT id FROM rewards WHERE id = ${rewardId}::uuid FOR UPDATE`;
+      const reward = await tx.reward.findFirst({
+        where: { id: rewardId, tenantId, isDeleted: false, isActive: true },
       });
-
-      if (walletDebit.count === 0) {
-        throw new BadRequestException('Tangalaringiz yetarli emas.');
+      if (!reward) {
+        throw new NotFoundException('Sovg‘a topilmadi yoki faol emas');
       }
 
-      // B. Sovg'a zaxirasini (stock) 1 taga kamaytirish (Agar cheksiz bo'lmasa, ya'ni -1 ga teng bo'lmasa).
-      // Shartli update: oxirgi dona bir vaqtda ikki kishiga sotilmasligi uchun.
-      let stockReserved = false;
-      if (reward.stock !== -1) {
-        const stockDebit = await tx.reward.updateMany({
-          where: { id: rewardId, stock: { gt: 0 } },
-          data: {
-            stock: { decrement: 1 },
-          },
-        });
-
-        if (stockDebit.count > 0) {
-          stockReserved = true;
-        } else {
-          // Shu orada admin sovg'ani cheksiz (-1) qilgan bo'lishi mumkin — unda dona ayirilmaydi
-          const current = await tx.reward.findUnique({
-            where: { id: rewardId },
-            select: { stock: true },
-          });
-          if (current?.stock !== -1) {
-            throw new BadRequestException(
-              'Afsuski, ushbu sovg‘a omborda qolmagan.',
-            );
-          }
-        }
+      // `stock: -1` — cheksiz
+      if (reward.stock !== -1 && reward.stock <= 0) {
+        throw new BadRequestException(
+          'Afsuski, ushbu sovg‘a omborda qolmagan.',
+        );
       }
 
-      const updatedWallet = await tx.wallet.findUniqueOrThrow({
+      if (wallet.balance < reward.coinPrice) {
+        throw new BadRequestException(
+          `Tangalaringiz yetarli emas. Sovg‘a narxi: ${reward.coinPrice} tanga, sizda esa ${wallet.balance} tanga bor.`,
+        );
+      }
+
+      // C. Coin ayiriladi (DB CHECK balance >= 0 qo'shimcha himoya)
+      const updatedWallet = await tx.wallet.update({
         where: { id: wallet.id },
+        data: { balance: { decrement: reward.coinPrice } },
         select: { balance: true },
       });
+
+      // D. Zaxiradan 1 dona (cheksiz sovg'ada — yo'q)
+      const stockReserved = reward.stock !== -1;
+      if (stockReserved) {
+        await tx.reward.update({
+          where: { id: rewardId },
+          data: { stock: { decrement: 1 } },
+        });
+      }
 
       // C. Xarid tarixiga (`Purchase` jadvali) yangi yozuv qo'shamiz
       const purchaseRecord = await tx.purchase.create({
